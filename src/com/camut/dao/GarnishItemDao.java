@@ -28,6 +28,6 @@ public interface GarnishItemDao {
 	 * @param:    id
 	 * @return: GarnishItem
 	 */
-	public List<PageGarnish> getGarnishItemByRestaurantId(long id);
+	public List<PageGarnish> getGarnishItemByRestaurantUuid(String restaurantUuid);
 	
 }

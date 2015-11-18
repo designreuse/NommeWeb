@@ -20,7 +20,7 @@ public interface ConsumersBankaccountDao {
 	 * @param:    id
 	 * @return: List<ConsumersBankaccount>
 	 */
-	public List<ConsumersBankaccount> getConsumersBankaccountById(long id);
+	public List<ConsumersBankaccount> getConsumersBankaccountByConsumerUuid(String consumerUuid);
 	
 	/**
 	 * @Title: getConsumersBankaccount

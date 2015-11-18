@@ -126,13 +126,13 @@ public class ConsumersDaoTest {
 	 * @return: Consumers
 	 */
 	//@Test
-	public void getConsumersById() throws Exception{
+	/*public void getConsumersById() throws Exception{
 		long id = 1;
 		Consumers consumers = consumersDao.getConsumersById(id);
 		if(consumers != null){
 			System.out.println("ok");
 		}
-	}
+	}*/
 	
 	/**
 	 * @Title: saveTokenAndType

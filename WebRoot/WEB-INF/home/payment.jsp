@@ -233,7 +233,9 @@
 							<c:if test="${!empty cards}">
 								<div style="border: 1px solid #dddddd;background-color: #dddddd">
 									<h4 id="dropDown" style="cursor: pointer;">
-										<a id="lbCardSelection" style="margin-left: 5%">Use a Saved Credit Card</a>
+										<a> &nbsp;&nbsp;&nbsp;Use a Saved Credit Card<span class="glyphicon glyphicon-chevron-down" style="margin-left: 65%;"></span> <span
+											class="glyphicon glyphicon-chevron-up" style="margin-left: 65%;display: none;"></span>
+										</a>
 									</h4>
 								</div>
 								<div id="sonCards" style="border: 1px solid #dddddd;border-radius: 5px;display: none;">

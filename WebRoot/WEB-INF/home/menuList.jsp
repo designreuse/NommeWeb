@@ -1,6 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE HTML>
@@ -66,9 +65,9 @@
 					<div class="panel-body" style="padding-bottom: 5px;">
 						<!--seafood-->
 						<div style="position:relative;">
-							<div align="right" style=" font-size:18px; padding-top:15px; position:absolute; background-color: #EBECED; right:0px; height:49px; top:-64px;  z-index:1025;">
+							<div align="right" style=" font-size:18px; padding-top:15px; position:absolute; background:url(images/restaurst-a-1.jpg) right center; right:0px; height:49px; background-position: 31.5px -4px; top:-64px;  z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-1" aria-expanded="false" aria-controls="collapseTwo">
-									<span class="glyphicon glyphicon-chevron-up" style="color: #FF9C00;"></span>
+									<span class="glyphicon glyphicon-chevron-up" style="color:#fff;"></span>
 								</a>
 							</div>
 						</div>
@@ -96,7 +95,7 @@
 														<br>${str2.chName}
 													</c:if>
 												</h5>
-												<h4>$ <fmt:formatNumber value="${str2.price}" type="currency" pattern="#0.00"/></h4>
+												<h4>$ ${str2.price}</h4>
 											</div>
 										</div>
 									</div>
@@ -134,9 +133,9 @@
 					<div class="panel-body">
 						<!--seafood-->
 						<div style="position:relative;">
-							<div align="right" style=" font-size:18px; padding-top:10px; position:absolute; background-color:#EBECED; right:0px; height:49px; top:-64px;  z-index:1025;">
+							<div align="right" style=" font-size:18px; padding-top:10px; position:absolute; background:url(images/restaurst-a-1.jpg) right center; right:0px; height:49px; background-position: 31.5px -4px; top:-64px;  z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-${status.count}" aria-expanded="false" aria-controls="collapseTwo">
-									<span class="glyphicon glyphicon-chevron-up" style="color: #FF9C00;"></span>
+									<span class="glyphicon glyphicon-chevron-up" style="color:#fff;"></span>
 								</a>
 							</div>
 						</div>

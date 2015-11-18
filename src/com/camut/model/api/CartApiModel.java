@@ -9,8 +9,8 @@ import com.camut.model.CartItem;
 public class CartApiModel {
 	private String mobileToken;// 设备编号
 	private Integer orderType;// 订单种类
-	private Integer consumerId;// 客户id
-	private Integer restaurantId;// 商家id
+	private String consumerUuid;// 客户id
+	private String restaurantUuid;// 商家id
 	private double total;// 总金额
 	private double tax;// 税费
 	private double discount;
@@ -32,17 +32,17 @@ public class CartApiModel {
 	public void setOrderType(Integer orderType) {
 		this.orderType = orderType;
 	}
-	public Integer getConsumerId() {
-		return consumerId;
+	public String getConsumerUuid() {
+		return consumerUuid;
 	}
-	public void setConsumerId(Integer consumerId) {
-		this.consumerId = consumerId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public double getTotal() {
 		DecimalFormat    df   = new DecimalFormat("######0.00"); 

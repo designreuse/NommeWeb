@@ -130,31 +130,6 @@ $(function(){
 		$("#myModal").modal('show');
 	});
 
-	//Contact Us
-	$("#index-contactus").click(function(){
-		$("#myContactUs").modal('show');
-	});
-	
-	//About 
-	$("#index-about").click(function(){
-		$("#myAbout").modal('show');
-	});
-	
-	//FAQ 
-	$("#index-faq").click(function(){
-		$("#myFaq").modal('show');
-	});	
-
-	//TERMS OF USE 
-	$("#index-termofuse").click(function(){
-		$("#myTermOfUse").modal('show');
-	});		
-	
-	//Privacy Policy
-	$("#index-privacypolicy").click(function(){
-		$("#myPrivacyPolicy").modal('show');
-	});
-		
 	
 	function checkLatLng(){
 		//如果没有填写地址信息，直接将浏览器获取到的经纬度用于商家查找

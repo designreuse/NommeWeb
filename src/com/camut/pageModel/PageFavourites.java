@@ -1,7 +1,7 @@
 package com.camut.pageModel;
 
 public class PageFavourites {
-	private Integer restaurantId;//商家Id
+	private String restaurantUuid;//商家Id
 	private Integer favouritesId;//收藏Id
 	private Double avgPrice;//平均消费等级
 	private String restaurantName;//商家名称
@@ -15,11 +15,12 @@ public class PageFavourites {
 
 	
 	
-	public Integer getRestaurantId() {
-		return restaurantId;
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public Integer getFavouritesId() {
 		return favouritesId;

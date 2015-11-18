@@ -53,15 +53,15 @@ public interface RestaurantsUserService {
 	 * @param:    id
 	 * @return: int
 	 */
-	public int deleteRestaurantsUser(long id);
+	public int deleteRestaurantsUser(String restaurantUserUuid);
 	
 	/**
-	 * @Title: getRestaurantsUserById
+	 * @Title: getRestaurantsUserByUuid
 	 * @Description: 通过主键查找商家员工
 	 * @param:    
 	 * @return: RestaurantsUser
 	 */
-	public RestaurantsUser getRestaurantsUserById(long id);
+	public RestaurantsUser getRestaurantsUserByUuid(String restaurantUserUuid);
 	
 	/**
 	 * @Title: updateRestaurantsUser
@@ -105,12 +105,12 @@ public interface RestaurantsUserService {
 	//public List<PageRestaurantAdmins> getAllRestaurantsAdmin();
 	
 	/**
-	 * @Title: getRestaurantsAdminByRestaurantId
+	 * @Title: getRestaurantsUsersByRestaurantUuid
 	 * @Description: 通过商家id获取该商家的管理员
 	 * @param: @param restaurantId
 	 * @return List<PageRestaurantAdmins>  
 	 */
-	public List<PageRestaurantAdmins> getRestaurantsUsersByRestaurantId(String restaurantId);
+	public List<PageRestaurantAdmins> getRestaurantsUsersByRestaurantUuid(String restaurantUuid);
 	
 	/**
 	 * @Title: auditRestaurantAdmin
@@ -119,7 +119,7 @@ public interface RestaurantsUserService {
 	 * @param: statu
 	 * @return void  
 	 */
-	public int auditRestaurantAdmin(long id, int statu, String operatorName);
+	public int auditRestaurantAdmin(String restaurantUserUuid, int statu, String operatorName);
 	
 	/**
 	 * @Title: saveTokenAndType

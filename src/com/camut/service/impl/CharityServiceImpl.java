@@ -51,7 +51,7 @@ public class CharityServiceImpl implements CharityService {
 		if(oh==null){
 			return null;
 		}
-		Restaurants r = restaurantsDao.getRestaurantsById(oh.getRestaurantId());//获取商家对象
+		Restaurants r = restaurantsDao.getRestaurantsByUuid(oh.getRestaurantUuid());//获取商家对象
 		for (Charity charity : cList) {
 			CharityApiModel cam = new CharityApiModel();
 			cam.setCharityName(charity.getCharityName());

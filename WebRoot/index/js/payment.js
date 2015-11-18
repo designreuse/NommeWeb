@@ -57,14 +57,8 @@ $(function(){
 	
 	$("#dropDown").click(function(){
 		$("#dropDown span").toggle();
-		$("#sonCards,#cardDetail").toggle(300, function() { 
-			if(!$( "#sonCards" ).is(":visible")){
-				$('#lbCardSelection').text('Use A Saved Credit Card');
-			}
-			else{
-				$('#lbCardSelection').text('Enter A New Credit Card');
-			}
-		});
+		$("#sonCards,#cardDetail").toggle(300);
+		
 	});
 
 	

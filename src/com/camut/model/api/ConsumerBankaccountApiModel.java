@@ -16,19 +16,13 @@ public class ConsumerBankaccountApiModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2075864345127902494L;
-	private long consumerId;//用户id
+	private String consumerUuid;//用户id
 	private String card="";// 卡号
 	private String expiratioin="";// 有效日期
 	private String cvv="";// 卡号最后三位
 	private Integer isDefault;// 是否默认 1:是,0否
 	private String paycardToken;//token
 	
-	public long getConsumerId() {
-		return consumerId;
-	}
-	public void setConsumerId(long consumerId) {
-		this.consumerId = consumerId;
-	}
 	public String getPaycardToken() {
 		return paycardToken;
 	}
@@ -59,5 +53,12 @@ public class ConsumerBankaccountApiModel implements Serializable {
 	public void setCvv(String cvv) {
 		this.cvv = cvv;
 	}
+	public String getConsumerUuid() {
+		return consumerUuid;
+	}
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
+	}
+	
 	
 }

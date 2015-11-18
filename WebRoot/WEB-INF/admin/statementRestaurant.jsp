@@ -79,7 +79,7 @@
 			        <th data-field="restaurantName" data-width="300" data-sortable="true" >Restaurant</th>
 			        <th data-field="orderType" data-formatter="orderTypeFormatter" data-sortable="true" data-align="center" data-width="150">Order Type</th>
 			        <th data-field="paymentType" data-formatter="paymentFormatter" data-sortable="true" data-align="center" data-width="150">Payment</th>
-			        <th data-field="amount" data-formatter="moneyFormatter" data-width="100" data-align="right">Subtotal</th>
+			        <th data-field="amount" data-formatter="moneyFormatter" data-width="100" data-align="right">Amount</th>
      			</tr>
      		</thead>
 		</table>

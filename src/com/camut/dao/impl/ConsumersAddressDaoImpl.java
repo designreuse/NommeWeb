@@ -31,10 +31,10 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 	 * @return: List<ConsumersAddress>
 	 */
 	@Override
-	public List<ConsumersAddress> getConsumersAddressById(long consumerId) {
-		String hql = "from ConsumersAddress ca where ca.consumers.id=:consumerId order by ca.isdefault asc";
+	public List<ConsumersAddress> getConsumersAddressByUuid(String consumerUuid) {
+		String hql = "from ConsumersAddress ca where ca.consumers.uuid=:consumerUuid order by ca.isdefault asc";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		List<ConsumersAddress> acList = this.find(hql, map);
 		return acList;
 	}
@@ -116,10 +116,10 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 	 * @param: @return
 	 * @return int  
 	 */
-	public int setConsumersDefaultAddressNotDefault(long consumerId){
-		String hql = "from ConsumersAddress ca where ca.consumers.id=:consumerId and ca.isdefault=:isdefault";
+	public int setConsumersDefaultAddressNotDefault(String consumersUuid){
+		String hql = "from ConsumersAddress ca where ca.consumers.uuid=:consumersUuid and ca.isdefault=:isdefault";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumersUuid", consumersUuid);
 		map.put("isdefault", 1);
 		List<ConsumersAddress> list = this.find(hql, map);
 		boolean flag = true; 
@@ -147,10 +147,10 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 	 * @return: ConsumersAddress
 	 */
 	@Override
-	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(long consumerId,long restaurantId) {
+	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(String consumerUuid,String restaurantUuid) {
 		String sql = "select t.id as addressId,t.full_address as address " +
-				"from (select restaurant_lng as rlng,restaurant_lat as rlat,distance from dat_restaurants where id="+restaurantId+") v LEFT JOIN "+ 
-				"(select * from tbl_consumers_address where consumer_id="+consumerId+") t ON "+
+				"from (select restaurant_lng as rlng,restaurant_lat as rlat,distance from dat_restaurants where uuid="+restaurantUuid+") v LEFT JOIN "+ 
+				"(select * from tbl_consumers_address where consumer_uuid="+consumerUuid+") t ON "+
 				"ACOS(SIN((t.lat * 3.1415) / 180 ) *SIN((v.rlat * 3.1415) / 180 ) +COS((t.lat"+
 				"* 3.1415) / 180 ) * COS((v.rlat * 3.1415) / 180 ) *COS((t.lng"+
 				"* 3.1415) / 180 - (v.rlng * 3.1415) / 180 ) ) * 6378.140<=v.distance where t.isdefault=1";
@@ -175,13 +175,13 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public  List<ConsumersAddressApiModel>  getConsumersAddressInDistance(long consumerId, long restaurantId) {
-		String sql = "select  t.consumer_id as consumerId,t.id as addressId,t.street,t.floor," +
-				"t.city,t.province,t.isdefault as isDefault  "+
-				"from (select restaurant_lng as rlng,restaurant_lat as rlat,distance from dat_restaurants where id="+restaurantId+") v LEFT JOIN "+ 
-				"(select * from tbl_consumers_address where consumer_id="+consumerId+") t ON "+
-				"ACOS(SIN((t.lat * 3.1415) / 180 ) *SIN((v.rlat * 3.1415) / 180 ) +COS((t.lat"+
-				"* 3.1415) / 180 ) * COS((v.rlat * 3.1415) / 180 ) *COS((t.lng"+
+	public  List<ConsumersAddressApiModel>  getConsumersAddressInDistance(String consumerUuid,String restaurantUuid) {
+		String sql = "select t.consumer_id as consumerId,t.id as addressId,t.street,t.floor, "+
+				"t.city,t.province,t.isdefault as isDefault "+
+				"from (select restaurant_lng as rlng,restaurant_lat as rlat,distance from dat_restaurants where uuid="+restaurantUuid+") v LEFT JOIN "+ 
+				"(select * from tbl_consumers_address where consumer_uuid="+consumerUuid+") t ON "+
+				"ACOS(SIN((t.lat * 3.1415) / 180 ) *SIN((v.rlat * 3.1415) / 180 ) +COS((t.lat "+
+				"* 3.1415) / 180 ) * COS((v.rlat * 3.1415) / 180 ) *COS((t.lng "+
 				"* 3.1415) / 180 - (v.rlng * 3.1415) / 180 ) ) * 6378.140<=v.distance";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setResultTransformer(Transformers.aliasToBean(ConsumersAddressApiModel.class));
@@ -209,10 +209,10 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 	 * @return: List<ConsumersAddress>
 	 */
 	@Override
-	public ConsumersAddress getConsumersAddressDefaultById(long consumerId) {
-		String hql = "from ConsumersAddress ca where ca.consumers.id=:consumerId and ca.isdefault=1 order by ca.isdefault asc";
+	public ConsumersAddress getConsumersAddressDefaultByUuid(String consumerUuid) {
+		String hql = "from ConsumersAddress ca where ca.consumers.uuid=:consumerUuid and ca.isdefault=1 order by ca.isdefault asc";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		return this.get(hql, map);
 	}
 

@@ -27,10 +27,10 @@ public interface PaymentService {
 	/**
 	 * @Title: addCard
 	 * @Description:增加银行卡
-	 * @param:    CardEntity cardEntity,String consumerId
+	 * @param:    CardEntity cardEntity,String consumerUuid
 	 * @return: int
 	 */
-	public int  addCard(CardEntity cardEntity,String consumerId);
+	public int  addCard(CardEntity cardEntity,String consumerUuid);
 	
 	/**
 	 * @Title: listAllCards
@@ -38,7 +38,7 @@ public interface PaymentService {
 	 * @param:    CardEntity cardEntity,String consumerId
 	 * @return: int
 	 */
-	public List<CardEntity>  listAllCards(String consumerId);
+	public List<CardEntity>  listAllCards(String consumerUuid);
 	
 	/**
 	 * @Title: chargeByCard
@@ -62,6 +62,6 @@ public interface PaymentService {
 	 * @param:    String cardId,String consumerId
 	 * @return: int -1失败  1成功
 	 */
-	public int deleteCard(String cardId,String consumerId);
+	public int deleteCard(String cardId,String consumerUuid);
 	
 }

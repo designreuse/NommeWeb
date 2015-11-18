@@ -17,7 +17,7 @@ a:active {
 	text-decoration: none;
 	 
 }
-.search_top { background: #515253; height:60px;} 
+.search_top { background:#606060; height:60px;}
 .zuikuan { max-width:1030px; margin: 0px auto; padding:0px 0px;}
 .shangbian-10 { padding:5px 0px;}
 .search_top_logo { float:left;}
@@ -108,7 +108,7 @@ padding:0 15px;
 .restaurants_menu-left {  width:67%; background:#ffffff; float:left;}
 .restaurants_menu-right {  width:32.8%; border-left:1px solid #6F6F6F; background:#F8F8F8; float:right;}
 
-.rest-xiala { line-height:58px; border:#85C53E 1px solid; height:58px; border-left: none; border-right: none; color:#000000;}
+.rest-xiala { line-height:58px; border:#898989 1px solid; height:58px; border-left: none; border-right: none; color:#000000;}
 .rest-xiala li:nth-child(1){ float:left; width:33.3%; text-align:center; font-size:16px; font-weight:900;}
 .rest-xiala li:nth-child(2){ float:left; width:33.3%; text-align:center; font-size:16px; font-weight:900;}
 .rest-xiala li:nth-child(3){ float:left; width:33.4%; text-align:center; font-size:16px; font-weight:900;}
@@ -132,16 +132,17 @@ padding:0 15px;
 }
 
 
-.rest-xiala-jg{border-bottom:1px solid #85C53E;}
+.rest-xiala-jg{border-bottom:1px solid #898989;}
 .rest-xiala-jg>li{float:left;margin-bottom:-1px}
 .rest-xiala-jg>li>a{margin-right:2px; border:1px solid transparent;border-radius:0px 0px 0 0}
 .rest-xiala-jg>li>a:hover{ }
-.rest-xiala-jg>li.active>a,.rest-xiala-jg>li.active>a:hover,.rest-xiala-jg>li.active>a:focus{color:#fff;cursor:default;background-color:#85C53E;  height:56px;}
-.rest-panel-one { background-color: #EBECED; margin:0; padding:0 15px; line-height:53px; color:#FFFFFF;}
-.rest-panel-one a { color:#FF9C00; font-weight: bold;}
+.rest-xiala-jg>li.active>a,.rest-xiala-jg>li.active>a:hover,.rest-xiala-jg>li.active>a:focus{color:#fff;cursor:default;background-color:#898989;  height:56px;}
+
+.rest-panel-one { background:url(../images/restaurst15-1.jpg); margin:0; padding:0 15px; line-height:53px; color:#FFFFFF;}
+.rest-panel-one a { color:#FFFFFF;}
 .rest-panel-one span { float:right; padding-top:20px;}
-.rest-panel-1 {background-color: #EBECED;margin:0; padding:0 15px; line-height:53px; color:#FFFFFF; border-radius: 4px;}
-.rest-panel-1 a { color: #FF9C00; font-weight: bold;}
+.rest-panel-1 { background:url(../images/restaurst-a-1.jpg); margin:0; padding:0 15px; line-height:53px; color:#FFFFFF; border-radius: 4px;}
+.rest-panel-1 a { color:#FFFFFF;}
 .rest-panel-1 span { float:right; padding-top:20px;}
 .rest-panel-2 { background:url(../images/restaurst-a-2.jpg); margin:0; padding:0 15px; line-height:53px; color:#FFFFFF; border-radius: 4px;}
 .rest-panel-2 a { color:#FFFFFF;}
@@ -336,9 +337,9 @@ color: #fff;
 background-color: #69A81A;
 }
 
-<!--ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½CSS-->
+<!--���¹���CSS-->
 .scrollbox{width:400px; padding:10px;border:#ccc 1px solid;}
-#scrollDiv{width:400px;height:180px; overflow:hidden;}/*ï¿½ï¿½ï¿½ï¿½Ä¸ß¶ÈºÍ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½ï¿½ï¿½*/
+#scrollDiv{width:400px;height:180px; overflow:hidden;}/*����ĸ߶Ⱥͳ��������Ǳ����*/
 #scrollDiv li{height:25px;line-height:25px; vertical-align:bottom; zoom:1; border-bottom:#CCC dashed 1px;}
 #scrollDiv li a{ color:#333; text-decoration:none;}
 #scrollDiv li a:hover{ color:#FF0000; text-decoration:underline;}
@@ -346,15 +347,15 @@ background-color: #69A81A;
 .scroltit{ height:26px; line-height:26px; border-bottom:#CCC dashed 1px; padding-bottom:4px; margin-bottom:4px;}
 .scroltit h3{ width:100px; float:left;}
 .scroltit small{float:right; font-size:13px;}
-<!--ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½CSS-->
+<!--���¹���CSS-->
 
-<!----------------------------------------------å¾ˆ-é•¿-çš„-åˆ†-å‰²-çº¿-------------------------------------------------------- -->
+<!----------------------------------------------很-长-的-分-割-线-------------------------------------------------------- -->
 
 .cursorPointer{
 	cursor:pointer;
 }
 
-<!-- é€‰æ‹©å‡ ä¸ªæ˜Ÿå�Žå°†é€‰ä¸­çš„æ˜Ÿå�˜ç»¿è‰² -->
+<!-- 选择几个星后将选中的星变绿色 -->
 .ratingMark{ margin:10px; color:#80BF2E; font-size:14px;}
 
 

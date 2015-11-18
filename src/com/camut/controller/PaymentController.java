@@ -79,7 +79,7 @@ public class PaymentController {
 			List<CardEntity> list = CommonUtil.listAllCards(consumers.getStripeCustomerId());
 			model.addAttribute("cards", list);
 		}
-		PageCartHeader pageCartHeader = cartHeaderService.getPageCartHeaderByConsumerId(consumers.getId().intValue());
+		PageCartHeader pageCartHeader = cartHeaderService.getPageCartHeaderByConsumerUuid(consumers.getUuid());
 		model.addAttribute("cart", pageCartHeader);
 		return "home/payment";
 	}
@@ -92,12 +92,12 @@ public class PaymentController {
 	 */
 	@RequestMapping(value = "/payByDetail", method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage pay(ChargeEntity chargeEntity,String consumerId,String orderId) {
+	public PageMessage pay(ChargeEntity chargeEntity,String consumerUuid,String orderId) {
 		PageMessage pm = new PageMessage();
-		if (chargeEntity != null && StringUtil.isNotEmpty(consumerId)) {
+		if (chargeEntity != null && StringUtil.isNotEmpty(consumerUuid)) {
 			int orderid = 0;
 			if (StringUtil.isEmpty(orderId)) {
-				CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerId(Integer.parseInt(consumerId));
+				CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerUuid(consumerUuid);
 				//将购物车转换成订单对象
 				OrderHeader orderHeader = orderService.CartHeaderToOrderHeaderForWeb(cartHeader.getId());
 				DecimalFormat format = new DecimalFormat("###.00");
@@ -111,7 +111,7 @@ public class PaymentController {
 				orderid = orderService.addOrder(orderHeader);
 				if (orderid!=-1) {
 					//删除购物车
-					int flag1 = cartService.deleteCartByConsumerId(Integer.parseInt(consumerId));
+					int flag1 = cartService.deleteCartByConsumerUuid(consumerUuid);
 					if (flag1==-1) {
 						pm.setErrorMsg(MessageConstant.PAY_FAIL);
 						pm.setSuccess(false);
@@ -127,11 +127,11 @@ public class PaymentController {
 			if (orderid!=-1) {//保存成功
 				pm.setFlag(orderid);
 				OrderHeader orderHeader = orderService.getOrderById(orderid);
-					Restaurants restaurants = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
+					Restaurants restaurants = restaurantsService.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
 					if (restaurants!=null && StringUtil.isNotEmpty(restaurants.getStripeAccount())) {
 						chargeEntity.setAccountId(restaurants.getStripeAccount());
 						if (chargeEntity.getSave()!=null && chargeEntity.getSave()==1) {//需要保存卡信息
-							Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerId));
+							Consumers consumers = consumersService.getConsumersByUuid(consumerUuid);
 							if (consumers!=null) {//用户存在
 								if (StringUtil.isEmpty(consumers.getStripeCustomerId())) {//不存在stripe的客户id了
 									//创建stripe的customer
@@ -192,13 +192,13 @@ public class PaymentController {
 	 */
 	@RequestMapping(value="/payByCardId",method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage chargeByCardId(ChargeEntity chargeEntity,String consumerId,String orderId){
+	public PageMessage chargeByCardId(ChargeEntity chargeEntity,String consumerUuid,String orderId){
 		PageMessage pm = new PageMessage();
 		//Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerId));
-		if(chargeEntity!=null && StringUtil.isNotEmpty(consumerId)){
+		if(chargeEntity!=null && StringUtil.isNotEmpty(consumerUuid)){
 			int orderid = 0;
 			if (StringUtil.isEmpty(orderId)) {
-				CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerId(Integer.parseInt(consumerId));
+				CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerUuid(consumerUuid);
 				//将购物车转换成订单对象
 				OrderHeader orderHeader = orderService.CartHeaderToOrderHeaderForWeb(cartHeader.getId());
 				if (orderHeader!=null) {
@@ -212,7 +212,7 @@ public class PaymentController {
 					orderid = orderService.addOrder(orderHeader);
 					if (orderid!=-1) {
 						//删除购物车
-						int flag1 = cartService.deleteCartByConsumerId(Integer.parseInt(consumerId));
+						int flag1 = cartService.deleteCartByConsumerUuid(consumerUuid);
 						if (flag1==-1) {
 							pm.setErrorMsg(MessageConstant.PAY_FAIL);
 							pm.setSuccess(false);
@@ -232,11 +232,11 @@ public class PaymentController {
 			}
 			if (orderid!=-1) {
 				pm.setFlag(orderid);
-				Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerId));
+				Consumers consumers = consumersService.getConsumersByUuid(consumerUuid);
 				OrderHeader orderHeader = orderService.getOrderById(orderid);
 					if (consumers!=null && orderHeader!=null) {
 						chargeEntity.setCustomerId(consumers.getStripeCustomerId());
-						Restaurants restaurants = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
+						Restaurants restaurants = restaurantsService.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
 						if (restaurants!=null && StringUtil.isNotEmpty(restaurants.getStripeAccount())) {
 							chargeEntity.setAccountId(restaurants.getStripeAccount());
 							int flag = paymentService.chargeByCard(chargeEntity,String.valueOf(orderid));
@@ -264,13 +264,13 @@ public class PaymentController {
 	 */
 	@RequestMapping(value="/payByCash",method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage chargeByCash(ChargeEntity chargeEntity,String consumerId,String orderId){
+	public PageMessage chargeByCash(ChargeEntity chargeEntity,String consumerUuid,String orderId){
 		PageMessage pm = new PageMessage();
 		if (StringUtil.isEmpty(orderId)) {
-			if(chargeEntity!=null && StringUtil.isNotEmpty(consumerId)){
-				Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerId));
+			if(chargeEntity!=null && StringUtil.isNotEmpty(consumerUuid)){
+				Consumers consumers = consumersService.getConsumersByUuid(consumerUuid);
 				if (consumers!=null) {
-					CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerId(Integer.parseInt(consumerId));
+					CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerUuid(consumerUuid);
 					//将购物车转换成订单对象
 					OrderHeader orderHeader = orderService.CartHeaderToOrderHeaderForWeb(cartHeader.getId());
 					//计算小费
@@ -283,7 +283,7 @@ public class PaymentController {
 					if (orderid!=-1) {//保存成功
 						//删除购物车
 						pm.setFlag(orderid);
-						cartService.deleteCartByConsumerId(Integer.parseInt(consumerId));
+						cartService.deleteCartByConsumerUuid(consumerUuid);
 						return pm;
 					}
 				}
@@ -320,7 +320,7 @@ public class PaymentController {
 			if(flag>0){
 				OrderHeader oh = orderService.getOrderById(Long.parseLong(orderId));			
 				Restaurants restaurants = new Restaurants();
-				restaurants.setId((long)oh.getRestaurantId());
+				restaurants.setUuid(oh.getRestaurantUuid());
 				List<RestaurantsUser> list = restaurantsUserService.getAllRestaurantsUser(restaurants);
 				for (RestaurantsUser restaurantsUser : list) {
 					if(StringUtil.isNotBlank(restaurantsUser.getToken())){//判断token是否为空
@@ -403,7 +403,7 @@ public class PaymentController {
 			if (orderHeader!=null) {
 				orderCharity.setMoney(StringUtil.convertLastDouble(orderHeader.getTotal()*0.05));
 				if (orderHeader.getConsumers()!=null) {
-					orderCharity.setConsumerId(orderHeader.getConsumers().getId().intValue());
+					orderCharity.setConsumerUuid(orderHeader.getConsumers().getUuid());
 					orderCharityService.saveOrderCharity(orderCharity);
 				}
 			}
@@ -441,12 +441,6 @@ public class PaymentController {
 	public List<CardEntity> testlistAllCards(String customerId) {
 		return CommonUtil.listAllCards(customerId);
 	}
-
-	/*@RequestMapping(value = "testchargeByCardId", method = RequestMethod.POST)
-	@ResponseBody
-	public String testchargeByCardId(String customerId, String cardId, ChargeEntity chargeEntity) {
-		return CommonUtil.chargeByCardId(customerId, cardId, chargeEntity);
-	}*/
 
 	@RequestMapping(value = "testrefundAll", method = RequestMethod.POST)
 	@ResponseBody

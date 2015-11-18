@@ -110,7 +110,6 @@
 			<li><a href="#" name="drinks"><p><img src="${ctx}/index/images/xc-tb04.png"></p>Drinks</a></li>
 			<li><a href="#" name="hotdog"><p><img src="${ctx}/index/images/xc-tb05.png"></p>Hot Dog</a></li>
 		</ul> --%>
-		<%-- 
 		<ul>
 			<c:forEach items="${foodClassification}" var="food" begin="0" step="1" varStatus="status">
 				<li><a href="#" title="foodClassification"  name="${food.classification}" value="${food.classificationId}"><p><img src="${food.imageUrl}"></p>${food.classification}</a></li>
@@ -119,7 +118,6 @@
 			</c:forEach>
 		
 		</ul>
-		--%>
 		<div class="clear"></div>
 
 	</div>
@@ -139,17 +137,8 @@
 
 	<div class="xc-bottom" align="center">
 		<p>
-			<a href="#" id = "index-contactus"><span style="color: #8DD039;">Contact Us</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
+			<a href="#"><span style="color: #8DD039;">Contact Us</span></a>　　About　　FAQ　　Terms of Use　　Privacy Policy
 		</p>
-		<jsp:include page="./contactUs.jsp"></jsp:include>
-		<jsp:include page="./about.jsp"></jsp:include>
-		<jsp:include page="./faq.jsp"></jsp:include>
-		<jsp:include page="./termOfUse.jsp"></jsp:include>
-		<jsp:include page="./privacyPolicy.jsp"></jsp:include>
 	</div>
 
 	<form id="search-restaurants-form" action="${ctx}/index/searchlist" method="post">

@@ -1,1 +1,1 @@
-var appPath = "";//TODO:path
+var appPath = "/camut";//TODO:path

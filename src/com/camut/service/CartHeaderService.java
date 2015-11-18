@@ -47,7 +47,7 @@ public interface CartHeaderService {
 	 * @return
 	 */
 
-	public int deleteCartDish(String mobileToken,int dishId,Integer consumerId);
+	public int deleteCartDish(String mobileToken,int dishId,String consumerUuid);
 
 	/**
 	 * @Title: updateCartHeader
@@ -62,7 +62,7 @@ public interface CartHeaderService {
 	 * 重新计算价格
 	 * @return
 	 */
-	public CartApiModel reCalcCost(String mobileToken,double restaurantLat,double restaurantLng,long discountId,long restaurantId,Integer consumerId );
+	public CartApiModel reCalcCost(String mobileToken,double restaurantLat,double restaurantLng,long discountId,String restaurantUuid,String consumerUuid);
 
 	/**
 	 * @Title: getPageCartHeaderByMobileToken
@@ -74,20 +74,20 @@ public interface CartHeaderService {
 	//public PageCartHeader getPageCartHeaderByMobileToken(String mobileToken);
 	
 	/**
-	 * @Title: getCatrHeaderByConsumerId
+	 * @Title: getCatrHeaderByConsumerUuid
 	 * @Description: 通过用户id获取购物车
 	 * @param: @param consumerId
 	 * @param: @return
 	 * @return CartHeader  
 	 */
-	public CartHeader getCatrHeaderByConsumerId(int consumerId);
+	public CartHeader getCatrHeaderByConsumerUuid(String consumerUuid);
 
 	/**
 	 * 根据用户id查找对象
 	 * @param mobileToken  consumerId
 	 * @return
 	 */
-	public CartHeader getCartHeaderByConsumerId(int consumerId);
+	public CartHeader getCartHeaderByConsumerUuid(String consumerUuid);
 
 	/**
 	 * 将token保存的已有的用户
@@ -110,16 +110,16 @@ public interface CartHeaderService {
 	 * @param mobileToken  consumerId
 	 * @return
 	 */
-	public PageCartHeader getPageCartHeaderByConsumerId(int consumerId);
+	public PageCartHeader getPageCartHeaderByConsumerUuid(String consumerUuid);
 	
 	/**
-	 * @Title: getWebCartHeaderByConsumerId
+	 * @Title: getWebCartHeaderByConsumerUuid
 	 * @Description: 获取用于web页面显示
 	 * @param: @param consumerId
 	 * @param: @return
 	 * @return CartHeader  
 	 */
-	public CartHeader getWebCartHeaderByConsumerId(int consumerId);
+	public CartHeader getWebCartHeaderByConsumerUuid(String consumerUuid);
 	
 	
 	

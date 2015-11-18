@@ -6,10 +6,7 @@ package com.camut.controller.restaurant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.alibaba.druid.support.json.JSONUtils;
 import com.camut.framework.constant.MessageConstant;
 import com.camut.model.Dish;
@@ -34,9 +30,7 @@ import com.camut.service.DishGarnishService;
 import com.camut.service.DishService;
 import com.camut.service.RestaurantsMenuService;
 import com.camut.service.RestaurantsService;
-import com.camut.utils.AWSUtil;
 import com.camut.utils.ImageUtils;
-import com.camut.utils.StringUtil;
 
 /**
  * @ClassName DiahController.java
@@ -198,11 +192,16 @@ public class DishController extends BaseController {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;  
 		MultipartFile file = multipartRequest.getFile("photo");
 		Restaurants restaurants = this.getRestaurants(request.getSession(), request);
-		
-        String imgtype = StringUtil.getFileExtension(file.getOriginalFilename());
-		String keyName = restaurants.getId() + "/" + UUID.randomUUID().toString() + "." + imgtype;
-			
-		return AWSUtil.uploadImageToNommeS3SingleOperation(file, keyName);
+		String tmpDir = restaurants.getId()+"";
+		String logourl = "";
+		try {
+			logourl = ImageUtils.saveImage(file, request, "upload/Dish", tmpDir, true);
+		} catch (Exception e) {
+			return null;
+		}
+		String path = request.getContextPath();
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+		return basePath+logourl;
 	}
 	
 	/**
@@ -224,7 +223,7 @@ public class DishController extends BaseController {
 		RestaurantsMenu menu = new RestaurantsMenu();
 		menu.setId(dishMenuId);
 		dish.setRestaurantsMenu(menu);
-		dish.setRestaurantId(this.getRestaurants(request.getSession(), request).getId().longValue());
+		dish.setRestaurantUuid(this.getRestaurants(request.getSession(), request).getUuid());
 		int flag = dishService.addDish(dish);
 		if(flag==-1){
 			pm.setErrorMsg(MessageConstant.ADD_FAILED);
@@ -253,7 +252,7 @@ public class DishController extends BaseController {
 		RestaurantsMenu menu = new RestaurantsMenu();
 		menu.setId(dishMenuId);
 		dish.setRestaurantsMenu(menu);
-		dish.setRestaurantId(this.getRestaurants(request.getSession(), request).getId().longValue());
+		dish.setRestaurantUuid(this.getRestaurants(request.getSession(), request).getUuid());
 		Dish dish2 = dishService.getDishById(dish.getId()+"");
 		dish.setCreatedate(dish2.getCreatedate());
 		dish.setStatus(dish2.getStatus());

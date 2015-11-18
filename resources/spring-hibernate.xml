@@ -12,8 +12,6 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<context:property-placeholder />
-	
 	<!--Configure the data source 配置数据源 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
@@ -21,13 +19,13 @@
 			<value>${driverClassName}</value>
 		</property>
 		<property name="jdbcUrl">
-			<value>${JDBC_CONNECTION_STRING}</value>
+			<value>${jdbc_url}</value>
 		</property>
 		<property name="user">
-			<value>${JDBC_USERNAME}</value>
+			<value>${jdbc_username}</value>
 		</property>
 		<property name="password">
-			<value>${JDBC_PASSWORD}</value>
+			<value>${jdbc_password}</value>
 		</property>
 		<!--连接池中保留的最小连接数。 -->
 		<property name="minPoolSize">

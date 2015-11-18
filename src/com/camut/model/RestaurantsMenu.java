@@ -44,7 +44,7 @@ public class RestaurantsMenu extends IdEntity implements java.io.Serializable,Co
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurants_id")
+	@JoinColumn(name = "restaurants_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}

@@ -30,10 +30,10 @@ public class BaseController {
 	
 	public Restaurants getRestaurants(HttpSession httpSession,HttpServletRequest request){
 		if(httpSession.getAttribute("restaurantsUser")!=null){
-			return restaurantsService.getRestaurantsById(((RestaurantsUser)httpSession.getAttribute("restaurantsUser")).getRestaurants().getId());
+			return restaurantsService.getRestaurantsByUuid(((RestaurantsUser)httpSession.getAttribute("restaurantsUser")).getRestaurants().getUuid());
 		}
 		else if(request.getParameter("restaurantId")!=null){
-			return restaurantsService.getRestaurantsById(Long.parseLong(request.getParameter("restaurantId")));
+			return restaurantsService.getRestaurantsByUuid(request.getParameter("restaurantUuid"));
 		}
 		return null;
 	}

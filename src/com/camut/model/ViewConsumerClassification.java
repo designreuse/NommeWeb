@@ -20,38 +20,38 @@ public class ViewConsumerClassification  implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	// Fields    
-	private Integer restaurantId;
-     private Integer consumerId;
-     private Integer classificationId;
-     private String iosImageUrl;
-     private String iosHoverImageUrl;
-     private String androidImageUrl;
-     private String androidHoverImageUrl;
-     private String webImageUrl;
-     private String webHoverImageUrl;
-     private String classificationName;
+	private String restaurantUuid;
+    private String consumerUuid;
+    private Integer classificationId;
+    private String iosImageUrl;
+    private String iosHoverImageUrl;
+    private String androidImageUrl;
+    private String androidHoverImageUrl;
+    private String webImageUrl;
+    private String webHoverImageUrl;
+    private String classificationName;
 
    
     // Property accessors
 
-    @Column(name="restaurant_id")
+    @Column(name="restaurant_uuid")
 
-    public Integer getRestaurantId() {
-        return this.restaurantId;
+    public String getRestaurantUuid() {
+        return this.restaurantUuid;
     }
     
-    public void setRestaurantId(Integer restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setRestaurantUuid(String restaurantUuid) {
+        this.restaurantUuid = restaurantUuid;
     }
 
-    @Column(name="consumer_id")
+    @Column(name="consumer_uuid")
     @Id
-    public Integer getConsumerId() {
-        return this.consumerId;
+    public String getConsumerUuid() {
+        return this.consumerUuid;
     }
     
-    public void setConsumerId(Integer consumerId) {
-        this.consumerId = consumerId;
+    public void setConsumerUuid(String consumerUuid) {
+        this.consumerUuid = consumerUuid;
     }
 
     @Column(name="classification_id", nullable=false)
@@ -143,8 +143,8 @@ public class ViewConsumerClassification  implements java.io.Serializable {
 		 if ( !(other instanceof ViewConsumerClassification) ) return false;
 		 ViewConsumerClassification castOther = ( ViewConsumerClassification ) other; 
          
-		 return ( (this.getRestaurantId()==castOther.getRestaurantId()) || ( this.getRestaurantId()!=null && castOther.getRestaurantId()!=null && this.getRestaurantId().equals(castOther.getRestaurantId()) ) )
- && ( (this.getConsumerId()==castOther.getConsumerId()) || ( this.getConsumerId()!=null && castOther.getConsumerId()!=null && this.getConsumerId().equals(castOther.getConsumerId()) ) )
+		 return ( (this.getRestaurantUuid()==castOther.getRestaurantUuid()) || ( this.getRestaurantUuid()!=null && castOther.getRestaurantUuid()!=null && this.getRestaurantUuid().equals(castOther.getRestaurantUuid()) ) )
+ && ( (this.getConsumerUuid()==castOther.getConsumerUuid()) || ( this.getConsumerUuid()!=null && castOther.getConsumerUuid()!=null && this.getConsumerUuid().equals(castOther.getConsumerUuid()) ) )
  && ( (this.getClassificationId()==castOther.getClassificationId()) || ( this.getClassificationId()!=null && castOther.getClassificationId()!=null && this.getClassificationId().equals(castOther.getClassificationId()) ) )
  && ( (this.getIosImageUrl()==castOther.getIosImageUrl()) || ( this.getIosImageUrl()!=null && castOther.getIosImageUrl()!=null && this.getIosImageUrl().equals(castOther.getIosImageUrl()) ) )
  && ( (this.getIosHoverImageUrl()==castOther.getIosHoverImageUrl()) || ( this.getIosHoverImageUrl()!=null && castOther.getIosHoverImageUrl()!=null && this.getIosHoverImageUrl().equals(castOther.getIosHoverImageUrl()) ) )
@@ -158,8 +158,8 @@ public class ViewConsumerClassification  implements java.io.Serializable {
    public int hashCode() {
          int result = 17;
          
-         result = 37 * result + ( getRestaurantId() == null ? 0 : this.getRestaurantId().hashCode() );
-         result = 37 * result + ( getConsumerId() == null ? 0 : this.getConsumerId().hashCode() );
+         result = 37 * result + ( getRestaurantUuid() == null ? 0 : this.getRestaurantUuid().hashCode() );
+         result = 37 * result + ( getConsumerUuid() == null ? 0 : this.getConsumerUuid().hashCode() );
          result = 37 * result + ( getClassificationId() == null ? 0 : this.getClassificationId().hashCode() );
          result = 37 * result + ( getIosImageUrl() == null ? 0 : this.getIosImageUrl().hashCode() );
          result = 37 * result + ( getIosHoverImageUrl() == null ? 0 : this.getIosHoverImageUrl().hashCode() );

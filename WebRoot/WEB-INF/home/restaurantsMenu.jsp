@@ -194,7 +194,7 @@
 				<div class="" role="tab" id="headingOne">
 					<h4 class="rest-panel-one">
 						<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false"
-							aria-controls="collapseOne" > Coupons
+							aria-controls="collapseOne"> Coupons
 							<span class="glyphicon glyphicon-chevron-down"></span>
 						</a>
 					</h4>
@@ -204,23 +204,21 @@
 					<div class="panel-body">
 						<div style="position:relative;">
 							<div align="right" style=" font-size:18px; padding-top:15px; position:absolute; 
-								background-color: #EBECED; right:0px; height:49px; top:-64px; z-index:1025;">
+								background:url(images/restaurst15-1.jpg) right 32px center; right:0px; height:49px; top:-64px; z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-									<span class="glyphicon glyphicon-chevron-up" style="color:#FF9C00;"></span>
+									<span class="glyphicon glyphicon-chevron-up" style="color:#fff;"></span>
 								</a>
 							</div>
 						</div>
-						
-							<!-- 显示当前商家所有优惠信息 -->
-							<c:forEach items="${restaurant.pageDiscountList}" var="discount" begin="0" step="1" varStatus="status">
-								<div class="row ">
-									<div class = "col-md-12">
-										<h5>${discount.content}</h5>
-									</div>
+						<!-- 显示当前商家所有优惠信息 -->
+						<c:forEach items="${restaurant.pageDiscountList}" var="discount" begin="0" step="1" varStatus="status">
+							<div class="row ">
+								<div class = "col-md-12">
+									<h5>${discount.content}</h5>
 								</div>
-								<div class="rest-miaodi"></div>
-							</c:forEach>
-					
+							</div>
+							<div class="rest-miaodi"></div>
+						</c:forEach>
 					</div>
 				</div>
 			</div>

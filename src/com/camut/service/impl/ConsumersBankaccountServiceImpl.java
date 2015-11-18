@@ -29,14 +29,14 @@ public class ConsumersBankaccountServiceImpl implements ConsumersBankaccountServ
 	private ConsumersDao  consumerDao;
 
 	/**
-	 * @Title: getConsumersBankaccountById
-	 * @Description: 通用户id查找用户 银行卡
-	 * @param:    id
+	 * @Title: getConsumersBankaccountByuuId
+	 * @Description: 通用户uuid查找用户 银行卡
+	 * @param:    uuid
 	 * @return: List<ConsumerBankaccountApiModel>
 	 */
 	@Override
-	public List<CardEntity> getConsumersBankaccountById(long id) {
-		Consumers consumers=consumerDao.getConsumersById(id);		
+	public List<CardEntity> getConsumersBankaccountByUuid(String consumerUuid) {
+		Consumers consumers=consumerDao.getConsumersByUuid(consumerUuid);		
 		return CommonUtil.listAllCards(consumers.getStripeCustomerId());
 	}
 
@@ -47,11 +47,11 @@ public class ConsumersBankaccountServiceImpl implements ConsumersBankaccountServ
 	 * @return: int -1表示添加失败，1表示添加成功    -1: registration failed
 	 */
 	@Override
-	public int addBankaccount(ConsumerBankaccountApiModel consumerBankaccountApiModel,String stripeConsumerId) {
+	public int addBankaccount(ConsumerBankaccountApiModel consumerBankaccountApiModel,String stripeConsumerUuid) {
 		Consumers consumers = new Consumers();
-		consumers.setId(consumerBankaccountApiModel.getConsumerId());
-		consumers=consumerDao.getConsumersById(consumerBankaccountApiModel.getConsumerId());	
-		consumers.setStripeCustomerId(stripeConsumerId);		
+		consumers.setUuid(consumerBankaccountApiModel.getConsumerUuid());
+		consumers=consumerDao.getConsumersByUuid(consumerBankaccountApiModel.getConsumerUuid());	
+		consumers.setStripeCustomerId(stripeConsumerUuid);		
 		return consumerDao.updateConsumers(consumers);
 	}
 

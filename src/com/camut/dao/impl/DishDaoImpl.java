@@ -26,7 +26,7 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 	 * @return: List<Dish>
 	 */
 	@Override
-	public List<Dish> getdish(long restaurantId, int type) {
+	public List<Dish> getdish(String restaurantUuid, int type) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*if (type == 1) {// 外送
 			int a = 1;
@@ -57,8 +57,8 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 			map.put("d", d);
 		}*/
 		//String hql = "from Dish di where di.restaurantId=:restaurantId and (di.isPickup=:a or di.isPickup=:b or di.isPickup=:c or di.isPickup=:d) and di.status=0";
-		String hql = "from Dish di where di.restaurantId=:restaurantId and di.status=0"; 
-		map.put("restaurantId", restaurantId);
+		String hql = "from Dish di where di.restaurantUuid=:restaurantUuid and di.status=0"; 
+		map.put("restaurantUuid", restaurantUuid);
 		List<Dish> dList = this.find(hql, map);
 		return dList;
 	}
@@ -85,9 +85,9 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 	 */
 	@Override
 	public List<Dish> getAllDish(Restaurants restaurants) {
-		String hql = "from Dish d where d.restaurantId=:id order by d.status";
+		String hql = "from Dish d where d.restaurantUuid=:uuid order by d.status";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("id", restaurants.getId());
+		map.put("uuid", restaurants.getUuid());
 		return this.find(hql, map);
 	}
 
@@ -129,7 +129,7 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 	 * @return: List<Dish>
 	 */
 	@Override
-	public List<Dish> getDishMenu(long restaurantId, int type) {
+	public List<Dish> getDishMenu(String restaurantUuid, int type) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*if (type == 1) {// 外送
 			int a = 1;
@@ -159,11 +159,11 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 			map.put("c", c);
 			map.put("d", d);
 		}*/
-		String hql = "from Dish di where di.restaurantId=:restaurantId and di.status=0";//and (di.isPickup=:a or di.isPickup=:b or di.isPickup=:c or di.isPickup=:d)
+		String hql = "from Dish di where di.restaurantUuid=:restaurantUuid and di.status=0";//and (di.isPickup=:a or di.isPickup=:b or di.isPickup=:c or di.isPickup=:d)
 		/*if(dishName != null && dishName.length() > 0){
 			hql += " and di.enName like '%"+dishName+"%'";
 		}*/
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<Dish> dList = this.find(hql, map);
 		return dList;
 	}
@@ -176,9 +176,9 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 	 */
 	@Override
 	public List<Dish> getAllAvailableDish(Restaurants restaurants) {
-		String hql = "from Dish d where d.restaurantId=:id and d.status=0 order by d.createdate desc";
+		String hql = "from Dish d where d.restaurantUuid=:uuid and d.status=0 order by d.createdate desc";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("id", restaurants.getId());
+		map.put("uuid", restaurants.getUuid());
 		return this.find(hql, map);
 	}
 	
@@ -189,10 +189,10 @@ public class DishDaoImpl extends BaseDao<Dish> implements DishDao {
 	 * @param: long restaurantsMenuId
 	 * @return List<Dish>  
 	 */
-	public List<Dish> getDishListByRestaurantsMenuIdAndRestaurantsId(int restaurantId,long restaurantsMenuId){
-		String hql = "from Dish d where d.restaurantId=:restaurantId and d.restaurantsMenu.id=:restaurantsMenuId order by d.enName asc";
+	public List<Dish> getDishListByRestaurantsMenuIdAndRestaurantsId(String restaurantUuid,long restaurantsMenuId){
+		String hql = "from Dish d where d.restaurantUuid=:restaurantUuid and d.restaurantsMenu.id=:restaurantsMenuId order by d.enName asc";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("restaurantsMenuId", restaurantsMenuId);
 		return this.find(hql, map);
 		

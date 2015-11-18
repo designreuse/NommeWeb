@@ -2,22 +2,22 @@ $(function(){
 	//显示等待遮罩层
     $("#bg").css("display", "block");
 	$("#show").css("display", "block");
-	$.cookie("restaurantId", $("#restaurantId").val(),{expires:10,path: '/' });  //设置商家Id到cookie
+	$.cookie("restaurantUuid", $("#restaurantUuid").val(),{expires:10,path: '/' });  //设置商家Id到cookie
 	$.cookie("taxRate",$("#taxRate").val(),{expires:10,path: '/' });//设置商家税率
 	
 	
-	var restaurantId = $("#restaurantId").val();
-	var showLoginModalByDineInClick = false;//用于判断跳出登录的模态框是否是Dine in 点击触发的，如果是，则在关闭时要检查是否登录了，如果模态框关闭且是未登录，则要跳回到原来的类型去
-	var flagOpenTime = false;//标记商家营业时间是否可用
+	//var stayOrClearCartClick = false;//用于判断是否清楚购物车模态框关闭时，是否的点击的清空或保留的两个按钮
+	//var showLoginModalByDineInClick = false;//用于判断跳出登录的模态框是否是Dine in 点击触发的，如果是，则在关闭时要检查是否登录了，如果模态框关闭且是未登录，则要跳回到原来的类型去
+	//var flagOpenTime = false;//标记商家营业时间是否可用
+	//var orderTimeIsAfterNow = false;//订单时间是否在现在时间之后
+	//var currentPreSelectFood = "";//reservation 点击pre-select food 时保存当前订单的字符串，用于加载到dinein下拉框
+	var restaurantUuid = $("#restaurantUuid").val();
 	var checkoutClick = false;//用于判断是否是点击了checkout才显示的登录模态框
-	var stayOrClearCartClick = false;//用于判断是否清楚购物车模态框关闭时，是否的点击的清空或保留的两个按钮
 	var orderTimeIsOk = false;//订单的时间是否在店家营业时间内
-	var orderTimeIsAfterNow = false;//订单时间是否在现在时间之后
 	
 	var cartOrderType = $("input[name='orderType']").val();//$("#orderType").val();//购物车中的订单类型
 	var resNewReservation = false;//reservation仅订桌按钮
 	var newOrderType = 2;//
-	var currentPreSelectFood = "";//reservation 点击pre-select food 时保存当前订单的字符串，用于加载到dinein下拉框
 	var reservationOrderId = 0;
 
 //------------------------------------打开页面根据商家拥有的订餐权限 初始化 pickup Delivery Dinein 按钮 和加载菜品----------------------------
@@ -93,11 +93,11 @@ $(function(){
 	(function getDishes(){
 		$("#bg").css("display", "block");
 		$("#show").css("display", "block");
-		var restaurantId = $("#restaurantId").val();
+		var restaurantUuid = $("#restaurantUuid").val();
 		$.ajax({
 			type:'post',
 			url:appPath+'/restaurantMenu/getDishes',
-			data:{"restaurantId":restaurantId},
+			data:{"restaurantUuid":restaurantUuid},
 			success:function(data){
 				$("#accordion").html(data);
 				$("#bg").css("display", "none");//隐藏等待层
@@ -110,18 +110,18 @@ $(function(){
 	var consumerLat = $.cookie("map-Lat");//? $.cookie("map-Lat") : $.cookie("browser-Lat");
 	/*刷新购物车方法*/
 	function refreshCart (){
-		var consumerId = $("#currentConsumerId").val();
+		var consumerUuid = $("#currentConsumerUuid").val();
 		$("#bg").css("display", "block");//显示等待遮罩层
 		$("#show").css("display", "block");
 		$.ajax({
     		type: 'post',
     		url: appPath+'/consumers/showCart',
-    		data: {"consumerLng":consumerLng,"consumerLat":consumerLat,"consumerId":consumerId,"orderType":newOrderType},
+    		data: {"consumerLng":consumerLng,"consumerLat":consumerLat,"consumerUuid":consumerUuid,"orderType":newOrderType},
     		success: function(data){
     			$("#bg").css("display", "none");
     			$("#show").css("display", "none");
     			$("#cartContent").html(data);
-    			var cartRestaurantId = $("#cartContent input[name='cartRestaurantId']").val();
+    			var cartRestaurantUuid = $("#cartContent input[name='cartRestaurantUuid']").val();
     			
     			//以下初始化购物车按钮 10月10日改
     			cartOrderType = $("input[name='orderType']").val();
@@ -151,12 +151,12 @@ $(function(){
 	
 	/*当前用户收藏按钮开关*/
 	function showfavorite (){
-		var restaurantId = $("#restaurantId").val();
-		var consumerId = $("#currentConsumerId").val();
+		var restaurantUuid = $("#restaurantUuid").val();
+		var consumerUuid = $("#currentConsumerUuid").val();
 		$.ajax({
 			type:'post',
 			url:appPath+"/consumer/existFavorites",
-			data:{"consumerId":consumerId,"restaurantId":restaurantId},
+			data:{"consumerUuid":consumerUuid,"restaurantUuid":restaurantUuid},
 			success:function(data){
 				var msg = $.parseJSON(data);
 				if(msg.success){
@@ -171,7 +171,7 @@ $(function(){
 	//index页面的google自动匹配的地址载入到右侧Address中
 	$("div[name='googleMapPlace']").empty().append($("#googleAutocompletePlace").val());
 	
-	if($("#currentConsumerId").val()){//如果用户id有值是true说明是已经登录了
+	if($("#currentConsumerUuid").val()){//如果用户id有值是true说明是已经登录了
 		showfavorite ();
 	}
 	/*返回首页*/
@@ -181,17 +181,17 @@ $(function(){
 	
 	/*切换是否是收藏*/
 	$("img[name='favoriteImg']").click(function(){
-		if(!$("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if(!$("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("#myModal").modal('show');
 		}else{//如果登录了再点收藏按钮
 			var src = $(this).attr("src");
-			var restaurantId = $("#restaurantId").val();
-			var consumerId = $("#currentConsumerId").val();
+			var restaurantUuid = $("#restaurantUuid").val();
+			var consumerUuid = $("#currentConsumerUuid").val();
 			if(src==appPath+"/index/images/collect-1.jpg"){//如果是已经是红色的点击就是删除变灰色
 				$.ajax({
 					type:'post',
 					url:appPath+"/consumer/deleteConsumerFavorite",
-					data:{"consumerId":consumerId,"restaurantId":restaurantId},
+					data:{"consumerUuid":consumerUuid,"restaurantUuid":restaurantUuid},
 					success:function(data){
 						var msg = $.parseJSON(data);
 						if(msg.success){
@@ -204,7 +204,7 @@ $(function(){
 				$.ajax({
 					type:'post',
 					url:appPath+"/consumer/addConsumerFavorite",
-					data:{"consumerId":consumerId,"restaurantId":restaurantId},
+					data:{"consumerUuid":consumerUuid,"restaurantUuid":restaurantUuid},
 					success:function(data){
 						var msg = $.parseJSON(data);
 						if(msg.success){
@@ -223,7 +223,7 @@ $(function(){
 			type:'post',
 			async:false,
 			url: appPath+'/consumers/getRestaurantOpenTimeOfOneDay',
-			data: {"orderDay":orderDay,"restaurantId":restaurantId,"type":orderType},
+			data: {"orderDay":orderDay,"restaurantUuid":restaurantUuid,"type":orderType},
 			success: function(data){
 				var msg = $.parseJSON(data);
 				//console.log(data);
@@ -294,8 +294,8 @@ $(function(){
 	
 	/*异步加载显示可用的reservation订单*/
 	function showReservationOrders (){
-		var restaurantId = $("#restaurantId").val();
-		var consumerId =  $("#currentConsumerId").val();
+		var restaurantUuid = $("#restaurantUuid").val();
+		var consumerUuid =  $("#currentConsumerUuid").val();
 		if($.cookie("cart-orderId")>0){
 			reservationOrderId = $.cookie("cart-orderId");
 		}
@@ -303,7 +303,7 @@ $(function(){
 			type: 'post',
 			async: false,
 			url: appPath+"/consumers/getUnpaidReservationOrders",
-			data: {"restaurantId":restaurantId,"consumerId":consumerId,"currentReservationOrderNumber":reservationOrderId},
+			data: {"restaurantUuid":restaurantUuid,"consumerUuid":consumerUuid,"currentReservationOrderNumber":reservationOrderId},
 			success: function(data){
 				var msg = $.parseJSON(data);
 				if(msg.length==0){
@@ -343,83 +343,16 @@ $(function(){
 		$("#reservationOrdersModal").modal('hide');
 	})
 	
-	
-	/*切换订单类型时用于保存点击之前的orderType和之后的orderType的对象*/
-	//var changOrderType = new Object();
-	//Delivery 1 ; Pick Up :2 ;Reservation:3    默认情况下是显示的是Pick Up 标签的菜品
-	
-	//加载对应订单类型下的菜品
-	//getDishes(cartOrderType);
-	/*var orderType = cartOrderType;
-	function checkOrderType(newOrderType,isByNewReservation){
-		//newOrderType;
-		$("#orderType").val(newOrderType);//设置将要添加的菜品的购物车的类型
-		var cartOrderType= $("input[name='orderType']").val();//获取到购物车的类型，如果购物车为空取到的值为0,Delivery：1 ; Pick Up :2 ;Reservation:3
-		if(cartOrderType!=0 && cartOrderType!=newOrderType){//如果购物车不为空，并且购物车里的类型和点击的order information按钮的类型不同时，提示是否清空之前的购物车内容
-			var oldCartTypeName = "";
-			var oldOrderTypeButtonId="";
-			var newCartTypeName = "";
-			if(cartOrderType == 1){
-				changOrderType.oldCartTypeName = "Delivery";
-				changOrderType.oldOrderTypeButtonId = "deliveryButton";
-			}else if(cartOrderType == 2){
-				changOrderType.oldCartTypeName = "Pick Up";
-				changOrderType.oldOrderTypeButtonId = "pickupButton";
-			}else if(cartOrderType==3){
-				changOrderType.oldCartTypeName = "Dine in";
-				changOrderType.oldOrderTypeButtonId = "dineInButton";
-			}
-			if(newOrderType == 1){
-				changOrderType.newCartTypeName = "Delivery";
-				changOrderType.newOrderTypeButtonId = "deliveryButton";
-				changOrderType.isPickup = 1;//用于刷新菜单
-			}else if(newOrderType == 2){
-				changOrderType.newCartTypeName = "Pick Up";
-				changOrderType.newOrderTypeButtonId = "pickupButton";
-				changOrderType.isPickup = 2;
-			}else if(newOrderType==3){
-				changOrderType.newCartTypeName = "Dine in";
-				changOrderType.newOrderTypeButtonId = "dineInButton";
-				changOrderType.isPickup = 3;
-			}
-			//切换订单类型的提示信息
-			var cartChangeTip = "The Cart Type is " + changOrderType.oldCartTypeName + ", do you want to chang order type and clear Cart ?";
-			$("div[name='clearCartTip']").text(cartChangeTip);
-			$("#clearCart").text("Clear Cart and goto " + changOrderType.newCartTypeName);
-			$("#stayOrginalCart").text("Stay "+changOrderType.oldCartTypeName);
-			$("#isEmptyCartModal").modal('show');
-		}else if(cartOrderType==newOrderType){
-			if(cartOrderType == 1){
-				changOrderType.oldCartTypeName = "Delivery";
-				changOrderType.oldOrderTypeButtonId = "deliveryButton";
-			}else if(cartOrderType == 2){
-				changOrderType.oldCartTypeName = "Pick Up";
-				changOrderType.oldOrderTypeButtonId = "pickupButton";
-			}else if(cartOrderType==3){
-				changOrderType.oldCartTypeName = "Dine in";
-				changOrderType.oldOrderTypeButtonId = "dineInButton";
-			}
-		}else{
-			getDishes(newOrderType);//获取菜品列表
-			if(newOrderType == 3 && !isByNewReservation){
-				showReservationOrders();
-			}
-			if(cartOrderType != 3 && !isByNewReservation){
-				showReservationOrders();
-			}
-		}
-	}*/
-	
 	$("#clearCart").click(function(){
 		clearCart();
 	})
 	/*清空购物车*/
 	function clearCart(){
-		var consumerId = $("#currentConsumerId").val();
+		var consumerUuid = $("#currentConsumerUuid").val();
 		$.ajax({
 			type:'post',
 			url:appPath+'/consumers/clearCart',
-			data:{"consumerId":consumerId},
+			data:{"consumerUuid":consumerUuid},
 			success:function(data){
 				refreshCart ();
 				getDishes(changOrderType.isPickup);
@@ -431,16 +364,16 @@ $(function(){
 		$("#isEmptyCartModal").modal('hide');
 	}
 	$("#stayOrginalCart").click(function(){
-		var cartRestaurantId = $("input[name='cartRestaurantId']").val();
-		if(cartRestaurantId){
-			window.location = appPath+"/index/restaurantmenu?restaurantId="+cartRestaurantId;
+		var cartRestaurantUuid = $("input[name='cartRestaurantUuid']").val();
+		if(cartRestaurantUuid){
+			window.location = appPath+"/index/restaurantmenu?restaurantUuid="+cartRestaurantUuid;
 		}
 	})
 	
 	
 	/*类型按钮 Delivery*/
 	$("#deliveryButton").click(function(){
-		if($("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if($("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("input[name='orderType']").val(1);
 			$("#orderType").val(1);
 			loadOrderDate(1,"orderTime-day","orderTime-hourAndMinutes");
@@ -458,7 +391,7 @@ $(function(){
 		$("#biaodan").attr("class","tab-pane active");
 		$("#tianxie").attr("class","tab-pane");
 		reservationOrderId = 0;
-		if($("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if($("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("input[name='orderType']").val(2);
 			$("#orderType").val(2);
 			newOrderType = 2;
@@ -471,7 +404,7 @@ $(function(){
 	})
 	/*类型按钮 Dine in*/
 	$("#dineInButton").click(function(){
-		if($("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if($("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("input[name='orderType']").val(3);
 			$("#orderType").val(3);
 			newOrderType = 3;
@@ -659,54 +592,6 @@ $(function(){
 		return flag;
 	}
 	
-	//获取日期控件产生的日期字符串装换成24小时的日期格式字符串：yyyy-MM-dd HH:mm:ss 并返回一个标准的日期格式的数据
-	/*function formatTime(timeArray){
-		var month ;//February  March  April  May  June  July  Aguest  September  October  November  December
-		if(timeArray[1]=="January"){
-			month = "01";
-		}else if(timeArray[1]=="February"){
-			month = "02";
-		}else if(timeArray[1]=="March"){
-			month = "03";
-		}else if(timeArray[1]=="April"){
-			month = "04";
-		}else if(timeArray[1]=="May"){
-			month = "05";
-		}else if(timeArray[1]=="June"){
-			month = "06";
-		}else if(timeArray[1]=="July"){
-			month = "07";
-		}else if(timeArray[1]=="August"){
-			month = "08";
-		}else if(timeArray[1]=="September"){
-			month = "09";
-		}else if(timeArray[1]=="October"){
-			month = "10";
-		}else if(timeArray[1]=="November"){
-			month = "11";
-		}else if(timeArray[1]=="December"){
-			month = "12";
-		}
-		function change24Hour(timeArray){
-			var time = timeArray[5];
-			var ampm = timeArray[6];
-			var HHMM = time.split(":");//获取小时
-			HHMM.push("00");
-			if(ampm == "PM"){
-				if(HHMM[0]!="12"){//如果不等于12，就需要在hour后面加12小时成为24小时格式
-					HHMM[0] = parseInt(HHMM[0])+12;
-				}
-			}
-			time = HHMM.join(":");
-			return time;
-		}
-		var hourAndMinute = change24Hour(timeArray);
-		var tt = timeArray[2]+"-"+month+"-"+timeArray[0]+" "+hourAndMinute;
-		var str = tt.replace(/-/g,"/");
-		var date = new Date(str);
-		return date;
-	}*/
-	
 	//验证订桌的日期
 	var isTodayReservation = false;//存储reservation订单是否是当天的订单,默认不是
 	function reservationTimeValidate(elementId,x,y){
@@ -740,7 +625,6 @@ $(function(){
 		return flag;
 	}
 	
-	
 	//---------------------------------------------------Reservatin  订桌位--------------------------------------------------------
 
 	var flag1 = false;//firstName
@@ -753,7 +637,7 @@ $(function(){
 	/*reservation 预定座位的按钮点击事件*/
 	$("button[name='reservation']").click(function(){
 		resNewReservation = false;
-		if(!$("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if(!$("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("#myModal").modal('show');
 		}else{//如果登录了再点收藏按钮
 			flag1 = false;//firstName
@@ -779,7 +663,6 @@ $(function(){
 		}
 	})
 	
-	
 	$("#res-firstName").focus(function(){
 		hidetips("res-firstName");//参数说明: 表单元素id值
 	}).blur(function(){
@@ -800,21 +683,6 @@ $(function(){
 	}).blur(function(){
 		flag4 = loginEmailValidate("res-email",110,38);
 	});
-	/*$("#res-time").focus(function(){
-		hidetips("res-time");
-	});*/
-	/*$("#res-peopleNumber").focus(function(){
-		hidetips("res-peopleNumber");
-	}).blur(function(){
-		flag6 = peopleNumberValidate("res-peopleNumber",110,38);
-	});*/
-	
-	
-	//peopleNumberValidate(elementId,x,y)
-	
-/*	$("#res-firstName").focus(function(){
-		showshow();//参数说明: 表单元素id值
-	})*/
 	
 	
 	/*保存订桌信息*/
@@ -836,14 +704,10 @@ $(function(){
 		if($("#res-orderHourAndMinutes").val()==0){
 			showtips("res-orderDay",'Please select another day time',110,44);
 			flag5 = false;
-			//flag5 = ("res-time",110,38);
-			
 		}else{
 			flag5 = true;
 		}
-		/*if(!flag6){
-			flag6 = peopleNumberValidate("res-peopleNumber",110,38);
-		}*/
+
 		if(flag1 && flag2 && flag3 && flag4 && flag5 && flag6){
 			var resObj = new Object();
 			resObj.firstName = $.trim($("#res-firstName").val());
@@ -854,8 +718,8 @@ $(function(){
 			resObj.reservationTime = $.trim($("#res-orderDay").val()) + " " + $.trim($("#res-orderHourAndMinutes").val());
 			resObj.peopleNumber = $.trim($("#res-peopleNumber").val());
 			resObj.specialRequest = $.trim($("#res-specialRrequest").val());
-			resObj.restaurantId = $("#restaurantId").val();//商家id
-			resObj.consumerId = $("#currentConsumerId").val();//用户id
+			resObj.restaurantUuid = $("#restaurantUuid").val();//商家id
+			resObj.consumerUuid = $("#currentConsumerUuid").val();//用户id
 			resObj.orderType = 3;//订单类型，reservation：3
 			var jsonResObj = JSON.stringify(resObj);
 			$.ajax({
@@ -868,10 +732,8 @@ $(function(){
 					if(msg.success){//保存reservation成功
 						orderId = msg.flag;
 						$("#reservationOrderId").val(msg.flag);//设置当前reservation订单id到购物车上面的一个隐藏控件
-						//$("#dishDialogContent #cart-orderId").val(msg.flag);
 						$.cookie("cart-orderId", msg.flag,{expires:10,path: '/' })
 						$.cookie("currentReservationOrderId", msg.flag,{expires:10,path: '/' });  //设置商家Id到cookie
-						//showReservationOrders ();//重新加载reservation下拉框
 						$("#dineInButton").click();
 					}else{
 						//如果保存reservation不成功，就显示提示信息
@@ -895,14 +757,6 @@ $(function(){
 		return orderId;
 	}
 	
-	
-	/*完成订桌后紧接着就点菜*/
-	/*function reservationAndGotoOrderDish(){
-		var orderId = addReservation();
-		//addReservation();
-		
-	}*/
-	
 	/**调用时间数据加载reservation的可用桌位*/
 	function loadReserationPeopleNumber(){
 		//时间正确加载的情况下，加载桌位
@@ -911,7 +765,7 @@ $(function(){
 			$.ajax({
 				type: 'post',
 				url: appPath+'/api/restaurant/tablecount',
-				data:{"restaurantId":restaurantId,"orderDate":orderDate},// restaurantId,String orderDate
+				data:{"restaurantUuid":restaurantUuid,"orderDate":orderDate},// restaurantUuid,String orderDate
 				success:function(data){
 					var msg = $.parseJSON(data);
 					if(msg.flag==1){//获取到有座位
@@ -947,9 +801,6 @@ $(function(){
 		}else{
 			hidetips("res-orderDay");
 			flag5 = true;
-			//var timeArray = orderTime.split(" ");// 0:日   1: 月 2 年 5时分 6：AM/PM
-			//var date = new Date(formatTime(timeArray));
-			//var dateOrderDate2 = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
 		}
 	})
 	
@@ -958,7 +809,6 @@ $(function(){
 		reservationOrderId = 0;
 		resNewReservation = true;
 		var orderId =  addReservation(1);
-		
 		if(orderId>0){//如果保存成功，orderId有值
 			//$("#reservationOrderId").val();
 			$("#bg").css("display", "none");
@@ -975,7 +825,6 @@ $(function(){
 	
 	/*订桌模态框点击 提交订桌并点菜    ||  当不是当天的订单并选择现在点菜时*/
 	$("#res-toSelectFood").click(function(){
-		
 		resNewReservation = true;
 		isByNewReservation = true;
 		var orderType=3;//订单类型为3
@@ -986,24 +835,6 @@ $(function(){
 			$.cookie("cart-orderId", orderId,{expires:10,path: '/' });//保存reservation的订单id 
 			$("#reservationOrderId").val(orderId);//设置当前保存成功的reservation订单Id到购物车上面的一个隐藏控件，用于checkout的时候将购物车关联得到该id的订单
 			$("#reservationModal").modal('hide');
-			//orderType = 3;
-			//一下注释，用于之前版本的判断是否是当天的订单 而决定是否跳出$("#waitAffirmModal").modal的模态框
-			/*var theDay = new Date();
-			var month = theDay.getMonth()+1+"";
-			if(month.length<2){
-				month = "0"+month;
-			}
-			var day = theDay.getDate()+"";
-			if(day.length<2){
-				day = "0"+day;
-			}
-			var dayStr = theDay.getFullYear()+"-"+month+"-"+day;
-			var newReservationOrderDate = $.trim($("#res-orderDay").val());
-			if(dayStr==newReservationOrderDate){
-				$("#waitAffirmModal").modal('show');
-			}else{
-				$("#dineInButton").click();
-			}*/
 			$("#dineInButton").click();
 		}
 	})
@@ -1016,78 +847,15 @@ $(function(){
 	
 	/*reservation成功后是否点菜的去点菜按钮*/
 	$("#isOrderDishToChooseDish").click(function(){
-		//$("#reservationModal").modal('hide');
 		$("#isOrderDishModal").modal('hide');
-		//$("#dineInButton").click();
-		//isDineInClick = true;//标志是否是DineIn的点击，用于确认清楚购物车后是否显示选择reservation下拉框的模态框
 		orderType = 3;
-		//isByNewReservation = true;//标注是否是一个新订单
 		$("#dineInButton").click();
-		//checkOrderType(3,isByNewReservation);//第一个参数说明将要处理的订单购物车类型是3：dine in类型的，第二个参数用于判断是否是通过完成下订单后去调用的，如果是，就不需要显示选择订单列表的模态框了
-		
-		
 	})
 
-	/*$("#isOrderDishToChooseDish").click(function(){
-		isByNewReservation = true;//标注是否是一个新订单
-	})*/
 	
 	$("#myModal").on('hidden.bs.modal',function(){
-		
-		
-		/*if(showLoginModalByDineInClick){
-			if(!$("#currentConsumerId").val()){//判断是否已经登录，如果没有登录 触发原来的按钮，返回到原来的购物车订单类型
-				var cartOrderType= $("input[name='orderType']").val();//获取到购物车的类型，如果购物车为空取到的值为0,Delivery：1 ; Pick Up :2 ;Reservation:3
-				if(cartOrderType == 1){
-					$("#deliveryButton").click();
-				}else if(cartOrderType == 2){
-					$("#pickupButton").click();
-				}
-			}
-		}*/
-		/*if(checkoutClick){
-			if($("#currentConsumerId").val()){//判断是否已经登录，如果没有登录 触发原来的按钮，返回到原来的购物车订单类型
-				window.location = appPath+"/index/regist"; 
-			}
-		}
-		showLoginModalByDineInClick = false;//重新设置，是否是Dine in点击的值为false
-		checkoutClick = false;*/
+
 	});
-	
-	
-	/*$("#isEmptyCartModal").on('hidden.bs.modal',function(){
-		if(!stayOrClearCartClick){
-			var cartOrderType= $("input[name='orderType']").val();//获取到购物车的类型，如果购物车为空取到的值为0,Delivery：1 ; Pick Up :2 ;Reservation:3
-			if(cartOrderType == 1){
-				$("#deliveryButton").click();
-			}else if(cartOrderType == 2){
-				$("#pickupButton").click();
-			}
-		}
-		stayOrClearCartClick = false;
-	});*/
-	
-	//var orderTime = var selectTime = $.trim($("#"+elementId).val());
-	/*function validateOrderTime(orderTime,cartOrderType){
-		var timeArray = orderTime.split(" ");//0:日   1: 月 2 年 5时分 6：AM/PM
-		var dateOrderDate = formatTime(timeArray);//日期控件的内容转换成日期格式的数据
-		$.ajax({
-			type: 'post',
-			async: false,
-			url: appPath+'/consumers/validateOrderTime',
-			data:{orderTime:dateOrderDate,restaurantId:restaurantId,orderType:cartOrderType},
-			success: function(data){
-				var msg = $.parseJSON(data);
-				if(msg.success){
-					orderTimeIsOk = true;
-				}else{
-					orderTimeIsOk = false;
-				}
-			}
-		})
-	}*/
-	
-	
 	
 	/*转到下一个页面 填写收货人信息*/
 	$("button[name='checkout']").click(function(){
@@ -1124,7 +892,7 @@ $(function(){
 		}else {
 			orderTime = $.trim($("#orderTime-day").val())+" "+$.trim($("#orderTime-hourAndMinutes").val());
 		}
-		if(!$("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if(!$("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("#myModal").modal('show');
 			return;
 		}else if(parseFloat($("#subTotal").text())<=0){//未点菜
@@ -1156,14 +924,14 @@ $(function(){
 			var deliveryFee = $("#deliveryFee").text();
 			var salesTax = parseFloat($("#salesTax").text());
 			var cartTotal = parseFloat(salesTax) + parseFloat(subTotal);
-			var consumerId = $("#currentConsumerId").val();
+			var consumerUuid = $("#currentConsumerUuid").val();
 			var cartOrderType2 = $("input[name='orderType']").val();
 			$.cookie("subTotal", subTotal,{expires:10,path: '/' });//设置菜品的总金额到cookie用于后一个页面计算配送费
 			saveChooseOrderDate(cartOrderType);//保存当前选中的时间，用于其他页面点击chang your order 时初始化购物车的时间
 			$.ajax({
 				type: 'post',
 				url: appPath+'/consumers/checkout',
-				data: {"dishFee":subTotal,"logistics":deliveryFee,"tax":salesTax,"total":cartTotal,"consumerId":consumerId,"orderTime":orderTime,"orderId":orderId,"orderType":cartOrderType2},
+				data: {"dishFee":subTotal,"logistics":deliveryFee,"tax":salesTax,"total":cartTotal,"consumerUuid":consumerUuid,"orderTime":orderTime,"orderId":orderId,"orderType":cartOrderType2},
 				success: function(data){
 					var msg = $.parseJSON(data);
 					if(msg.success){
@@ -1181,16 +949,11 @@ $(function(){
 		}
 	});
 	
-	
-	
 	$("#reservationOrderSelect").change(function(){//修改选择一个reservation订单时间，将其保存到购物车中去
 		reservationOrderId=$(this).val();
 		$("#reservationOrderId").val(reservationOrderId);
 		$.cookie("currentReservationOrderId", reservationOrderId,{expires:10,path: '/' });  //设置商家Id到cookie
 	})
-
-	//$("#bg").css("display", "none");//隐藏等待层
-	//$("#show").css("display", "none");
 });
 
 
@@ -1445,12 +1208,12 @@ $(function(){
 					discountType = $(this).attr("title");
 				}
 				if(oldDiscountId != newDiscountId){
-					var consumerId = $("#currentConsumerId").val();
+					var consumerUuid = $("#currentConsumerUuid").val();
 					$.ajax({
 						type:'post',
 						url:appPath+"/consumers/chooseDiscount",
 						async: false,
-						data:{"oldDiscountId":oldDiscountId,"newDiscountId":newDiscountId, "consumerId":consumerId},
+						data:{"oldDiscountId":oldDiscountId,"newDiscountId":newDiscountId, "consumerUuid":consumerUuid},
 						success: function(data){
 							var msg = $.parseJSON(data);
 							var newDiscountObj = null;
@@ -1475,22 +1238,22 @@ $(function(){
 		})
 	});
 	$("#cartContent").on("click", "a[name='cart-restaurantName']", function(){
-		var cartRestaurantId = $("input[name='restaurantId']").val();
-		var currentRestaurantId = $("#restaurantId").val();//当前餐厅id
+		var cartRestaurantUuid = $("input[name='restaurantUuid']").val();
+		var currentRestaurantUuid = $("#restaurantUuid").val();//当前餐厅id
 		
-		if(cartRestaurantId!=currentRestaurantId){
+		if(cartRestaurantUuid!=currentRestaurantUuid){
 			$("#getoCartRestaurant").submit();
 		}
 	});
 
 	(function getCartId (){
-		var cartRestaurantId = $("input[name='cartRestaurantId']").val();
-		//console.log("cartRestaurantId:"+cartRestaurantId);
-		if(cartRestaurantId){
-			//alert(cartRestaurantId);
-			$.cookie("cartRestaurantId", cartRestaurantId,{expires:10,path: '/' });  //设置购物车的商家Id到cookie
+		var cartRestaurantUuid = $("input[name='cartRestaurantUuid']").val();
+		//console.log("cartRestaurantUuid:"+cartRestaurantUuid);
+		if(cartRestaurantUuid){
+			//alert(cartRestaurantUuid);
+			$.cookie("cartRestaurantUuid", cartRestaurantUuid,{expires:10,path: '/' });  //设置购物车的商家Id到cookie
 		}else{
-			$.cookie("cartRestaurantId", "0",{expires:10,path: '/' });
+			$.cookie("cartRestaurantUuid", "0",{expires:10,path: '/' });
 		}
 	})();
 	
@@ -1498,19 +1261,19 @@ $(function(){
 	var consumerLat = $.cookie("map-Lat");//? $.cookie("map-Lat") : $.cookie("browser-Lat");
 	/*刷新购物车方法*/
 	function refreshCart (){
-		var consumerId = $("#currentConsumerId").val();
+		var consumerUuid = $("#currentConsumerUuid").val();
 		var newOrderType = $("input[name='orderType']").val();
 		$("#bg").css("display", "block");//显示等待遮罩层
 		$("#show").css("display", "block");
 		$.ajax({
     		type: 'post',
     		url: appPath+'/consumers/showCart',
-    		data: {"consumerLng":consumerLng,"consumerLat":consumerLat,"consumerId":consumerId,"orderType":newOrderType},
+    		data: {"consumerLng":consumerLng,"consumerLat":consumerLat,"consumerUuid":consumerUuid,"orderType":newOrderType},
     		success: function(data){
     			$("#bg").css("display", "none");
     			$("#show").css("display", "none");
     			$("#cartContent").html(data);
-    			var cartRestaurantId = $("#cartContent input[name='cartRestaurantId']").val();
+    			var cartRestaurantUuid = $("#cartContent input[name='cartRestaurantUuid']").val();
     			
     			//以下初始化购物车按钮 10月10日改
     			cartOrderType = $("input[name='orderType']").val();
@@ -1553,12 +1316,12 @@ $(function(){
 		$('#paging').bootstrapPaginator(options);
 	}
 	//异步获取订单列表
-	function getPagingDatas(url, restaurantId, currentPage, limit){
+	function getPagingDatas(url, restaurantUuid, currentPage, limit){
 		$.ajax({
 			type:'post',
 			url: url,
 			async:false,
-			data: {"restaurantId":restaurantId, "offset":currentPage, "limit":limit},
+			data: {"restaurantUuid":restaurantUuid, "offset":currentPage, "limit":limit},
 			success:function(data){
 				/*$("#bg").css("display", "none");//隐藏等待层
 				$("#show").css("display", "none");*/

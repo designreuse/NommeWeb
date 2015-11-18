@@ -23,12 +23,10 @@ public class ConsumerController {
 	 */
 	@RequestMapping(value="existFavorites", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage existFavoritesByConsumerIdAndrestaurantId(String consumerId, String restaurantId){
+	public PageMessage existFavoritesByConsumerIdAndrestaurantId(String consumerUuid, String restaurantUuid){
 		PageMessage pm = new PageMessage();
-		if(StringUtil.isNotEmpty(consumerId) && StringUtil.isNotEmpty(restaurantId)){
-			long cId = Long.parseLong(consumerId);
-			int rId = Integer.parseInt(restaurantId);
-			int temp = consumersFavoritesService.existFavoritesByConsumerIdAndrestaurantId(cId,rId);
+		if(StringUtil.isNotEmpty(consumerUuid) && StringUtil.isNotEmpty(restaurantUuid)){
+			int temp = consumersFavoritesService.existFavoritesByConsumerUuidAndrestaurantUuid (consumerUuid,restaurantUuid);
 			if(temp>0){
 				pm.setSuccess(true);
 			}else{
@@ -48,12 +46,10 @@ public class ConsumerController {
 	 */
 	@RequestMapping(value="addConsumerFavorite", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage addConsumerFavorite(String consumerId, String restaurantId){
+	public PageMessage addConsumerFavorite(String consumerUuid, String restaurantUuid){
 		PageMessage pm = new PageMessage();
-		if(StringUtil.isNotEmpty(consumerId) && StringUtil.isNotEmpty(restaurantId)){
-			long cId = Long.parseLong(consumerId);
-			int rId = Integer.parseInt(restaurantId);
-			long temp = consumersFavoritesService.addConsumerFavorite(cId,rId);
+		if(StringUtil.isNotEmpty(consumerUuid) && StringUtil.isNotEmpty(restaurantUuid)){
+			long temp = consumersFavoritesService.addConsumerFavorite(consumerUuid,restaurantUuid);
 			if(temp>=0){
 				pm.setSuccess(true);
 			}else{
@@ -73,12 +69,10 @@ public class ConsumerController {
 	 */
 	@RequestMapping(value="deleteConsumerFavorite", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage deleteConsumerFavorite(String consumerId, String restaurantId){
+	public PageMessage deleteConsumerFavorite(String consumerUuid, String restaurantUuid){
 		PageMessage pm = new PageMessage();
-		if(StringUtil.isNotEmpty(consumerId) && StringUtil.isNotEmpty(restaurantId)){
-			int cId = Integer.parseInt(consumerId);
-			int rId = Integer.parseInt(restaurantId);
-			int temp = consumersFavoritesService.deleteConsumerFavorite(cId,rId);
+		if(StringUtil.isNotEmpty(consumerUuid) && StringUtil.isNotEmpty(restaurantUuid)){
+			int temp = consumersFavoritesService.deleteConsumerFavorite(consumerUuid,restaurantUuid);
 			if(temp>=0){
 				pm.setSuccess(true);
 			}else{

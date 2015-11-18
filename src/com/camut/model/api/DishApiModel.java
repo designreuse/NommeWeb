@@ -17,7 +17,7 @@ public class DishApiModel implements Comparable<DishApiModel> {
 	 */
 	private static final long serialVersionUID = -7931178112930827393L;
 	private long dishId=0;//菜品id
-	private Long restaurantId;// 商家编号
+	private String restaurantUuid;// 商家编号
 	private String enName="";// 菜品名称
 	private String chName="";// 菜品名称 繁体中文
 	private String enIntro="";// 菜品介绍
@@ -47,11 +47,11 @@ public class DishApiModel implements Comparable<DishApiModel> {
 	public void setDishId(long dishId) {
 		this.dishId = dishId;
 	}
-	public Long getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getEnName() {
 		return enName;

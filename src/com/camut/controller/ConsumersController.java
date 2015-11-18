@@ -103,12 +103,6 @@ public class ConsumersController {
 	@RequestMapping(value="/addCart",method = RequestMethod.POST)
 	@ResponseBody
 	public PageMessage addCart(String cartHeader, HttpServletRequest request) throws Exception{
-		//String ip = GetIpAndMAC.getRemoteIPAddress(request);//获取客户端ip地址
-		//String strMAC = GetIpAndMAC.getMACAddress(ip);//通过ip地址获取客户端MAC地址/,使用MAC地址作为mobileToken
-		//String mobileToken = "{\"mobileToken\":\""+strMAC+"\",";
-		//String str = cartHeader.substring(1, cartHeader.length());
-		//str = mobileToken+str;
-		//System.out.println(str);
 		int temp = cartService.addWebCart(cartHeader);
 		PageMessage pm = new PageMessage();
 		if(temp>0){
@@ -159,18 +153,14 @@ public class ConsumersController {
 	 * @return String  
 	 */
 	@RequestMapping(value="/showCart", method = RequestMethod.POST)
-	public String showCart(Double consumerLng, Double consumerLat,Integer consumerId, Model model, HttpSession session,HttpServletRequest request) throws Exception{
+	public String showCart(Double consumerLng, Double consumerLat,String consumerUuid, Model model, HttpSession session,HttpServletRequest request) throws Exception{
 		CartHeader cartHeader2 = new CartHeader();
-		if(consumerId!=null){
-			cartHeader2 = cartHeaderService.getCatrHeaderByConsumerId(consumerId);
+		if(consumerUuid!=null){
+			cartHeader2 = cartHeaderService.getCatrHeaderByConsumerUuid(consumerUuid);
 		}
 		if(cartHeader2!=null){
 			//刷新时设置该购物车不使用任何优惠券
 			boolean flag12 = false;
-			/*if(StringUtil.isNotEmpty(orderType)){
-				flag12 = true;
-				cartHeader2.setOrderType(Integer.parseInt(orderType));
-			}*/
 			if(cartHeader2 != null && cartHeader2.getDiscountId()!=null){//有购物车，并且购物车里面有优惠券ID
 				cartHeader2.setDiscountId(null);
 				flag12 = true;
@@ -178,11 +168,11 @@ public class ConsumersController {
 			if(flag12){
 				cartHeaderService.updateCartHeader(cartHeader2);//getCartHeaderByMobileToken(mobileToken);
 			}
-			int consumerId2 = 0; 
-			if(consumerId!=null){
-				consumerId2=consumerId;
+			String consumerUuid2 = ""; 
+			if(consumerUuid!=null){
+				consumerUuid2=consumerUuid;
 			}
-			CartHeaderApiModel cartHeaderApiModel = cartService.getCartHeaderApiModelByConsumerId(consumerId2);//consumerLng, consumerLat, 
+			CartHeaderApiModel cartHeaderApiModel = cartService.getCartHeaderApiModelByConsumerUuid(consumerUuid2);//consumerLng, consumerLat, 
 			if(cartHeaderApiModel!=null){
 				if(cartHeaderApiModel.getTax()>0){
 					cartHeaderApiModel.setTax(Math.floor(cartHeaderApiModel.getTax()*100+0.5)/100.0);
@@ -274,30 +264,11 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="clearCart", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage clearCart(Integer consumerId, HttpServletRequest request) throws Exception{
+	public PageMessage clearCart(String consumerUuid, HttpServletRequest request) throws Exception{
 		int temp = 0;
-		if(consumerId!=null){
-			temp=cartService.deleteCartByConsumerId(consumerId);
+		if(consumerUuid!=null){
+			temp=cartService.deleteCartByConsumerUuid(consumerUuid);
 		}
-		/*int temp1 = 0;
-		int temp2 = 0;
-		PageMessage pm = new PageMessage();
-		if(consumerId != null){
-			CartHeader cartHeader =  cartHeaderService.getCatrHeaderByConsumerId(consumerId);//getCartHeader(mobileToken);
-			if(cartHeader!=null){
-				temp1 = cartDishGarnishService.deleteCartDishGarnishByCartHeaderId(cartHeader.getId());
-				if(temp1>0){
-					temp2 = cartItemService.deleteCartItemByCartHeaderId(cartHeader.getId());
-				}
-				if(temp2>0){
-					temp = cartHeaderService.deleteCartHeader(cartHeader);
-				}
-			}else{
-				pm.setSuccess(false);
-			}
-		}else{
-			pm.setSuccess(false);
-		}*/
 		PageMessage pm = new PageMessage();
 		if (temp > 0){
 			pm.setSuccess(true);
@@ -340,17 +311,15 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="getUnpaidReservationOrders", method=RequestMethod.POST)
 	@ResponseBody
-	public List<PageOrderHeader> getUnpaidReservationOrders(String consumerId,String restaurantId,String currentReservationOrderNumber){
+	public List<PageOrderHeader> getUnpaidReservationOrders(String consumerUuid,String restaurantUuid,String currentReservationOrderNumber){
 		List<PageOrderHeader> orderHeaderList = new ArrayList<PageOrderHeader>();
-		if(StringUtil.isNotEmpty(restaurantId) && StringUtil.isNotEmpty(consumerId)){
-			int resId = Integer.parseInt(restaurantId);
-			int conId =  Integer.parseInt(consumerId);
+		if(StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(consumerUuid)){
 			int orderType = GlobalConstant.TYPE_RESERVATION; 
 			long currentOrderNo = 0;
 			if(StringUtil.isNotEmpty(currentReservationOrderNumber)){
 				currentOrderNo = Long.parseLong(currentReservationOrderNumber);
 			}
-			orderHeaderList = orderService.getUnpaidReservationOrders(resId,conId,orderType,currentOrderNo);
+			orderHeaderList = orderService.getUnpaidReservationOrders(consumerUuid,restaurantUuid,orderType,currentOrderNo);
 		}
 		return orderHeaderList;
 	}
@@ -365,12 +334,12 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="chooseDiscount", method = RequestMethod.POST)
 	@ResponseBody
-	public List<PageDiscount> chooseDiscount(String oldDiscountId, String newDiscountId,Integer consumerId, HttpServletRequest request) throws Exception{
+	public List<PageDiscount> chooseDiscount(String oldDiscountId, String newDiscountId, String consumerUuid, HttpServletRequest request) throws Exception{
 		//String ip = GetIpAndMAC.getRemoteIPAddress(request);//获取客户端ip地址
 		//String mobileToken = GetIpAndMAC.getMACAddress(ip);//通过ip地址获取客户端MAC地址/,使用MAC地址作为mobileToken
 		CartHeader cartHeader = new CartHeader();
-		if(consumerId!=null){
-			cartHeader = cartHeaderService.getCatrHeaderByConsumerId(consumerId);
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			cartHeader = cartHeaderService.getCatrHeaderByConsumerUuid(consumerUuid);
 		}
 		int temp = 0;
 		if(cartHeader!=null && StringUtil.isNotEmpty(newDiscountId)){
@@ -399,11 +368,11 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="/checkout", method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage updateCatrFee (String dishFee,String logistics,String tax,String total,Integer consumerId,String orderTime,String orderId,String orderType, HttpServletRequest request) throws Exception{
+	public PageMessage updateCatrFee (String dishFee,String logistics,String tax,String total,String consumerUuid,String orderTime,String orderId,String orderType, HttpServletRequest request) throws Exception{
 		PageMessage pm = new PageMessage();
 		CartHeader cartHeader = null;
-		if(consumerId!=null){
-			cartHeader = cartHeaderService.getCatrHeaderByConsumerId(consumerId);
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			cartHeader = cartHeaderService.getCatrHeaderByConsumerUuid(consumerUuid);
 		}
 		//Double dishFee,Double logistics,Double tax,Double total,Integer consumerId,String orderTime,
 		if(cartHeader != null){
@@ -459,9 +428,9 @@ public class ConsumersController {
 	 * @return String  
 	 */
 	@RequestMapping(value="/showRegistCart", method = RequestMethod.POST)
-	public String showRegistCart(Integer consumerId, Model model, HttpSession session) throws Exception{
-		if(consumerId!=null){
-			CartHeaderApiModel cartHeader = cartService.getRegistCartHeaderApiModel(consumerId);//, consumerLng, consumerLat getPageCartHeaderByMobileToken(mobileToken);
+	public String showRegistCart(String consumerUuid, Model model, HttpSession session) throws Exception{
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			CartHeaderApiModel cartHeader = cartService.getRegistCartHeaderApiModel(consumerUuid);//, consumerLng, consumerLat getPageCartHeaderByMobileToken(mobileToken);
 			if(cartHeader!=null){
 				model.addAttribute("cartHeader", cartHeader);
 				if(cartHeader.getDiscountId()!=null){
@@ -489,9 +458,8 @@ public class ConsumersController {
 	@ResponseBody
 	public List<PageConsumersAddress> getConsumersAddressListInDistance (String consumerId, HttpSession session) throws Exception{
 		if(StringUtil.isNotEmpty(consumerId)){
-			long consumerId2 = Long.parseLong(consumerId);
 			//long restaurantId2 = Long.parseLong(restaurantId);
-			List<PageConsumersAddress> consumersAddressList = consumersAddressService.getPageConsumersAddressById(consumerId2);
+			List<PageConsumersAddress> consumersAddressList = consumersAddressService.getPageConsumersAddressByConsumerUuid(consumerId);
 			//getConsumersAddressDefault(long consumerId) {
 			//List<ConsumersAddressApiModel> apiAddressList = consumersAddressService.getConsumersAddressInDistance(consumerId2, restaurantId2);
 			/*List<PageConsumersAddress> consumersAddressList2 = new ArrayList<PageConsumersAddress>();
@@ -510,7 +478,6 @@ public class ConsumersController {
 				return consumersAddressList;
 			}
 		}
-		
 		return null;
 	}
 	
@@ -526,9 +493,9 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="getLatLng",method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage getLatLng(String address, Double subTotal,Integer restaurantId, HttpSession session){
+	public PageMessage getLatLng(String address, Double subTotal,String restaurantUuid, HttpSession session){
 		PageMessage pm = new PageMessage();
-		if(StringUtil.isNotEmpty(address) && subTotal!=null && restaurantId!=null){
+		if(StringUtil.isNotEmpty(address) && subTotal!=null && StringUtil.isNotEmpty(restaurantUuid)){
 			Map<String, Object> map = new HashMap<String, Object>();
 			try {
 				map = GetLatLngByAddress.getCoordinate(address, false);//地址,是否使用代理，默认不使用
@@ -550,7 +517,7 @@ public class ConsumersController {
 				//session.setAttribute("currentLat", lat);//纬度
 				//String latLngAndFee = lat+"-"+lng;//返回经纬度l
 				
-				Restaurants restaurants = restaurantsService.getRestaurantsById(restaurantId);
+				Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 				if(restaurants!=null){
 					//计算距离
 					double distance= CommonUtil.getDistance(Double.parseDouble(lat), Double.parseDouble(lng), restaurants.getRestaurantLng(), restaurants.getRestaurantLat());
@@ -560,7 +527,7 @@ public class ConsumersController {
 						return pm;
 					}else{
 						pm.setSuccess(true);
-						double distanceFee = distancePriceService.getOneDistanceByFee(restaurantId, subTotal, Double.parseDouble(lng), Double.parseDouble(lat));//restaurants.getDistancePricesSet();
+						double distanceFee = distancePriceService.getOneDistanceByFee(restaurantUuid, subTotal, Double.parseDouble(lng), Double.parseDouble(lat));//restaurants.getDistancePricesSet();
 						String latLngAndFee = lat+"=="+lng+"=="+distanceFee;
 						//String latLngAndFee = "{\"lat\":"+lat+",\"lng\":"+lng+",\"fee\":"+distanceFee+"}";
 						pm.setErrorMsg(latLngAndFee);//设置配送费
@@ -589,29 +556,19 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="getDeliveryFee",method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage getDeliveryFee(Double lng,Double lat, Double subTotal,Integer restaurantId){
+	public PageMessage getDeliveryFee(Double lng,Double lat, Double subTotal,String restaurantUuid){
 		PageMessage pm = new PageMessage();
-		if(lng!=null&&lat!=null&&subTotal!=null&&restaurantId!=null){
-			Restaurants restaurants = restaurantsService.getRestaurantsById(restaurantId);
+		if(lng!=null&&lat!=null&&subTotal!=null&&StringUtil.isNotEmpty(restaurantUuid)){
+			Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 			if(restaurants!=null){
 				double distance= CommonUtil.getDistance(lat, lng, restaurants.getRestaurantLng(), restaurants.getRestaurantLat());
 				if(distance > restaurants.getDistance()){//实际配送距离超出了最大外送距离，通知前台不可以下单
 					pm.setSuccess(false);
-					//pm.setErrorMsg(MessageConstant.OVER_RANGE);
 					return pm;
 				}else{
 					pm.setSuccess(true);
-					double distanceFee = distancePriceService.getOneDistanceByFee(restaurantId, subTotal, lng, lat);//restaurants.getDistancePricesSet();
+					double distanceFee = distancePriceService.getOneDistanceByFee(restaurantUuid, subTotal, lng, lat);//restaurants.getDistancePricesSet();
 					pm.setErrorMsg(distanceFee+"");
-					/*for (DistancePrice distancePrice : distancePriceList) {
-						if (distance > distancePrice.getStartDistance() && distance < distancePrice.getEndDistance() || distance == distancePrice.getEndDistance()) {
-							if(subTotal >= distancePrice.getOrderPrice()){// 达到订单价格
-								pm.setErrorMsg(distancePrice.getUpPrice()+"");
-							} else {// 没有达到订单价格
-								pm.setErrorMsg(distancePrice.getNotupPrice()+"");
-							}
-						}
-					}*/
 				}
 			}
 		}else{
@@ -636,7 +593,7 @@ public class ConsumersController {
 		Map<String, Object> map = (Map<String, Object>) JSONUtils.parse(jsonCartObj);
 		if(StringUtil.isNotEmpty(map.get("id").toString())){
 			CartHeader cartHeader = cartHeaderService.getCartHeaderById(Long.parseLong(map.get("id").toString()));
-			int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
 			if(cartHeader!=null){
 				PageConsumersAddress cartAddress = new PageConsumersAddress();
 				if (map.get("name") != null&&map.get("name").toString().length()>0) {
@@ -717,7 +674,7 @@ public class ConsumersController {
 							}
 						}
 						Consumers consumers = new Consumers();
-						consumers.setId((long)consumerId);
+						consumers.setUuid(consumerUuid);
 						address.setConsumers(consumers);
 						//if(StringUtil.isNotEmpty(map.get("isSaveAddress").toString())){
 						address.setPhone(cartHeader.getPhone());
@@ -744,9 +701,9 @@ public class ConsumersController {
 						address.setIsdefault(2);
 						int temp2 =0;
 						if(addressId>0){
-							temp2 = consumersAddressService.updateWebConsumersAddress(address, consumerId);
+							temp2 = consumersAddressService.updateWebConsumersAddress(address, consumerUuid);
 						}else{
-							temp2 = consumersAddressService.addWebConsumersAddress(address, consumerId);
+							temp2 = consumersAddressService.addWebConsumersAddress(address, consumerUuid);
 						}
 						
 						
@@ -838,15 +795,15 @@ public class ConsumersController {
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value="validateOrderTime", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage validateOrderTime(String orderTime, String restaurantId, String orderType){
+	public PageMessage validateOrderTime(String orderTime, String restaurantUuid, String orderType){
 		PageMessage pm = new PageMessage( );
 		pm.setSuccess(false);
-		if(StringUtil.isNotEmpty(orderTime)&&StringUtil.isNotEmpty(restaurantId)&&StringUtil.isNotEmpty(orderType)){
+		if(StringUtil.isNotEmpty(orderTime)&&StringUtil.isNotEmpty(restaurantUuid)&&StringUtil.isNotEmpty(orderType)){
 			Date orderDate = new Date(orderTime);
-			int restaurantId2 = Integer.parseInt(restaurantId);
+			//int restaurantId2 = Integer.parseInt(restaurantId);
 			int orderType2 = Integer.parseInt(orderType);
 			if(orderType2!=0){//购物车为空的情况除外
-				int temp = openTimeService.orderDateAtOpenTime(orderDate, restaurantId2, orderType2);//orderDateAtOpenTime(orderDate,restaurantId,orderType);
+				int temp = openTimeService.orderDateAtOpenTime(orderDate, restaurantUuid, orderType2);//orderDateAtOpenTime(orderDate,restaurantId,orderType);
 					//-1不在 1在
 				if(temp>0){
 					pm.setSuccess(true);
@@ -869,9 +826,9 @@ public class ConsumersController {
 	@RequestMapping(value="getCurrentAndPastOrders", method=RequestMethod.POST)
 	public String getCurrentOrders(PageFilter pf,int statusType, Model model, HttpSession session){
 		if(session.getAttribute("consumer")!=null ){
-			int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-			if(consumerId>0){
-				PageMessage ordersInfo = orderService.getPastOrderInfoByConsumerId(consumerId,statusType,pf);
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+			if(StringUtil.isNotEmpty(consumerUuid)){
+				PageMessage ordersInfo = orderService.getPastOrderInfoByConsumerUuid(consumerUuid,statusType,pf);
 				if(ordersInfo!=null){
 					model.addAttribute("ordersInfo", ordersInfo);
 				}
@@ -888,12 +845,12 @@ public class ConsumersController {
 	 * @param: @return
 	 * @return String  
 	 */
-	/*@RequestMapping(value="getPastOrders", method=RequestMethod.POST)
+/*	@RequestMapping(value="getPastOrders", method=RequestMethod.POST)
 	public String getPastOrders(PageFilter pf, int statusType, Model model, HttpSession session){
 		if(session.getAttribute("consumer")!=null ){
-			int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-			if(consumerId>0){
-				PageMessage ordersInfo = orderService.getPastOrderInfoByConsumerId(consumerId,statusType,pf);
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+			if(StringUtil.isNotEmpty(consumerUuid)){
+				PageMessage ordersInfo = orderService.getPastOrderInfoByConsumerUuid(consumerUuid,statusType,pf);
 				if(ordersInfo!=null){
 					model.addAttribute("ordersInfo", ordersInfo);
 				}
@@ -912,9 +869,9 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="editBasisInfoPage", method=RequestMethod.POST)
 	public String editBasisInfoPage(Model model, HttpSession session){
-		/*if(session.getAttribute("consumer")!=null){
+		if(session.getAttribute("consumer")!=null){
 			
-		}*/
+		}
 		return "user/editBasisInfo";
 	}
 	
@@ -1003,10 +960,10 @@ public class ConsumersController {
 	@RequestMapping(value="getAddressPage", method=RequestMethod.POST)
 	public String getAddressPage(Model model, HttpSession session){
 		if(session.getAttribute("consumer")!=null){
-			int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-			int restaurantId = 0;
-			if(consumerId>0){
-				List<PageConsumersAddress> addressList = consumersAddressService.getPageConsumersAddressListById(consumerId, restaurantId);
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+			String restaurantUuid = "0";
+			if(StringUtil.isNotEmpty(consumerUuid)){
+				List<PageConsumersAddress> addressList = consumersAddressService.getPageConsumersAddressListByConsumerUuid(consumerUuid);
 				model.addAttribute("addressList",addressList);
 			}
 		}
@@ -1023,18 +980,12 @@ public class ConsumersController {
 	@RequestMapping(value="getPaymentPage", method=RequestMethod.POST)
 	public String getPaymentPage(Model model, HttpSession session){
 		if(session.getAttribute("consumer")!=null){
-			long consumerId =((Consumers)session.getAttribute("consumer")).getId();
-			Consumers consumers = consumersService.getConsumersById(consumerId);
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();  
+			Consumers consumers = consumersService.getConsumersByUuid(consumerUuid);
 			if(consumers.getStripeCustomerId()!=null){//之前保存过
 				List<CardEntity> list = CommonUtil.listAllCards(consumers.getStripeCustomerId());
 				model.addAttribute("cards", list);
 			}
-			/*if(consumerId>0 && StringUtil.isNotEmpty(orderId)){
-				long orderId2 = Long.parseLong(orderId);
-				OrderDetailsApiModel order = orderItemService.selectHistoryOrder(orderId2);
-				//PageOrderHeader pageOrderHeader = orderService.getPageOrderHeaderByOrderId(orderId2);
-				model.addAttribute("order",order);
-			}*/
 		}
 		return "user/payment";
 	}
@@ -1050,9 +1001,9 @@ public class ConsumersController {
 	@RequestMapping(value="getFavouritesPage", method=RequestMethod.POST)
 	public String getFavouritesPage(PageFilter pf, Model model, HttpSession session){
 		if(session.getAttribute("consumer")!=null){
-			int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-			List<PageFavourites> favouritesList = consumersFavoritesService.getFavouriteListByconsumerId(consumerId, pf);
-			int total = consumersFavoritesService.countTotalByConsumerId(consumerId);
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+			List<PageFavourites> favouritesList = consumersFavoritesService.getFavouriteListByConsumerUuid(consumerUuid, pf);
+			int total = consumersFavoritesService.countTotalByConsumerUuid(consumerUuid);
 			model.addAttribute("favouritesList",favouritesList);
 			model.addAttribute("total",total);
 		}
@@ -1073,17 +1024,17 @@ public class ConsumersController {
 		PageMessage pm = new PageMessage();
 		if(StringUtil.isNotEmpty(orderId)){
 			int orderId2 = Integer.parseInt(orderId);
-			int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-			int temp1 = cartService.deleteCartByConsumerId(consumerId);
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+			int temp1 = cartService.deleteCartByConsumerUuid(consumerUuid);
 			if (temp1>0){//清空购物车成功
 				OrderHeader orderHeader = orderService.getOrderById(orderId2); 
 				int temp2 = 0;
 				if(orderHeader != null){
-					temp2 = orderService.repeatOrderWebUsed(orderId2, consumerId);//没有mobiletoken，传入一个空字符串
+					temp2 = orderService.repeatOrderWebUsed(orderId2, consumerUuid);//没有mobiletoken，传入一个空字符串
 				}
 				if(temp2>0 && orderHeader != null){
 					pm.setSuccess(true);
-					pm.setFlag(orderHeader.getRestaurantId());
+					pm.setStringFlag(orderHeader.getRestaurantUuid());
 				}else{
 					pm.setSuccess(false);
 					pm.setErrorMsg("Repeat failed!");
@@ -1113,20 +1064,20 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="rating", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage rating(String orderId,String restaurantId, String stars, String review, HttpSession session){
+	public PageMessage rating(String orderId,String restaurantUuid, String stars, String review, HttpSession session){
 		PageMessage pm = new PageMessage();
-		int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-		Consumers consumers = consumersService.getConsumersById(consumerId);
-		if(StringUtil.isNotEmpty(orderId) && StringUtil.isNotEmpty(restaurantId) && StringUtil.isNotEmpty(stars) && consumers!=null){
+		String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+		Consumers consumers = consumersService.getConsumersByUuid(consumerUuid);
+		if(StringUtil.isNotEmpty(orderId) && StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(stars) && consumers!=null){
 			EvaluateApiModel e = new EvaluateApiModel();
-			e.setConsumerId(consumerId);
+			e.setConsumerUuid(consumerUuid);
 			if(StringUtil.isNotEmpty(review)){
 				e.setContent(review);
 			}
 			e.setCreatetime(new Date());
 			e.setFirstName(consumers.getFirstName());
 			e.setLastName(consumers.getLastName());
-			e.setRestaurantId(Integer.parseInt(restaurantId));
+			e.setRestaurantUuid(restaurantUuid);
 			e.setOrderHeaderId(Integer.parseInt(orderId));
 			e.setScore(stars);
 			e.setStatus(1);
@@ -1178,8 +1129,8 @@ public class ConsumersController {
 	@RequestMapping(value="getFavouritesList", method=RequestMethod.POST)
 	@ResponseBody
 	public List<PageFavourites> getFavouritesList(PageFilter pf, Model model, HttpSession session){
-		int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-		List<PageFavourites> favouritesList = consumersFavoritesService.getFavouriteListByconsumerId(consumerId, pf);
+		String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+		List<PageFavourites> favouritesList = consumersFavoritesService.getFavouriteListByConsumerUuid(consumerUuid, pf);
 		return favouritesList;
 	}
 	
@@ -1290,7 +1241,7 @@ public class ConsumersController {
 			}else{//通过地址无法获取经纬度
 				return pm;
 			}
-			long consumerId =((Consumers)session.getAttribute("consumer")).getId();
+			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
 			if(StringUtil.isNotEmpty(addressId)){//修改地址
 				ConsumersAddress ca = consumersAddressService.getAddressById(Long.parseLong(addressId));
 				if(ca!=null){
@@ -1308,7 +1259,7 @@ public class ConsumersController {
 					}else{
 						ca.setIsdefault(2);
 					}
-					int temp = consumersAddressService.updateWebConsumersAddress(ca,consumerId);
+					int temp = consumersAddressService.updateWebConsumersAddress(ca,consumerUuid);
 					if(temp>0){
 						pm.setSuccess(true);
 					}
@@ -1316,7 +1267,7 @@ public class ConsumersController {
 			}else{//新增地址
 				ConsumersAddress ca = new ConsumersAddress();
 				Consumers consumers = new Consumers();
-				consumers.setId(consumerId);
+				consumers.setUuid(consumerUuid);
 				ca.setConsumers(consumers);
 				ca.setFloor(floor);
 				ca.setFloor(floor);
@@ -1332,24 +1283,20 @@ public class ConsumersController {
 				}else{
 					ca.setIsdefault(2);
 				}
-				int temp = consumersAddressService.addWebConsumersAddress(ca,consumerId);
+				int temp = consumersAddressService.addWebConsumersAddress(ca,consumerUuid);
 				if(temp>0){
 					pm.setSuccess(true);
 				}
 			}
-			
-		/*}else{
-			pm.setSuccess(false);
-		}*/
 		return pm;
 	}
 	
 	@RequestMapping(value="getRestaurantOpenTimeOfOneDay", method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage addOrUpdateAddress(String orderDay, String restaurantId, String type){
+	public PageMessage addOrUpdateAddress(String orderDay, String restaurantUuid, String type){
 		PageMessage pm = new PageMessage();
 		pm.setSuccess(false);
-		if (StringUtil.isNotEmpty(orderDay) && StringUtil.isNotEmpty(restaurantId) && StringUtil.isNotEmpty(type)){
+		if (StringUtil.isNotEmpty(orderDay) && StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(type)){
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			//Date day = new Date(orderDay);
 			Date day = null;
@@ -1361,35 +1308,30 @@ public class ConsumersController {
 				return pm;
 			}
 			int type2 = Integer.parseInt(type);
-			long restaurantId2 = Long.parseLong(restaurantId);
-			String[] openTimesArr = openTimeService.getOpenTimeByOrderDate(day, restaurantId2, type2); 
+			String[] openTimesArr = openTimeService.getOpenTimeByOrderDate(day, restaurantUuid, type2); 
 			String openTimesStr = "";
 			if(openTimesArr.length>0){
 				for (int i = 0; i < openTimesArr.length; i++) {
 					openTimesStr = openTimesStr + openTimesArr[i]+"==";
 				}
-				//getOpenTimeByOrderDate(Date orderDate, long restaurantId, int type) 
 				openTimesStr = openTimesStr.substring(0, openTimesStr.lastIndexOf("=="));
 				pm.setSuccess(true);
 				pm.setErrorMsg(openTimesStr);
-				
 			}
 		}
 		return pm;
 	}
 	
 	@RequestMapping(value="loadReviews", method=RequestMethod.POST)
-	public String loadReviews(String restaurantId, String offset, String limit,Model model){
+	public String loadReviews(String restaurantUuid, String offset, String limit,Model model){
 		List<EvaluateApiModel> reviewsList = new ArrayList<EvaluateApiModel>();
-		if(StringUtil.isNotEmpty(restaurantId) && StringUtil.isNotEmpty(offset) && StringUtil.isNotEmpty(limit)){
-			reviewsList = evaluateService.getEvaluatePagingByRestaurantId(Long.parseLong(restaurantId), Integer.parseInt(offset), Integer.parseInt(limit));
-		
+		if(StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(offset) && StringUtil.isNotEmpty(limit)){
+			reviewsList = evaluateService.getEvaluatePagingByRestaurantId(restaurantUuid, Integer.parseInt(offset), Integer.parseInt(limit));
 		}
 		if(reviewsList!=null && reviewsList.size()>0){
 			model.addAttribute("reviewsList", reviewsList);
 			model.addAttribute("count", evaluateService.getCount());
 		}
-		
 		return "/home/reviews";
 	}
 	

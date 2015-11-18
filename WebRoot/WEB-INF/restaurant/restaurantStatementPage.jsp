@@ -81,7 +81,7 @@
      				<th data-field="tips" data-formatter="moneyFormatter" data-width="50px" data-align="right">Tips</th>
      				<th data-field="nommeFee" data-formatter="moneyFormatter" data-width="50px" data-align="right">Nomme Collected Fee</th>
      				<th data-field="stripeFee" data-formatter="moneyFormatter" data-width="50px" data-align="right">Stripe Processing Fee</th>
-     				<th data-field="income" data-formatter="moneyFormatter" data-width="50px" data-align="right">Net Deposit</th>
+     				<th data-field="income" data-formatter="moneyFormatter" data-width="50px" data-align="right">Income</th>
      			</tr>
      		</thead>
 		</table>

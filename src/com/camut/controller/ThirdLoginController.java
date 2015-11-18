@@ -56,15 +56,10 @@ public class ThirdLoginController {
 		Log4jUtil.info("进入twitter第三方登录WEB开始 ==>" + request.getParameter("originalUrlForTwitter"));
 		// 将登陆前的地址放在session中
 		session.setAttribute("originalUrlForTwitter", request.getParameter("originalUrlForTwitter"));
-		
-		String website = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
-		Log4jUtil.info("website=" + website);	
-		
 		OAuthService service = new ServiceBuilder().provider(TwitterApi.class)
 		// 此处是 用户名: Meta_Universe 的
 				.apiKey("M9PuxP9rqjuFTGWofuyYq4Zxf").apiSecret("SM6rJAUJrjgEmdQZw87ArPFOcGraVo0Ey4kpEs0zgNTOm1h9by")
-				.callback(String.format("%s/thirdLogin/twitterCallback",website))// Current Website
-				//.callback("https://www.metaorder.ca/thirdLogin/twitterCallback")// 加拿大服务器
+				.callback("https://www.metaorder.ca/thirdLogin/twitterCallback")// 加拿大服务器
 				// .callback("http://119.29.2.48:8080/camut/thirdLogin/twitterCallback")//中国服务器
 				// .callback("http://localhost:8080/thirdLogin/twitterCallback")//
 				// 本地机器
@@ -133,15 +128,10 @@ public class ThirdLoginController {
 		Log4jUtil.info("进入Facebook第三方登录WEB开始 ==>" + request.getParameter("originalUrlForFacbook"));
 		// 将登陆前的地址放在session中
 		session.setAttribute("originalUrlForFacbook", request.getParameter("originalUrlForFacbook"));
-		
-		String website = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
-		Log4jUtil.info("website=" + website);
-		
 		OAuthService service = new ServiceBuilder().provider(FacebookApi.class)
 		// 使用的Facebook 应用账号 用户名: meta.universe.2015@gmail.com 密码：Test20150101
 				.apiKey("1913585478866636").apiSecret("4e6e5994324fc99146771cc3f37ba79d")
-				.callback(String.format("%s/thirdLogin/facebookCallback",website))// Current Website
-				//.callback("https://www.metaorder.ca/thirdLogin/facebookCallback")// 加拿大服务器
+				.callback("https://www.metaorder.ca/thirdLogin/facebookCallback")// 加拿大服务器
 				// .callback("http://119.29.2.48:8080/camut/thirdLogin/facebookCallback")//国内服务器
 				// .callback("http://localhost:8080/thirdLogin/facebookCallback")//本地
 				.build();

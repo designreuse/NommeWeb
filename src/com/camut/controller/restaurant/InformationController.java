@@ -8,10 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.camut.framework.constant.MessageConstant;
 import com.camut.model.Chain;
 import com.camut.model.Classification;
@@ -35,9 +31,7 @@ import com.camut.service.AreasService;
 import com.camut.service.ChainService;
 import com.camut.service.ClassificationService;
 import com.camut.service.RestaurantsService;
-import com.camut.utils.AWSUtil;
 import com.camut.utils.ImageUtils;
-import com.camut.utils.StringUtil;
 
 /**
  * @ClassName InformationController.java
@@ -77,7 +71,7 @@ public class InformationController extends BaseController {
 	/*
 	 * @Title: getPageRestaurant
 	 * @Description: 返回商家的页面对象
-	 * @param:    
+	 * @param:	
 	 * @return: PageRestaurant
 	 */
 	@RequestMapping(value="getPageRestaurant",method=RequestMethod.POST)
@@ -175,12 +169,16 @@ public class InformationController extends BaseController {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;  
 		MultipartFile file = multipartRequest.getFile("logo");
 		Restaurants restaurants = this.getRestaurants(request.getSession(), request);
-
-        String imgtype = StringUtil.getFileExtension(file.getOriginalFilename());
-		String keyName = restaurants.getId() + "/" + UUID.randomUUID().toString() + "." + imgtype;
-		
-		restaurants.setLogourl(AWSUtil.uploadImageToNommeS3SingleOperation(file, keyName));
-
+		String tmpDir = restaurants.getId()+"";
+		String logourl = "";
+		try {
+			logourl = ImageUtils.saveImage(file, request, "upload", tmpDir, true);
+		} catch (Exception e) {
+			return null;
+		}
+		String path = request.getContextPath();
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+		restaurants.setLogourl(basePath+logourl);
 		int flag = restaurantsService.updateRestaurants(restaurants);
 		if(flag==-1){
 			return null;

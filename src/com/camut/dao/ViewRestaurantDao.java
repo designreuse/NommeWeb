@@ -41,7 +41,7 @@ public interface ViewRestaurantDao {
 	 * @param: long id
 	 * @return ViewRestaurant  
 	 */
-	public ViewRestaurant getRestaurantsById(long id);
+	public ViewRestaurant getRestaurantsByRestaurantUuid(String restaurantUuid);
 	
 	/**
 	 * @Title: getViewRestaurants

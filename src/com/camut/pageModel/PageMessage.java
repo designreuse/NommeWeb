@@ -18,6 +18,7 @@ private static final long serialVersionUID = 4549689561573640893L;
 	
 	private int flag=0;//状态码标记; status flag
 	
+	private String stringFlag = "";//String类型的标记码
 	
 	
 	public int getFlag() {
@@ -44,6 +45,12 @@ private static final long serialVersionUID = 4549689561573640893L;
 	}
 	public void setList(List<?> list) {
 		this.list = list;
+	}
+	public String getStringFlag() {
+		return stringFlag;
+	}
+	public void setStringFlag(String stringFlag) {
+		this.stringFlag = stringFlag;
 	}
 	
 	

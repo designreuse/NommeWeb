@@ -22,8 +22,7 @@ import com.camut.model.RestaurantsUser;
  * @memo
  */
 @Repository
-public class RestaurantsUserDaoImpl extends BaseDao<RestaurantsUser> implements
-		RestaurantsUserDao {
+public class RestaurantsUserDaoImpl extends BaseDao<RestaurantsUser> implements RestaurantsUserDao {
 	
 
 	/**
@@ -99,10 +98,10 @@ public class RestaurantsUserDaoImpl extends BaseDao<RestaurantsUser> implements
 	 * @return: RestaurantsUser
 	 */
 	@Override
-	public RestaurantsUser getRestaurantsUserById(long id) {
-		String hql = "from RestaurantsUser r where r.id=:id and r.status=0";
+	public RestaurantsUser getRestaurantsUserByUuid(String restaurantUserUuid) {
+		String hql = "from RestaurantsUser r where r.uuid=:restaurantUserUuid and r.status=0";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("id", id);
+		map.put("restaurantUserUuid", restaurantUserUuid);
 		return this.get(hql, map);
 	}
 	/**
@@ -112,10 +111,10 @@ public class RestaurantsUserDaoImpl extends BaseDao<RestaurantsUser> implements
 	 * @return: RestaurantsUser
 	 */
 	@Override
-	public RestaurantsUser getAnyRestaurantsUserById(long id) {
-		String hql = "from RestaurantsUser r where r.id=:id and r.status>=0";
+	public RestaurantsUser getAnyRestaurantsUserByUuid(String restaurantUserUuid) {
+		String hql = "from RestaurantsUser r where r.uuid=:restaurantUserUuid and r.status>=0";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("id", id);
+		map.put("restaurantUserUuid", restaurantUserUuid);
 		return this.get(hql, map);
 	}
 
@@ -199,10 +198,10 @@ public class RestaurantsUserDaoImpl extends BaseDao<RestaurantsUser> implements
 	 * @param: 
 	 * @return List<PageRestaurantsAdmin>  
 	 */
-	public List<RestaurantsUser> getRestaurantsUsersByRestaurantId(long restaurantId){
+	public List<RestaurantsUser> getRestaurantsUsersByRestaurantUuid(String restaurantUuid){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
-		String hql = "from RestaurantsUser r where r.restaurants.id=:restaurantId and r.status>=0 order by r.code";
+		map.put("restaurantUuid", restaurantUuid);
+		String hql = "from RestaurantsUser r where r.restaurants.uuid=:restaurantUuid and r.status>=0 order by r.code";
 		return this.find(hql,map);
 	}
 

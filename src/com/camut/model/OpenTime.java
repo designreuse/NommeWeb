@@ -36,7 +36,7 @@ public class OpenTime extends IdEntity implements java.io.Serializable {
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurants_id")
+	@JoinColumn(name = "restaurants_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}

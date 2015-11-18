@@ -90,10 +90,10 @@ public class DistancePriceDaoImpl extends BaseDao<DistancePrice> implements Dist
 	 * @param: restaurantsApiModel
 	 * @return List<DistancePrice> 
 	 */
-	public List<DistancePrice> getDistancePrice(long restaurantId){
-		String hql = "from DistancePrice dp where dp.restaurants.id=:restaurantId";
+	public List<DistancePrice> getDistancePrice(String restaurantUuid){
+		String hql = "from DistancePrice dp where dp.restaurants.uuid=:restaurantUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<DistancePrice> pdList = this.find(hql, map);
 		return pdList;
 	}

@@ -1,4 +1,4 @@
-var appPath = "";//TODO:path
+var appPath = "/camut";//TODO:path
 
 $(function(){
 	$("button[name='logo']").click(function(){

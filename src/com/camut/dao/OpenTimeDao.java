@@ -20,7 +20,7 @@ public interface OpenTimeDao {
 	 * @param:  restaurantId
 	 * @return: List<OpenTime>
 	 */
-	public List<OpenTime> selectOpenTime(long restaurantId);
+	public List<OpenTime> selectOpenTime(String restaurantUuid);
 	
 	/**
 	 * @Title: addOpenTime
@@ -45,7 +45,7 @@ public interface OpenTimeDao {
 	 * @param:  restaurantId
 	 * @return: List<OpenTime>
 	 */
-	public List<OpenTime> getOpenTime(long restaurantId, int type, int week);
+	public List<OpenTime> getOpenTime(String restaurantUuid, int type, int week);
 	
 	/**
 	 * @Title: getOpenTimeByRestaurantIdAndType
@@ -53,5 +53,5 @@ public interface OpenTimeDao {
 	 * @param:  restaurantId type
 	 * @return: List<OpenTime>
 	 */
-	public List<OpenTime> getOpenTimeByRestaurantIdAndType(long restaurantId, int type);
+	public List<OpenTime> getOpenTimeByRestaurantUuidAndType(String restaurantUuid, int type);
 }

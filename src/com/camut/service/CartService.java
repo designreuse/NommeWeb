@@ -19,7 +19,7 @@ public interface CartService {
 	 * @param:    String，int
 	 * @return: CartHeaderApiModel
 	 */
-	public CartHeaderApiModel getCartHeaderApiModel(String mobileToken, Integer consumerId);
+	public CartHeaderApiModel getCartHeaderApiModel(String mobileToken, String consumerUuid);
 	
 	/**
 	 * @Title: getCartHeaderApiModel
@@ -27,7 +27,7 @@ public interface CartService {
 	 * @param:    String，int
 	 * @return: CartHeaderApiModel
 	 */
-	public CartHeaderApiModel getCartHeaderApiModelByConsumerId(int consumerId);//double consumerLng, double consumerLat, 
+	public CartHeaderApiModel getCartHeaderApiModelByConsumerUuid(String consumerUuid);//double consumerLng, double consumerLat, 
 	
 	/**
 	 * @Title: getCartHeaderApiModel
@@ -35,7 +35,7 @@ public interface CartService {
 	 * @param:    String，int
 	 * @return: CartHeaderApiModel
 	 */
-	public CartHeaderApiModel getRegistCartHeaderApiModel(int consumerId);//, Double consumerLng, Double consumerLat
+	public CartHeaderApiModel getRegistCartHeaderApiModel(String consumerUuid);//, Double consumerLng, Double consumerLat
 	
 	/**
 	 * @Title: getCartHeaderByMobileToken
@@ -67,7 +67,7 @@ public interface CartService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int deleteCartByConsumerId(int consumerId);
+	public int deleteCartByConsumerUuid(String consumerUuid);
 	
 	/**
 	 * @Title: deleteCartByConsumerId
@@ -75,6 +75,6 @@ public interface CartService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int deleteCartHeader(String mobileToken, String consumerId);
+	public int deleteCartHeader(String mobileToken, String consumerUuid);
 	
 }

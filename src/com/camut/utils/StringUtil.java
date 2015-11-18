@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;  
 import java.util.regex.Pattern;  
 
@@ -1979,11 +1980,13 @@ public class StringUtil {
     	return str;
     }
     
-	public static String getFileExtension(String name) {
-	    try {
-	        return name.substring(name.lastIndexOf(".") + 1);
-	    } catch (IndexOutOfBoundsException e) {
-	        return "";
-	    }
-	}
+    /**  
+     * 生成32位编码  
+     * @return string  
+     */    
+    public static String getUUID(){
+        String uuid = UUID.randomUUID().toString().trim().replaceAll("-", "");    
+        return uuid;    
+    }    
+    
 }

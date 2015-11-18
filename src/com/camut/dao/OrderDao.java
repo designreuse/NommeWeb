@@ -2,7 +2,6 @@ package com.camut.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.camut.model.OrderHeader;
 import com.camut.model.api.AcceptOrderApiModel;
@@ -29,7 +28,7 @@ public interface OrderDao {
 	 * @param:  consumerId   
 	 * @return: ResultApiModel
 	 */
-	public List<OrderHeader> selectPastOrder(long consumerId);
+	public List<OrderHeader> selectPastOrder(String consumerUuid);
 	
 	/**
 	 * @Title: addOrder
@@ -53,7 +52,7 @@ public interface OrderDao {
 	 * @param:  consumerId  orderType  createdate
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> selectRestaurantOrder(int restaurantId, String orderType, Date createdate);
+	public List<OrderHeader> selectRestaurantOrder(String restaurantUuid, String orderType, Date createdate);
 	
 	/**
 	 * @Title: getOrder
@@ -61,7 +60,7 @@ public interface OrderDao {
 	 * @param:  type  restaurantId  menuId
 	 * @return: List<OrderHeader>
 	 */
-	public OrderHeader getOrder(int type, int restaurantId, long menuId);
+	public OrderHeader getOrder(int type, String restaurantUuid, long menuId);
 	
 
 	/**
@@ -71,7 +70,7 @@ public interface OrderDao {
 	 * @param: @param pf
 	 * @return PageModel  
 	 */
-	public List<OrderHeader> getOrdersByRestaurantId(int restaurantId, PageFilter pf,String status,String orderDate);
+	public List<OrderHeader> getOrdersByRestaurantUuid(String restaurantUuid, PageFilter pf,String status,String orderDate);
 	
 	/**
 	 * @Title: getCount
@@ -87,7 +86,7 @@ public interface OrderDao {
 	 * @param:  consumerId  
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> selectCurrentOrder(long consumerId);
+	public List<OrderHeader> selectCurrentOrder(String consumerUuid);
 	
 	/**
 	 * @Title: cancelOrder
@@ -106,7 +105,7 @@ public interface OrderDao {
 	 * @param: @param status
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageOrderHeader> getUnpaidReservationOrders(int resId, int conId, int orderType, long currentOrderNo);
+	public List<PageOrderHeader> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo);
 	
 	/**
 	 * @Title: cancelOrder
@@ -114,7 +113,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> cancelOrder(int restaurantId);
+	public List<OrderHeader> cancelOrder(String restaurantUuid);
 	
 	/**
 	 * @Title: completeOrder
@@ -122,7 +121,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> completeOrder(int restaurantId, String createdate, String orderType);
+	public List<OrderHeader> completeOrder(String restaurantUuid, String createdate, String orderType);
 	
 	/**
 	 * @Title: completeOrderAll
@@ -130,7 +129,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> completeOrderAll(int restaurantId ,String status);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid,String status);
 	
 	/**
 	 * @Title: liveOrder
@@ -138,7 +137,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeaderId> liveOrder(int restaurantId);
+	public List<OrderHeaderId> liveOrder(String restaurantUuid);
 	
 	/**
 	 * @Title: upcomingOrder
@@ -146,7 +145,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeaderId> upcomingOrder(int restaurantId);
+	public List<OrderHeaderId> upcomingOrder(String restaurantUuid);
 	
 	/**
 	 * @Title: acceptOrder
@@ -154,7 +153,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<AcceptOrderApiModel> acceptOrder(int restaurantId);
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid);
 	
 	/**
 	 * @Title: acceptUpcomingOrder
@@ -162,7 +161,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(int restaurantId);
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid);
 	
 	/**
 	 * @Title: totalAmount
@@ -170,7 +169,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> totalAmount(int restaurantId);
+	public List<OrderHeader> totalAmount(String restaurantUuid);
 	
 	/**
 	 * @Title: updateOrderHeader
@@ -186,7 +185,7 @@ public interface OrderDao {
 	 * @param:    restaurantId
 	 * @return: List<OrderHeader>
 	 */ 
-	public List<OrderHeader> getDineinOrder(int restaurantId);
+	public List<OrderHeader> getDineinOrder(String restaurantUuid);
 	
 	/**
 	 * @Title: getDineIn
@@ -194,7 +193,7 @@ public interface OrderDao {
 	 * @param:  restaurantId   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> getDineIn(long consumerId, int restaurantId);
+	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: getlineup
@@ -219,7 +218,7 @@ public interface OrderDao {
 	 * @param: @return
 	 * @return List<PagePastOrderInfo>  
 	 */
-	public PageMessage getPastOrderInfoByConsumerId(int consumerId,int orderType, PageFilter pf);
+	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid,int orderType, PageFilter pf);
 	
 	/**
 	 * @Title: handleOrder
@@ -234,7 +233,7 @@ public interface OrderDao {
 	 * @param consumerId
 	 * @return
 	 */
-	public double getCharityAmount(long consumerId) ;
+	public double getCharityAmount(String consumerUuid) ;
 	
 	/**
 	 * @Title: getUndisposedOrders
@@ -279,7 +278,7 @@ public interface OrderDao {
 	 * @param: @return
 	 * @return PageModel  
 	 */
-	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf, String restaurantId);
+	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf, String restaurantUuid);
 	
 	
 	

@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +16,10 @@ import com.camut.dao.OpenTimeDao;
 import com.camut.dao.RestaurantsDao;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.OpenTime;
-import com.camut.model.Restaurants;
 import com.camut.model.api.OpenTimeApiModel;
 import com.camut.pageModel.PageOpenTime;
 import com.camut.service.OpenTimeService;
-import com.camut.utils.GoogleTimezoneAPIUtil;
+import com.camut.utils.StringUtil;
 
 /**
  * @dao OpenTimeServiceImpl.java
@@ -48,7 +45,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: List<OpenTimeApiModel>
 	 */
 	@Override
-	public List<String> selectOpenTime(long restaurantId, int type, String date) {
+	public List<String> selectOpenTime(String restaurantUuid, int type, String date) {
 		if(date != null){
 			Calendar c = Calendar.getInstance();
 			DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
@@ -81,7 +78,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			        week = 6;  
 			        break;  
 			    }  
-				List<OpenTime> otList = openTimeDao.getOpenTime(restaurantId, type, week);
+				List<OpenTime> otList = openTimeDao.getOpenTime(restaurantUuid, type, week);
 				List<String> timeList = new ArrayList<>();
 				for (OpenTime openTime : otList) {
 					OpenTimeApiModel otam = new OpenTimeApiModel();
@@ -137,10 +134,10 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: PageOpenTime
 	 */
 	@Override
-	public List<PageOpenTime> getAllOpenTime(long restaurantsId) {
+	public List<PageOpenTime> getAllOpenTime(String restaurantUuid) {
 		//if(restaurants!=null && restaurants.getId()!=null){
-		if(restaurantsId>0){
-			List<OpenTime> openTimes = openTimeDao.selectOpenTime(restaurantsId);
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<OpenTime> openTimes = openTimeDao.selectOpenTime(restaurantUuid);
 			List<PageOpenTime> list = new ArrayList<PageOpenTime>();
 			for(OpenTime ot:openTimes){
 				PageOpenTime pageOpenTime = new PageOpenTime();
@@ -210,8 +207,8 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: List<OpenTimeListApiModel>
 	 */
 	@Override
-	public List<Map<String, Object>> getOpenTime(long restaurantId) {
-		List<OpenTime> otList = openTimeDao.selectOpenTime(restaurantId);
+	public List<Map<String, Object>> getOpenTime(String restaurantUuid) {
+		List<OpenTime> otList = openTimeDao.selectOpenTime(restaurantUuid);
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		if(otList != null){
 			List<OpenTimeApiModel> otamList = new ArrayList<OpenTimeApiModel>();
@@ -309,7 +306,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: int -1不在 1在-2 30只能下30分钟后的单 -3只能下15分钟后的单
 	 */
 	@Override
-	public int orderDateAtOpenTime(Date orderDate, int restaurantId,int ordertype) {
+	public int orderDateAtOpenTime(Date orderDate, String restaurantUuid,int ordertype) {
 	
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(orderDate);
@@ -318,7 +315,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			week = 7;
 		}
 		//根据商家id和订单类型找出营业时间
-		List<OpenTime> list = openTimeDao.getOpenTime(restaurantId, ordertype, week);
+		List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, ordertype, week);
 		String yyyymmdd = new SimpleDateFormat("yyyy-MM-dd").format(orderDate);
 		if (orderDate.before(new Date())) {
 			return -4;
@@ -361,22 +358,13 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: String[]
 	 */
 	@Override
-	public String[] getOpenTimeByOrderDate(Date orderDate, long restaurantId, int type) {
+	public String[] getOpenTimeByOrderDate(Date orderDate, String restaurantUuid, int type) {
 		Calendar calendar = Calendar.getInstance();
-		
-		// Adjust times for restaurant local time
-		// TODO: This assumes users are in the same time zone as the restaurant!!
-		Restaurants restaurant = restaurantsDao.getRestaurantsById(restaurantId);
-		double latitude = restaurant.getRestaurantLat();
-		double longitude = restaurant.getRestaurantLng();
-		TimeZone restaurantTimezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
-		calendar.setTimeZone(restaurantTimezone);	
-		
 		try {
 			//注释掉的是之前做的开始时间结束时间都减少15分钟的方案， 现在是不减时间的
 			String orderDateStr = new SimpleDateFormat("yyyy-MM-dd").format(orderDate);
 			// 传来的日期如果是今天之前的日期直接返回null
-			if (orderDate.before(new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime())))) {
+			if (orderDate.before(new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(new Date())))) {
 				return null;
 			}
 			// 找出订单日期的星期
@@ -386,8 +374,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				week = 7;
 			}
 			// 根据餐厅id，类型，星期找出当天的营业时间
-			List<OpenTime> list = openTimeDao.getOpenTime(restaurantId, type, week);	
-			
+			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
 			StringBuffer buffer = new StringBuffer();
 			String startStr = "";
 			for (OpenTime openTime : list) {
