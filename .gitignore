@@ -1,0 +1,21 @@
+# Directories #
+/build/
+/bin/
+target/
+ 
+# OS Files #
+.DS_Store
+ 
+*.class
+ 
+# Package Files #
+*.war
+*.ear
+*.db
+ 
+# Windows image file caches
+Thumbs.db 
+.DS_Store
+.svn
+
+ 

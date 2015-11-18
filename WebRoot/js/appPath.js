@@ -1,0 +1,1 @@
+var appPath = "";//TODO:path

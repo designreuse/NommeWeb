@@ -1,0 +1,411 @@
+/*提示样式三角*/
+.easytip{
+	text-align: left; 
+	padding:5px; 
+	color:#ffffff; 
+	border: 0px solid #75b525; 
+	border-radius: 4px; 
+	background-color:#75b525;
+	z-index: 3000;
+}
+/*提示样式方框*/
+.easytip-arrow{
+	padding: 0px; 
+	margin: 0px; 
+	width: 0px; 
+	height: 0px; 
+	position: absolute;
+	border-left:7px solid transparent;
+	border-right:7px solid transparent; 
+	border-bottom:7px solid #75b525; 
+	left:20px; 
+	top: -6px;
+	z-index: 3000;
+}
+/*google地图的自动匹配搜索下拉框样式*/
+.pac-container{
+	background:rgba(255, 255, 255, 1);
+	background-image: url(../images/xc-touming-bg.png);
+}
+
+.cursorPointer{
+	cursor:pointer;
+}
+
+/*第三方登陆的按钮*/
+/* .loginEffect{
+	position:relative;
+	z-index: 2000;
+	left: 397px;
+	
+}
+.loginEffect div {
+	float:left;
+	margin-right:4px;
+	width: 32px;
+	height: 32px;
+
+	z-index: 2001;
+} */
+/* .loginEffect div:hover {
+	background-color:#ffffff;
+	cursor:pointer;
+	opacity: 0.3
+} */
+.twitter-logo{
+	cursor:pointer;
+	border: 1px solod red;
+	width:30px;
+	height:30px;
+	background-image: url(../images/third-login-1.jpg);
+  	background-position: -3px -3px;
+  	background-repeat: no-repeat;
+  	margin-right:10px;
+  	float: right;
+}
+.twitter-logo:hover{
+	opacity: 0.5
+}
+
+.facebook-logo{
+	cursor:pointer;
+	border: 1px solod red;
+	width:30px;
+	height:30px;
+	background-image: url(../images/third-login-1.jpg);
+  	background-position: -40px -3px;
+  	background-repeat: no-repeat;
+  	float: right;
+}
+.facebook-logo:hover{
+	opacity: 0.5
+}
+
+/*右上角用户下拉样式*/
+.dropdown-menu>li>a:focus,.dropdown-menu>li>a:hover{
+	background-color:#e8e8e8;
+	background-image:-webkit-linear-gradient(top,#f5f5f5 0,#e8e8e8 100%);
+	background-image:-o-linear-gradient(top,#f5f5f5 0,#e8e8e8 100%);
+	background-image:-webkit-gradient(linear,left top,left bottom,from(#f5f5f5),to(#e8e8e8));
+	background-image:linear-gradient(to bottom,#f5f5f5 0,#e8e8e8 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0);
+	background-repeat:repeat-x
+}
+
+
+
+/*商家详情页面点菜是弹出模态框时的数量样式*/
+.quantity-content{
+	border-top: 1px solid #dddddd;
+	border-right: 0px solid #dddddd; 
+	border-bottom: 1px solid #dddddd;
+	border-left: 0px solid #dddddd;
+	width: 495px;
+	height: 70px;
+	margin-left: 0px;
+	margin-top: 24px;
+	padding-top: 15px;
+	padding-bottom: 13px;
+}
+/*商家显示评论的div*/
+.evaluate_content{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.quantity{
+	margin-top: 4px;
+}
+.count-quantity{
+	border-top: 1px solid #cccccc;
+	border-right: 0px solid #cccccc; 
+	border-bottom: 1px solid #cccccc;
+	border-left: 0px solid #cccccc;
+	height:34px;
+	width:45px;
+	text-align: center;
+}
+/*忘记密码的文字样式*/
+.forgotPassword:link{
+	color:#6D9940;
+}
+.timeContent{
+	background-color:#898989; 
+	width:290px;
+	height:32px;
+	border-radius:4px;
+	border: 1px solid #898989;
+	margin-left: 0px;
+	
+}
+.timePicker{
+	background-color:#fff; 
+	border-top: 0px;
+	border-right: 1px solid #333;
+	border-bottom: 0px;
+	border-left: 0px;
+	padding-left: 0px;
+	width:250px;
+	height:30px;
+	border-radius:4px 0px 0px 4px;;
+	text-align: center;
+	
+}
+.reservationTimeContent{
+	background-color:#898989; 
+	width:458px;
+	height:32px;
+	border-radius:4px;
+	border: 0px solid #898989;
+	margin-left: 0px;
+	
+}
+.reservationTimePicker{
+	background-color:#fff; 
+	
+	border: 1px solid #ddd;
+	
+	width:458px;
+	height:30px;
+	border-radius:4px;
+	text-align: center;
+	
+}
+
+.restaurant-introduction{
+	height:190px;
+	/* padding-right: 20px; */
+}
+.notice{
+	position: relative;
+	
+}
+.aDishButton{
+	cursor: pointer;
+}
+
+.radio-checkbox-button{
+	/* height: 30px;
+	width:30px; */
+	display: inline-block;
+	/* float: left; */
+}
+.garnishItemName{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight:lighter;
+	display: inline-block;
+/* 	float:left; */
+}
+.garnishItemName div{
+	 font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight:lighter;
+	display: inline-block;
+	/*
+	word-break: break-all;
+  	word-wrap: break-word;
+	*/
+	
+	/* width:160px;  */
+}
+
+.dishRemark{
+	text-align:left;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius:4px;
+}
+
+/*菜品配菜数量下拉框样式*/
+.dishGarnishSelect{
+	width:43px;
+	height: 26px;
+	border-radius:4px;
+}
+
+.dishGarnishErrorInfo{
+	padding-top10px;
+	height:25px;
+	padding-top: 10px;
+	color: red;
+	font-weight: 110;
+	font-size: 18px;
+}
+
+.bulletin-board{
+	border:1px solid #cccccc;
+	border-radius:4px;
+	margin: 5px 20px;
+	font-weight: bolder;
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+.table-condensed{
+ 	width:260px;
+}
+
+.hidden-style{
+	display: none;
+}
+
+.show-style{
+	display: block;
+}
+
+.userContentDiv{
+    /* height:1000px; */
+    height:auto!important;
+  
+}
+
+html,body{
+    margin:0px;
+    height:auto;
+}
+
+/*---------------------------------------用户个人信息维护页面 订单模态框中文字排版样式--------------------------------------------------- */
+.orderModel-field-title{
+	font-size: 15px;
+	font-weight: bold;
+	margin-top: 5px;
+	text-align: right;
+	/* height: 28px;
+	line-height: 20px;
+	vertical-align: bottom; */
+}
+.orderModel-field-text{
+	font-size: 20px;
+	height: 28px;
+	text-align: left;
+}
+.orderModel-dishlist{/*订单模态框菜品列表样式*/
+	font-size: 16px;
+	text-align: center;
+}
+.orderModel-dish-ingredientslist{/*订单模态框配菜样式*/
+	font-size: 14px;
+	font-weight:normal;
+	text-align: center;
+}
+.green-errorMessage{
+	color: #7DD700;
+	font-size: 16px;
+}
+
+.address-title-username{
+	margin-top:10px;
+	padding-right: 20px;
+	font-size: 16px;
+	text-align: right;
+	width:100px;
+	vertical-align:bottom;
+	float: left;
+}
+
+.address-title{
+	padding-right: 20px;
+	font-size: 16px;
+	text-align: right;
+	width:100px;
+	vertical-align:bottom;
+	float: left;
+}
+
+.address-userName{
+	font-size: 26px;
+}
+/*鼠标放在购物车菜品图片上，显示购物车中的菜品配菜信息*/
+.show-subItems{
+	position:relative;
+}
+.show-subItems .show-subItem{
+	display:none;
+	background: rgba(245, 245, 245,0.9);
+	width:200px; 
+	position:absolute;
+	padding: 10px 10px;
+	border-radius: 5px;
+	border: 1px solid #666666;
+	top:40px;
+	left:75px;
+	z-index:2000;
+	cursor:default;
+}
+.show-subItems:hover .show-subItem{
+	display:block;
+}
+
+/*鼠标放在菜品分类上面显示分类描述*/
+.show-menus{
+	position:relative;
+	
+}
+.show-menus .show-menu{
+	display:none;
+	background: rgba(245, 245, 245,0.9);
+	width:600px; 
+	position:relative;
+	padding: 3px 3px;
+	height:10px;
+	
+	border-radius: 5px;
+	border: 1px solid #666666;
+	color:#333333;
+	font-size:10px;
+	top:10px;
+	left:50px;
+	z-index:5005;
+	float:right;
+	cursor:default;
+}
+.show-menus:hover .show-menu{
+	display:block;
+}
+
+.panel-remade{
+  margin-bottom: 10px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.panel-default-remade {
+  border-color: #ddd;
+}
+/*页面loding 图片和遮罩层样式*/
+#bg {
+	display: none;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	right: 0px; 
+	bottom : 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #111111;
+	z-index: 10001;
+	-moz-opacity: 0.8;
+	opacity: 0.8;
+	filter: alpha(opacity =   40);
+	bottom: 0px;
+	overflow: hidden;
+}
+
+#show {
+	display: none;
+	position: fixed;
+	top: 45%;
+	left: 50%;
+	padding: 8px;
+	z-index: 10003;
+	overflow: hidden;
+}
+.read-border{
+ 	background-color: #993333;
+}

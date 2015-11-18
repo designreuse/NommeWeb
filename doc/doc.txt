@@ -1,0 +1,19 @@
+Email send interface:
+邮件发送接口：
+	
+  //this class mainly is to set up the mail 这个类主要是设置邮件  
+  MailSenderInfo mailInfo = new MailSenderInfo();   
+  mailInfo.setMailServerHost("smtp.czumi.com");   
+  mailInfo.setMailServerPort("25");   
+  mailInfo.setValidate(true);   
+  mailInfo.setUserName("");   
+  mailInfo.setPassword("");//your email password 您的邮箱密码   
+  mailInfo.setFromAddress("");    //sender email 发送者邮箱
+  mailInfo.setToAddress("yuanyoulin@czumi.com");     //receiver email 接收者邮箱
+  mailInfo.setSubject("set email title设置邮箱标题");   
+  mailInfo.setContent("set email content设置邮箱内容");   
+  //this class mainly is to send the mail这个类主要来发送邮件  
+  SimpleMailSender sms = new SimpleMailSender();  
+  sms.sendTextMail(mailInfo);//sendTextMail发送文体格式   
+  //sms.sendHtmlMail(mailInfo);//sendHtmlMail发送html格式  
+	

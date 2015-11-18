@@ -1,0 +1,179 @@
+@CHARSET "UTF-8";
+
+
+.iradio_minimal{/* 设置input types="radio"元素的 背景颜色 */
+	background-color: #EAEAEC;
+}
+.modal-header {
+	background-color: #3D9970;
+	border-bottom: 4px solid #307959; border-radius : 5px 5px 0px 0px;
+	color: #ffffff;
+	border-radius: 5px 5px 0px 0px;
+}
+
+.modal-body {
+	background-color: #EAEAEC;
+}
+
+.modal-footer {
+	margin-top: 0px;
+}
+
+.modal-content {
+	width: 560px;
+}
+
+.mybt {
+	width: 100px;
+	height: 32px;
+	margin-left: 20;
+}
+
+.modal input {
+	width: 300px;
+	height: 37px;
+	margin-top: 10px;
+	padding-left: 8PX;
+	border: 0px solid;
+}
+.modal select {
+	width: 300px;
+	height: 37px;
+	margin-top: 10px;
+	padding-left: 8PX;
+	border: 0px solid;
+}
+
+.modalField {
+	float: right;
+	font-weight: lighter;
+	font-size:16;
+	text-align: left;
+	margin-top: 15px;
+}
+
+
+.popover-content {/*提示信息*/
+	color: #FA6A6A;
+	width: 280px;
+}
+
+.toolDescribe{
+	margin-left: 8px;
+}
+
+body{
+	padding-left: 5px;
+	padding-right:5px;
+	
+}
+.selectDiv{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.statusGroup{
+	width: 360px;
+	height: 37px;
+	margin-top: 0px;
+	padding-top:3px;
+	border: 0px solid;
+	margin-top:12px;
+}
+
+
+.orderHeaderInfo{
+	padding-left: 40px;
+	
+}
+
+.orderHeader1, .orderHeader2{
+	/* border: 1px solid red; */
+	width: 400px;
+	font-weight: bold;
+	float: left;
+}
+
+.orderHeader3{
+	/* border: 1px solid red; */
+	width: 800px;
+	float: none;
+}
+.orderHeader1Name, .orderHeader2Name, .orderHeader3Name{
+	/* border: 1px solid green; */
+	width: 140px;
+	text-align: right;
+	font-weight: bold;
+	float: left;
+}
+.orderHeader1Value, .orderHeader2Value{
+	/* border: 1px solid yello; */
+	padding-left: 10px;
+	font-weight: normal;
+	float: left;
+}
+.orderHeader3Value{
+	/* border: 1px solid yello; */
+	padding-left: 10px;
+	font-weight: normal;
+	float: left;
+	
+}
+.orderListTitle{
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width:780px;
+	font-weight: bold;
+	text-align: left;
+	float: left;
+}
+.itemTable{
+	width: 780px;
+	margin-left: 40px;
+	
+	
+}
+.itemTable td, .itemTable th{
+	border:1px solid #888888;
+	 text-align:center; 
+}
+.garnishsUl{
+	list-style:none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}
+.garnishsUl li{
+	margin-left: 10px;
+    text-align: left;
+	
+}
+.operateRadios{
+	margin-left: 40px;
+	margin-top: 10px;
+}
+.disposePatterns{
+	margin-left: 20px;
+	
+}
+.lineUpContent{
+	border:1px solid #888888;
+	width: 780px;
+	height: 50px;
+	margin-left: 30px;
+	margin-top: 10px;
+	float: left;
+}
+.dineInNumberText{
+	width:10px;
+	height:30px;
+	text-align: center;
+}
+
+.show-classification-Image-div{
+	height: 100px;
+	width:100px;
+	background-image: url('../../images/no picture.jpg');
+	background-size: contain;
+	background-repeat: no-repeat;
+	
+}
