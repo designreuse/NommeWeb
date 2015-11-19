@@ -352,7 +352,7 @@
 						<div class="col-md-6">
 							<p>Phone (Required)</p>
 							<p>
-							<input type="text" class="form-control" name="input-phone">
+							<input type="text" class="form-control" name="input-phone" placeholder="(xxx) xxx-xxxx">
 							</p>
 						</div>
 					</div>

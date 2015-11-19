@@ -265,27 +265,27 @@ $(function(){
 		
 	})
 	$("#pageContent").on("click","#phone-save",function(){
-		var orginalPhone = $.trim($("#orginal-phone").text());
-		var newPhone = $.trim($("#input-phone").val());
-		var phoneExpReg = /(^[0-9]{3}\ ?[0-9]{3}-?[0-9]{4}$)|(^[0-9]{3}-[0-9]{3}-?[0-9]{4}$)|(^\([0-9]{3}\)\ ?[0-9]{3}-?[0-9]{4}$)/;
-		if(newPhone.length==0){
-			showtips("input-phone","Required",20,38);
-		}else if(orginalPhone==newPhone){
-			$("div[name='phone-edit-div']").css("display","none");
-			$("#phone-edit").css("display","block");
-		}else if(phoneExpReg.test(newPhone)){//正则表达式验证填写的电话格式正确
-			var consumer = new Consumer();
-			consumer.phone = newPhone;
-			editConsumer(consumer);
-			if(updatesuccess){
-				$("#orginal-phone").text(newPhone);
-				$("#phone-edit").css("display","block");
+		var isValidPhone = phoneNumberValidate("input-phone", 20, 38)
+		if(isValidPhone){
+			var newPhone = $.trim($("#input-phone").val());
+			var orginalPhone = $.trim($("#orginal-phone").text());
+			
+			//check if the same phone number -> no need to update
+			if(orginalPhone==newPhone){
 				$("div[name='phone-edit-div']").css("display","none");
+				$("#phone-edit").css("display","block");
 			}else{
-				showtips("input-phone","Edit error",20,38);
+				var consumer = new Consumer();
+				consumer.phone = newPhone;
+				editConsumer(consumer);
+				if(updatesuccess){
+					$("#orginal-phone").text(newPhone);
+					$("#phone-edit").css("display","block");
+					$("div[name='phone-edit-div']").css("display","none");
+				}else{
+					showtips("input-phone","Edit error",20,38);
+				}
 			}
-		}else{//号码非空，和原来的不一样，但格式不正确
-			showtips("input-phone","Not a phone",20,38);
 		}
 	})
 	
@@ -1105,6 +1105,7 @@ $(function(){
 	}).on("focus","#current-address-div input[name='input-city']",function(){
 		hidetips("current-input-city");
 	})
+	
 	$("#pageContent").on("blur","#current-address-div input[name='input-province']",function(){
 		if($.trim($(this).val()).length==0){
 			showtips("current-input-province",'Required',130,38);
@@ -1115,55 +1116,49 @@ $(function(){
 	}).on("focus","#current-address-div input[name='input-province']",function(){
 		hidetips("current-input-province");
 	})
+	
 	$("#pageContent").on("blur","#current-address-div input[name='input-phone']",function(){
-		if($.trim($(this).val()).length==0){
-			showtips("current-input-phone",'Required',130,38);
-			addressInputFlagPhone = false;
-		}else{
-			addressInputFlagPhone = true;
-		}
+		addressInputFlagPhone = phoneNumberValidate("current-input-phone", 130, 38)
 	}).on("focus","#current-address-div input[name='input-phone']",function(){
 		hidetips("current-input-phone");
 	})
 	
 	$("#pageContent").on("click","button[name='edit-address-save']", function(){
+		var canSave = true;
 		if(!addressInputFlagName && $("#current-address-div input[name='input-name']").val().length==0){
 			hidetips("current-input-name");
-			showtips("current-input-name",'Required',130,38);
-			return;
+			showtips("current-input-name",'Required',230,38);
+			canSave = false;
 		}else{
 			addressInputFlagName = true;
 		}
 		if(!addressInputFlagStreet && $("#current-address-div input[name='input-street']").val().length==0){
 			hidetips("current-input-street");
 			showtips("current-input-street",'Required',130,38);
-			return;
+			canSave = false;
 		}else{
 			addressInputFlagStreet = true;
 		}
 		if(!addressInputFlagCity && $("#current-address-div input[name='input-city']").val().length==0){
 			hidetips("current-input-city");
 			showtips("current-input-city",'Required',130,38);
-			return;
+			canSave = false;
 		}else{
 			addressInputFlagCity = true;
 		}
 		if(!addressInputFlagProvince && $("#current-address-div input[name='input-province']").val().length==0){
 			hidetips("current-input-province");
 			showtips("current-input-province",'Required',130,38);
-			return;
+			canSave = false;
 		}else{
 			addressInputFlagProvince = true;
 		}
-		if(!addressInputFlagPhone && $("#current-address-div input[name='input-phone']").val().length==0){
-			hidetips("current-input-phone");
-			showtips("current-input-phone",'Required',130,38);
-			return;
-		}else{
-			addressInputFlagPhone = true;
-		}
+	
+		//check phone number
+		canSave = phoneNumberValidate("current-input-phone",130,38);
 		
-		if(addressInputFlagName && addressInputFlagStreet && addressInputFlagCity && addressInputFlagProvince && addressInputFlagPhone){
+		if(canSave){
+			console.log("Saving");
 			//是否选为默认地址  （选中：true 不选：false）
 			var checkDefault = ($("#current-address-div input[name='input-defaultAddress']").prop("checked"));
 			//当前地址在数据库重的id （新增的没有值）
@@ -1183,12 +1178,31 @@ $(function(){
 					if(msg.success){
 						addressClick();
 					}else{
+						console.log("Saving Address Failed. msg= " + JSON.stringify(msg));
 						$("#current-address-div div[name='save-address-errorInfo']").css("display","block");
 					}
 				}
 			})
 		}
 	})
+	
+	//VALIDATIONS 
+	function phoneNumberValidate(elementId,x,y){
+		var falg = false;
+		var phoneExpReg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+		var val = $.trim($("#"+elementId).val());
+		if(val==""){
+			flag=false;
+			showtips(elementId,'Required',x,y);
+		}else if(val.match(phoneExpReg)){
+			flag = true;
+			hidetips(elementId);
+		}else{
+			flag = false;
+			showtips(elementId,"Invalid Phone",x,y);
+		}
+		return flag;
+	}
 
 //----------------------------------------------------信用卡信息维护-------------------------------------------------------------
 	
