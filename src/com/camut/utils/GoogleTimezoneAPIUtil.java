@@ -17,8 +17,8 @@ public class GoogleTimezoneAPIUtil {
 		Calendar calendar = Calendar.getInstance();
 		TimeZone timezone = calendar.getTimeZone();
 
-		// Convert milliseconds to second (UNIX timestamp)
-		int timestamp = (int) (calendar.getTime().getTime() / 1000.0);
+		// Convert milliseconds to second (UNIX time stamp)
+		int timestamp = (int) (calendar.getTimeInMillis() / 1000.0);
 
 		// TODO: Add API key in case access is denied by google. Right now, we
 		// do not use API key and it still works.
