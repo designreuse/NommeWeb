@@ -8,7 +8,7 @@ import java.util.Map;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.camut.framework.constant.Currency;
 import com.camut.framework.constant.MessageConstant;
-import com.camut.framework.constant.StripeApiKey;
+import com.camut.utils.StripeUtil;
 import com.camut.model.CardEntity;
 import com.camut.model.ChargeEntity;
 import com.camut.pageModel.PageMessage;
@@ -62,7 +62,7 @@ public class CommonUtil {
 	 * @return: String 返回 charge的id null失败
 	 */
 	public static String chargeByToken(ChargeEntity chargeEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
 			chargeParams.put("amount", chargeEntity.getAmount());
@@ -90,7 +90,7 @@ public class CommonUtil {
 	 * @return: String 返回 customer的id null失败
 	 */
 	public static String saveCustomerAndCardByToken(String token) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (StringUtil.isNotEmpty(token)) {
 			Map<String, Object> customerParams = new HashMap<String, Object>();
 			customerParams.put("source", token);
@@ -112,7 +112,7 @@ public class CommonUtil {
 	 * @return: String 返回 charge的id null失败
 	 */
 	public static String chargeByCard(CardEntity cardEntity, ChargeEntity chargeEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (cardEntity != null && chargeEntity != null) {
 			Map<String, Object> cardParams = new HashMap<String, Object>();
 			cardParams.put("object", "card");
@@ -144,7 +144,7 @@ public class CommonUtil {
 	 * @return: String 返回 返回 customer的id null失败
 	 */
 	public static String saveCustomerAndCard(CardEntity cardEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (cardEntity != null) {
 			Map<String, Object> cardParams = new HashMap<String, Object>();
 			cardParams.put("number", cardEntity.getNumber());
@@ -174,7 +174,7 @@ public class CommonUtil {
 	 * @return: String 返回 返回 charge的id null失败
 	 */
 	public static String chargeByCustomer(ChargeEntity chargeEntity, String customerId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null && StringUtil.isNotEmpty(customerId)) {
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
 			chargeParams.put("amount", chargeEntity.getAmount());
@@ -200,7 +200,7 @@ public class CommonUtil {
 	 * @return: String 返回customer的id null失败
 	 */
 	public static String createCustomer(String eamil) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		Map<String, Object> customerParams = new HashMap<String, Object>();
 		if (StringUtil.isNotEmpty(eamil)) {
 			customerParams.put("email", eamil);
@@ -220,7 +220,7 @@ public class CommonUtil {
 	 * @return: String 返回 返回 card的id null失败
 	 */
 	public static String customerAddCard(CardEntity cardEntity, String customerId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (cardEntity != null && StringUtil.isNotEmpty(customerId)) {
 
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -251,7 +251,7 @@ public class CommonUtil {
 	 * @return: String 返回 返回 card的id null失败
 	 */
 	public static String customerAddCardByToken(ChargeEntity chargeEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("source", chargeEntity.getToken());
@@ -275,7 +275,7 @@ public class CommonUtil {
 	 * @return: String 返回 返回 card的集合 null失败
 	 */
 	public static List<CardEntity> listAllCards(String customerId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		List<CardEntity> cardEntities = new ArrayList<CardEntity>();
 		if (StringUtil.isNotEmpty(customerId)) {
 
@@ -312,7 +312,7 @@ public class CommonUtil {
 	 * @return: String 返回 charge的id null失败
 	 */
 	public static String chargeByCardId(ChargeEntity chargeEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
 			chargeParams.put("amount", chargeEntity.getAmount());
@@ -343,7 +343,7 @@ public class CommonUtil {
 	 * @return: String 返回 refund的id null失败
 	 */
 	public static String refundAll(String chargeId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (StringUtil.isNotEmpty(chargeId) && chargeId.contains("ch")) {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("refund_application_fee", true);
@@ -367,7 +367,7 @@ public class CommonUtil {
 	 * @return: String 返回 account的id null失败
 	 */
 	public static String createManagedAccount() {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		Map<String, Object> accountParams = new HashMap<String, Object>();
 		accountParams.put("managed", true);
 		try {
@@ -386,7 +386,7 @@ public class CommonUtil {
 	 * @return: Account 返回 Account null失败
 	 */
 	public static Account getAccountById(String accountId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		try {
 			RequestOptions options = RequestOptions.builder().setIdempotencyKey(CreateOrderNumber.getRadomString()).build();
 			Account acct = Account.retrieve(accountId, options);
@@ -404,7 +404,7 @@ public class CommonUtil {
 	 * @return: PageMessage
 	 */
 	public static PageMessage createBankAccount(String routingNumber, String bankAccountNumber, String accountId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		PageMessage pm = new PageMessage();
 		if (StringUtil.isNotEmpty(routingNumber) && StringUtil.isNotEmpty(bankAccountNumber) && StringUtil.isNotEmpty(accountId)) {
 			Map<String, Object> accountParams = new HashMap<String, Object>();
@@ -442,7 +442,7 @@ public class CommonUtil {
 	 * @return: String 返回 token的id null失败
 	 */
 	public static String getTokenByCard(CardEntity cardEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (cardEntity != null) {
 			Map<String, Object> cardParams = new HashMap<String, Object>();
 			cardParams.put("number", cardEntity.getNumber());
@@ -470,7 +470,7 @@ public class CommonUtil {
 	 * @return: String 返回 charge的id null失败
 	 */
 	public static String chargeForPlatform(CardEntity cardEntity, String accountNumber, ChargeEntity chargeEntity) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		if (cardEntity != null && StringUtil.isNotEmpty(accountNumber)) {
 			String token = getTokenByCard(cardEntity);
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
@@ -498,7 +498,7 @@ public class CommonUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static PageMessage updateManagedAccount(String accountNumber, String context) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		PageMessage pm = new PageMessage();
 		if (StringUtil.isNotEmpty(accountNumber) && StringUtil.isNotEmpty(context) && !"{}".equals(context)) {
 			RequestOptions options = RequestOptions.builder().setIdempotencyKey(CreateOrderNumber.getRadomString()).build();
@@ -591,7 +591,7 @@ public class CommonUtil {
 	 * @return: int -1失败 1成功
 	 */
 	public static int deleteCard(String customerId, String cardId) {
-		Stripe.apiKey = StripeApiKey.getApiKey();
+		Stripe.apiKey = StripeUtil.getApiKey();
 		try {
 			Customer customer = Customer.retrieve(customerId);
 			for (ExternalAccount source : customer.getSources().getData()) {
