@@ -203,10 +203,9 @@
 				<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 					<div class="panel-body">
 						<div style="position:relative;">
-							<div align="right" style=" font-size:18px; padding-top:15px; position:absolute; 
-								background-color: #EBECED; right:0px; height:49px; top:-64px; z-index:1025;">
+							<div align="right" style=" font-size:18px; padding-top:5px; position:absolute;background-color: #EBECED; right:0px; height:30px; top:-50px; z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-									<span class="glyphicon glyphicon-chevron-up" style="color:#FF9C00;"></span>
+									<span class="glyphicon glyphicon-chevron-up" style="color:#515253;"></span>
 								</a>
 							</div>
 						</div>
