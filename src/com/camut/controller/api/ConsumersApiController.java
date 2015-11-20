@@ -193,15 +193,15 @@ public class ConsumersApiController extends BaseAPiModel {
 						//e.printStackTrace();
 					//}
 					consumers.setPassword(MD5Util.md5(temporarypassword));
-					long id = consumersService.saveTokenAndType(consumers);
+					String uuid = consumersService.saveTokenAndType(consumers);
 					//增加失败
-					if (id<0) {
+					if (!StringUtil.isNotEmpty(uuid)) {
 						ram.setFlag(-1);
 						ram.setResultMessage(MessageConstant.ADD_FAILED);
 						return ram;
 					}
-					Consumers consumers3 = consumersService.getConsumersById(id);
-					consumersApiModel.setConsumerId(id);
+					Consumers consumers3 = consumersService.getConsumersByUuid(uuid);
+					//consumersApiModel.setConsumerId(id);
 					consumersApiModel.setConsumerUuid(consumers3.getUuid());
 					if (StringUtil.isNotEmpty(consumers.getNickname())) {
 						consumersApiModel.setShowName(consumers.getNickname());

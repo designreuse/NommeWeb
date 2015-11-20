@@ -11,6 +11,7 @@ import com.camut.pageModel.PageFilter;
 import com.camut.pageModel.PageMessage;
 import com.camut.pageModel.PageOrderHeader;
 import com.camut.pageModel.PageRestaurantOrderStatement;
+import com.camut.pageModel.PageSelectItemReservationOrder;
 
 /**
  * @dao OrderDao.java
@@ -105,7 +106,7 @@ public interface OrderDao {
 	 * @param: @param status
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageOrderHeader> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo);
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo);
 	
 	/**
 	 * @Title: cancelOrder

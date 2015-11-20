@@ -142,8 +142,8 @@
 	<div class="container bgbai">
 		<div class="row">
 			<div class="col-md-8">
-				<input type="hidden" id="consumerId" value="${cart.consumerId}"> 
-				<input type="hidden" id="restaurantId1" value="${cart.restaurantId}"> 
+				<input type="hidden" id="consumerUuid" value="${cart.consumerUuid}"> 
+				<input type="hidden" id="restaurantUuid1" value="${cart.restaurantUuid}"> 
 				<input type="hidden" id="orderId">
 				
 				<c:if test="${cart.orderType==1}"><h4 align="left">Delivery Details</h4>

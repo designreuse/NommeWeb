@@ -89,7 +89,7 @@ public interface ConsumersDao {
 	 * @param:    consumers
 	 * @return: id
 	 */
-	public long saveTokenAndType(Consumers consumers);
+	public String saveTokenAndType(Consumers consumers);
 	
 	/**
 	 * @Title: updateTokenAndType

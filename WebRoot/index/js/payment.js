@@ -52,7 +52,7 @@ $(function(){
 	});
 	
 	$("button[name='changeOrder']").click(function(){
-		window.location = appPath+"/index/restaurantmenu?restaurantId="+$("#restaurantId1").val();
+		window.location = appPath+"/index/restaurantmenu?restaurantUuid="+$("#restaurantUuid1").val();
 	});
 	
 	$("#dropDown").click(function(){
@@ -71,7 +71,7 @@ $(function(){
    			 url: appPath+'/payment/payByCash',
   			 data: {
   			 	'amount':(parseFloat($("#cartTotal").text())*100).toFixed(0),
-   				'consumerId':$("#consumerId").val(),
+   				'consumerUuid':$("#consumerUuid").val(),
    				'orderId':$("#orderId").val()
   			 },
    			 success: function(msg){
@@ -106,7 +106,7 @@ $(function(){
 				type: 'post',
 				url: appPath+'/consumers/showRegistCart',
 				data: {
-						'consumerId':$("#consumerId").val()
+						'consumerUuid':$("#consumerUuid").val()
 						},
 				success: function(data){
 					$("#bg").css("display", "none");
@@ -258,22 +258,22 @@ $(function(){
   $("button[name='placeOrder']").click(function(){
   	if($("#cardDetail").css('display')=='block'){//输入卡的详细信息付款
   		if($("input[name='save']").prop("checked")){
-  		save = 1;
-  	}
+	  		save = 1;
+	  	}
   		if($("#number").val()=='' ){
-  		$("#numberdiv").css('border-color','red');
-  	}
-  	if($("#month").val()==''){
-  		$("#month").parent().css('border-color','red');
-  	}
-  	if($("#year").val()==''){
-  		$("#year").parent().css('border-color','red');
-  	}
-  	if($("#cvv").val()==''){
-  		$("#cvv").parent().css('border-color','red');
-  	}
-  	if(flag && flag1 && flag2 && flag3){//表单验证通过
-  		var $form = $("#payment-form");
+	  		$("#numberdiv").css('border-color','red');
+	  	}
+	  	if($("#month").val()==''){
+	  		$("#month").parent().css('border-color','red');
+	  	}
+	  	if($("#year").val()==''){
+	  		$("#year").parent().css('border-color','red');
+	  	}
+	  	if($("#cvv").val()==''){
+	  		$("#cvv").parent().css('border-color','red');
+	  	}
+	  	if(flag && flag1 && flag2 && flag3){//表单验证通过
+	  		var $form = $("#payment-form");
 
     	$("button[name='placeOrder']").prop('disabled', true);
 
@@ -282,63 +282,63 @@ $(function(){
   	
   	
   	 function stripeResponseHandler(status, response) {
-  var $form = $('#payment-form');
-  if (response.error) {
-    var param = response.error.param;
-    if(param=='number'){
-    	$("#numberdiv").css('border-color','red');
-    }
-    else if(param=='exp_month'){
-    	$("#month").parent().css('border-color','red');
-    }
-    else if(param=='exp_year'){
-    	$("#year").parent().css('border-color','red');
-    }
-    else if(param=='cvc'){
-    	$("#cvv").parent().css('border-color','red');
-    }
-    $("button[name='placeOrder']").prop('disabled', false);
-  } else {
-    var token = response.id;
-    $("#bg").css("display", "block");
-	$("#show").css("display", "block");
-    $.ajax({
-  		type: "POST",
-   		url: appPath+"/payment/payByDetail",
-   		data: {
-   			'token':token,
-   			'amount':(parseFloat($("#cartTotal").text())*100).toFixed(0),
-   			'consumerId':$("#consumerId").val(),
-   			'save':save,
-   			'orderId':$("#orderId").val()
-   		},
-   		success: function(msg){
-   			$("#bg").css("display", "none");
-			$("#show").css("display", "none");
-   			$("button[name='placeOrder']").prop('disabled', false);
-     		msg = $.parseJSON(msg);
-     		if(msg.flag>0){//订单已经增加过
-     				$("#orderId").val(msg.flag);
-     			}
-     		if(!msg.success){//不成功
-     			$("button[name='placeOrder']").popover({
-					content :msg.errorMsg
-				});
-				$("button[name='placeOrder']").popover('show');
-				setTimeout(function(){
-					$("button[name='placeOrder']").popover('destroy');
-				},5000)
-     		}
-     		else{
-     			//捐款
-     			$.cookie("cart-orderId", 0,{expires:10,path: '/' })
-     			$("#charityNum").append("You will donate $"+(parseFloat($("#subTotal").text())*0.05).toFixed(2));
-     			$("#display").css('display','block');
-     		}
-   		}
-	});
-  }
-};
+		  var $form = $('#payment-form');
+		  if (response.error) {
+		    var param = response.error.param;
+		    if(param=='number'){
+		    	$("#numberdiv").css('border-color','red');
+		    }
+		    else if(param=='exp_month'){
+		    	$("#month").parent().css('border-color','red');
+		    }
+		    else if(param=='exp_year'){
+		    	$("#year").parent().css('border-color','red');
+		    }
+		    else if(param=='cvc'){
+		    	$("#cvv").parent().css('border-color','red');
+		    }
+		    $("button[name='placeOrder']").prop('disabled', false);
+		  } else {
+		    var token = response.id;
+		    $("#bg").css("display", "block");
+			$("#show").css("display", "block");
+		    $.ajax({
+		  		type: "POST",
+		   		url: appPath+"/payment/payByDetail",
+		   		data: {
+		   			'token':token,
+		   			'amount':(parseFloat($("#cartTotal").text())*100).toFixed(0),
+		   			'consumerUuid':$("#consumerUuid").val(),
+		   			'save':save,
+		   			'orderId':$("#orderId").val()
+		   		},
+		   		success: function(msg){
+		   			$("#bg").css("display", "none");
+					$("#show").css("display", "none");
+		   			$("button[name='placeOrder']").prop('disabled', false);
+		     		msg = $.parseJSON(msg);
+		     		if(msg.flag>0){//订单已经增加过
+		     				$("#orderId").val(msg.flag);
+		     			}
+		     		if(!msg.success){//不成功
+		     			$("button[name='placeOrder']").popover({
+							content :msg.errorMsg
+						});
+						$("button[name='placeOrder']").popover('show');
+						setTimeout(function(){
+							$("button[name='placeOrder']").popover('destroy');
+						},5000)
+		     		}
+		     		else{
+		     			//捐款
+		     			$.cookie("cart-orderId", 0,{expires:10,path: '/' })
+		     			$("#charityNum").append("You will donate $"+(parseFloat($("#subTotal").text())*0.05).toFixed(2));
+		     			$("#display").css('display','block');
+		     		}
+		   		}
+			});
+		  }
+		};
   	
   	}
   	else{//用存好的卡付款
@@ -366,7 +366,7 @@ $(function(){
    		url: appPath+"/payment/payByCardId",
    		data: {
    			'amount':(parseFloat($("#cartTotal").text())*100).toFixed(0),
-   			'consumerId':$("#consumerId").val(),
+   			'consumerUuid':$("#consumerUuid").val(),
    			'cardId':cardId,
    			'orderId':$("#orderId").val()
    		},
@@ -410,7 +410,7 @@ $(function(){
   		type: "POST",
    		url: appPath+"/payment/deleteCard",
    		data: {
-   			'consumerId':$("#consumerId").val(),
+   			'consumerUuid':$("#consumerUuid").val(),
    			'cardId':cardId
    		},
    		success: function(msg){

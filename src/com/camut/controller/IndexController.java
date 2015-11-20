@@ -191,7 +191,7 @@ public class IndexController {
 	@RequestMapping(value = "/user")
 	public String userPage(String flag, Model model,HttpSession session){
 		Consumers consumers = (Consumers)session.getAttribute("consumer");
-		if(consumers!=null && consumers.getId()!=null){//必须是用户已登录
+		if(consumers!=null && StringUtil.isNotEmpty(consumers.getUuid())){//必须是用户已登录
 			//long consumerId = seesion.get
 			//Consumers consumers2 = consumersService.getConsumersById(consumers.getId());//Long.parseLong(
 			model.addAttribute("consumer", consumers);

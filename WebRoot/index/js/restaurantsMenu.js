@@ -870,7 +870,7 @@ $(function(){
 		if(cartOrderType == 3){//reservation的情况
 			
 			orderTimeIsOk = false;
-			if(orderId==0){
+			if(orderId==0||orderId == undefined){
 				$("div[name='checkoutInfo-text']").text("Please selecte an reservation order");
 				$("#checkoutInfo").attr("style","display:block;");
 				setTimeout(function(){

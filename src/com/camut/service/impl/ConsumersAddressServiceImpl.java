@@ -153,7 +153,7 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 			pca.setPhone(consumersAddress.getPhone());
 			pca.setZipcode(consumersAddress.getZipcode());
 			pca.setConsignee(consumersAddress.getConsignee());
-			pca.setFullAddress(consumersAddress.getStreet()+" "+consumersAddress.getCity()+" "+consumersAddress.getProvince());
+			pca.setFullAddress(consumersAddress.getStreet()+" "+consumersAddress.getFloor()+" "+consumersAddress.getCity()+" "+consumersAddress.getProvince());
 			pcaList.add(pca);
 		}
 		return pcaList;

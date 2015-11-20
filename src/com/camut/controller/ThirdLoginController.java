@@ -59,9 +59,9 @@ public class ThirdLoginController {
 		OAuthService service = new ServiceBuilder().provider(TwitterApi.class)
 		// 此处是 用户名: Meta_Universe 的
 				.apiKey("M9PuxP9rqjuFTGWofuyYq4Zxf").apiSecret("SM6rJAUJrjgEmdQZw87ArPFOcGraVo0Ey4kpEs0zgNTOm1h9by")
-				.callback("https://www.metaorder.ca/thirdLogin/twitterCallback")// 加拿大服务器
+				//.callback("https://www.metaorder.ca/thirdLogin/twitterCallback")// 加拿大服务器
 				// .callback("http://119.29.2.48:8080/camut/thirdLogin/twitterCallback")//中国服务器
-				// .callback("http://localhost:8080/thirdLogin/twitterCallback")//
+				 .callback("http://localhost:8080/thirdLogin/twitterCallback")//
 				// 本地机器
 				.build();
 		Token token = service.getRequestToken();// 获取token
@@ -107,6 +107,7 @@ public class ThirdLoginController {
 			consumers2.setNickname(map.get("screen_name").toString());
 			consumers2.setLoginType(LoginTypeConstant.TWITTER);
 			consumers2.setStatus(0);
+			consumers2.setUuid(StringUtil.getUUID());
 			consumers2.setRegDate(new Date());
 			int flag = consumersService.addConsumerForNomme(consumers2);
 			if (flag == 1) {// 增加成功
@@ -131,9 +132,9 @@ public class ThirdLoginController {
 		OAuthService service = new ServiceBuilder().provider(FacebookApi.class)
 		// 使用的Facebook 应用账号 用户名: meta.universe.2015@gmail.com 密码：Test20150101
 				.apiKey("1913585478866636").apiSecret("4e6e5994324fc99146771cc3f37ba79d")
-				.callback("https://www.metaorder.ca/thirdLogin/facebookCallback")// 加拿大服务器
+				//.callback("https://www.metaorder.ca/thirdLogin/facebookCallback")// 加拿大服务器
 				// .callback("http://119.29.2.48:8080/camut/thirdLogin/facebookCallback")//国内服务器
-				// .callback("http://localhost:8080/thirdLogin/facebookCallback")//本地
+				 .callback("http://localhost:8080/thirdLogin/facebookCallback")//本地
 				.build();
 		String authorizationUrl = service.getAuthorizationUrl(null);// 获取登陆地址
 		session.setAttribute("facebookService", service);
@@ -169,6 +170,7 @@ public class ThirdLoginController {
 			consumers2.setNickname(map.get("name").toString());
 			consumers2.setLoginType(LoginTypeConstant.FACEBOOK);
 			consumers2.setStatus(0);
+			consumers2.setUuid(StringUtil.getUUID());
 			consumers2.setRegDate(new Date());
 			int flag = consumersService.addConsumerForNomme(consumers2);
 			if (flag == 1) {// 增加成功

@@ -3,6 +3,7 @@
  */
 package com.camut.dao.impl;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -163,14 +164,16 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 	 * @return: id
 	 */
 	@Override
-	public long saveTokenAndType(Consumers consumers) {
+	public String saveTokenAndType(Consumers consumers) {
 		try {
 			consumers.setStatus(0);
 			consumers.setRegDate(new Date());
-			return (Long) this.save(consumers);
+			consumers.setUuid(StringUtil.getUUID());
+			Serializable serializable = this.save(consumers);
+			return serializable.toString();//返回次对象uuid
 		} catch (Exception e) {
 			e.printStackTrace();
-			return -1;
+			return "";
 		}
 	}
 

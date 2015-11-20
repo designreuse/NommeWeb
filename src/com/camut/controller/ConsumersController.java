@@ -37,6 +37,7 @@ import com.camut.pageModel.PageFavourites;
 import com.camut.pageModel.PageFilter;
 import com.camut.pageModel.PageMessage;
 import com.camut.pageModel.PageOrderHeader;
+import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.service.CartDishGarnishService;
 import com.camut.service.CartHeaderService;
 import com.camut.service.CartItemService;
@@ -311,8 +312,8 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="getUnpaidReservationOrders", method=RequestMethod.POST)
 	@ResponseBody
-	public List<PageOrderHeader> getUnpaidReservationOrders(String consumerUuid,String restaurantUuid,String currentReservationOrderNumber){
-		List<PageOrderHeader> orderHeaderList = new ArrayList<PageOrderHeader>();
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid,String restaurantUuid,String currentReservationOrderNumber){
+		List<PageSelectItemReservationOrder> orderHeaderList = new ArrayList<PageSelectItemReservationOrder>();
 		if(StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(consumerUuid)){
 			int orderType = GlobalConstant.TYPE_RESERVATION; 
 			long currentOrderNo = 0;
@@ -320,8 +321,40 @@ public class ConsumersController {
 				currentOrderNo = Long.parseLong(currentReservationOrderNumber);
 			}
 			orderHeaderList = orderService.getUnpaidReservationOrders(consumerUuid,restaurantUuid,orderType,currentOrderNo);
+			
+			
+			
+			
+			
 		}
-		return orderHeaderList;
+		if(orderHeaderList!=null &&orderHeaderList.size()>0){
+			List<PageSelectItemReservationOrder> orderHeaderList2 = new ArrayList<PageSelectItemReservationOrder>(); 
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
+			long nowTime = new Date().getTime();
+			for (int i=0;i< orderHeaderList.size(); i++){
+				PageSelectItemReservationOrder pageOrderHeader = orderHeaderList.get(i);
+				if(pageOrderHeader.getItemSize()==0){
+					long orderTime = pageOrderHeader.getOrderDate().getTime();
+					//Date d =  pageOrderHeader.getOrderDate();
+					//String time = format.format(d);  
+					//pageOrderHeader.setStrOrderDate(time);
+					//如果有当前订单号传进来 并且要订单的订单号与传入的订单号相等时，且订单时间要大于当前时间的，才给予显示出来
+					if( Long.parseLong(currentReservationOrderNumber) == pageOrderHeader.getId() && orderTime<nowTime){
+						continue;
+					}else{
+						orderHeaderList2.add(pageOrderHeader);
+						
+					}
+				}
+			}
+			
+			return orderHeaderList2;
+		}else{
+			return null;
+		}
+		
+		
 	}
 	
 	/**
@@ -456,10 +489,10 @@ public class ConsumersController {
 	 */
 	@RequestMapping(value="/getConsumersAddressList", method = RequestMethod.POST)
 	@ResponseBody
-	public List<PageConsumersAddress> getConsumersAddressListInDistance (String consumerId, HttpSession session) throws Exception{
-		if(StringUtil.isNotEmpty(consumerId)){
+	public List<PageConsumersAddress> getConsumersAddressListInDistance (String consumerUuid, HttpSession session) throws Exception{
+		if(StringUtil.isNotEmpty(consumerUuid)){
 			//long restaurantId2 = Long.parseLong(restaurantId);
-			List<PageConsumersAddress> consumersAddressList = consumersAddressService.getPageConsumersAddressByConsumerUuid(consumerId);
+			List<PageConsumersAddress> consumersAddressList = consumersAddressService.getPageConsumersAddressByConsumerUuid(consumerUuid);
 			//getConsumersAddressDefault(long consumerId) {
 			//List<ConsumersAddressApiModel> apiAddressList = consumersAddressService.getConsumersAddressInDistance(consumerId2, restaurantId2);
 			/*List<PageConsumersAddress> consumersAddressList2 = new ArrayList<PageConsumersAddress>();
@@ -747,9 +780,9 @@ public class ConsumersController {
 		Map<String, Object> map = (Map<String, Object>)JSONUtils.parse(context);
 		PageMessage pm = new PageMessage();
 		pm.setSuccess(false);
-		int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
+		String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
 		//if(map.get("consumerId")!=null && map.get("consumerId").toString().length()>0){
-			Consumers consumers = consumersService.getConsumersById(consumerId);
+			Consumers consumers = consumersService.getConsumersByUuid(consumerUuid);
 			if(consumers!=null){
 				if(map.get("firstName")!=null && map.get("firstName").toString().length()>0){
 					consumers.setFirstName(map.get("firstName").toString());
@@ -772,7 +805,7 @@ public class ConsumersController {
 				}
 				int temp = consumersService.updateConsumersForNomme(consumers);
 				if(temp>0){
-					Consumers consumers2 = consumersService.getConsumersById(consumerId);
+					Consumers consumers2 = consumersService.getConsumersByUuid(consumerUuid);
 					if(consumers2!=null){
 						session.setAttribute("consumer", consumers2);
 					}

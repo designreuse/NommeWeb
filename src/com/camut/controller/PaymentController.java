@@ -355,10 +355,10 @@ public class PaymentController {
 	 */
 	@RequestMapping(value="deleteCard",method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage deleteCardById(String cardId,String consumerId){
+	public PageMessage deleteCardById(String cardId,String consumerUuid){
 		PageMessage pm = new PageMessage();
-		if (StringUtil.isNotEmpty(cardId)&&StringUtil.isNotEmpty(consumerId)) {
-			int flag = paymentService.deleteCard(cardId, consumerId);
+		if (StringUtil.isNotEmpty(cardId)&&StringUtil.isNotEmpty(consumerUuid)) {
+			int flag = paymentService.deleteCard(cardId, consumerUuid);
 			if (flag==1) {//删除成功
 				return pm;
 			}

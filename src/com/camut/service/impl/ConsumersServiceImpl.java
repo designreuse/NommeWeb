@@ -210,7 +210,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 	 * @return: Consumers
 	 */
 	@Override
-	public long saveTokenAndType(Consumers consumers) {
+	public String saveTokenAndType(Consumers consumers) {
 		return consumersDao.saveTokenAndType(consumers);
 	}
 

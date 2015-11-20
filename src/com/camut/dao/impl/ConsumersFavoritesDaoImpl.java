@@ -140,7 +140,7 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	public List<PageFavourites> getFavouriteListByconsumerUuid(String consumerUuid, PageFilter pf){
 		String sql = "select d.restaurants_uuid as restaurantUuid, d.id as favouritesId, e.aavgPrice as avgPrice, e.arname as restaurantName, e.cscore as avgStars, e.adelivery as isDelivery, e.apickup as isPickup, "
 				+"e.areservation as isReservation, e.adistance as distance, e.adeliveryPrice as deliveryPrice, e.url as imageUrl from tbl_customer_favorites d "
-				+"LEFT JOIN ( select a.restaurant_name as arname, a.logourl as url, a.id as aruuid, c.scroe as cscore,a.isdelivery as adelivery, "
+				+"LEFT JOIN ( select a.restaurant_name as arname, a.logourl as url, a.uuid as aruuid, c.scroe as cscore,a.isdelivery as adelivery, "
 				+"a.ispickup as apickup, a.isreservation as areservation, a.`status` as `status`, a.distance as adistance, a.deliver_price as adeliveryPrice, a.avg_price as aavgPrice "
 				 +"from dat_restaurants a "
 					+"LEFT JOIN ( select round(avg(b.score)) as scroe, b.restaurants_uuid as rsuuid from tbl_evaluate b group by b.restaurants_uuid) c  on c.rsuuid = a.uuid) e on d.restaurants_uuid=e.aruuid "
@@ -156,7 +156,7 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 		query.setParameter("rows", rows);
 		
 		query.setResultTransformer(Transformers.aliasToBean(PageFavourites.class));
-		query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
+		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
 		query.addScalar("favouritesId",new org.hibernate.type.IntegerType());
 		query.addScalar("avgPrice",new org.hibernate.type.DoubleType());
 		query.addScalar("restaurantName",new org.hibernate.type.StringType());

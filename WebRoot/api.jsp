@@ -535,9 +535,9 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取营业时间                                 
    	<form action="${ctx }/api/getOpenTime" method="post">    		
-   		订单时间:<input type="text" name="orderDate" value="">
-   		商家Id:<input type="text" name="restaurantUuid" value="16">
-   		订单类型:<input type="text" name="type" value="1">
+   		订单时间:<input type="text" name="orderDate" value="2015-11-19">
+   		商家Id:<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
+   		订单类型:<input type="text" name="type" value="2">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

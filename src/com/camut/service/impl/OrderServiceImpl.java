@@ -62,6 +62,7 @@ import com.camut.pageModel.PageModel;
 import com.camut.pageModel.PageOrderHeader;
 import com.camut.pageModel.PageOrderItem;
 import com.camut.pageModel.PageRestaurantOrderStatement;
+import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.service.CartService;
 import com.camut.service.ConsumersService;
 import com.camut.service.DishGarnishService;
@@ -631,7 +632,7 @@ public class OrderServiceImpl implements OrderService {
         }
 		
 		Consumers consumers = new Consumers();
-		consumers.setId(Long.parseLong(map.get("consumerId").toString()));
+		consumers.setUuid(map.get("consumerUuid").toString());
 		oh.setConsumers(consumers);
 		oh.setOrderType(Integer.parseInt(map.get("orderType").toString()));
 		oh.setCreatedate(new Date());
@@ -667,29 +668,10 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: @param status
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageOrderHeader> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType,long currentOrderNo){
-		List<PageOrderHeader> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, orderType, currentOrderNo);
-		List<PageOrderHeader> orderHeaderList2 = new ArrayList<PageOrderHeader>(); 
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
-		long nowTime = new Date().getTime();
-		for (int i=0;i< orderHeaderList.size(); i++){
-			PageOrderHeader pageOrderHeader = orderHeaderList.get(i);
-			if(pageOrderHeader.getItemSize()==0){
-				long orderTime = pageOrderHeader.getOrderDate().getTime();
-				Date d =  pageOrderHeader.getOrderDate();
-				String time = format.format(d);  
-				pageOrderHeader.setStrOrderDate(time);
-				//如果有当前订单号传进来 并且要订单的订单号与传入的订单号相等时，且订单时间要大于当前时间的，才给予显示出来
-				if(currentOrderNo == pageOrderHeader.getId() && orderTime<nowTime){
-					continue;
-				}else{
-					orderHeaderList2.add(pageOrderHeader);
-					
-				}
-			}
-		}
-		return orderHeaderList2;
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType,long currentOrderNo){
+		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, orderType, currentOrderNo);
+		
+		return orderHeaderList;
 	}
 
 	/**

@@ -103,7 +103,7 @@ public interface ConsumersService {
 	 * @param:    consumers
 	 * @return: Consumers
 	 */
-	public long saveTokenAndType(Consumers consumers);
+	public String saveTokenAndType(Consumers consumers);
 	
 	/**
 	 * @Title: updateTokenAndType

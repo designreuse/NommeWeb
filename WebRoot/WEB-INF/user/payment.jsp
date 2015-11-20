@@ -8,7 +8,7 @@
 
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="expires" content="0">
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 
@@ -32,7 +32,6 @@
 						<p>Card Number</p>
 						<p>
 							<div name="number-div" >
-								
 								<div class="col-md-10" style="padding: 0px;">
 									<input class="form-control" id="number" type="text" maxlength="20" data-stripe="number" placeholder="Card Number">
 								</div>
@@ -48,7 +47,6 @@
 									</div>
 								</div>
 							</div>
-							<!-- <input type="text" class="form-control" placeholder="Card Number" id="card-number"> -->
 						</p>
 					</div>
 					<div class="col-md-4">
@@ -93,46 +91,12 @@
 				
 			</div>
 		</div>	
-			
-			<!-- <div class="row">
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-8">
-							<p>Card Number</p>
-							<p>
-								<input type="email" class="form-control"
-									id="exampleInputEmail1">
-							</p>
-						</div>
-						<div class="col-md-2">
-							<p>Expiration</p>
-							<p>
-								<input type="email" class="form-control"
-									id="exampleInputEmail1">
-							</p>
-						</div>
-						<div class="col-md-2">
-							<p>CVV</p>
-							<p>
-								<input type="email" class="form-control"
-									id="exampleInputEmail1">
-							</p>
-						</div>
-					</div>
-					
-				</div>
-			</div> -->
-		
-
 	</div>
 
 	<div class="userpadd" id="Payments">
 		<h3 align="left" class="rest-miaodi">Your Cards</h3>
 		<c:forEach items="${cards}" var="card">
 			<div class="row" style="border: 1px solid #dddddd;border-radius:4px;height: 70px;margin-left: 70px;margin-right: 70px;margin-top: 20px;margin-bottom: 10px;background-color: #eeeeee;">
-				<%-- <div class="col-md-1" style="padding-top: 13px;">
-					<input type="radio" name="card"> <input type="hidden" name="cardId" value="${card.id}">
-				</div> --%>
 				<div class="col-md-3" style="padding-top: 9px;">
 					<div>
 						<c:if test="${card.type=='Visa'}">
@@ -146,7 +110,6 @@
 						</c:if>
 					</div>
 				</div>
-				
 				<div class="col-md-7" style="padding-top: 10px;">
 					<div style="font-size: x-large;color: #444444;padding-top: 12px;float:left;">***************&nbsp;</div>
 					<div style="font-size: x-large;color: #444444;padding-top: 5px;">${card.last4}</div>

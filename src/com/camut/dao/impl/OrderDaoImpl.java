@@ -21,6 +21,7 @@ import com.camut.pageModel.PageMessage;
 import com.camut.pageModel.PageOrderHeader;
 import com.camut.pageModel.PagePastOrderInfo;
 import com.camut.pageModel.PageRestaurantOrderStatement;
+import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.utils.StringUtil;
 
 /**
@@ -208,7 +209,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return List<PageOrderHeader>  
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PageOrderHeader> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo){
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, int orderType, long currentOrderNo){
 		//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
 		//java.sql.Date endDate = new java.sql.Date(nowTime);
 		//Long a = num;
@@ -217,11 +218,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		
 		String sql = "";
 		if(currentOrderNo>0){
-			sql = "select o.id as id, o.order_date as orderDate, o.number as number, COUNT(i.id) as itemSize "
+			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
 					+"from dat_order_header o " 
 					+"left join dat_order_item i on o.id=i.order_id"
-					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid "
-					+"and o.order_type=:orderType "
+					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid " 
+					+" and o.order_type=:orderType "
 					+"and ((DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or "
 					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and "
 					+" DATE_FORMAT(o.createdate,'%Y-%m-%d') < DATE_FORMAT(NOW(),'%Y-%m-%d') and "
@@ -232,7 +233,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					//+" and  DATE_FORMAT(o.order_date,'%Y-%m-%d%T') >= DATE_FORMAT(NOW(),'%Y-%m-%d%T'))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
 					+" group by o.id order by o.order_date asc";
 		}else{
-			sql = "select o.id as id, o.order_date as orderDate, o.number as number, COUNT(i.id) as itemSize "
+			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
 					+"from dat_order_header o " 
 					+"left join dat_order_item i on o.id=i.order_id"
 					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid "
@@ -246,26 +247,20 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					+"(o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3 ))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
 					+" group by o.id order by o.order_date asc";
 		}
-		
-		/*select o.id as id, o.order_date as orderDate, o.number as number, o.order_type as orderType, o.`status` as `status`
-		from dat_order_header o where o.consumer_id=54 and o.restaurant_id=16 and 
-		(DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or 
-			(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and  (o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3  ) ))
-					and o.order_type=3  order by o.order_date asc;
-		
-		*/
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("consumerUuid", consumerUuid);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderType", orderType);
 		//query.setParameter("status", status);
 		//query.setParameter("endDate", endDate);
-		query.setResultTransformer(Transformers.aliasToBean(PageOrderHeader.class));
-		query.addScalar("orderDate",new org.hibernate.type.TimestampType());
+		query.setResultTransformer(Transformers.aliasToBean(PageSelectItemReservationOrder.class));
 		query.addScalar("id",new org.hibernate.type.IntegerType());
+		query.addScalar("orderDate",new org.hibernate.type.TimestampType());
+		query.addScalar("strOrderDate",new org.hibernate.type.StringType());
 		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("itemSize",new org.hibernate.type.IntegerType());
-		return query.list();
+		List<PageSelectItemReservationOrder> list = query.list();
+		return list;
 		
 	}
 
@@ -342,7 +337,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(date);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
@@ -591,7 +586,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.addScalar("total",new org.hibernate.type.DoubleType());
 		query.addScalar("status",new org.hibernate.type.IntegerType());
 		query.addScalar("orderType",new org.hibernate.type.IntegerType());
-		query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
+		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
 		query.addScalar("restaurantName",new org.hibernate.type.StringType());
 		@SuppressWarnings("unchecked")
 		List<PagePastOrderInfo> list = query.list();
