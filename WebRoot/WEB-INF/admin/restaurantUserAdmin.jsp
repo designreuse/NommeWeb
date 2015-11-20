@@ -33,7 +33,7 @@
   
   <body>
 	<div style="margin-top:10px;margin-left: 10px;">
-	<input type="hidden" id = "restaurantId1">
+	<input type="hidden" id = "restaurantUuid1">
 		<div  style="width:140px;  float:left;">
 			<div style="font-size:16; font-weight: lighter;">Restaurant Name:</div>
 		</div>
@@ -104,7 +104,7 @@
 							<div class="row"  >
 								
 								<div class="col-md-9" >
-									<input type="hidden" name="restaurantId"/>
+									<input type="hidden" name="restaurantUuid"/>
 								</div>
 							</div>
 						<!-- </div> -->
@@ -172,8 +172,8 @@
 								</div>
 								<div class="col-md-9">
 									<input type="password" name="password" class="form-control"
-										placeholder="Password" data-placement="right" /> <input
-										type="hidden" name="id"> 
+										placeholder="Password" data-placement="right" /> 
+									<input type="hidden" name="uuid"> 
 								</div>
 							</div>
 						</div>
@@ -339,8 +339,8 @@
 	    	var tabeDataUrl;//刷新表格的URL
 	    	var oldStatu;
 	    	var newStatu;
-	    	var id;
-	    	var restaurantId ;
+	    	var restaurantUserUuid;
+	    	var restaurantUuid ;
 	    	
 	    	$(".select2RestauramtName").select2({//使select具有select2的样式和功能
 	    		placeholder: "Select a restaurant"
@@ -358,7 +358,7 @@
     				$(".select2RestauramtName").append(opt);
 	    			for ( var i in result) {
 	    				var a = result[i];
-	    				var opt = "<option value="+a.id+">"+a.restaurantName+"</option>";
+	    				var opt = "<option value="+a.restaurantUuid+">"+a.restaurantName+"</option>";
 	    				$(".select2RestauramtName").append(opt);
 					}
 	    		}
@@ -367,16 +367,16 @@
 	    	$(".select2RestauramtName").on("select2:select", function (e) { log("select2:select", e); });
 	    	//select2的选择事件，事件触发将获得对应商家的id，然后去后台搜索出对应的商家管理员并加载到表格中显示
 	    	function log (name, evt) {
-	    		restaurantId = evt.params.data.id;
+	    		restaurantUuid = evt.params.data.id;
 	    		//$("input[name='restaurantId']").val(evt.params.data.id);
 	    		//$("#restaurantId2").val(evt.params.data.id);
 	    		//$("input[name='restaurantId']").val(evt.params.data.id);
-	    		$("#restaurantId1").val(evt.params.data.id);
-	    		if(restaurantId!=0){
+	    		$("#restaurantUuid1").val(evt.params.data.id);
+	    		if(restaurantUuid!=undefined && restaurantUuid!=0){
 	    			$("#tableContent").show();
-	    			tabeDataUrl = "${ctx}/admin/getrestaurantadminsbyrestaurantid?restaurantId="+restaurantId;
+	    			tabeDataUrl = "${ctx}/admin/getrestaurantadminsbyrestaurantUuid?restaurantUuid="+restaurantUuid;
 		    		$("#adminUserTable").bootstrapTable('refresh', {
-	                    url: '${ctx}/admin/getrestaurantadminsbyrestaurantid?restaurantId='+restaurantId
+	                    url: '${ctx}/admin/getrestaurantadminsbyrestaurantUuid?restaurantUuid='+restaurantUuid
 	                });
 	    		}
 	    	} 
@@ -393,7 +393,7 @@
 	    		var rowData = $("#adminUserTable").bootstrapTable('getSelections')[0];//行点击时获取出行和数据
 	    		if(rowData){
 	    			oldStatu = rowData.status;
-	    			id = rowData.id;
+	    			restaurantUserUuid = rowData.restaurantUserUuid;
 	    		 	$("#userName").append(rowData.code);//获取名称加载到模态框
 	    		 	$("#id").val(rowData.id);//获取餐厅的id
 	    		 	if (oldStatu == 0) {
@@ -416,7 +416,7 @@
 	    			$.ajax({
 	 	    			type: 'POST',
 	 	    			async: false,
-	 	    			data: {id:id, statu:newStatu,restaurantId:restaurantId},
+	 	    			data: {restaurantUserUuid:restaurantUserUuid, statu:newStatu,restaurantUuid:restaurantUuid},
 	 	    			url: '${ctx}/admin/auditrestaurantadmin',
 	 	    			success:function(data){
 	 	    				var msg = jQuery.parseJSON(data);
@@ -502,13 +502,14 @@
 								  cache: false,
 								  data:{
 									  'code':$("input[name='code']").val(),
-									  'id' : $("input[name='id']").val(),
+									  'uuid' : $("input[name='uuid']").val(),
 									  'type' : $("#addSelect").val(),
-								  	  'restaurantId' : $("#restaurantId1").val()
+								  	  'restaurantUuid' : $("#restaurantUuid1").val()
 								  },
 								  success: function(msg){
 									  var msg = jQuery.parseJSON(msg);
 									  if(!msg.success){
+										  flag1 = false;
 										 $("input[name='code']").popover({
 											  content:msg.errorMsg
 										  });
@@ -529,13 +530,14 @@
 							cache : false,
 							data : {
 								'code' : $("input[name='code']").val(),
-								'id' : $("input[name='id']").val(),
+								'uuid' : $("input[name='uuid']").val(),
 								'type' : $("#addSelect").val(),
-								'restaurantId' : $("#restaurantId1").val()
+								'restaurantUuid' : $("#restaurantUuid1").val()
 							},
 							success : function(msg) {
 								var msg = jQuery.parseJSON(msg);
 								if (!msg.success) {
+									flag1 = false;
 									$("input[name='code']").popover({
 										content : msg.errorMsg
 									});
@@ -676,11 +678,12 @@
 										async : false,
 										data : {
 											'code' : $("input[name='code']").val(),
-											'id' : $("input[name='id']").val(),
+											'uuid' : $("input[name='uuid']").val(),
 											'type' : $("#addSelect").val(),
-											'restaurantId' : $("#restaurantId1").val()
+											'restaurantUuid' : $("#restaurantUuid1").val()
 										},
 										success : function(msg) {
+											flag1 = false;
 											var msg = jQuery.parseJSON(msg);
 											if (!msg.success) {
 												$("input[name='code']").popover({
@@ -702,11 +705,12 @@
 									async : false,
 									data : {
 										'code' : $("input[name='code']").val(),
-										'id' : $("input[name='id']").val(),
+										'uuid' : $("input[name='uuid']").val(),
 										'type' : $("#addSelect").val(),
-										'restaurantId' : $("#restaurantId1").val()
+										'restaurantUuid' : $("#restaurantUuid1").val()
 									},
 									success : function(msg) {
+										flag1 = false;
 										var msg = jQuery.parseJSON(msg);
 										if (!msg.success) {
 											$("input[name='code']").popover({
@@ -789,7 +793,7 @@
 					}
 					$("#addSelect").attr('disabled', false);
 					if (flag1 && flag2 && flag3 && flag4) {
-						$("input[name='restaurantId']").val($("#restaurantId1").val());//设置商家id
+						$("input[name='restaurantUuid']").val($("#restaurantUuid1").val());//设置商家id
 						if ($("#fm input[name='role1']").prop('checked')) {
 							$("#fm input[name='role1']").val(4);
 						}
@@ -847,7 +851,7 @@
 						$("input[name='firstName']").val(user.firstName);
 						$("input[name='lastName']").val(user.lastName);
 						$("input[name='password']").val(user.password);
-						$("input[name='id']").val(user.id);
+						$("input[name='uuid']").val(user.restaurantUserUuid);
 						$("#addSelect").val(user.type);
 						$("#addSelect").attr("disabled", true);
 
@@ -899,7 +903,7 @@
 						type : "POST",
 						url : "${ctx}/restaurant/deleteEmployee",
 						data : {
-							'id' : user1.id
+							'uuid' : user1.restaurantUserUuid
 						},
 						success : function(msg) {
 							var msg = jQuery.parseJSON(msg);

@@ -283,6 +283,7 @@ public class RestaurantController extends BaseController {
 		PageMessage pm = new PageMessage();
 			int flag = -1;
 			Restaurants restaurants = this.getRestaurants(request.getSession(), request);
+			//Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 			flag = restaurantsUserService.checkLoginNameForEmployee(restaurantsUser, restaurants);
 		if(flag==-1){
 			pm.setErrorMsg(MessageConstant.LOGINNAME_EXISTS);
@@ -408,6 +409,25 @@ public class RestaurantController extends BaseController {
 			return pm;
 		}
 	}
+	
+	@RequestMapping(value="/verifyTheCode",method = RequestMethod.POST)
+	@ResponseBody
+	public PageMessage verifyTheCode (String webSideCode,HttpSession session){
+		PageMessage pm = new PageMessage();
+		String serverSideCode = session.getAttribute("verificationCode").toString();
+		if(StringUtil.isNotEmpty(serverSideCode) && StringUtil.isNotEmpty(serverSideCode)){
+			if(serverSideCode.equals(webSideCode)){
+				pm.setSuccess(true);
+			}else{
+				pm.setSuccess(false);
+			}
+		}else{
+			pm.setSuccess(false);
+		}
+		return pm;
+	}
+	
+	
 	
 	/**
 	 * @Description: 实现用户密码重置; reset password

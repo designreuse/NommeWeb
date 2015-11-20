@@ -242,13 +242,12 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	 */
 	@Override
 	public int checkLoginNameForEmployee(RestaurantsUser restaurantsUser, Restaurants restaurants) {
-		if (restaurantsUser != null && restaurantsUser.getId() != null) {// 修改用户
+		if (restaurantsUser != null && restaurantsUser.getUuid() != null) {// 修改用户
 			if (restaurantsUser.getCode() != null && restaurantsUser.getCode().length() > 0) {// 工号不为空
 				RestaurantsUser restaurantsUser1 = restaurantsUserDao.getEmployee(restaurantsUser.getCode(), restaurants);
+				//RestaurantsUser restaurantsUser1 = restaurantsUserDao.getRestaurantsUseByLoginName(restaurantsUser.getCode());
 				if (restaurantsUser1 != null) {// 用户名存在
-					if (restaurantsUser.getId().toString().equals(restaurantsUser1.getId().toString())) {// 用户名没修改
-						return 1;
-					}
+					return -1;
 				} else {// 用户名不存在
 					return 1;
 				}
@@ -296,6 +295,7 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 		for (RestaurantsUser restaurantsUser : list) {
 			PageRestaurantAdmins admin = new PageRestaurantAdmins();
 			BeanUtils.copyProperties(restaurantsUser, admin);
+			admin.setRestaurantUserUuid(restaurantsUser.getUuid());
 			pageAdminList.add(admin);
 		}
 		return pageAdminList;

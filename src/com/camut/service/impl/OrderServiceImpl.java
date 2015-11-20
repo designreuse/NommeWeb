@@ -288,7 +288,7 @@ public class OrderServiceImpl implements OrderService {
 	public PageModel getOrdersByRestaurantUuid(String restaurantUuid, PageFilter pf,String status, String orderDate){
 		PageModel pm = new PageModel();
 		List<OrderHeader> orderHeaderList = orderDao.getOrdersByRestaurantUuid(restaurantUuid, pf,status,orderDate);
-		if(orderHeaderList.size()>0){//如果有订单
+		if(orderHeaderList!=null && orderHeaderList.size()>0){//如果有订单
 			List<PageOrderHeader> pageOrderList = new ArrayList<PageOrderHeader>();
 			for (OrderHeader oh : orderHeaderList){//遍历组装每一个订单头
 				//double totalFee = oh.getLogistics();//设置初始化当前订单的总金额为运费
@@ -1606,8 +1606,8 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: @return
 	 * @return PageModel  
 	 */
-	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf, String restaurantId){
-		List<PageRestaurantOrderStatement> list = orderDao.getRestaurantStatement(searchKey, pf, restaurantId);
+	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf, String restaurantUuid){
+		List<PageRestaurantOrderStatement> list = orderDao.getRestaurantStatement(searchKey, pf, restaurantUuid);
 		if(list!=null &&list.size()>0){
 			PageRestaurantOrderStatement pros = new PageRestaurantOrderStatement();
 			int orderQuantity =0;

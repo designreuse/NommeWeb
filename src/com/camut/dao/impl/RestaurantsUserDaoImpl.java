@@ -171,9 +171,10 @@ public class RestaurantsUserDaoImpl extends BaseDao<RestaurantsUser> implements 
 	 */
 	@Override
 	public RestaurantsUser getEmployee(String code, Restaurants restaurants) {
-		String hql = "from RestaurantsUser r where r.restaurants=:restaurants and r.status=0 and r.code=:code";
+		String restaurantUuid = restaurants.getUuid();
+		String hql = "from RestaurantsUser r where r.restaurants.uuid=:restaurantUuid and r.status=0 and r.code=:code";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurants", restaurants);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("code", code);
 		return this.get(hql, map);
 	}

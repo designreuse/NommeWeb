@@ -14,6 +14,9 @@ public class PageRestaurantAdmins {
 	private Integer type;// 员工类型,1代表管理员，2代表普通员工
 	private Integer role;//权限，001只有预定权限，011表示预定和外卖权限，111三种权限都有，100只有自取权限
 	private String modby;// 操作人
+	private String restaurantUserUuid;
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -80,6 +83,12 @@ public class PageRestaurantAdmins {
 	}
 	public void setModby(String modby) {
 		this.modby = modby;
+	}
+	public String getRestaurantUserUuid() {
+		return restaurantUserUuid;
+	}
+	public void setRestaurantUserUuid(String restaurantUserUuid) {
+		this.restaurantUserUuid = restaurantUserUuid;
 	}
 	
 	

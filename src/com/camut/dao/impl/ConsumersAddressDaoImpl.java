@@ -150,7 +150,7 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(String consumerUuid,String restaurantUuid) {
 		String sql = "select t.id as addressId,t.full_address as address " +
 				"from (select restaurant_lng as rlng,restaurant_lat as rlat,distance from dat_restaurants where uuid="+restaurantUuid+") v LEFT JOIN "+ 
-				"(select * from tbl_consumers_address where consumer_uuid="+consumerUuid+") t ON "+
+				"(select * from tbl_consumers_address where consumer_uuid='"+consumerUuid+"') t ON "+
 				"ACOS(SIN((t.lat * 3.1415) / 180 ) *SIN((v.rlat * 3.1415) / 180 ) +COS((t.lat"+
 				"* 3.1415) / 180 ) * COS((v.rlat * 3.1415) / 180 ) *COS((t.lng"+
 				"* 3.1415) / 180 - (v.rlng * 3.1415) / 180 ) ) * 6378.140<=v.distance where t.isdefault=1";
@@ -179,7 +179,7 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 		String sql = "select t.consumer_id as consumerId,t.id as addressId,t.street,t.floor, "+
 				"t.city,t.province,t.isdefault as isDefault "+
 				"from (select restaurant_lng as rlng,restaurant_lat as rlat,distance from dat_restaurants where uuid="+restaurantUuid+") v LEFT JOIN "+ 
-				"(select * from tbl_consumers_address where consumer_uuid="+consumerUuid+") t ON "+
+				"(select * from tbl_consumers_address where consumer_uuid='"+consumerUuid+"') t ON "+
 				"ACOS(SIN((t.lat * 3.1415) / 180 ) *SIN((v.rlat * 3.1415) / 180 ) +COS((t.lat "+
 				"* 3.1415) / 180 ) * COS((v.rlat * 3.1415) / 180 ) *COS((t.lng "+
 				"* 3.1415) / 180 - (v.rlng * 3.1415) / 180 ) ) * 6378.140<=v.distance";

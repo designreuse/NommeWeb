@@ -144,7 +144,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @param: @param pf
 	 * @return PageModel  
 	 */
-	public List<OrderHeader> getOrdersByRestaurantId(String restaurantUuid, PageFilter pf,String status, String orderDate1){
+	public List<OrderHeader> getOrdersByRestaurantUuid(String restaurantUuid, PageFilter pf,String status, String orderDate1){
 		int page = (pf.getOffset()/pf.getLimit())+1;//第几页
 		int rows = pf.getLimit();//每页行数
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -717,7 +717,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}
 		
 		String sql="select a.restaurant_name as restaurantName, b.oh_order_type as orderType, b.oh_payment as paymentType, b.oh_amount as amount from dat_restaurants a "
-				+"INNER JOIN (select oh.restaurant_id as oh_restaurantId, oh.order_type as oh_order_type, oh.payment as oh_payment, FORMAT(sum(ifnull(oh.amount,0)), 2) as oh_amount from dat_order_header oh ";
+				+"INNER JOIN (select oh.restaurant_uuid as oh_restaurantUuid, oh.order_type as oh_order_type, oh.payment as oh_payment, FORMAT(sum(ifnull(oh.amount,0)), 2) as oh_amount from dat_order_header oh ";
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -730,8 +730,8 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
 		}
 		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
-		sql += "GROUP BY oh.restaurant_id, oh.order_type, oh.payment) b "
-				+"ON b.oh_restaurantId = a.id ";
+		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
+				+"ON b.oh_restaurantuuid = a.id ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
 		
@@ -785,7 +785,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @param: @return
 	 * @return PageModel  
 	 */
-	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf,String restaurantId){
+	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf,String restaurantUuid){
 		String startDate = "";//开始时间
 		String endDate = "";//结束时间
 		if(StringUtil.isNotEmpty(searchKey) && searchKey.trim().length()>3){
@@ -793,11 +793,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			startDate = valueArray[0];
 			endDate = valueArray[1];
 		}
-		String sql = "select oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_id) as orderQuantity, "
+		String sql = "select oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_uuid) as orderQuantity, "
 			+"SUM(oh.total) as subtotal, round(sum(oh.logistics),2) as deliveryFee, "
 			+"sum(oh.tax) as gst, sum(oh.tip) as tips, "
 			+"round(sum((oh.total+oh.tax)*0.1),2) as nommeFee, round(sum((oh.amount*0.029)+0.3),2) as stripeFee, sum(oh.amount) as income "
-				+"from dat_order_header oh where oh.restaurant_id=:restaurantId and oh.status=7 ";//已完成的订单状态：7
+				+"from dat_order_header oh where oh.restaurant_uuid=:restaurantUuid and oh.status=7 ";//已完成的订单状态：7
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -811,7 +811,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}
 		sql += "GROUP BY oh.order_type, oh.payment ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(PageRestaurantOrderStatement.class));
 		query.addScalar("orderType",new org.hibernate.type.StringType());
 		query.addScalar("paymentType",new org.hibernate.type.StringType());
@@ -826,12 +826,12 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		return query.list();
 	}
 
-	@Override
+	/*@Override
 	public List<OrderHeader> getOrdersByRestaurantUuid(String restaurantUuid,
 			PageFilter pf, String status, String orderDate) {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 	
 		
 }

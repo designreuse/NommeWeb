@@ -192,6 +192,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 				}
 				BeanUtils.copyProperties(list, pr);
 				pr.setId(list.getId());
+				pr.setRestaurantUuid(list.getUuid());
 				pr.setRestaurantName(list.getRestaurantName());
 				pr.setRestaurantContact(list.getRestaurantContact());
 				pr.setRestaurantPhone(list.getRestaurantPhone());
@@ -222,17 +223,6 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 				}else{
 					pr.setChainid(-1);
 				}
-				/*ViewArea va = list.getViewArea();
-				double textRate = 0.0;
-				if(va.getGst()!=null){
-					textRate = va.getGst();
-				}
-				if(va.getPst()!=null){
-					textRate = va.getPst();
-				}
-				pr.setTaxRate(textRate);
-				pr.setAreasId(list.getViewArea().getAreaId());*/
-				//Set<Long> set = list.getClassificationsSet<Long>();
 				Set<Classification> set = list.getClassificationsSet();
 				List<Long> classificationIdList = new ArrayList<Long>();
 				for (Classification classification : set) {
@@ -248,20 +238,6 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 					pr.setNotice("");
 				}
 				pr.setDeliverTime(list.getDeliverTime());
-				
-				/*
-				private String features;// 特征
-				private Integer isdelivery;// 是否外带0是，1否
-				private Integer ispickup;// 是否自取0是，1否
-				private Integer isreservation;// 是否预定0是，1否
-				private Integer chainid;// 连锁店
-				private Integer areasId;// 区域
-				private List<Long> classificationId;//餐厅分类
-				private String logourl;// logo图片的存放地址
-				private Integer status;//审核状态 -1为无效，0为有效(说明已经审核通过)，1待审核（新注册的商家状态为1）,2 冻结 、未审核通过
-				private String notice;// 商家的消息
-				private Integer deliverTime;
-				*/
 				li.add(pr);
 			}
 		}
@@ -314,6 +290,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 		for (Restaurants restaurant : list) {
 			PageRestaurantName ptName = new PageRestaurantName();
 			ptName.setId(restaurant.getId());
+			ptName.setRestaurantUuid(restaurant.getUuid());
 			ptName.setRestaurantName(restaurant.getRestaurantName());
 			nameList.add(ptName);
 		}

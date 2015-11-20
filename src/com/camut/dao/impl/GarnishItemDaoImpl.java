@@ -49,7 +49,7 @@ public class GarnishItemDaoImpl extends BaseDao<GarnishItem> implements GarnishI
 				"INNER JOIN "+
 				"(select id,ismust,show_type,garnish_menu "+
 				"from tbl_garnish_header  "+
-				"where restaurant_uuid="+restaurantUuid+") tbl on dat.garnish_id = tbl.id and dat.status=0";
+				"where restaurant_uuid='"+restaurantUuid+"') tbl on dat.garnish_id = tbl.id and dat.status=0";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setResultTransformer(Transformers.aliasToBean(PageGarnish.class));
 		query.addScalar("id", new org.hibernate.type.LongType());

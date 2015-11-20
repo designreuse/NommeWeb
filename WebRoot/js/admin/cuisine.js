@@ -299,6 +299,7 @@ $(function(){
 	$("#cuisineImageModal").on('hidden.bs.modal',function(){
 		$("#refresh").click();
 	});
+	
 
 	//显示选择的文件的名称
 	$("#input-image").change(function(){

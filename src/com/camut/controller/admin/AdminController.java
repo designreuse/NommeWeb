@@ -331,7 +331,7 @@ public class AdminController {
 		newAdmin.setPassword(MD5Util.md5(pageAdminUser.getPassword()));
 		//newAdmin.setSex(Integer.parseInt(pageAdminUser.getSex()));
 		//newAdmin.setAge(Integer.parseInt(pageAdminUser.getAge()));
-		newAdmin.setUsertype(1);
+		newAdmin.setUsertype(Integer.parseInt(pageAdminUser.getUsertype()));
 		newAdmin.setState(0);
 		newAdmin.setModon(new Date());
 		newAdmin.setModby(operator.getFirstName()+" "+operator.getLastName());
@@ -680,9 +680,9 @@ public class AdminController {
 	 * @param: order
 	 * @return List<PageRestaurantAdmins>  
 	 */
-	@RequestMapping(value="getrestaurantadminsbyrestaurantid", method = RequestMethod.GET)
+	@RequestMapping(value="getrestaurantadminsbyrestaurantUuid", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PageRestaurantAdmins> getRestaurantsAdminByRestaurantId(String restaurantUuid,String order){
+	public List<PageRestaurantAdmins> getRestaurantsAdminByRestaurantUuid(String restaurantUuid,String order){
 		List<PageRestaurantAdmins> restaurantAdminsList = restaurantsUserService.getRestaurantsUsersByRestaurantUuid(restaurantUuid);
 		//List<PageRestaurantsAdmin> admins = restaurantsService.getAllRestaurantsAdmin();
 		return restaurantAdminsList;

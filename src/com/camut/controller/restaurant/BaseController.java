@@ -32,7 +32,7 @@ public class BaseController {
 		if(httpSession.getAttribute("restaurantsUser")!=null){
 			return restaurantsService.getRestaurantsByUuid(((RestaurantsUser)httpSession.getAttribute("restaurantsUser")).getRestaurants().getUuid());
 		}
-		else if(request.getParameter("restaurantId")!=null){
+		else if(request.getParameter("restaurantUuid")!=null){
 			return restaurantsService.getRestaurantsByUuid(request.getParameter("restaurantUuid"));
 		}
 		return null;

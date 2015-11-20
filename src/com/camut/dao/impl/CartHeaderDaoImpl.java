@@ -179,7 +179,7 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 
 	@Override
 	public int deleteFreeCartItem(String consumerUuid) {
-		String sql="delete from dat_cart_item  where cart_id=(select id from dat_cart_header where consumer_uuid="+consumerUuid+") and unitprice =0";
+		String sql="delete from dat_cart_item  where cart_id=(select id from dat_cart_header where consumer_uuid='"+consumerUuid+"') and unitprice =0";
 		try {
 			return this.executeSql(sql);
 		} catch (Exception e) {
