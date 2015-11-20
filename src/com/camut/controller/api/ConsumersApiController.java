@@ -296,10 +296,10 @@ public class ConsumersApiController extends BaseAPiModel {
 			String verificationCode = (int)(Math.random()*900000+100000)+"";//生成6位验证码
 			session.setAttribute(email, verificationCode);
 			map.put(email, verificationCode);
-			String title = "Verification code by Nomme";
-			String content = "To reset your Nomme account "+email+" password , please enter the verification code— <span style='color:#064977'>" 
-					+ verificationCode + "</span> to retrieve password input box, and then click the button to reset the password."
-					+ "<br> Note: please use the verification code within 30 minutes.";
+			String title = "Verification code from Nomme";
+			String content = "To reset the password of your Nomme account "+email+", please enter the verification code <span style='color:#064977'>" 
+					+ verificationCode + "</span> in the input box to retrieve your password, and then click the button to reset the password."
+					+ " Please use the verification code within 30 minutes.";
 			MailUtil.sendMail(title, content, email);
 			Log4jUtil.info("管理员", "测试发送邮件");
 			ram.setResultMessage("");
