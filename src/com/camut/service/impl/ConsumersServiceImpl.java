@@ -292,9 +292,9 @@ public class ConsumersServiceImpl implements ConsumersService {
 			list = viewConsumerClassificationDao.getClassificationNames(consumerUuid);
 		}
 		List<ViewConsumerClassifitionApiModel> apiModels = new ArrayList<ViewConsumerClassifitionApiModel>();
-		int num = 4;
+		int num = 0;
 		if(type!=null && type==3){//当是网站调用的时候需要显示5个
-			num = 5;
+			num = 0;
 		}
 		if (list!=null&&list.size()>0) {
 			if(list.size()>=num){//够展示的4个

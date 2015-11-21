@@ -372,7 +372,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 		// Adjust times for restaurant local time
 		// TODO: This assumes users are in the same time zone as the
 		// restaurant!!
-		Restaurants restaurant = restaurantsDao.getRestaurantsById(restaurantUuid);
+		Restaurants restaurant = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		double latitude = restaurant.getRestaurantLat();
 		double longitude = restaurant.getRestaurantLng();
 		TimeZone restaurantTimezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
