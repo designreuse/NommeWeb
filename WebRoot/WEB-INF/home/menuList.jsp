@@ -66,9 +66,9 @@
 					<div class="panel-body" style="padding-bottom: 5px;">
 						<!--seafood-->
 						<div style="position:relative;">
-							<div align="right" style=" font-size:18px; padding-top:15px; position:absolute; background-color: #EBECED; right:0px; height:49px; top:-64px;  z-index:1025;">
+							<div align="right" style=" font-size:18px; padding-top:5px; position:absolute; background-color: #EBECED; right:0px; height:30px; top:-50px;  z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-1" aria-expanded="false" aria-controls="collapseTwo">
-									<span class="glyphicon glyphicon-chevron-up" style="color: #FF9C00;"></span>
+									<span class="glyphicon glyphicon-chevron-up" style="color: #515253;"></span>
 								</a>
 							</div>
 						</div>
@@ -134,13 +134,13 @@
 					<div class="panel-body">
 						<!--seafood-->
 						<div style="position:relative;">
-							<div align="right" style=" font-size:18px; padding-top:10px; position:absolute; background-color:#EBECED; right:0px; height:49px; top:-64px;  z-index:1025;">
+						
+							<div align="right" style=" font-size:18px; padding-top:5px; position:absolute; background-color: #EBECED; right:0px; height:30px; top:-50px;  z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-${status.count}" aria-expanded="false" aria-controls="collapseTwo">
-									<span class="glyphicon glyphicon-chevron-up" style="color: #FF9C00;"></span>
+									<span class="glyphicon glyphicon-chevron-up" style="color: #515253;"></span>
 								</a>
 							</div>
 						</div>
-
 						<div class="row">
 							<c:forEach items="${str.pageDishList}" var="str2" begin="0"  step="1" varStatus="status2">
 								<c:if test="${(status2.index+1)%3==1||status2.first}">
@@ -157,7 +157,7 @@
 													<img src="${str2.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="..." class="img-thumbnail">
 												<%-- </c:if> --%>
 											</div>
-											<div class="col-md-7">
+											<div class="col-md-7 dish-title">
 												<h5 style="margin-top:2px;">
 													<c:if test="${!empty str2.enName}">
 														${str2.enName}
@@ -166,7 +166,7 @@
 														<br>${str2.chName}
 													</c:if>
 												</h5>
-												<h4>$ ${str2.price}</h4>
+												<h5>$ ${str2.price}</h5>
 											</div>
 										</div>
 									</div>

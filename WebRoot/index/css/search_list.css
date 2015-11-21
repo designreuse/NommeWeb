@@ -131,18 +131,26 @@ color:#323232;
 padding:0 15px;
 }
 
+.restaurant-menu-list {
+	background-image: url(../images/restaurant_menu_bg1.png);
+}
+
+.dish-title {
+	color: #515253;
+}
+
 
 .rest-xiala-jg{border-bottom:1px solid #85C53E;}
 .rest-xiala-jg>li{float:left;margin-bottom:-1px}
 .rest-xiala-jg>li>a{margin-right:2px; border:1px solid transparent;border-radius:0px 0px 0 0}
 .rest-xiala-jg>li>a:hover{ }
 .rest-xiala-jg>li.active>a,.rest-xiala-jg>li.active>a:hover,.rest-xiala-jg>li.active>a:focus{color:#fff;cursor:default;background-color:#85C53E;  height:56px;}
-.rest-panel-one { background-color: #EBECED; margin:0; padding:0 15px; line-height:53px; color:#FFFFFF;}
-.rest-panel-one a { color:#FF9C00; font-weight: bold;}
-.rest-panel-one span { float:right; padding-top:20px;}
-.rest-panel-1 {background-color: #EBECED;margin:0; padding:0 15px; line-height:53px; color:#FFFFFF; border-radius: 4px;}
-.rest-panel-1 a { color: #FF9C00; font-weight: bold;}
-.rest-panel-1 span { float:right; padding-top:20px;}
+.rest-panel-one { background-color: #EBECED; margin:0; padding:0 15px; line-height:35px; color:#FFFFFF;}
+.rest-panel-one a { color:#515253;}
+.rest-panel-one span { float:right; padding-top:10px;}
+.rest-panel-1 {background-color: #EBECED;margin:0; padding:0 15px; line-height:35px; color:#FFFFFF; border-radius: 4px;}
+.rest-panel-1 a { color: #515253;}
+.rest-panel-1 span { float:right; padding-top:10px;}
 .rest-panel-2 { background:url(../images/restaurst-a-2.jpg); margin:0; padding:0 15px; line-height:53px; color:#FFFFFF; border-radius: 4px;}
 .rest-panel-2 a { color:#FFFFFF;}
 .rest-panel-2 span { float:right; padding-top:20px;}
