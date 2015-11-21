@@ -42,14 +42,14 @@ public class GarnishItemDaoImpl extends BaseDao<GarnishItem> implements GarnishI
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PageGarnish> getGarnishItemByRestaurantId(long id) {
+	public List<PageGarnish> getGarnishItemByRestaurantUuid(String restaurantUuid) {
 		String sql = "select dat.id as id,dat.garnish_name as garnishName," +
 				"tbl.garnish_menu as garnishHeaderName,tbl.id as garnishHeaderId," +
 				"tbl.show_type as showType,tbl.ismust as ismust from dat_garnish_item dat "+
 				"INNER JOIN "+
 				"(select id,ismust,show_type,garnish_menu "+
 				"from tbl_garnish_header  "+
-				"where restaurant_id="+id+") tbl on dat.garnish_id = tbl.id and dat.status=0";
+				"where restaurant_uuid='"+restaurantUuid+"') tbl on dat.garnish_id = tbl.id and dat.status=0";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setResultTransformer(Transformers.aliasToBean(PageGarnish.class));
 		query.addScalar("id", new org.hibernate.type.LongType());

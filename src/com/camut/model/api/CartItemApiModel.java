@@ -90,7 +90,7 @@ public class CartItemApiModel implements Comparable<CartItemApiModel> {
 	@Override
 	public int compareTo(CartItemApiModel o) {
 		// TODO Auto-generated method stub
-		return (int)(o.unitprice-this.unitprice);
+		return (int)(o.dishId-this.dishId);
 	}
 	public String getInstruction() {
 		return instruction;

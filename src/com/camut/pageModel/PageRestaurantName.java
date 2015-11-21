@@ -2,6 +2,7 @@ package com.camut.pageModel;
 
 public class PageRestaurantName {
 	private long id;//主键
+	private String restaurantUuid;
 	private String restaurantName;// 店名
 	public long getId() {
 		return id;
@@ -14,6 +15,12 @@ public class PageRestaurantName {
 	}
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
+	}
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	
 	

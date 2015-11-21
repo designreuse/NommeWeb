@@ -21,7 +21,7 @@ public interface ConsumersFavoritesService {
 	 * @param:  rid  cid
 	 * @return: -1表示添加失败，1 表示添加成功
 	 */
-	public int addFavorites(long consumerId, int restaurantId);
+	public int addFavorites(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: selectFavorites
@@ -29,7 +29,7 @@ public interface ConsumersFavoritesService {
 	 * @param:  id
 	 * @return: List<ConsumerFavoritesApiModel>
 	 */
-	public List<ConsumerFavoritesApiModel> selectFavorites(long id);
+	public List<ConsumerFavoritesApiModel> selectFavorites(String consumerUuid);
 	
 	/**
 	 * @Title: deleteFavorites
@@ -40,13 +40,13 @@ public interface ConsumersFavoritesService {
 	public int deleteFavorites(long id);
 	
 	/**
-	 * @Title: existFavoritesByConsumerIdAndrestaurantId
+	 * @Title: existFavoritesByConsumerUuidAndrestaurantUuid 
 	 * @Description: 通过用户通过商家id和用户id查找当前用户是否收藏了当前商家
 	 * @param: @param consumerId
 	 * @param: @param restaurantId
 	 * @return int  
 	 */
-	public int existFavoritesByConsumerIdAndrestaurantId (long consumerId, int restaurantId);
+	public int existFavoritesByConsumerUuidAndrestaurantUuid (String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: addConsumerFavorite
@@ -55,7 +55,7 @@ public interface ConsumersFavoritesService {
 	 * @param: @param restaurantId
 	 * @return long  
 	 */
-	public long addConsumerFavorite(long consumerId, int restaurantId);
+	public long addConsumerFavorite(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: deleteConsumerFavorite
@@ -64,16 +64,16 @@ public interface ConsumersFavoritesService {
 	 * @param: int restaurantId
 	 * @return int
 	 */
-	public int deleteConsumerFavorite(long consumerId, int restaurantId);
+	public int deleteConsumerFavorite(String consumerUuid, String restaurantUuid);
 	
 	/**
-	 * @Title: getFavouriteListByconsumerId
+	 * @Title: getFavouriteListByConsumerUuid
 	 * @Description: 获取用户收藏的商家列表（用于Web）
 	 * @param: @param consumerId
 	 * @param: @return
 	 * @return List<PageFavourites>  
 	 */
-	public List<PageFavourites> getFavouriteListByconsumerId(int consumerId, PageFilter pf);
+	public List<PageFavourites> getFavouriteListByConsumerUuid(String consumerUuid, PageFilter pf);
 	
 	/**
 	 * @Title: countTotalByConsumerId
@@ -82,5 +82,5 @@ public interface ConsumersFavoritesService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int countTotalByConsumerId(int consumerId);
+	public int countTotalByConsumerUuid(String consumerUuid);
 }

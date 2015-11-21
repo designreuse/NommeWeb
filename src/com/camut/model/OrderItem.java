@@ -98,7 +98,7 @@ public class OrderItem extends IdEntity implements java.io.Serializable,Comparab
 	}
 
 	
-	@OneToMany(fetch=FetchType.LAZY,mappedBy="orderItem")
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="orderItem")
 	public Set<OrderDishGarnish> getOrderDishGarnishs() {
 		return orderDishGarnishs;
 	}

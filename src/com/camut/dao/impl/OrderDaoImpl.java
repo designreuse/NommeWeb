@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.IntegerType;
 import org.springframework.stereotype.Repository;
 
 import com.camut.dao.OrderDao;
@@ -22,6 +21,7 @@ import com.camut.pageModel.PageMessage;
 import com.camut.pageModel.PageOrderHeader;
 import com.camut.pageModel.PagePastOrderInfo;
 import com.camut.pageModel.PageRestaurantOrderStatement;
+import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.utils.StringUtil;
 
 /**
@@ -55,13 +55,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: ResultApiModel
 	 */
 	@Override
-	public List<OrderHeader> selectPastOrder(long consumerId) {
-		String hql = "from OrderHeader oh where oh.consumers.id=:consumerId and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
+	public List<OrderHeader> selectPastOrder(String consumerUuid) {
+		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
 		String tablename1 = dateFormat1.format(new Date());
 		map.put("dt", tablename1);
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -104,8 +104,8 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> selectRestaurantOrder(int restaurantId, String orderType, Date createdate) {
-		String hql = "from OrderHeader oh where oh.restaurantId=:restaurantId";
+	public List<OrderHeader> selectRestaurantOrder(String restaurantUuid, String orderType, Date createdate) {
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(orderType != null){
 			int type = Integer.parseInt(orderType);
@@ -116,7 +116,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			hql += " and oh.createdate>=:createdate";
 			map.put("createdate", createdate);
 		}
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -128,11 +128,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderMenuApiModel>
 	 */
 	@Override
-	public OrderHeader getOrder(int type, int restaurantId, long menuId) {
-		String hql = "from OrderHeader oh where oh.id=:menuId and oh.restaurantId=:restaurantId and oh.orderType=:type";
+	public OrderHeader getOrder(int type, String restaurantUuid, long menuId) {
+		String hql = "from OrderHeader oh where oh.id=:menuId and oh.restaurantUuid=:restaurantUuid and oh.orderType=:type";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", type);
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("menuId", menuId);
 		return this.get(hql, map);
 	}
@@ -144,16 +144,16 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @param: @param pf
 	 * @return PageModel  
 	 */
-	public List<OrderHeader> getOrdersByRestaurantId(int restaurantId, PageFilter pf,String status, String orderDate1){
+	public List<OrderHeader> getOrdersByRestaurantUuid(String restaurantUuid, PageFilter pf,String status, String orderDate1){
 		int page = (pf.getOffset()/pf.getLimit())+1;//第几页
 		int rows = pf.getLimit();//每页行数
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
-		String hql = "from OrderHeader oh where oh.restaurantId=:restaurantId";
+		map.put("restaurantUuid", restaurantUuid);
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid";
 		if(StringUtil.isNotEmpty(orderDate1)){
 			//map.put("orderDate1", orderDate1);
 			//hql = "from OrderHeader oh where oh.restaurantId=:restaurantId and DATE_FORMAT(oh.orderDate,'%Y-%m-%d')=:orderDate1";
-			hql = "from OrderHeader oh where oh.restaurantId=:restaurantId and oh.orderDate like '%" + orderDate1 + "%'";
+			hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.orderDate like '%" + orderDate1 + "%'";
 		}
 		if (StringUtil.isNotEmpty(status)) {
 			hql += " and oh.status="+status;
@@ -171,13 +171,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> selectCurrentOrder(long consumerId) {
-		String hql = "from OrderHeader oh where oh.consumers.id=:consumerId and oh.status in(1,2,3,8,9,10) and date_format(oh.orderDate,'%Y-%m-%d')>=:dt order by oh.orderDate desc";//
+	public List<OrderHeader> selectCurrentOrder(String consumerUuid) {
+		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(1,2,3,8,9,10) and date_format(oh.orderDate,'%Y-%m-%d')>=:dt order by oh.orderDate desc";//
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
 		String tablename1 = dateFormat1.format(new Date());
 		map.put("dt", tablename1);
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -209,7 +209,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return List<PageOrderHeader>  
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PageOrderHeader> getUnpaidReservationOrders(int resId, int conId, int orderType, long currentOrderNo){
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, int orderType, long currentOrderNo){
 		//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
 		//java.sql.Date endDate = new java.sql.Date(nowTime);
 		//Long a = num;
@@ -218,11 +218,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		
 		String sql = "";
 		if(currentOrderNo>0){
-			sql = "select o.id as id, o.order_date as orderDate, o.number as number, COUNT(i.id) as itemSize "
+			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
 					+"from dat_order_header o " 
 					+"left join dat_order_item i on o.id=i.order_id"
-					+" where o.consumer_id=:conId and o.restaurant_id=:resId "
-					+"and o.order_type=:orderType "
+					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid " 
+					+" and o.order_type=:orderType "
 					+"and ((DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or "
 					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and "
 					+" DATE_FORMAT(o.createdate,'%Y-%m-%d') < DATE_FORMAT(NOW(),'%Y-%m-%d') and "
@@ -233,10 +233,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					//+" and  DATE_FORMAT(o.order_date,'%Y-%m-%d%T') >= DATE_FORMAT(NOW(),'%Y-%m-%d%T'))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
 					+" group by o.id order by o.order_date asc";
 		}else{
-			sql = "select o.id as id, o.order_date as orderDate, o.number as number, COUNT(i.id) as itemSize "
+			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
 					+"from dat_order_header o " 
 					+"left join dat_order_item i on o.id=i.order_id"
-					+" where o.consumer_id=:conId and o.restaurant_id=:resId "
+					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid "
 					+"and o.order_type=:orderType "
 					+"and (DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or "
 					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and "
@@ -247,26 +247,20 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					+"(o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3 ))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
 					+" group by o.id order by o.order_date asc";
 		}
-		
-		/*select o.id as id, o.order_date as orderDate, o.number as number, o.order_type as orderType, o.`status` as `status`
-		from dat_order_header o where o.consumer_id=54 and o.restaurant_id=16 and 
-		(DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or 
-			(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and  (o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3  ) ))
-					and o.order_type=3  order by o.order_date asc;
-		
-		*/
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("conId", conId);
-		query.setParameter("resId", resId);
+		query.setParameter("consumerUuid", consumerUuid);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderType", orderType);
 		//query.setParameter("status", status);
 		//query.setParameter("endDate", endDate);
-		query.setResultTransformer(Transformers.aliasToBean(PageOrderHeader.class));
-		query.addScalar("orderDate",new org.hibernate.type.TimestampType());
+		query.setResultTransformer(Transformers.aliasToBean(PageSelectItemReservationOrder.class));
 		query.addScalar("id",new org.hibernate.type.IntegerType());
+		query.addScalar("orderDate",new org.hibernate.type.TimestampType());
+		query.addScalar("strOrderDate",new org.hibernate.type.StringType());
 		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("itemSize",new org.hibernate.type.IntegerType());
-		return query.list();
+		List<PageSelectItemReservationOrder> list = query.list();
+		return list;
 		
 	}
 
@@ -277,14 +271,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> cancelOrder(int restaurantId) {
+	public List<OrderHeader> cancelOrder(String restaurantUuid) {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		String strDate = fmt.format(date);
-		String hql = "from OrderHeader oh where oh.restaurantId=:restaurantId and oh.status=0 and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status=0 and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dt", strDate);
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -296,10 +290,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> completeOrder(int restaurantId, String createdate ,String orderType) {
+	public List<OrderHeader> completeOrder(String restaurantUuid, String createdate,String orderType) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String hql = "from OrderHeader oh where oh.restaurantId=:restaurantId and oh.status in (0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
-		map.put("restaurantId", restaurantId);
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in (0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("dt", createdate);
 		if(StringUtil.isNotEmpty(orderType)){
 			int type = Integer.parseInt(orderType);
@@ -317,14 +311,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeaderId> liveOrder(int restaurantId) {
+	public List<OrderHeaderId> liveOrder(String restaurantUuid) {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(date);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_id=:restaurantId and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
 		query.setResultTransformer(Transformers.aliasToBean(OrderHeaderId.class));
 		query.addScalar("orderId",new org.hibernate.type.LongType());
@@ -338,14 +332,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeaderId> upcomingOrder(int restaurantId) {
+	public List<OrderHeaderId> upcomingOrder(String restaurantUuid) {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(date);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_id=:restaurantId and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
 		query.setResultTransformer(Transformers.aliasToBean(OrderHeaderId.class));
 		query.addScalar("orderId",new org.hibernate.type.LongType());
@@ -359,17 +353,17 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptOrder(int restaurantId) {
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid) {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(date);
 		String sql = "select o.id as orderId, o.createdate as createdate, o.order_date as orderDate, o.phone_number as phone,o.order_type as orderType, "
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
-				+ "left join tbl_consumers c on c.id = o.consumer_id "
-				+ "where o.restaurant_id=:restaurantId and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
+				+ "left join tbl_consumers c on c.uuid = o.consumer_uuid "
+				+ "where o.restaurant_uuid=:restaurantUuid and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
 		query.setResultTransformer(Transformers.aliasToBean(AcceptOrderApiModel.class));
 		query.addScalar("orderId",new org.hibernate.type.LongType());
@@ -389,17 +383,17 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(int restaurantId) {
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid) {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(date);
 		String sql = "select o.id as orderId, o.createdate as createdate, o.order_date as orderDate, o.phone_number as phone,o.order_type as orderType, "
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
-				+ "left join tbl_consumers c on c.id = o.consumer_id "
-				+ "where o.restaurant_id=:restaurantId and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
+				+ "left join tbl_consumers c on c.uuid = o.consumer_uuid "
+				+ "where o.restaurant_uuid=:restaurantUuid and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
 		query.setResultTransformer(Transformers.aliasToBean(AcceptOrderApiModel.class));
 		query.addScalar("orderId",new org.hibernate.type.LongType());
@@ -419,14 +413,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> totalAmount(int restaurantId) {
+	public List<OrderHeader> totalAmount(String restaurantUuid) {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(date);
 		String sql = "select o.total as total from dat_order_header o "
-				+ "where o.restaurant_id=:restaurantId and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
 		query.setResultTransformer(Transformers.aliasToBean(OrderHeader.class));
 		query.addScalar("total",new org.hibernate.type.DoubleType());
@@ -457,10 +451,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */ 
 	@Override
-	public List<OrderHeader> getDineinOrder(int restaurantId) {
-		String hql = "from OrderHeader oh where oh.restaurantId=:restaurantId and oh.status=3";
+	public List<OrderHeader> getDineinOrder(String restaurantUuid) {
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status=3";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -472,19 +466,19 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(int restaurantId, String status) {
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String status) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		String strDate = fmt.format(date);
-		String hql = "from OrderHeader oh where oh.restaurantId=:restaurantId and oh.status=7 and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
 		if(StringUtil.isNotEmpty(status)){
 			int type = Integer.parseInt(status);
 			hql += " and oh.orderType=:type";
 			map.put("type", type);
 		}
 		map.put("dt", strDate);
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -496,11 +490,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> getDineIn(long consumerId, int restaurantId) {
-		String hql = "from OrderHeader oh where oh.consumers.id=:consumerId and oh.restaurantId=:restaurantId and oh.status=3 and oh.orderType=3 and oh.orderDate > :currentDate";
+	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid) {
+		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.restaurantUuid=:restaurantUuid and oh.status=3 and oh.orderType=3 and oh.orderDate > :currentDate";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
-		map.put("restaurantId", restaurantId);
+		map.put("consumerUuid", consumerUuid);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("currentDate", new Date());
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
@@ -545,7 +539,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @param: @return
 	 * @return List<PagePastOrderInfo>  
 	 */
-	public PageMessage getPastOrderInfoByConsumerId(int consumerId,int statusType, PageFilter pf){
+	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int statusType, PageFilter pf){
 		PageMessage pm = new PageMessage();
 		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
 		String today = smp.format(new Date());//当天日期
@@ -559,16 +553,16 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		if(statusType == 1){//1：当前订单 CurrentOrders
 			sql = "select a.id as id, a.order_no as orderNo, a.createdate as createDate, date_format(a.order_date,'%Y-%m-%d %h:%i %p') as orderDate,"
 					+ "a.amount as total, a.status as status, a.order_type as orderType, "
-					+ "a.restaurant_id as restaurantId, b.restaurant_name as restaurantName " 
-					+ "from dat_order_header a left join dat_restaurants b on a.restaurant_id=b.id where a.consumer_id=:consumerId " 
+					+ "a.restaurant_uuid as restaurantUuid, b.restaurant_name as restaurantName " 
+					+ "from dat_order_header a left join dat_restaurants b on a.restaurant_uuid=b.uuid where a.consumer_uuid=:consumerUuid " 
 					+ "and (a.status=1 or a.status=2 or a.status=3 or a.status=8 or a.status=9 or a.status=10) "
 					+ "and date_format(a.order_date,'%Y-%m-%d %h:%i %p')>='"+ today +"' "
 					+ "order by a.createdate desc limit :beginIndex, :rows";
 		}else{//2：历史订单PastOrders
 			sql = "select a.id as id, a.order_no as orderNo, a.createdate as createDate, date_format(a.order_date,'%Y-%m-%d %h:%i %p') as orderDate,"
 					+ "a.amount as total, a.status as status, a.order_type as orderType, "
-					+ "a.restaurant_id as restaurantId, b.restaurant_name as restaurantName " 
-					+ "from dat_order_header a left join dat_restaurants b on a.restaurant_id=b.id where a.consumer_id=:consumerId " 
+					+ "a.restaurant_uuid as restaurantUuid, b.restaurant_name as restaurantName " 
+					+ "from dat_order_header a left join dat_restaurants b on a.restaurant_uuid=b.uuid where a.consumer_uuid=:consumerUuid " 
 					+ "and (a.status=0 or a.status=4 or a.status=6 or a.status=7) "
 					//+ "and date_format(a.order_date,'%Y-%m-%d')<'"+ today +"' "
 					+ "and date_format(a.order_date,'%Y-%m-%d')>='"+ todayBeforeSevenDay +"' "
@@ -580,7 +574,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		int beginIndex = (page-1)*rows;
 		
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("consumerId", consumerId);
+		query.setParameter("consumerUuid", consumerUuid);
 		//query.setParameter("strOrderType", strOrderType);
 		query.setParameter("beginIndex", beginIndex);
 		query.setParameter("rows", rows);
@@ -592,7 +586,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.addScalar("total",new org.hibernate.type.DoubleType());
 		query.addScalar("status",new org.hibernate.type.IntegerType());
 		query.addScalar("orderType",new org.hibernate.type.IntegerType());
-		query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
+		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
 		query.addScalar("restaurantName",new org.hibernate.type.StringType());
 		@SuppressWarnings("unchecked")
 		List<PagePastOrderInfo> list = query.list();
@@ -600,12 +594,12 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String hql = "";
 		if(statusType == 1){
-			hql = "select count(*) from OrderHeader oh where oh.consumers.id=:consumerId and oh.status in(1,2,3,8,9,10) "; 
+			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(1,2,3,8,9,10) "; 
 		}else{
-			hql = "select count(*) from OrderHeader oh where oh.consumers.id=:consumerId and oh.status in(0,4,6,7) "; 
+			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) "; 
 		}
 		
-		map.put("consumerId", (long)consumerId);
+		map.put("consumerUuid", consumerUuid);
 		count = this.count(hql, map).intValue();
 		if(count == 0){//如果没有数据，需要这是数量为1，否则页面有一个计算的分母为0 会出错
 			count = 1;
@@ -638,10 +632,8 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return
 	 */
 	@Override
-	public double getCharityAmount(long consumerId) {
-		/*String sql = "select sum(amount*0.05) from tbl_order_charity a " +
-				"INNER JOIN dat_order_header b on b.id = a.order_id where b.consumer_id ="+consumerId;*/
-		String sql = "select sum(money) from tbl_order_charity a where a.consumer_id ="+consumerId;
+	public double getCharityAmount(String consumerUuid) {
+		String sql = "select sum(money) from tbl_order_charity a where a.consumer_uuid ='"+consumerUuid+"'";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		Object object= query.uniqueResult();
 		if(object!=null){
@@ -725,7 +717,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}
 		
 		String sql="select a.restaurant_name as restaurantName, b.oh_order_type as orderType, b.oh_payment as paymentType, b.oh_amount as amount from dat_restaurants a "
-				+"INNER JOIN (select oh.restaurant_id as oh_restaurantId, oh.order_type as oh_order_type, oh.payment as oh_payment, FORMAT(sum(ifnull(oh.amount,0)), 2) as oh_amount from dat_order_header oh ";
+				+"INNER JOIN (select oh.restaurant_uuid as oh_restaurantUuid, oh.order_type as oh_order_type, oh.payment as oh_payment, FORMAT(sum(ifnull(oh.amount,0)), 2) as oh_amount from dat_order_header oh ";
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -738,8 +730,8 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
 		}
 		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
-		sql += "GROUP BY oh.restaurant_id, oh.order_type, oh.payment) b "
-				+"ON b.oh_restaurantId = a.id ";
+		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
+				+"ON b.oh_restaurantuuid = a.id ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
 		
@@ -793,7 +785,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @param: @return
 	 * @return PageModel  
 	 */
-	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf,String restaurantId){
+	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf,String restaurantUuid){
 		String startDate = "";//开始时间
 		String endDate = "";//结束时间
 		if(StringUtil.isNotEmpty(searchKey) && searchKey.trim().length()>3){
@@ -801,14 +793,12 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			startDate = valueArray[0];
 			endDate = valueArray[1];
 		}
-		String sql = "select oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_id) as orderQuantity, "
+		String sql = "select oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_uuid) as orderQuantity, "
 			+"SUM(oh.total) as subtotal, round(sum(oh.logistics),2) as deliveryFee, "
 			+"sum(oh.tax) as gst, sum(oh.tip) as tips, "
-			//+"round(sum((oh.total+oh.tax)*0.1),2) as nommeFee, round(sum((oh.amount*0.029)+0.3),2) as stripeFee, sum(oh.amount) as income "
-			//	+"from dat_order_header oh where oh.restaurant_id=:restaurantId and oh.status=7 ";//已完成的订单状态：7
 			+"round(sum((oh.total*1.05)*0.1),2) as nommeFee, if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as stripeFee,"
-			+"sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income "		
-				+"from dat_order_header oh where oh.restaurant_id=:restaurantId and oh.status =7 ";	//已完成的订单状态：7	
+			+"sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income "	
+				+"from dat_order_header oh where oh.restaurant_uuid=:restaurantUuid and oh.status=7 ";//已完成的订单状态：7
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -822,7 +812,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}
 		sql += "GROUP BY oh.order_type, oh.payment ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(PageRestaurantOrderStatement.class));
 		query.addScalar("orderType",new org.hibernate.type.StringType());
 		query.addScalar("paymentType",new org.hibernate.type.StringType());
@@ -836,6 +826,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.addScalar("income",new org.hibernate.type.StringType());
 		return query.list();
 	}
+
+	/*@Override
+	public List<OrderHeader> getOrdersByRestaurantUuid(String restaurantUuid,
+			PageFilter pf, String status, String orderDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
 	
 		
 }

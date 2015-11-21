@@ -64,6 +64,6 @@ public interface RestaurantsMenuDao {
 	 * @param: int id
 	 * @return List<RestaurantsMenu>  
 	 */
-	public List<RestaurantsMenu> getRestaurantsMenuByRestaurantsId(long restaurantId);
+	public List<RestaurantsMenu> getRestaurantsMenuByRestaurantsUuid(String restaurantUuid);
 
 }

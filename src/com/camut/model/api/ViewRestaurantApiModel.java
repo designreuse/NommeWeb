@@ -2,7 +2,7 @@ package com.camut.model.api;
 
 public class ViewRestaurantApiModel {
 
-	private long restaurantId;  //商家id
+	private String restaurantUuid;  //商家id
 	private String logourl = "";  // logo图片
 	private String restaurantName = "";   // 店名
 	private Double avgPrice = 0.0;   // 人均小费价格
@@ -20,14 +20,15 @@ public class ViewRestaurantApiModel {
 	}
 	//private Integer currentPageIndex;  //当前页数
 	//private Integer total;  //总数量
-	public long getRestaurantId() {
-		return restaurantId;
-	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
-	}
+	
 	public String getLogourl() {
 		return logourl;
+	}
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public void setLogourl(String logourl) {
 		this.logourl = logourl;

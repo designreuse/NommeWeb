@@ -141,8 +141,8 @@ public class ViewRestaurantServiceImpl implements ViewRestaurantService {
 		List<ViewRestaurantApiModel> vramList = new ArrayList<ViewRestaurantApiModel>();
 		for (ViewRestaurant viewRestaurant2 : list) {
 			ViewRestaurantApiModel vram = new ViewRestaurantApiModel();
-			if(viewRestaurant2.getId() != null){
-				vram.setRestaurantId(viewRestaurant2.getId());//店家id
+			if(viewRestaurant2.getRestaurantUuid() != null){
+				vram.setRestaurantUuid(viewRestaurant2.getRestaurantUuid());//店家id
 			}
 			if(viewRestaurant2.getLogourl() != null && viewRestaurant2.getLogourl().length() > 0){
 				vram.setLogourl(viewRestaurant2.getLogourl());//logo
@@ -207,8 +207,8 @@ public class ViewRestaurantServiceImpl implements ViewRestaurantService {
 	 * @return: ViewRestaurant
 	 */
 	@Override
-	public ViewRestaurant getRestaurantScore(long id) {
-		return viewRestaurantDao.getRestaurantsById(id);
+	public ViewRestaurant getRestaurantScore(String restaurantUuid) {
+		return viewRestaurantDao.getRestaurantsByRestaurantUuid(restaurantUuid);
 	}
 	
 

@@ -21,19 +21,19 @@ $(function(){
 		//console.log(orgCartAddress);
 	}
 	
-	var consumerId = $("#currentConsumerId").val();
-	var restaurantId = $.cookie("restaurantId");
+	var consumerUuid = $("#currentConsumerUuid").val();
+	var restaurantUuid = $.cookie("restaurantUuid");
 	$("button[name='changeOrder']").click(function(){
-		window.location = appPath+"/index/restaurantmenu?restaurantId="+restaurantId;
+		window.location = appPath+"/index/restaurantmenu?restaurantUuid="+restaurantUuid;
 	});
 	
 	function refreshCart (){
-		if(consumerId){
+		if(consumerUuid){
 			$.ajax({
 				type: 'post',
 				async: false,
 				url: appPath+'/consumers/showRegistCart',
-				data: {consumerId:consumerId},
+				data: {consumerUuid:consumerUuid},
 				success: function(data){
 					$("#cartContent").html(data);
 				}
@@ -60,12 +60,12 @@ $(function(){
 		//var indexAddress = $.cookie("indexAddress");
 		//var lat = $.cookie("Lat");
 		//var lng = $.cookie("Lng");
-		if(consumerId){//判断是否登录
+		if(consumerUuid){//判断是否登录
 			$.ajax({
 				type: 'post',
 				async: false,
 				url: appPath+'/consumers/getConsumersAddressList',
-				data: {consumerId:consumerId},
+				data: {consumerUuid:consumerUuid},
 				success: function(data){
 					if(data){
 						addressList = $.parseJSON(data);
@@ -250,7 +250,7 @@ $(function(){
 			type: "post",
 			url: appPath+"/consumers/getDeliveryFee",
 			async: false,
-			data:{lng:obj1.lng, lat:obj1.lat,subTotal:obj1.subTotal, restaurantId:restaurantId},//restaurantId在上面用已用cookie获取
+			data:{lng:obj1.lng, lat:obj1.lat,subTotal:obj1.subTotal, restaurantUuid:restaurantUuid},//restaurantUuid在上面用已用cookie获取
 			success: function(data){
 				$("#bg").css("display", "none");//隐藏等待层
 				$("#show").css("display", "none");
@@ -423,7 +423,7 @@ $(function(){
 				$.ajax({
 					type: "post",
 					async: false,
-					data: {address:newFullAddress, subTotal:subTotal, restaurantId:restaurantId},
+					data: {address:newFullAddress, subTotal:subTotal, restaurantUuid:restaurantUuid},
 					url: appPath+"/consumers/getLatLng",
 					success: function(data){
 						$("#bg").css("display", "none");//隐藏等待层

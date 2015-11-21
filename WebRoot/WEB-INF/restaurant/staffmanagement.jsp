@@ -45,7 +45,7 @@ label {
 		<img src="${ctx}/images/loader.gif"><span style="color: #eeeeee;font-size: large;">&nbsp;Loading...</span>
 	</div>
 	
-	<input type="hidden" id="storeId" value="${sessionScope.restaurantsUser.id}">
+	<input type="hidden" id="storeId" value="${sessionScope.restaurantsUser.uuid}">
 	<div id="custom-toolbar">
 		<button type="button" name="add" class="btn btn-default glyphicon glyphicon-plus" title="add new employee"
 			style="margin-left: 40px;" data-toggle="modal" data-target="#myModal">
@@ -146,7 +146,7 @@ label {
 								</div>
 								<div class="col-md-9">
 									<input type="password" name="password" class="form-control" placeholder="Password" data-placement="right" /> <input
-										type="hidden" name="id">
+										type="hidden" name="uuid">
 								</div>
 							</div>
 						</div>

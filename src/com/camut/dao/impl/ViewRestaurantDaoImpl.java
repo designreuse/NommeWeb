@@ -150,10 +150,10 @@ public class ViewRestaurantDaoImpl extends BaseDao<ViewRestaurant> implements Vi
 	 * @param: long id
 	 * @return ViewRestaurant  
 	 */
-	public ViewRestaurant getRestaurantsById(long id){
-		String hql = "from ViewRestaurant vr where vr.id=:id";
+	public ViewRestaurant getRestaurantsByRestaurantUuid(String restaurantUuid){
+		String hql = "from ViewRestaurant vr where vr.restaurantUuid=:restaurantUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
+		map.put("restaurantUuid", restaurantUuid);
 		return this.get(hql, map);
 	}
 

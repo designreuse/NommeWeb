@@ -122,7 +122,7 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
 	public List<RestaurantTableApiModel> getRestaurantTableList(Restaurants restaurants,String orderDate) {
 		List<RestaurantTable> rtList = restaurantTableDao.getRestaurantTable(restaurants);
 		//根据订单类型和订单时间获取桌位信息。
-		List<TableEntity> tables=restaurantTableDao.getRestaurantTableNumberByOrderTypeAndOrderDate(restaurants.getId(),GlobalConstant.TYPE_RESERVATION, orderDate);
+		List<TableEntity> tables=restaurantTableDao.getRestaurantTableNumberByOrderTypeAndOrderDate(restaurants.getUuid(),GlobalConstant.TYPE_RESERVATION, orderDate);
 		List<RestaurantTableApiModel> rtamList = new ArrayList<RestaurantTableApiModel>();
 		if(rtList != null){
 			for (RestaurantTable restaurantTable : rtList) {//循环所有座位

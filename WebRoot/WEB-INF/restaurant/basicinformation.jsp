@@ -50,8 +50,9 @@ html,body,#map-canvas {
 									name</label>
 							</div>
 							<div class="col-md-8">
-								<input type="text" id="restaurantName" name="restaurantName" class="form-control" data-placement="bottom" /> <input
-									type="hidden" name="id" id="id" />
+								<input type="text" id="restaurantName" name="restaurantName" class="form-control" data-placement="bottom" /> 
+								<input type="hidden" name="id" id="id" />
+								<input type="hidden" name="uuid" id="uuid" />
 							</div>
 						</div>
 					</div>

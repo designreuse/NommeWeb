@@ -13,7 +13,6 @@ import com.camut.model.Consumers;
 import com.camut.model.Evaluate;
 import com.camut.model.Restaurants;
 import com.camut.model.api.EvaluateApiModel;
-import com.camut.pageModel.PagePastOrderInfo;
 
 /**
  * @dao EvaluateDaoImpl.java
@@ -50,10 +49,10 @@ public class EvaluateDaoImpl extends BaseDao<Evaluate> implements EvaluateDao {
 		try {
 			Evaluate evaluate = new Evaluate();
 			Consumers consumers = new Consumers();
-			consumers.setId(evaluateApiModel.getConsumerId());
+			consumers.setUuid(evaluateApiModel.getConsumerUuid());
 			evaluate.setConsumers(consumers);
 			Restaurants restaurants = new Restaurants();
-			restaurants.setId(evaluateApiModel.getRestaurantId());
+			restaurants.setUuid(evaluateApiModel.getRestaurantUuid());
 			evaluate.setRestaurants(restaurants);
 			evaluate.setOrderHeaderId(evaluateApiModel.getOrderHeaderId());
 			evaluate.setStatus(1);
@@ -74,10 +73,10 @@ public class EvaluateDaoImpl extends BaseDao<Evaluate> implements EvaluateDao {
 	 * @return: List<Evaluate>
 	 */
 	@Override
-	public List<Evaluate> getEvaluateByRestaurantId(long restaurantId) {
-		String hql = "from Evaluate f where f.restaurants.id=:restaurantId";
+	public List<Evaluate> getEvaluateByRestaurantUuid(String restaurantUuid) {
+		String hql = "from Evaluate f where f.restaurants.uuid=:restaurantUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<Evaluate> eList = this.find(hql, map);
 		return eList;
 	}
@@ -89,11 +88,11 @@ public class EvaluateDaoImpl extends BaseDao<Evaluate> implements EvaluateDao {
 	 * @return: Evaluate
 	 */
 	@Override
-	public Evaluate getEvaluate(long restaurantId, long consumerId) {
-		String hql = "from Evaluate f where f.restaurants.id=:restaurantId and f.consumers.id=:consumerId ";
+	public Evaluate getEvaluate(String restaurantUuid, String consumerUuid) {
+		String hql = "from Evaluate f where f.restaurants.uuid=:restaurantUuid and f.consumers.uuid=:consumerUuid ";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
-		map.put("consumerId", consumerId);
+		map.put("restaurantUuid", restaurantUuid);
+		map.put("consumerUuid", consumerUuid);
 		return this.get(hql, map);
 	}
 	
@@ -121,26 +120,22 @@ public class EvaluateDaoImpl extends BaseDao<Evaluate> implements EvaluateDao {
 	 * @return List<EvaluateApiModel>  
 	 */
 	@SuppressWarnings("unchecked")
-	public List<EvaluateApiModel> getEvaluatePagingByRestaurantId(long restaurantId, int offset, int limit){
-		String hql = "select count(*) from Evaluate f where f.restaurants.id=:restaurantId and f.status=1";
+	public List<EvaluateApiModel> getEvaluatePagingByRestaurantUuid(String restaurantUuid, int offset, int limit){
+		String hql = "select count(*) from Evaluate f where f.restaurants.uuid=:restaurantUuid and f.status=1";
 		//select count(*) from tbl_evaluate f where f.restaurants_id=16 and f.status=1
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		count = this.count(hql, map);
-	
-		
-		
 		String sql = "select a.content as content, a.score as score, a.createtime as createtime, " +
 				"b.firstname as firstName, b.lastname as lastName "+
 				"from tbl_consumers b right JOIN tbl_evaluate  a "+
-				"ON a.consumers_id = b.id where a.restaurants_id =:restaurantId "+ 
+				"ON a.consumers_uuid = b.uuid where a.restaurants_uuid =:restaurantUuid "+ 
 				"and a.`status`=1 ORDER BY a.createtime desc limit :beginIndex, :rows";
-		
 		//int page = pf.getOffset();//当前页码
 		//int rows = pf.getLimit();//每页数量
 		int beginIndex = (offset-1)*limit;
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("beginIndex", beginIndex);
 		query.setParameter("rows", limit);
 		query.setResultTransformer(Transformers.aliasToBean(EvaluateApiModel.class));

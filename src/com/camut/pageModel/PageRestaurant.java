@@ -44,6 +44,7 @@ public class PageRestaurant {
 	private List<PageRestaurantsMenu> pageRestaurantsMenuList;//餐厅菜单分类集合
 	private List<PageEvaluate> pageEvaluateList;//商家评论
 	private List<PageDiscount> pageDiscountList;//优惠券信息
+	private String restaurantUuid;
 	
 	public String getRestaurantName() {
 		return restaurantName;
@@ -237,8 +238,12 @@ public class PageRestaurant {
 	public void setRestaurantEmail(String restaurantEmail) {
 		this.restaurantEmail = restaurantEmail;
 	}
-	
-	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
+	}
 	
 	
 }

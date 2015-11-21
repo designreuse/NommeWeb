@@ -20,7 +20,7 @@ public class RestaurantsDetailApiModel {
 	 private Integer isreservation;
 	 private String logourl;
 	 private String restaurantAddress;
-	 private Long restaurantId;
+	 private String restaurantUuid;
 	 private String restaurantName;
 	 private Double score;
 	 private String notice="";
@@ -103,11 +103,11 @@ public class RestaurantsDetailApiModel {
 	public void setRestaurantAddress(String restaurantAddress) {
 		this.restaurantAddress = restaurantAddress;
 	}
-	public Long getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getRestaurantName() {
 		return restaurantName;

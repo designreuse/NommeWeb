@@ -38,7 +38,7 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 	private Integer orderType;// 订单种类，1:外送 2：自取 3：到店就餐; 1:delivery 2:pick up
 								// 3：dine-in/reservation
 	private Date createdate;// 下单时间
-	private Integer restaurantId;// 商家编号
+	private String restaurantUuid;// 商家编号
 	private Integer status;// 订单状态 0：订单取消状态 1:未付款 2：已付款 3：已接单 4:拒绝接单  6：已退款
 							// 7：完成的订单  8：line up  9：现金付款   10:待审核
 	private Date orderDate;// 送货时间
@@ -70,7 +70,7 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 	private Integer discountId;// 优惠券id
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "consumer_id")
+	@JoinColumn(name = "consumer_uuid")
 	public Consumers getConsumers() {
 		return this.consumers;
 	}
@@ -98,13 +98,13 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 		this.createdate = createdate;
 	}
 
-	@Column(name = "restaurant_id")
-	public Integer getRestaurantId() {
-		return this.restaurantId;
+	@Column(name = "restaurant_uuid")
+	public String getRestaurantUuid() {
+		return this.restaurantUuid;
 	}
 
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 
 	@Column(name = "total", precision = 22, scale = 0)

@@ -140,7 +140,7 @@ public class ConsumersApiController extends BaseAPiModel {
 				coms.setMobileToken(consumers.getMobileToken());
 				coms.setMobileType(consumers.getMobileType());
 				consumersService.updateTokenAndType(coms);
-				consumersApiModel.setConsumerId(coms.getId());
+				consumersApiModel.setConsumerUuid(coms.getUuid());
 				consumersApiModel.setEmail(coms.getEmail());
 				consumersApiModel.setPhone(coms.getPhone()==null?"":coms.getPhone());
 				consumersApiModel.setFirstName(coms.getFirstName()==null?"":coms.getFirstName());
@@ -174,7 +174,7 @@ public class ConsumersApiController extends BaseAPiModel {
 						ram.setResultMessage(MessageConstant.ALL_FAILED);
 						return ram;
 					}
-					consumersApiModel.setConsumerId(consumers2.getId());
+					consumersApiModel.setConsumerUuid(consumers2.getUuid());
 					consumersApiModel.setEmail(consumers2.getEmail()==null?"":consumers2.getEmail());
 					consumersApiModel.setFirstName(consumers2.getFirstName()==null?"":consumers2.getFirstName());
 					consumersApiModel.setLastName(consumers2.getLastName()==null?"":consumers2.getLastName());
@@ -193,14 +193,16 @@ public class ConsumersApiController extends BaseAPiModel {
 						//e.printStackTrace();
 					//}
 					consumers.setPassword(MD5Util.md5(temporarypassword));
-					long id = consumersService.saveTokenAndType(consumers);
+					String uuid = consumersService.saveTokenAndType(consumers);
 					//增加失败
-					if (id<0) {
+					if (!StringUtil.isNotEmpty(uuid)) {
 						ram.setFlag(-1);
 						ram.setResultMessage(MessageConstant.ADD_FAILED);
 						return ram;
 					}
-					consumersApiModel.setConsumerId(id);
+					Consumers consumers3 = consumersService.getConsumersByUuid(uuid);
+					//consumersApiModel.setConsumerId(id);
+					consumersApiModel.setConsumerUuid(consumers3.getUuid());
 					if (StringUtil.isNotEmpty(consumers.getNickname())) {
 						consumersApiModel.setShowName(consumers.getNickname());
 					}
@@ -228,7 +230,7 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel addConsumers(Consumers consumers) {	
+	public ResultApiModel addConsumers(Consumers consumers) {
 		Log4jUtil.info("会员注册接口==>"+consumers.toString());
 		ResultApiModel ram = new ResultApiModel();
 		int flag = consumersService.addConsumers(consumers);
@@ -363,11 +365,11 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/address/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getConsumersAddressById(String consumerId,String restaurantId) {
-		Log4jUtil.info("用户地址列表接口==>"+"consumerId="+consumerId+"restaurantId="+restaurantId);
+	public ResultApiModel getConsumersAddressById(String consumerUuid,String restaurantUuid) {
+		Log4jUtil.info("用户地址列表接口==>"+"consumerUuid="+consumerUuid+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if (StringUtil.isNotEmpty(consumerId)&&StringUtil.isNotEmpty(restaurantId)) {
-			List<ConsumersAddressApiModel> list = consumersAddressService.getConsumersAddressById(Long.parseLong(consumerId), Long.parseLong(restaurantId));
+		if (StringUtil.isNotEmpty(consumerUuid)&&StringUtil.isNotEmpty(restaurantUuid)) {
+			List<ConsumersAddressApiModel> list = consumersAddressService.getConsumersAddressById(consumerUuid, restaurantUuid);
 			if (list!=null) {
 				ram.setBody(list);
 				ram.setFlag(1);
@@ -458,12 +460,12 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/paycard/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getConsumersBankaccountById(String consumerId) {
-		Log4jUtil.info(" 用户银行卡列表接口==>"+"consumerId="+consumerId);
+	public ResultApiModel getConsumersBankaccountById(String consumerUuid) {
+		Log4jUtil.info(" 用户银行卡列表接口==>"+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(consumersBankaccountService.getConsumersBankaccountById(Long.parseLong(consumerId)));
+			ram.setBody(consumersBankaccountService.getConsumersBankaccountByUuid(consumerUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -538,13 +540,13 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/collection/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel selectFavorites(long consumerId) {
-		Log4jUtil.info("用户收藏接口==>"+"consumerId="+consumerId);
+	public ResultApiModel selectFavorites(String consumerUuid) {
+		Log4jUtil.info("用户收藏接口==>"+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if(consumerId > 0){
+		if(StringUtil.isNotEmpty(consumerUuid)){
 			try {
 				ram.setFlag(1);
-				ram.setBody(consumersFavoritesService.selectFavorites(consumerId));
+				ram.setBody(consumersFavoritesService.selectFavorites(consumerUuid));
 				ram.setResultMessage("");
 			} catch (Exception e) {
 				ram.setFlag(-1);
@@ -562,11 +564,11 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/collection/add", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel addFavorites(String consumerId, String restaurantId){
-		Log4jUtil.info("用户添加收藏接口==>"+"consumerId="+consumerId+"restaurantId="+restaurantId);
+	public ResultApiModel addFavorites(String consumerUuid, String restaurantUuid){
+		Log4jUtil.info("用户添加收藏接口==>"+"consumerUuid="+consumerUuid+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if(consumerId != null && consumerId.length() > 0 && restaurantId != null && restaurantId.length() > 0){
-			int flag = consumersFavoritesService.addFavorites(Long.parseLong(consumerId), Integer.parseInt(restaurantId));
+		if(StringUtil.isNotEmpty(consumerUuid) && StringUtil.isNotEmpty(restaurantUuid)){
+			int flag = consumersFavoritesService.addFavorites(consumerUuid, restaurantUuid);
 			if(flag == -1){//添加失败
 				ram.setResultMessage(MessageConstant.ALL_FAILED);
 				ram.setFlag(-1);
@@ -611,7 +613,7 @@ public class ConsumersApiController extends BaseAPiModel {
 	@RequestMapping(value = "/review/add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultApiModel addEvaluat(EvaluateApiModel evaluateApiModel){
-		Log4jUtil.info("用户发布评论接口==>"+"OrderHeaderId"+evaluateApiModel.getOrderHeaderId());
+		Log4jUtil.info("用户发布评论接口==>"+"OrderHeaderId"+evaluateApiModel.getOrderHeaderId()+"评分=>"+evaluateApiModel.getScore());
 		ResultApiModel ram = new ResultApiModel();
 		int flag = evaluateService.addEvaluate(evaluateApiModel);
 		if(flag == -1){//添加失败
@@ -632,13 +634,13 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/order/history/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel selectPastOrder(long consumerId) {
-		Log4jUtil.info("已完成订单接口==>"+"consumerId="+consumerId);
+	public ResultApiModel selectPastOrder(String consumerUuid) {
+		Log4jUtil.info("已完成订单接口==>"+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderService.selectPastOrder(consumerId));
-			ram.setTotal(orderService.getCharityAmount(consumerId));
+			ram.setBody(orderService.selectPastOrder(consumerUuid));
+			ram.setTotal(orderService.getCharityAmount(consumerUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -655,12 +657,12 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/order/current/list", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel selectCurrentOrder(long consumerId) {
-		Log4jUtil.info("未完成订单接口==>"+"consumerId="+consumerId);
+	public ResultApiModel selectCurrentOrder(String consumerUuid) {
+		Log4jUtil.info("未完成订单接口==>"+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderService.selectCurrentOrder(consumerId));
+			ram.setBody(orderService.selectCurrentOrder(consumerUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -777,22 +779,22 @@ public class ConsumersApiController extends BaseAPiModel {
 					orderHeader.setEmail(map.get("email").toString());
 				}
 				
-				if(map.get("consumerId")!=null&&!"0".equals(map.get("consumerId"))){
+				if(map.get("consumerUuid") != null && StringUtil.isNotEmpty(map.get("consumerUuid").toString())){
 					Consumers consumers=new Consumers();
-					consumers.setId(Long.valueOf(map.get("consumerId").toString()));
+					consumers.setUuid(map.get("consumerUuid").toString());
 					orderHeader.setConsumers(consumers);
 				}
 				else{
 					ram.setFlag(-1);
-					ram.setResultMessage("please enter consumerId!");
+					ram.setResultMessage("please enter consumerUuid!");
 					return ram;
 				}
-				if(map.get("restaurantId")!=null){
-					orderHeader.setRestaurantId(Integer.valueOf(map.get("restaurantId").toString()));
+				if(map.get("restaurantUuid")!=null && StringUtil.isNotEmpty(map.get("restaurantUuid").toString())){
+					orderHeader.setRestaurantUuid(map.get("restaurantUuid").toString());
 				}
 				else{
 					ram.setFlag(-1);
-					ram.setResultMessage("please enter restaurantId!");
+					ram.setResultMessage("please enter restaurantUuid!");
 					return ram;
 				}
 				if(map.get("orderDate")!=null){
@@ -892,7 +894,7 @@ public class ConsumersApiController extends BaseAPiModel {
 						orderHeader.setId(Long.parseLong(map.get("orderId").toString()));
 						OrderHeader orderHeader1 = orderService.getOrderById(orderHeader.getId());
 						orderHeader.setConsumers(orderHeader1.getConsumers());
-						orderHeader.setRestaurantId(orderHeader1.getRestaurantId());
+						orderHeader.setRestaurantUuid(orderHeader1.getRestaurantUuid());
 						orderHeader.setOrderDate(orderHeader1.getOrderDate());
 						orderHeader.setPeopleName(orderHeader1.getPeopleName());
 						orderHeader.setEmail(orderHeader1.getEmail());
@@ -1011,10 +1013,10 @@ public class ConsumersApiController extends BaseAPiModel {
 		Restaurants restaurants = null;
 		if (orderHeader.getOrderType()==3 && orderHeader.getOrderItems()!=null && orderHeader.getOrderItems().size()>0){
 			OrderHeader oh = orderService.getOrderById(orderHeader.getId());
-			restaurants = restaurantsService.getRestaurantsById(oh.getRestaurantId());
+			restaurants = restaurantsService.getRestaurantsByUuid(oh.getRestaurantUuid());
 		}
 		else{
-			restaurants = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
+			restaurants = restaurantsService.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
 		}
 		
 
@@ -1069,7 +1071,7 @@ public class ConsumersApiController extends BaseAPiModel {
 			else if(orderHeader.getPayment()==1){//卡支付
 				if (map.get("cardId")==null) {
 					ram.setFlag(-1);
-					ram.setResultMessage("have no cardId!");
+					ram.setResultMessage("Have no cardId!");
 					return ram;
 				}
 				orderHeader.setStatus(1);//未支付状态
@@ -1077,7 +1079,7 @@ public class ConsumersApiController extends BaseAPiModel {
 		}
 		else{
 			ram.setFlag(-1);
-			ram.setResultMessage("have no payment!");
+			ram.setResultMessage("Have no payment!");
 			return ram;
 		}
 
@@ -1101,7 +1103,7 @@ public class ConsumersApiController extends BaseAPiModel {
 			//删除购物车
 			//判断是否有cartHeaderId
 			if(map.get("cartHeaderId") != null){//排除Reservation的情况
-				cartService.deleteCartByConsumerId(orderHeader.getConsumers().getId().intValue());
+				cartService.deleteCartByConsumerUuid(orderHeader.getConsumers().getUuid());
 			}
 			
 			if (orderHeader.getOrderType()==3 && (orderHeader.getOrderItems()==null || orderHeader.getOrderItems().size()==0)) {
@@ -1114,7 +1116,7 @@ public class ConsumersApiController extends BaseAPiModel {
 			}
 			//设置付款
 			if(orderHeader.getPayment()==1){//信用卡付款
-				Consumers consumers = consumersService.getConsumersById(orderHeader.getConsumers().getId());
+				Consumers consumers = consumersService.getConsumersByUuid(orderHeader.getConsumers().getUuid());
 				if(consumers!=null && StringUtil.isNotEmpty(consumers.getStripeCustomerId())){
 					ChargeEntity chargeEntity = new ChargeEntity();
 					chargeEntity.setCustomerId(consumers.getStripeCustomerId());
@@ -1184,16 +1186,16 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/index/type",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getShortcutMenu(Integer consumerId,Integer type,HttpSession session){
-		Log4jUtil.info("获取快捷菜单接口==>"+"consumerId="+consumerId+"type="+type);
+	public ResultApiModel getShortcutMenu(String consumerUuid,Integer type,HttpSession session){
+		Log4jUtil.info("获取快捷菜单接口==>"+"consumerUuid="+consumerUuid+"type="+type);
 		ResultApiModel ram = new ResultApiModel();
-		if(consumerId==null){
-			consumerId=0;
+		if(!StringUtil.isNotEmpty(consumerUuid)){
+			consumerUuid="";
 		}
 		if(session.getAttribute("consumer")!=null ){
-			consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
+			consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
 		}
-		List<ViewConsumerClassifitionApiModel> list = consumersService.getShortcutMenu(consumerId,type);
+		List<ViewConsumerClassifitionApiModel> list = consumersService.getShortcutMenu(consumerUuid,type);
 		if(list!=null){
 			ram.setBody(list);
 			ram.setFlag(1);
@@ -1246,13 +1248,13 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/cart/getInfo",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getInfo(String mobileToken, Double consumerLng, Double consumerLat, String consumerId){
-		Log4jUtil.info("获取购物车接口==>"+"mobileToken="+mobileToken+"consumerLng="+consumerLng+"consumerLat="+consumerLat+"consumerId="+consumerId);
+	public ResultApiModel getInfo(String mobileToken, Double consumerLng, Double consumerLat, String consumerUuid){
+		Log4jUtil.info("获取购物车接口==>"+"mobileToken="+mobileToken+"consumerLng="+consumerLng+"consumerLat="+consumerLat+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if(!StringUtil.isNotEmpty(consumerId)){
-			consumerId = String.valueOf(0);
+		if(!StringUtil.isNotEmpty(consumerUuid)){
+			consumerUuid = "";
 		}
-		CartHeaderApiModel apiModel = cartService.getCartHeaderApiModel(mobileToken, Integer.parseInt(consumerId));
+		CartHeaderApiModel apiModel = cartService.getCartHeaderApiModel(mobileToken, consumerUuid);
 		if (apiModel!=null) {
 			ram.setFlag(1);
 			ram.setBody(apiModel);
@@ -1294,11 +1296,11 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/cart/delete",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel deleteCartHeaderByMobileToken(String mobileToken, String consumerId){
-		Log4jUtil.info("清空购物车接口==>"+"mobilToken="+mobileToken+",consumerId="+consumerId);
+	public ResultApiModel deleteCartHeaderByMobileToken(String mobileToken, String consumerUuid){
+		Log4jUtil.info("清空购物车接口==>"+"mobilToken="+mobileToken+",consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if (StringUtil.isNotEmpty(mobileToken) || StringUtil.isNotEmpty(consumerId)) {
-			int flag = cartService.deleteCartHeader(mobileToken, consumerId);
+		if (StringUtil.isNotEmpty(mobileToken) || StringUtil.isNotEmpty(consumerUuid)) {
+			int flag = cartService.deleteCartHeader(mobileToken, consumerUuid);
 			if (flag==1) {//成功
 				ram.setFlag(1);
 				return ram;
@@ -1317,13 +1319,13 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/cart/deleteone",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel deleteCartContent(String mobileToken,Integer dishId, Double consumerLng, Double consumerLat,Integer consumerId){
-		Log4jUtil.info("删除获取购物车单个菜的接口==>"+"mobileToken="+mobileToken+"dishId="+dishId+"consumerLng="+consumerLng+"consumerLat="+consumerLat+"consumerId="+consumerId);
+	public ResultApiModel deleteCartContent(String mobileToken,Integer dishId, Double consumerLng, Double consumerLat,String consumerUuid){
+		Log4jUtil.info("删除获取购物车单个菜的接口==>"+"mobileToken="+mobileToken+"dishId="+dishId+"consumerLng="+consumerLng+"consumerLat="+consumerLat+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
-		int flag = cartHeaderService.deleteCartDish(mobileToken, dishId, consumerId);
+		int flag = cartHeaderService.deleteCartDish(mobileToken, dishId, consumerUuid);
 		if (flag==1) {
 			ram.setFlag(1);
-			ram.setBody(cartService.getCartHeaderApiModel(mobileToken,consumerId));
+			ram.setBody(cartService.getCartHeaderApiModel(mobileToken,consumerUuid));
 			return ram;
 		}
 		ram.setFlag(-1);
@@ -1349,9 +1351,9 @@ public class ConsumersApiController extends BaseAPiModel {
 				ram.setFlag(1);
 				//推送  "标题", "内容", "token"
 				OrderHeader oh = orderService.getOrderById(orderId);
-				if(oh != null && oh.getRestaurantId() != null){
+				if(oh != null && StringUtil.isNotEmpty(oh.getRestaurantUuid())){
 					Restaurants restaurants = new Restaurants();
-					restaurants.setId((long)oh.getRestaurantId());
+					restaurants.setUuid(oh.getRestaurantUuid());
 					List<RestaurantsUser> list = restaurantsUserService.getAllRestaurantsUser(restaurants);
 					for (RestaurantsUser restaurantsUser : list) {
 						if(StringUtil.isNotBlank(restaurantsUser.getToken())){//判断token是否为空
@@ -1389,14 +1391,14 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/repeat",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel repeatOrder(Integer consumerId, Long orderId, String mobiletoken){
-		Log4jUtil.info("重复下订单接口==>consumerId="+consumerId+",orderId="+orderId+",mobiletoken="+mobiletoken);
+	public ResultApiModel repeatOrder(String consumerUuid, Long orderId, String mobiletoken){
+		Log4jUtil.info("重复下订单接口==>consumerUuid="+consumerUuid+",orderId="+orderId+",mobiletoken="+mobiletoken);
 		ResultApiModel ram = new ResultApiModel();
 		if (orderId!=null) {
 			int flag = orderService.repeatOrder(orderId, mobiletoken);
 			OrderHeader orderHeader = orderService.getOrderById(orderId);
 			if (flag==1) {//购物车增加成功
-				CartHeaderApiModel cartHeaderApiModel = cartService.getCartHeaderApiModel(mobiletoken, orderHeader.getConsumers().getId().intValue());
+				CartHeaderApiModel cartHeaderApiModel = cartService.getCartHeaderApiModel(mobiletoken, orderHeader.getConsumers().getUuid());
 				ram.setFlag(1);
 				ram.setBody(cartHeaderApiModel);
 				ram.setResultMessage("Please review your items in My Order");
@@ -1417,8 +1419,8 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/cart/sDiscount",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel selectDiscount(String mobileToken,Double restaurantLat,Double restaurantLng,Long discountId,Long restaurantId,Integer consumerId){
-		Log4jUtil.info("选择折扣接口==>mobilToken="+mobileToken+",discountId="+discountId+",restaurantId="+restaurantId+",consumerId="+consumerId);
+	public ResultApiModel selectDiscount(String mobileToken,Double restaurantLat,Double restaurantLng,Long discountId,String restaurantUuid,String consumerUuid){
+		Log4jUtil.info("选择折扣接口==>mobilToken="+mobileToken+",discountId="+discountId+",restaurantUuid="+restaurantUuid+",consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try{
 			if(restaurantLat==null||restaurantLng==null){
@@ -1426,7 +1428,7 @@ public class ConsumersApiController extends BaseAPiModel {
 				restaurantLng=new Double(0);
 			}
 			ram.setFlag(1);
-			ram.setBody(cartHeaderService.reCalcCost(mobileToken, restaurantLat, restaurantLng, discountId, restaurantId,consumerId));
+			ram.setBody(cartHeaderService.reCalcCost(mobileToken, restaurantLat, restaurantLng, discountId, restaurantUuid,consumerUuid));
 			ram.setResultMessage("");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1448,8 +1450,8 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/stripe/addCard",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel addCard(CardEntity cardEntity,String consumerId,HttpSession session){
-		Log4jUtil.info("添加信用卡接口==>"+cardEntity.toString()+"consumerId="+consumerId);
+	public ResultApiModel addCard(CardEntity cardEntity,String consumerUuid,HttpSession session){
+		Log4jUtil.info("添加信用卡接口==>"+cardEntity.toString()+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			if (StringUtil.isNotEmpty(cardEntity.getNumber()) && cardEntity.getExp_month()!=null &&
@@ -1463,10 +1465,10 @@ public class ConsumersApiController extends BaseAPiModel {
 							if (cardEntity.getExp_year()>=year) {
 								if (cardEntity.getCvc().matches("^\\d{3}$")) {
 									//卡号初步验证通过
-									int flag = paymentService.addCard(cardEntity, consumerId);
+									int flag = paymentService.addCard(cardEntity, consumerUuid);
 									if (flag==1) {//增加成功
 										ram.setFlag(1);
-										Consumers consumers2 = consumersService.getConsumersById(Integer.parseInt(consumerId));
+										Consumers consumers2 = consumersService.getConsumersByUuid(consumerUuid);
 										if(consumers2!=null){
 											session.setAttribute("consumer", consumers2);
 										}
@@ -1527,10 +1529,10 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/stripe/listAllCards",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel listAllCards(String consumerId){
-		Log4jUtil.info("列出所有的银行卡接口==>"+"consumerId="+consumerId);
+	public ResultApiModel listAllCards(String consumerUuid){
+		Log4jUtil.info("列出所有的银行卡接口==>"+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
-		List<CardEntity> list = paymentService.listAllCards(consumerId);
+		List<CardEntity> list = paymentService.listAllCards(consumerUuid);
 		if (list!=null) {
 			ram.setBody(list);
 			ram.setFlag(1);
@@ -1549,13 +1551,13 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/stripe/chargeByCardId",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel chargeByCardId(ChargeEntity chargeEntity,String consumerId,String restaurantId,String orderId){
-		Log4jUtil.info("根据指定的卡号付款接口==>"+chargeEntity.toString()+"consumerId="+consumerId+"restaurantId="+restaurantId+"orderId="+orderId);
+	public ResultApiModel chargeByCardId(ChargeEntity chargeEntity,String consumerUuid,String restaurantUuid,String orderId){
+		Log4jUtil.info("根据指定的卡号付款接口==>"+chargeEntity.toString()+"consumerUuid="+consumerUuid+"restaurantUuid="+restaurantUuid+"orderId="+orderId);
 		ResultApiModel ram = new ResultApiModel();
-		Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerId));
+		Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerUuid));
 		if(consumers!=null && StringUtil.isNotEmpty(consumers.getStripeCustomerId())){
 			chargeEntity.setCustomerId(consumers.getStripeCustomerId());
-			Restaurants restaurants = restaurantsService.getRestaurantsById(Long.parseLong(restaurantId));
+			Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 			if (restaurants!=null && StringUtil.isNotEmpty(restaurants.getStripeAccount())) {
 				chargeEntity.setAccountId(restaurants.getStripeAccount());
 				int flag = paymentService.chargeByCard(chargeEntity,orderId);
@@ -1577,12 +1579,12 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/dineinorder",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getDineIn(long consumerId, int restaurantId){
-		Log4jUtil.info("商家已经审核的订单（预定）接口==>"+"consumerId="+consumerId+"restaurantId="+restaurantId);
+	public ResultApiModel getDineIn(String consumerUuid, String restaurantUuid){
+		Log4jUtil.info("商家已经审核的订单（预定）接口==>"+"consumerUuid="+consumerUuid+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try{
 			ram.setFlag(1);
-			ram.setBody(orderService.getDineIn(consumerId, restaurantId));
+			ram.setBody(orderService.getDineIn(consumerUuid, restaurantUuid));
 			ram.setResultMessage("");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1631,9 +1633,9 @@ public class ConsumersApiController extends BaseAPiModel {
 			ram.setFlag(1);
 			ram.setResultMessage("");
 			//推送
-			if(oh != null && oh.getRestaurantId() != null){
+			if(oh != null && StringUtil.isNotEmpty(oh.getRestaurantUuid())){
 				Restaurants restaurants = new Restaurants();
-				restaurants.setId((long)oh.getRestaurantId());
+				restaurants.setUuid(oh.getRestaurantUuid());
 				List<RestaurantsUser> list = restaurantsUserService.getAllRestaurantsUser(restaurants);
 				for (RestaurantsUser restaurantsUser : list) {
 					if(StringUtil.isNotBlank(restaurantsUser.getToken())){//判断token是否为空
@@ -1665,7 +1667,7 @@ public class ConsumersApiController extends BaseAPiModel {
 			OrderHeader order = orderService.getOrderById(Long.parseLong(orderId));
 			if(order != null){
 				Consumers consumer = consumersService.getConsumersById(order.getConsumers().getId());
-				Restaurants restaurant = restaurantsService.getRestaurantsById(order.getRestaurantId());
+				Restaurants restaurant = restaurantsService.getRestaurantsByUuid(order.getRestaurantUuid());
 				if(consumer != null && restaurant != null){
 					ChargeEntity chargeEntity = new ChargeEntity();
 					chargeEntity.setAmount((int)order.getAmount()*100);
@@ -1692,17 +1694,17 @@ public class ConsumersApiController extends BaseAPiModel {
 	 */
 	@RequestMapping(value="/address/default",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getConsumersAddressDefault(String consumerId,String restaurantId) {
-		Log4jUtil.info("获取用户默认地址接口==>"+"consumerId="+consumerId+"restaurantId"+restaurantId);
+	public ResultApiModel getConsumersAddressDefault(String consumerUuid,String restauranUuid) {
+		Log4jUtil.info("获取用户默认地址接口==>"+"consumerUuid="+consumerUuid+"restauranUuid"+restauranUuid);
 		ResultApiModel ram = new ResultApiModel();
 		ram.setFlag(1);
-		if (StringUtil.isNotEmpty(restaurantId)&&StringUtil.isNotEmpty(consumerId)) {
-			ConsumersAddressDefaultApiModel apiModel = consumersAddressService.getConsumersAddressDefaultById(Long.parseLong(consumerId));
-			if (apiModel!=null) {
+		if (StringUtil.isNotEmpty(consumerUuid)&&StringUtil.isNotEmpty(restauranUuid)) {
+			ConsumersAddressDefaultApiModel apiModel = consumersAddressService.getConsumersAddressDefaultByConsumerUuid(consumerUuid);
+			if (apiModel!=null) {                                              
 				ram.setBody(apiModel);
 			}
 			else{
-				List<ConsumersAddressApiModel> list = consumersAddressService.getConsumersAddressById(Long.parseLong(consumerId), Long.parseLong(restaurantId));
+				List<ConsumersAddressApiModel> list = consumersAddressService.getConsumersAddressById(consumerUuid, restauranUuid);
 				ram.setBody(list.get(0));
 			}
 		}

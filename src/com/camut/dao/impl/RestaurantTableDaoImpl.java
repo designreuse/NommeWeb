@@ -104,7 +104,7 @@ public class RestaurantTableDaoImpl extends BaseDao<RestaurantTable> implements
 	}
 
 	@Override
-	public List<TableEntity> getRestaurantTableNumberByOrderTypeAndOrderDate(long restaurantId, int orderType, String orderDate) {
+	public List<TableEntity> getRestaurantTableNumberByOrderTypeAndOrderDate(String restaurantUuid, int orderType, String orderDate) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
 		Date dt = null;
@@ -128,27 +128,27 @@ public class RestaurantTableDaoImpl extends BaseDao<RestaurantTable> implements
 		}*/
 		String sql="";
 		if(dt8.before(dt)&&dt.before(dt16)){
-			sql = "select  consumer_id as consumerId,restaurant_id as restaurantId,number,count(1) as count from  dat_order_header " +
+			sql = "select  consumer_uuid as consumerUuid,restaurant_uuid as restaurantUuid,number,count(1) as count from  dat_order_header " +
 					"WHERE  DATE_FORMAT(:dt,'%Y-%m-%d')=DATE_FORMAT(order_date,'%Y-%m-%d') " +
 					"and  HOUR(order_date)-HOUR(:dt8)>0 and HOUR(:dt16)-HOUR(order_date)>0 " +
-					"and order_type=:type and `status`=3 and restaurant_id=:restaurantId " +
-					"GROUP BY consumer_id,restaurant_id,number";
+					"and order_type=:type and `status`=3 and restaurant_uuid=:restaurantUuid " +
+					"GROUP BY consumer_uuid,restaurant_uuid,number";
 		}else{
-			sql="select consumer_id as consumerId,restaurant_id as restaurantId,number,count(1) as count  from  dat_order_header  " +
+			sql="select consumer_uuid as consumerUuid,restaurant_uuid as restaurantUuid,number,count(1) as count  from  dat_order_header  " +
 					"WHERE  DATE_FORMAT(:dt,'%Y-%m-%d')=DATE_FORMAT(order_date,'%Y-%m-%d') " +
 					"and (HOUR(order_date)-HOUR(:dt8)<0 or HOUR(:dt16)-HOUR(order_date)<0) " +
-					"and order_type=:type and `status`=3 and restaurant_id=:restaurantId " +
-					"GROUP BY consumer_id,restaurant_id,number ";
+					"and order_type=:type and `status`=3 and restaurant_uuid=:restaurantUuid " +
+					"GROUP BY consumer_uuid,restaurant_uuid,number ";
 		}		
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("dt", dt);
 		query.setParameter("dt8", dt8);
 		query.setParameter("dt16", dt16);
 		query.setParameter("type", orderType);
-		query.setParameter("restaurantId", restaurantId);
+		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(TableEntity.class));
-		query.addScalar("consumerId",new org.hibernate.type.IntegerType());
-		query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
+		query.addScalar("consumerUuid",new org.hibernate.type.StringType());
+		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
 		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("count",new org.hibernate.type.IntegerType());
 		return query.list();

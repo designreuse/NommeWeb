@@ -23,7 +23,7 @@ public interface DishService {
 	 * @param:    restaurantId , type
 	 * @return: List<DishApiModel>
 	 */
-	public List<DishApiModel> getdish(int restaurantId, int type);
+	public List<DishApiModel> getdish(String restaurantUuid, int type);
 	
 	/**
 	 * @Title: getAllDish
@@ -79,7 +79,7 @@ public interface DishService {
 	 * @param:    restaurantId , type 
 	 * @return: List<RestaurantsDishMenuApiModel>
 	 */
-	public  List<DishMenuApiModel> getDishMenu(int restaurantId, int type);
+	public  List<DishMenuApiModel> getDishMenu(String restaurantUuid, int type);
 	
 	/**
 	 * @Title: deleteDish
@@ -103,6 +103,6 @@ public interface DishService {
 	 * @param:    restaurantId , type
 	 * @return: List<Dish>
 	 */
-	public List<Dish> getdishs(int restaurantId, int type);
+	public List<Dish> getdishs(String restaurantUuid, int type);
 	
 }

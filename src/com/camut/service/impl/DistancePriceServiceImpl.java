@@ -104,8 +104,8 @@ public class DistancePriceServiceImpl implements DistancePriceService {
 	 * @return List<DistancePriceApiModel> 
 	 */
 	@Override
-	public List<DistancePriceApiModel> getDistancePrice(long restaurantId) {
-		List<DistancePrice> dpList = distancePriceDao.getDistancePrice(restaurantId);
+	public List<DistancePriceApiModel> getDistancePrice(String restaurantUuid) {
+		List<DistancePrice> dpList = distancePriceDao.getDistancePrice(restaurantUuid);
 		List<DistancePriceApiModel> dpamList = new ArrayList<DistancePriceApiModel>();
 		for (DistancePrice distancePrice : dpList) {
 			DistancePriceApiModel dpam = new DistancePriceApiModel();
@@ -129,9 +129,9 @@ public class DistancePriceServiceImpl implements DistancePriceService {
 	 * @param: @param consumerLat
 	 * @return DistancePrice  
 	 */
-	public double getOneDistanceByFee(long restaurantId, double subTotal, double consumerLng, double consumerLat){
+	public double getOneDistanceByFee(String restaurantUuid, double subTotal, double consumerLng, double consumerLat){
 		double disPrice = 0.0;
-		Restaurants restaurants = restaurantsDao.getRestaurantsById(restaurantId);
+		Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		if(restaurants!=null){
 			double resLng = restaurants.getRestaurantLng();
 			double resLat = restaurants.getRestaurantLat();

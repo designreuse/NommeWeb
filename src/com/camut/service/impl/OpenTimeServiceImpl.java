@@ -25,6 +25,7 @@ import com.camut.model.api.OpenTimeApiModel;
 import com.camut.pageModel.PageOpenTime;
 import com.camut.service.OpenTimeService;
 import com.camut.utils.GoogleTimezoneAPIUtil;
+import com.camut.utils.StringUtil;
 
 /**
  * @dao OpenTimeServiceImpl.java
@@ -50,8 +51,8 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: List<OpenTimeApiModel>
 	 */
 	@Override
-	public List<String> selectOpenTime(long restaurantId, int type, String date) {
-		if (date != null) {
+	public List<String> selectOpenTime(String restaurantUuid, int type, String date) {
+		if(date != null){
 			Calendar c = Calendar.getInstance();
 			DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 			Date newdate;
@@ -82,7 +83,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 					week = 6;
 					break;
 				}
-				List<OpenTime> otList = openTimeDao.getOpenTime(restaurantId, type, week);
+				List<OpenTime> otList = openTimeDao.getOpenTime(restaurantUuid, type, week);
 				List<String> timeList = new ArrayList<>();
 				for (OpenTime openTime : otList) {
 					OpenTimeApiModel otam = new OpenTimeApiModel();
@@ -98,6 +99,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 					Date date2 = format.parse(endTime);
 					// Date currentDate = format.p
 
+					
 					long longTime1 = date1.getTime();
 					long longTime2 = date2.getTime();
 
@@ -138,32 +140,36 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 * @return: PageOpenTime
 	 */
 	@Override
-	public List<PageOpenTime> getAllOpenTime(long restaurantsId) {
-		// if(restaurants!=null && restaurants.getId()!=null){
-		if (restaurantsId > 0) {
-			List<OpenTime> openTimes = openTimeDao.selectOpenTime(restaurantsId);
+	public List<PageOpenTime> getAllOpenTime(String restaurantUuid) {
+		//if(restaurants!=null && restaurants.getId()!=null){
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<OpenTime> openTimes = openTimeDao.selectOpenTime(restaurantUuid);
 			List<PageOpenTime> list = new ArrayList<PageOpenTime>();
 			for (OpenTime ot : openTimes) {
 				PageOpenTime pageOpenTime = new PageOpenTime();
 				BeanUtils.copyProperties(ot, pageOpenTime);
-				int startH = Integer.parseInt(ot.getStarttime().split(":")[0]);
-				String startM = ot.getStarttime().split(":")[1];
-				if (startH - 12 < 0) {// 判断是am还是pm
-					pageOpenTime.setStarttime(ot.getStarttime() + "AM");
-				} else if (startH - 12 == 0) {
-					pageOpenTime.setStarttime(ot.getStarttime() + "PM");
-				} else {
-					pageOpenTime.setStarttime(startH - 12 + ":" + startM + "PM");
+				int startH = Integer.parseInt( ot.getStarttime().split(":")[0]);
+				String startM =  ot.getStarttime().split(":")[1];
+				if(startH-12<0){//判断是am还是pm
+					pageOpenTime.setStarttime(ot.getStarttime()+"AM");
 				}
-
-				int endH = Integer.parseInt(ot.getEndtime().split(":")[0]);
-				String endM = ot.getEndtime().split(":")[1];
-				if (endH - 12 < 0) {// 判断是am还是pm
-					pageOpenTime.setEndtime(ot.getEndtime() + "AM");
-				} else if (endH - 12 == 0) {
-					pageOpenTime.setEndtime(ot.getEndtime() + "PM");
-				} else {
-					pageOpenTime.setEndtime(endH - 12 + ":" + endM + "PM");
+				else if(startH-12==0){
+					pageOpenTime.setStarttime(ot.getStarttime()+"PM");
+				}
+				else{
+					pageOpenTime.setStarttime(startH-12+":"+startM+"PM");
+				}
+				
+				int endH = Integer.parseInt( ot.getEndtime().split(":")[0]);
+				String endM =  ot.getEndtime().split(":")[1];
+				if(endH-12<0){//判断是am还是pm
+					pageOpenTime.setEndtime(ot.getEndtime()+"AM");
+				}
+				else if(endH-12==0){
+					pageOpenTime.setEndtime(ot.getEndtime()+"PM");
+				}
+				else{
+					pageOpenTime.setEndtime(endH-12+":"+endM+"PM");
 				}
 				list.add(pageOpenTime);
 			}
@@ -175,12 +181,12 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	/**
 	 * @Title: addOpenTime
 	 * @Description: 增加营业时间
-	 * @param: OpenTime
+	 * @param:    OpenTime
 	 * @return: int
 	 */
 	@Override
 	public int addOpenTime(OpenTime openTime) {
-		if (openTime != null) {
+		if(openTime!=null){
 			return openTimeDao.addOpenTime(openTime);
 		}
 		return -1;
@@ -189,12 +195,12 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	/**
 	 * @Title: deleteOpenTime
 	 * @Description: 删除营业时间
-	 * @param: OpenTime
+	 * @param:    OpenTime
 	 * @return: int
 	 */
 	@Override
 	public int deleteOpenTime(OpenTime openTime) {
-		if (openTime != null) {
+		if(openTime!=null){
 			return openTimeDao.deleteOpenTime(openTime);
 		}
 		return -1;
@@ -203,14 +209,14 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	/**
 	 * @Title: getOpenTime
 	 * @Description: 获取商家的营业时间（moer）
-	 * @param: RestaurantId
+	 * @param:    RestaurantId
 	 * @return: List<OpenTimeListApiModel>
 	 */
 	@Override
-	public List<Map<String, Object>> getOpenTime(long restaurantId) {
-		List<OpenTime> otList = openTimeDao.selectOpenTime(restaurantId);
+	public List<Map<String, Object>> getOpenTime(String restaurantUuid) {
+		List<OpenTime> otList = openTimeDao.selectOpenTime(restaurantUuid);
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		if (otList != null) {
+		if(otList != null){
 			List<OpenTimeApiModel> otamList = new ArrayList<OpenTimeApiModel>();
 			// 1 外送 2 自取 3 预定
 			for (OpenTime openTime : otList) {
@@ -225,7 +231,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				otam.setType(openTime.getType());
 				otamList.add(otam);
 			}
-
+			
 			List<OpenTimeApiModel> tmpList = new ArrayList<OpenTimeApiModel>();
 			int num = 0;
 			boolean flag = false;
@@ -259,37 +265,37 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 					}
 				}
 			}
-			Map<String, Object> mapde = new HashMap<String, Object>();
-			Map<String, Object> mappi = new HashMap<String, Object>();
-			Map<String, Object> mapre = new HashMap<String, Object>();
-			List<OpenTimeApiModel> listTypede = new ArrayList<OpenTimeApiModel>();
-			List<OpenTimeApiModel> listTypepi = new ArrayList<OpenTimeApiModel>();
-			List<OpenTimeApiModel> listTypere = new ArrayList<OpenTimeApiModel>();
+			Map<String, Object> mapde=new HashMap<String, Object>();
+			Map<String, Object> mappi=new HashMap<String, Object>();
+			Map<String, Object> mapre=new HashMap<String, Object>();
+			List<OpenTimeApiModel> listTypede=new ArrayList<OpenTimeApiModel>();
+			List<OpenTimeApiModel> listTypepi=new ArrayList<OpenTimeApiModel>();
+			List<OpenTimeApiModel> listTypere=new ArrayList<OpenTimeApiModel>();
 			for (OpenTimeApiModel openTimeApiModel : tmpList) {
-				Map<String, Object> map = new HashMap<String, Object>();
+				Map<String, Object> map=new HashMap<String, Object>();
 				if (GlobalConstant.TYPE_DELIVERY == openTimeApiModel.getType()) {
 					listTypede.add(openTimeApiModel);
 				}
-				if (GlobalConstant.TYPE_PICKUP == openTimeApiModel.getType()) {
+				if (GlobalConstant.TYPE_PICKUP == openTimeApiModel.getType()) {				
 					listTypepi.add(openTimeApiModel);
 				}
 				if (GlobalConstant.TYPE_RESERVATION == openTimeApiModel.getType()) {
 					listTypere.add(openTimeApiModel);
 				}
 			}
-			if (listTypede != null && listTypede.size() > 0) {
+			if(listTypede!=null&&listTypede.size()>0){
 				mapde.put("type", GlobalConstant.TYPE_DELIVERY);
 				mapde.put("name", "Delivery");
 				mapde.put("content", listTypede);
 				result.add(mapde);
 			}
-			if (listTypepi != null && listTypepi.size() > 0) {
+			if(listTypepi!=null&&listTypepi.size()>0){
 				mappi.put("type", GlobalConstant.TYPE_PICKUP);
 				mappi.put("name", "Pick up");
 				mappi.put("content", listTypepi);
 				result.add(mappi);
 			}
-			if (listTypere != null && listTypere.size() > 0) {
+			if(listTypere!=null&&listTypere.size()>0){
 				mapre.put("type", GlobalConstant.TYPE_RESERVATION);
 				mapre.put("name", "Reservation");
 				mapre.put("content", listTypere);
@@ -302,65 +308,63 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	/**
 	 * @Title: orderDateAtOpenTime
 	 * @Description: 判断订单时间是否在营业时间内
-	 * @param: Date
-	 *             orderDate,int restaurantId
+	 * @param:    Date orderDate,int restaurantId
 	 * @return: int -1不在 1在-2 30只能下30分钟后的单 -3只能下15分钟后的单
 	 */
 	@Override
-	public int orderDateAtOpenTime(Date orderDate, int restaurantId, int ordertype) {
-
+	public int orderDateAtOpenTime(Date orderDate, String restaurantUuid,int ordertype) {
+	
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(orderDate);
-		int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-		if (week == 0) {
+		int week = calendar.get(Calendar.DAY_OF_WEEK)-1;
+		if (week==0) {
 			week = 7;
 		}
-		// 根据商家id和订单类型找出营业时间
-		List<OpenTime> list = openTimeDao.getOpenTime(restaurantId, ordertype, week);
+		//根据商家id和订单类型找出营业时间
+		List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, ordertype, week);
 		String yyyymmdd = new SimpleDateFormat("yyyy-MM-dd").format(orderDate);
 		if (orderDate.before(new Date())) {
 			return -4;
 		}
-
-		if (ordertype == 1) {// delivery
-			if (orderDate.before(new Date(new Date().getTime() + 30 * 60 * 1000))) {
+		
+		if (ordertype==1) {//delivery
+			if ( orderDate.before(new Date(new Date().getTime()+30*60*1000))) {
 				return -2;
 			}
-		} else if (ordertype == 2 || ordertype == 3) {// pick-up or dine in
-			if (orderDate.before(new Date(new Date().getTime() + 15 * 60 * 1000))) {
+		}
+		else if(ordertype==2 || ordertype==3){//pick-up or dine in
+			if ( orderDate.before(new Date(new Date().getTime()+15*60*1000))) {
 				return -3;
 			}
 		}
 		long longOrderDate = orderDate.getTime();
-		if (list != null && list.size() > 0) {
+		if (list!=null && list.size()>0) {
 			for (OpenTime openTime : list) {
 				try {
-					long startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-							.parse(yyyymmdd + " " + openTime.getStarttime()).getTime();
-					long endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm")
-							.parse(yyyymmdd + " " + openTime.getEndtime()).getTime();
-					// 在营业时间内
-					if (longOrderDate >= startTime && longOrderDate <= endTime) {
-						return 1;
-					}
+						long startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(yyyymmdd+" "+openTime.getStarttime()).getTime();
+						long endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(yyyymmdd+" "+openTime.getEndtime()).getTime();
+						//在营业时间内
+						if (longOrderDate>=startTime && longOrderDate<=endTime) {
+							return 1;
+						}
 				} catch (Exception e) {
 					// TODO: handle exception
 					return -1;
 				}
 			}
 		}
-
+		
 		return -1;
 	}
 
 	/**
 	 * @Title: getOpenTimeByOrderDate
 	 * @Description: 返回营业时间段
-	 * @param:
+	 * @param:    
 	 * @return: String[]
 	 */
 	@Override
-	public String[] getOpenTimeByOrderDate(Date orderDate, long restaurantId, int type) {
+	public String[] getOpenTimeByOrderDate(Date orderDate, String restaurantUuid, int type) {
 		Calendar calendar = Calendar.getInstance();
 		TimeZone originalTimeZone = calendar.getTimeZone();
 		Date originalTime = calendar.getTime();
@@ -368,7 +372,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 		// Adjust times for restaurant local time
 		// TODO: This assumes users are in the same time zone as the
 		// restaurant!!
-		Restaurants restaurant = restaurantsDao.getRestaurantsById(restaurantId);
+		Restaurants restaurant = restaurantsDao.getRestaurantsById(restaurantUuid);
 		double latitude = restaurant.getRestaurantLat();
 		double longitude = restaurant.getRestaurantLng();
 		TimeZone restaurantTimezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
@@ -413,7 +417,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				week = 7;
 			}
 			// 根据餐厅id，类型，星期找出当天的营业时间
-			List<OpenTime> list = openTimeDao.getOpenTime(restaurantId, type, week);
+			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
 
 			StringBuffer buffer = new StringBuffer();
 			String startStr = "";

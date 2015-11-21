@@ -70,9 +70,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 					odam.setIsRating(0);
 				}
 				SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa",Locale.CANADA);
-				Restaurants restaurants = restaurantsDao.getRestaurantsById(orderHeader.getRestaurantId());
+				Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
 				odam.setOrderId(id);
-				odam.setRestaurantId(orderHeader.getRestaurantId());
+				odam.setRestaurantUuid(orderHeader.getRestaurantUuid());
 				String rejection = "";
 				if(StringUtil.isNotEmpty(orderHeader.getRejection())){
 					rejection = orderHeader.getRejection();
@@ -231,7 +231,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 				odam.setAmount(StringUtil.convertLastDouble(orderHeader.getAmount()));
 				
 				odam.setPayment(orderHeader.getPayment());
-				odam.setConsumersId(orderHeader.getConsumers().getId());
+				odam.setConsumerUuid(orderHeader.getConsumers().getUuid());
 				if(orderHeader.getPhoneNumber() != null){
 					odam.setConsumersIdPhone(orderHeader.getPhoneNumber());
 				} else {
@@ -322,9 +322,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 			OrderDetailsApiModel odam = new OrderDetailsApiModel();	
 			if(orderHeader != null){
 				SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa",Locale.CANADA);
-				Restaurants restaurants = restaurantsDao.getRestaurantsById(orderHeader.getRestaurantId());
+				Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
 				odam.setOrderId(id);
-				odam.setRestaurantId(orderHeader.getRestaurantId());
+				odam.setRestaurantUuid(orderHeader.getRestaurantUuid());
 				String rejection = "";
 				if(StringUtil.isNotEmpty(orderHeader.getRejection())){
 					rejection = orderHeader.getRejection();
@@ -407,7 +407,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 				odam.setTax(orderHeader.getTax());
 				odam.setAmount(orderHeader.getAmount());
 				odam.setPayment(orderHeader.getPayment());
-				odam.setConsumersId(orderHeader.getConsumers().getId());
+				odam.setConsumerUuid(orderHeader.getConsumers().getUuid());
 				if(orderHeader.getPhoneNumber() != null){
 					odam.setConsumersIdPhone(orderHeader.getPhoneNumber());
 				} else {

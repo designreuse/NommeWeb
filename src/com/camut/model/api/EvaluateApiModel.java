@@ -20,8 +20,8 @@ public class EvaluateApiModel implements Serializable {
 	private String content="";// 评价内容 
 	private String score;// 评分 
 	private Date createtime=new Date();// 创建时间
-	private long consumerId=0;// 用户id
-	private long restaurantId=0;// 店铺id
+	private String consumerUuid="";// 用户id
+	private String restaurantUuid="";// 店铺id
 	private Integer orderHeaderId;//订单Id
 	private Integer status;// 状态
 	private String lastName="";// 姓
@@ -52,18 +52,6 @@ public class EvaluateApiModel implements Serializable {
 	public void setCreatetime(Date createtime) {
 		this.createtime = createtime;
 	}
-	public long getConsumerId() {
-		return consumerId;
-	}
-	public void setConsumerId(long consumerId) {
-		this.consumerId = consumerId;
-	}
-	public long getRestaurantId() {
-		return restaurantId;
-	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
-	}
 	public String getLastName() {
 		return lastName;
 	}
@@ -84,6 +72,18 @@ public class EvaluateApiModel implements Serializable {
 	}
 	public void setOrderHeaderId(Integer orderHeaderId) {
 		this.orderHeaderId = orderHeaderId;
+	}
+	public String getConsumerUuid() {
+		return consumerUuid;
+	}
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
+	}
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	
 	
