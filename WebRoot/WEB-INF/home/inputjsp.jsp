@@ -201,7 +201,7 @@
 <input type="hidden" id = "currentNickname" value=${sessionScope.consumer.nickname}>
 <input type="hidden" id = "currentFirstName" value=${sessionScope.consumer.firstName}>
 <input type="hidden" id = "currentLastName" value=${sessionScope.consumer.lastName}>
-<input type="hidden" id = "currentConsumerId" value=${sessionScope.consumer.id}>
-<input type="hidden" id = "restaurantId" value=${restaurant.id}>
+<input type="hidden" id = "currentConsumerUuid" value=${sessionScope.consumer.uuid}>
+<input type="hidden" id = "restaurantUuid" value=${restaurant.restaurantUuid}>
 <input type="hidden" id = "restaurantTaxRate" value=${restaurant.taxRate}><!-- 店家税率 -->
 <input type="hidden" id = "googleAutocompletePlace" value="No place information">

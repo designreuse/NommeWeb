@@ -16,7 +16,7 @@
 			<i class="fa fa-plus "></i> Add
 		</button>
 		<button type="button" id="modifyChain" class="btn btn-default mybt"
-			data-toggle="modal" data-target="#chainModal" title="Edit Chain">
+			 title="Edit Chain">
 			<i class="fa fa-pencil "></i> Edit
 		</button>
 		<button type="button" id="deleteChain" class="btn btn-default mybt"
@@ -121,21 +121,21 @@
 		});
 		
 		$("#modifyChain").click(function(){
-			$("#chainName").popover('destroy');
-			url="${ctx}/admin/modifychain";
-			$("#chainModal h4").text("Edit Chain");
-			chainUrl = "${ctx}/admin/modifychain";
-			$("#chainForm")[0].reset();//重置表单
-			var chain = $("#table-chain").bootstrapTable('getSelections')[0];//行点击时获取出行和数据
-			oldChainName = chain.chainname;
-			if(chain!=null){
-				$("#chainName").val(chain.chainname);
-				$("#chainid").val(chain.id);
-			}else{
-				$("#chainModal").modal('hide');
+			var currentChain = $("#table-chain").bootstrapTable('getSelections')[0];//行点击时获取出行和数据
+			if(currentChain!=undefined && currentChain!=null){
+				$("#chainName").popover('destroy');
+				url="${ctx}/admin/modifychain";
+				$("#chainModal h4").text("Edit Chain");
+				chainUrl = "${ctx}/admin/modifychain";
+				$("#chainForm")[0].reset();//重置表单
+				var chain = $("#table-chain").bootstrapTable('getSelections')[0];//行点击时获取出行和数据
+				oldChainName = chain.chainname;
+				if(chain!=null){
+					$("#chainName").val(chain.chainname);
+					$("#chainid").val(chain.id);
+					$("#chainModal").modal('show');
+				}
 			}
-			
-		
 		}); 
 		$("#chainName").focus(function(){
 			$(this).popover('destroy');

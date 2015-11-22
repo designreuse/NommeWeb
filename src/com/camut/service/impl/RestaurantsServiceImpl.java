@@ -79,7 +79,15 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	public Restaurants getRestaurantsById(long id) {
 		return restaurantsDao.getRestaurantsById(id);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see com.camut.service.RestaurantsService#getRestaurantsById(java.lang.String)
+	 */
+	@Override
+	public Restaurants getRestaurantsByUuid(String restaurantUuid) {
+		return restaurantsDao.getRestaurantsByUuid(restaurantUuid);
+	}
+	
 	/*
 	 * @Title: addRestaurants
 	 * @Description: 增加商家; add a restaurant
@@ -87,13 +95,14 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return:Restaurants
 	 */
 	@Override
-	public long addRestaurants(Restaurants restaurants) {
+	public String addRestaurants(Restaurants restaurants) {
 		if(restaurants!=null){
 			restaurants.setCreatetime(new Date());
+			restaurants.setUuid(StringUtil.getUUID());
 			restaurants.setStatus(1);
 			return restaurantsDao.addRestaurants(restaurants);
 		}
-		return -1;
+		return null;
 	}
 
 	/*
@@ -103,9 +112,9 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return: int -1删除失败 1删除成功
 	 */
 	@Override
-	public int deleteRestaurants(long id) {
-		if(id!=0){
-			Restaurants restaurants = restaurantsDao.getRestaurantsById(id);
+	public int deleteRestaurants(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 			if(restaurants!=null){
 				return restaurantsDao.deleteRestaurants(restaurants);
 			}
@@ -165,7 +174,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 			for (Restaurants list : restaurantsList){
 				PageRestaurant pr = new PageRestaurant();
 				//设置商家管理员邮箱
-				List<PageRestaurantAdmins> adminList = restaurantsUserService.getRestaurantsUsersByRestaurantId(list.getId()+"");
+				List<PageRestaurantAdmins> adminList = restaurantsUserService.getRestaurantsUsersByRestaurantUuid(list.getUuid()+"");
 				boolean flag = false;
 				if(adminList!=null && adminList.size()>0){
 					for (PageRestaurantAdmins pageRestaurantAdmins : adminList) {
@@ -183,6 +192,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 				}
 				BeanUtils.copyProperties(list, pr);
 				pr.setId(list.getId());
+				pr.setRestaurantUuid(list.getUuid());
 				pr.setRestaurantName(list.getRestaurantName());
 				pr.setRestaurantContact(list.getRestaurantContact());
 				pr.setRestaurantPhone(list.getRestaurantPhone());
@@ -213,17 +223,6 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 				}else{
 					pr.setChainid(-1);
 				}
-				/*ViewArea va = list.getViewArea();
-				double textRate = 0.0;
-				if(va.getGst()!=null){
-					textRate = va.getGst();
-				}
-				if(va.getPst()!=null){
-					textRate = va.getPst();
-				}
-				pr.setTaxRate(textRate);
-				pr.setAreasId(list.getViewArea().getAreaId());*/
-				//Set<Long> set = list.getClassificationsSet<Long>();
 				Set<Classification> set = list.getClassificationsSet();
 				List<Long> classificationIdList = new ArrayList<Long>();
 				for (Classification classification : set) {
@@ -239,20 +238,6 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 					pr.setNotice("");
 				}
 				pr.setDeliverTime(list.getDeliverTime());
-				
-				/*
-				private String features;// 特征
-				private Integer isdelivery;// 是否外带0是，1否
-				private Integer ispickup;// 是否自取0是，1否
-				private Integer isreservation;// 是否预定0是，1否
-				private Integer chainid;// 连锁店
-				private Integer areasId;// 区域
-				private List<Long> classificationId;//餐厅分类
-				private String logourl;// logo图片的存放地址
-				private Integer status;//审核状态 -1为无效，0为有效(说明已经审核通过)，1待审核（新注册的商家状态为1）,2 冻结 、未审核通过
-				private String notice;// 商家的消息
-				private Integer deliverTime;
-				*/
 				li.add(pr);
 			}
 		}
@@ -268,9 +253,8 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @param: statu
 	 * @return int  
 	 */
-	public int auditRestaurant(long id, int statu){
-		
-		Restaurants restaurant = restaurantsDao.getRestaurantByIdToAudit(id);
+	public int auditRestaurant(String restaurantUuid, int statu){
+		Restaurants restaurant = restaurantsDao.getRestaurantByUuidToAudit(restaurantUuid);
 		if(statu==0){//当审核状态是变成已经审核通过时，设置商家下面的所有管理员状态为审核通过状态
 			Set<RestaurantsUser> restaurantsUsersSet = restaurant.getRestaurantsUsersSet();
 			Set<RestaurantsUser> newRestaurantsUsersSet = new HashSet<RestaurantsUser>();
@@ -306,6 +290,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 		for (Restaurants restaurant : list) {
 			PageRestaurantName ptName = new PageRestaurantName();
 			ptName.setId(restaurant.getId());
+			ptName.setRestaurantUuid(restaurant.getUuid());
 			ptName.setRestaurantName(restaurant.getRestaurantName());
 			nameList.add(ptName);
 		}
@@ -319,12 +304,12 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return restaurantsDetailApiModel 
 	 */
 	@Override
-	public RestaurantsDetailApiModel restaurantsDetailApiModel(long restaurantId, long consumerId) {
+	public RestaurantsDetailApiModel restaurantsDetailApiModel(String restaurantUuid, String consumerUuid) {
 		//Restaurants restaurants = restaurantsDao.getRestaurantsById(restaurantId);
-		ViewRestaurant r = viewRestaurantDao.getRestaurantsById(restaurantId);
-		ConsumersFavorites cf = consumersFavoritesDao.existFavoritesByConsumerIdAndrestaurantId(consumerId, (int)restaurantId);
+		ViewRestaurant r = viewRestaurantDao.getRestaurantsByRestaurantUuid(restaurantUuid);
+		ConsumersFavorites cf = consumersFavoritesDao.existFavoritesByConsumerUuidAndrestaurantUuid(consumerUuid, restaurantUuid);
 		RestaurantsDetailApiModel rdam = new RestaurantsDetailApiModel();
-		rdam.setRestaurantId(restaurantId);//商家Id
+		rdam.setRestaurantUuid(restaurantUuid);//商家Id
 		if(StringUtil.isNotEmpty(r.getLogourl())){
 			rdam.setLogourl(r.getLogourl());//店家logo
 		} else {
@@ -361,8 +346,8 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 		}else{
 			rdam.setIsDiscount(0);
 		}
-		if(consumerId != 0){
-			ConsumersFavorites favorites= consumersFavoritesDao.existFavoritesByConsumerIdAndrestaurantId(consumerId, Long.valueOf(restaurantId).intValue());
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			ConsumersFavorites favorites= consumersFavoritesDao.existFavoritesByConsumerUuidAndrestaurantUuid(consumerUuid, restaurantUuid);
 			//Evaluate evaluate = evaluateDao.getEvaluate(restaurantId, consumerId);
 			if(favorites != null){
 				rdam.setIsCollection(1);
@@ -382,13 +367,14 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return PageRestaurant  
 	 */
 	@SuppressWarnings("unchecked")
-	public PageRestaurant getPageRestaurantById(long id){
+	public PageRestaurant getPageRestaurantByUuid(String restaurantUuid){
 		PageRestaurant pr = new PageRestaurant();
-		Restaurants restaurant = restaurantsDao.getRestaurantsById(id);
+		Restaurants restaurant = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		if(restaurant==null){
 			return null;
 		}
 		pr.setId(restaurant.getId());//主键
+		pr.setRestaurantUuid(restaurant.getUuid());
 		pr.setRestaurantName(restaurant.getRestaurantName());// 店名
 		pr.setRestaurantContact(restaurant.getRestaurantContact());//餐厅负责人
 		pr.setRestaurantPhone(restaurant.getRestaurantPhone());// 联系电话
@@ -404,7 +390,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 		pr.setIsreservation(restaurant.getIsreservation());//是否堂食
 		if(restaurant.getChainid()!=null){//连锁店名称
 			long chainId = restaurant.getChainid();
-			Chain chain = chainDao.getById(id);
+			Chain chain = chainDao.getById(chainId);
 			if(chain!=null){
 				pr.setChainid((int) chainId);
 				pr.setChainName(chain.getChainname());
@@ -497,9 +483,9 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return PageRestaurant  
 	 */
 	@Override
-	public List<PageRestaurantsMenu> getRestaurantsMenusByRestaurantsIdAndIsPickup(long restaurantId){
+	public List<PageRestaurantsMenu> getRestaurantsMenusByRestaurantsIdAndIsPickup(String restaurantUuid){
 		//获取当前餐厅所有的菜单
-		List<RestaurantsMenu> restaurantsMenuList = restaurantsMenuDao.getRestaurantsMenuByRestaurantsId(restaurantId);
+		List<RestaurantsMenu> restaurantsMenuList = restaurantsMenuDao.getRestaurantsMenuByRestaurantsUuid(restaurantUuid);
 		if(restaurantsMenuList.size()>0){
 			//菜单分类列表用于遍历
 			List<PageRestaurantsMenu> pageRestaurantsMenuList = new ArrayList<PageRestaurantsMenu>();
@@ -546,10 +532,10 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return: Restaurants
 	 */
 	@Override
-	public RestaurantsApiModel getRestaurantById(long id) {
-		Restaurants r = restaurantsDao.getRestaurantsById(id);
+	public RestaurantsApiModel getRestaurantByUuid(String restaurantUuid) {
+		Restaurants r = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		RestaurantsApiModel ram = new RestaurantsApiModel();
-		ram.setRestaurantId(r.getId());
+		ram.setRestaurantUuid(r.getUuid());
 		ram.setRestaurantName(r.getRestaurantName());
 		ram.setRestaurantContact(r.getRestaurantContact());
 		ram.setRestaurantPhone(r.getRestaurantPhone());
@@ -576,9 +562,9 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 	 * @return: RestaurantsMoreApiModel
 	 */
 	@Override
-	public RestaurantsMoreApiModel getRestaurantMoreById(long id) {
-		if(id > 0){
-			Restaurants r = restaurantsDao.getRestaurantsById(id);
+	public RestaurantsMoreApiModel getRestaurantMoreById(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			Restaurants r = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 			RestaurantsMoreApiModel rmam = new RestaurantsMoreApiModel();
 			if(r != null){
 				rmam.setFeatures(r.getFeatures());

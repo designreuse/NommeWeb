@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 import com.camut.dao.CartHeaderDao;
 import com.camut.model.CartHeader;
@@ -29,10 +30,10 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 	 * @return: CartHeader
 	 */
 	@Override
-	public CartHeader getCartHeaderByMobileToken(String mobileToken,Integer consumerId) {
-		String hql = "from CartHeader c where c.consumerId=:consumerId";// and c.consumerId is null";
+	public CartHeader getCartHeaderByMobileToken(String mobileToken,String consumerUuid) {
+		String hql = "from CartHeader c where c.consumerUuid=:consumerUuid";// and c.consumerId is null";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		return this.get(hql, map);
 	}
 	
@@ -157,17 +158,17 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 	}
 
 	@Override
-	public CartApiModel getCartInfoForSql(String mobileToken,Integer consumerId) {
+	public CartApiModel getCartInfoForSql(String mobileToken,String consumerUuid) {
 		String sql = "select a.mobile_token as mobileToken,sum(unitprice)  as total " +
-				",a.restaurant_id as restaurantId from dat_cart_header  a JOIN dat_cart_item b ON a.id=b.cart_id  " +
-				"where consumer_id=:consumerId " +
-				"GROUP BY a.id,a.mobile_token,a.restaurant_id";
+				",a.restaurant_uuid as restaurantUuid from dat_cart_header a JOIN dat_cart_item b ON a.id=b.cart_id " +
+				"where a.consumer_uuid=:consumerUuid " +
+				"GROUP BY a.id,a.mobile_token,a.restaurant_uuid";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);		
-		query.setParameter("consumerId", consumerId);
+		query.setParameter("consumerUuid", consumerUuid);
 		query.setResultTransformer(Transformers.aliasToBean(CartApiModel.class));
 		query.addScalar("mobileToken",new org.hibernate.type.StringType());		
 		query.addScalar("total",new org.hibernate.type.DoubleType());		
-		query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
+		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
 		List<CartApiModel> list=query.list();
 		if(list!=null&&list.size()>0){
 			return list.get(0);
@@ -177,8 +178,8 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 	}
 
 	@Override
-	public int deleteFreeCartItem(long consumerId) {
-		String sql="delete from dat_cart_item  where cart_id=(select id from dat_cart_header where  consumer_id="+consumerId+") and unitprice =0";
+	public int deleteFreeCartItem(String consumerUuid) {
+		String sql="delete from dat_cart_item  where cart_id=(select id from dat_cart_header where consumer_uuid='"+consumerUuid+"') and unitprice =0";
 		try {
 			return this.executeSql(sql);
 		} catch (Exception e) {
@@ -195,11 +196,10 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 	 * @return
 	 */
 	@Override
-	public CartHeader getCartHeaderByConsumerId(int consumerId) {
-		
-		String hql = "from CartHeader c where c.consumerId=:consumerId";
+	public CartHeader getCartHeaderByConsumerUuid(String consumerUuid) {
+		String hql = "from CartHeader c where c.consumerUuid=:consumerUuid";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		return this.get(hql, map);
 	}	
 
@@ -209,11 +209,11 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 	 * @return
 	 */
 	@Override
-	public CartHeader getWebCartHeaderByConsumerId(int consumerId) {
+	public CartHeader getWebCartHeaderByConsumerUuid(String consumerUuid) {
 		
-		String hql = "from CartHeader c where c.consumerId=:consumerId"; //and c.mobileToken is null";
+		String hql = "from CartHeader c where c.consumerUuid=:consumerUuid"; //and c.mobileToken is null";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		return this.get(hql, map);
 	}	
 

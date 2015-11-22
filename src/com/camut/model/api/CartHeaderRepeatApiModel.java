@@ -7,8 +7,8 @@ public class CartHeaderRepeatApiModel {
 
 	private Integer orderType;// 订单种类
 	private String mobileToken;// 设备编号
-	private Integer restaurantId;// 商家id
-	private Integer consumerId;// 客户id
+	private String restaurantUuid;// 商家id
+	private String consumerUuid;// 客户id
 	private Integer type;//2：直接添加到购物车
 	private List<CartItemRepeatApiModel> item = new ArrayList<CartItemRepeatApiModel>();
 	
@@ -24,17 +24,17 @@ public class CartHeaderRepeatApiModel {
 	public void setMobileToken(String mobileToken) {
 		this.mobileToken = mobileToken;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
-	public Integer getConsumerId() {
-		return consumerId;
+	public String getConsumerUuid() {
+		return consumerUuid;
 	}
-	public void setConsumerId(Integer consumerId) {
-		this.consumerId = consumerId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
 	public Integer getType() {
 		return type;

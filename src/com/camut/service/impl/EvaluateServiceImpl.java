@@ -45,8 +45,8 @@ public class EvaluateServiceImpl implements EvaluateService {
 	 * @return: List<EvaluateApiModel>
 	 */
 	@Override
-	public List<EvaluateApiModel> getEvaluateByRestaurantId(long restaurantId) {
-		List<Evaluate> eList = evaluateDao.getEvaluateByRestaurantId(restaurantId);
+	public List<EvaluateApiModel> getEvaluateByRestaurantId(String restaurantUuid) {
+		List<Evaluate> eList = evaluateDao.getEvaluateByRestaurantUuid(restaurantUuid);
 		List<EvaluateApiModel> eamList = new ArrayList<EvaluateApiModel>();
 		if(eList != null){
 			for (Evaluate evaluate : eList) {
@@ -54,8 +54,8 @@ public class EvaluateServiceImpl implements EvaluateService {
 				eam.setContent(evaluate.getContent());
 				eam.setScore(String.valueOf(evaluate.getScore()));
 				eam.setCreatetime(evaluate.getCreatetime());
-				eam.setConsumerId(evaluate.getConsumers().getId());
-				eam.setRestaurantId(evaluate.getId());
+				eam.setConsumerUuid(evaluate.getConsumers().getUuid());
+				eam.setRestaurantUuid(evaluate.getRestaurants().getUuid());
 				eam.setFirstName(evaluate.getConsumers().getFirstName());
 				eam.setLastName(evaluate.getConsumers().getLastName());
 				eam.getShowName();
@@ -94,8 +94,8 @@ public class EvaluateServiceImpl implements EvaluateService {
 	 * @return List<EvaluateApiModel>  
 	 */
 	@Override
-	public List<EvaluateApiModel> getEvaluatePagingByRestaurantId(long restaurantId, int offset, int limit) {
-		return evaluateDao.getEvaluatePagingByRestaurantId(restaurantId, offset, limit);
+	public List<EvaluateApiModel> getEvaluatePagingByRestaurantId(String restaurantUuid, int offset, int limit) {
+		return evaluateDao.getEvaluatePagingByRestaurantUuid(restaurantUuid, offset, limit);
 	
 	}
 	

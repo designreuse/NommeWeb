@@ -75,7 +75,7 @@ public class TestJunit1 {
 	}*/
 	
 	@Test
-	public void getOpenTimeTest(){
+	/*public void getOpenTimeTest(){
 		try {
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2015-9-16");
 			String[] strs = openTimeService.getOpenTimeByOrderDate(date, 16, 1);
@@ -86,7 +86,7 @@ public class TestJunit1 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	//@Test
 	public void charityTest(){

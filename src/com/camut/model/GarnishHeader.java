@@ -80,7 +80,7 @@ public class GarnishHeader extends IdEntity implements java.io.Serializable,Comp
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurant_id")
+	@JoinColumn(name = "restaurant_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}

@@ -17,7 +17,7 @@ public class MenuApiModel implements Serializable,Comparable<MenuApiModel> {
 	 */
 	private static final long serialVersionUID = 8622355594162470933L;
 	private long id=0;
-	private Integer restaurantId=1;// 商家编号
+	private String restaurantUuid="";// 商家编号
 	private Integer dishId=1;//菜品编号
 	private String chName="";// 菜品名称 繁体中文
 	private String enIntro="";// 菜品介绍
@@ -31,11 +31,12 @@ public class MenuApiModel implements Serializable,Comparable<MenuApiModel> {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public Integer getDishId() {
 		return dishId;

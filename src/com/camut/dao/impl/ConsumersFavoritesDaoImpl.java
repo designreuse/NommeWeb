@@ -31,13 +31,13 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	 * @return: -1表示添加失败，1 表示添加成功; -1:failed, 1: success
 	 */
 	@Override
-	public int addFavorites(long consumerId, int restaurantId) {
+	public int addFavorites(String consumerUuid, String restaurantUuid) {
 		try {
 			ConsumersFavorites cf = new ConsumersFavorites();
-			cf.setRestaurantsId(restaurantId);
+			cf.setRestaurantsUuid(restaurantUuid);
 			Consumers consumers = new Consumers();
-			consumers.setId(consumerId);
-			cf.setConsumers(consumers);
+			consumers.setUuid(consumerUuid);
+			cf.setConsumersUuid(consumerUuid);
 			cf.setFavoritesdate(new Date());
 			this.save(cf);
 			return 1;
@@ -53,10 +53,10 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	 * @return: List<ConsumersFavorites>
 	 */
 	@Override
-	public List<ConsumersFavorites> selectFavorites(long id) {
-		String hql = "from ConsumersFavorites cf where cf.consumers.id=:id";
+	public List<ConsumersFavorites> selectFavorites(String consumerUuid) {
+		String hql = "from ConsumersFavorites cf where cf.consumersUuid=:consumerUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
+		map.put("consumerUuid", consumerUuid);
 		List<ConsumersFavorites> cfList = this.find(hql, map);
 		return cfList;
 	}
@@ -88,11 +88,11 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	 * @param: @param restaurantId
 	 * @return ConsumersFavorites  
 	 */
-	public ConsumersFavorites existFavoritesByConsumerIdAndrestaurantId (long consumerId, int restaurantId){
-		String hql = "from ConsumersFavorites cf where cf.restaurantsId=:restaurantId and cf.consumers.id=:consumerId";
+	public ConsumersFavorites existFavoritesByConsumerUuidAndrestaurantUuid (String consumerUuid, String restaurantUuid){
+		String hql = "from ConsumersFavorites cf where cf.restaurantsUuid=:restaurantUuid and cf.consumersUuid=:consumerUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
-		map.put("restaurantId", restaurantId);
+		map.put("consumerUuid", consumerUuid);
+		map.put("restaurantUuid", restaurantUuid);
 		return this.get(hql, map);
 	}
 	
@@ -115,11 +115,11 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	 * @return: -1表示新增失败 ，1表示新增成功
 	 */
 	@Override
-	public int deleteFavoritesByRidCid(long consumerId, int restaurantId) {
-		String hql = "from ConsumersFavorites cf where cf.consumers.id=:consumerId and cf.restaurantsId=:restaurantId";
+	public int deleteFavoritesByRidCid(String consumerUuid, String restaurantUuid) {
+		String hql = "from ConsumersFavorites cf where cf.consumersUuid=:consumerUuid and cf.restaurantsUuid=:restaurantUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
-		map.put("restaurantId", restaurantId);
+		map.put("consumerUuid", consumerUuid);
+		map.put("restaurantUuid", restaurantUuid);
 		ConsumersFavorites cf = this.get(hql, map);
 		try {
 			this.delete(cf);
@@ -137,26 +137,26 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	 * @param: @return
 	 * @return List<PageFavourites>  
 	 */
-	public List<PageFavourites> getFavouriteListByconsumerId(int consumerId, PageFilter pf){
-		String sql = "select d.restaurants_id as restaurantId, d.id as favouritesId, e.aavgPrice as avgPrice, e.arname as restaurantName, e.cscore as avgStars, e.adelivery as isDelivery, e.apickup as isPickup, "
+	public List<PageFavourites> getFavouriteListByconsumerUuid(String consumerUuid, PageFilter pf){
+		String sql = "select d.restaurants_uuid as restaurantUuid, d.id as favouritesId, e.aavgPrice as avgPrice, e.arname as restaurantName, e.cscore as avgStars, e.adelivery as isDelivery, e.apickup as isPickup, "
 				+"e.areservation as isReservation, e.adistance as distance, e.adeliveryPrice as deliveryPrice, e.url as imageUrl from tbl_customer_favorites d "
-				+"LEFT JOIN ( select a.restaurant_name as arname, a.logourl as url, a.id as arid, c.scroe as cscore,a.isdelivery as adelivery, "
+				+"LEFT JOIN ( select a.restaurant_name as arname, a.logourl as url, a.uuid as aruuid, c.scroe as cscore,a.isdelivery as adelivery, "
 				+"a.ispickup as apickup, a.isreservation as areservation, a.`status` as `status`, a.distance as adistance, a.deliver_price as adeliveryPrice, a.avg_price as aavgPrice "
-					+"from dat_restaurants a "
-					+"LEFT JOIN ( select round(avg(b.score)) as scroe, b.restaurants_id as rsid from tbl_evaluate b group by b.restaurants_id) c  on c.rsid = a.id) e on d.restaurants_id=e.arid "
-						+"where e.status>=0 and d.consumers_id=:consumerId LIMIT :beginIndex, :rows";
+				 +"from dat_restaurants a "
+					+"LEFT JOIN ( select round(avg(b.score)) as scroe, b.restaurants_uuid as rsuuid from tbl_evaluate b group by b.restaurants_uuid) c  on c.rsuuid = a.uuid) e on d.restaurants_uuid=e.aruuid "
+						+"where e.status>=0 and d.consumers_uuid=:consumerUuid LIMIT :beginIndex, :rows";
 
 		int page = pf.getOffset();//当前页码
 		int rows = pf.getLimit();//每页数量
 		int beginIndex = (page-1)*rows;
 		
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("consumerId", consumerId);
+		query.setParameter("consumerUuid", consumerUuid);
 		query.setParameter("beginIndex", beginIndex);
 		query.setParameter("rows", rows);
 		
 		query.setResultTransformer(Transformers.aliasToBean(PageFavourites.class));
-		query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
+		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
 		query.addScalar("favouritesId",new org.hibernate.type.IntegerType());
 		query.addScalar("avgPrice",new org.hibernate.type.DoubleType());
 		query.addScalar("restaurantName",new org.hibernate.type.StringType());
@@ -168,15 +168,7 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 		query.addScalar("deliveryPrice",new org.hibernate.type.DoubleType());
 		query.addScalar("imageUrl",new org.hibernate.type.StringType());
 		
-		//query.addScalar("consumerId",new org.hibernate.type.IntegerType());
-		//query.addScalar("restaurantId",new org.hibernate.type.IntegerType());
-		//query.addScalar("number",new org.hibernate.type.IntegerType());
-		//query.addScalar("count",new org.hibernate.type.IntegerType());
-		return query.list();
-		
-		
-		
-		
+		return query.list();	
 	}
 	
 	
@@ -187,11 +179,11 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 	 * @param: @return
 	 * @return int  
 	 */
-	public int countTotalByConsumerId(int consumerId){
+	public int countTotalByConsumerUuid(String consumerUuid){
 		int total = 1;
-		String hql = "select count(*) from ConsumersFavorites cf where cf.consumers.id=:consumerId "; 
+		String hql = "select count(*) from ConsumersFavorites cf where cf.consumers.uuid=:consumerUuid "; 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		try {
 			total = this.count(hql, map).intValue();
 		} catch (Exception e) {
@@ -199,6 +191,8 @@ public class ConsumersFavoritesDaoImpl extends BaseDao<ConsumersFavorites> imple
 		}
 		return total;
 	}
+
+	
 	
 	
 	

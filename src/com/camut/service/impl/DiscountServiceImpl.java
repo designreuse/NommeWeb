@@ -42,8 +42,8 @@ public class DiscountServiceImpl implements DiscountService {
 	 * @return: List<DiscountApiModel>
 	 */
 	@Override
-	public List<DiscountApiModel> getDiscountByRestaurantId(long restaurantId, int orderType, double consumePrice) {
-		List<Discount> dList = discountDao.getDiscountByRestaurantId(restaurantId, orderType, consumePrice);
+	public List<DiscountApiModel> getDiscountByRestaurantId(String restaurantUuid, int orderType, double consumePrice) {
+		List<Discount> dList = discountDao.getDiscountByRestaurantUuid(restaurantUuid, orderType, consumePrice);
 		List<DiscountApiModel> damList = new ArrayList<DiscountApiModel>();
 		for (Discount discount : dList) {
 			DiscountApiModel dam = new DiscountApiModel();

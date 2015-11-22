@@ -23,7 +23,7 @@ public interface DiscountService {
 	 * @param:  
 	 * @return: List<DiscountApiModel>
 	 */
-	public List<DiscountApiModel> getDiscountByRestaurantId(long restaurantId, int orderType, double consumePrice);
+	public List<DiscountApiModel> getDiscountByRestaurantId(String restaurantUuid, int orderType, double consumePrice);
 	
 	/**
 	 * @Title: getAllDiscounts

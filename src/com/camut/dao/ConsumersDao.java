@@ -76,12 +76,20 @@ public interface ConsumersDao {
 	public Consumers getConsumersById(long id);
 	
 	/**
+	 * @Title: getConsumersByuuId
+	 * @Description: 通uuid查找用户
+	 * @param:    uuid
+	 * @return: Consumers
+	 */
+	public Consumers getConsumersByUuid(String consumerUuid);
+	
+	/**
 	 * @Title: saveTokenAndType
 	 * @Description: 用户登录保存token和type
 	 * @param:    consumers
 	 * @return: id
 	 */
-	public long saveTokenAndType(Consumers consumers);
+	public String saveTokenAndType(Consumers consumers);
 	
 	/**
 	 * @Title: updateTokenAndType

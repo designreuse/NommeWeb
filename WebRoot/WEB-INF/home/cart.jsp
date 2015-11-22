@@ -32,12 +32,12 @@
 		</c:if>
 		<c:if test="${fn:length(cartHeader.item)>0}"><!-- 如果购物车中没有菜品就设置ordert=0，如果有菜品就设置取出来的购物车的类型值 -->
 			<input type="hidden" name="orderType" value="${cartHeader.orderType}">
-			<input type="hidden" name="cartRestaurantId" value="${cartHeader.restaurantId}">
+			<input type="hidden" name="cartRestaurantUuid" value="${cartHeader.restaurantUuid}">
 			<input type="hidden" name="cartId" value="${cartHeader.cartId}">
 			
 			<div class="row">
 				<div class="col-md-12" align="center">
-					<a name="cart-restaurantName" href="#" value="${cartHeader.restaurantId}" style="color:#7DD700;">
+					<a name="cart-restaurantName" href="#" value="${cartHeader.restaurantUuid}" style="color:#7DD700;">
 						<h4>Order from ${cartHeader.restaurantName}</h4>
 					</a>
 				</div>
@@ -249,7 +249,7 @@
 
 	<div style="display:none"> 
 		<form action="${ctx}/index/restaurantmenu" method="post" id="getoCartRestaurant">
-			<input type="text" name="restaurantId" value="${cartHeader.restaurantId}">
+			<input type="text" name="restaurantUuid" value="${cartHeader.restaurantUuid}">
 		</form>
 	</div>
 	<%-- <script type="text/javascript" src="${ctx}/index/js/cart.js"></script> --%>

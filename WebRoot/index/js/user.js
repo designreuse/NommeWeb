@@ -1,6 +1,6 @@
 $(function(){
 //-------------------------------分页使用的全局变量-------------------------------------
-	var consumerId = $("#currentConsumerId").val();//当前用户Id
+	var consumerUuid = $("#currentConsumerUuid").val();//当前用户Id
 	var total= 0;//数据总条数
 	var offset = 1;//当前页码 初始为第一页
 	var limit = 15;//每页记录数
@@ -17,9 +17,7 @@ $(function(){
 	$("a[name='logo']").click(function(){
 		window.location = appPath+"/index/index";
 	});
-	//获取当前用户Id
 	function Consumer(){
-		//this.consumerId = $("#currentConsumerId").val();
 	}
 	//从其他页面快捷跳入当前页时选择了那个选项，打开页面时跳到对应选项卡
 	(function(){
@@ -532,7 +530,7 @@ $(function(){
 				
 				var msg = $.parseJSON(data);
 				if(msg.success){//成功，跳转到商家选菜页面
-					$("input[name='restaurantId']").val(msg.flag);
+					$("input[name='restaurantUuid']").val(msg.stringFlag);
 					$("#repeat-goto-restaurantMenu").submit();
 				}else{//显示错误信息
 					$("#bg").css("display", "none");//隐藏等待层
@@ -689,11 +687,11 @@ $(function(){
 	//评分评论模态框   提交评分 
 	$("button[name='ratingModal-submit']").click(function(){
 		var review = $.trim($("#rating_text").val());
-		var restaurantId = $("input[name='modal-restaurantId']").val();
+		var restaurantUuid = $("input[name='modal-restaurantUuid']").val();
 		$.ajax({
 			type: 'post',
 			url: appPath+'/consumers/rating',
-			data: {orderId:currentOrderId, restaurantId:restaurantId, stars:stars, review:review},
+			data: {orderId:currentOrderId, restaurantUuid:restaurantUuid, stars:stars, review:review},
 			success: function(data){
 				var msg = $.parseJSON(data);
 				if(msg.success){//发表评论成功
@@ -910,7 +908,7 @@ $(function(){
 			$.ajax({
 				type: 'post',
 				url: appPath+'/payment/deleteCard',
-				data:{cardId:cardId,consumerId:consumerId},
+				data:{cardId:cardId,consumerUuid:consumerUuid},
 				success:function(data){
 					var msg = $.parseJSON(data);
 					if(msg.success){//成功
@@ -1229,7 +1227,7 @@ $(function(){
 		$.ajax({
 			type: 'post',
 			url: appPath+"/api/consumer/stripe/addCard",
-			data: {number:number,exp_month:month,exp_year:year,cvc:cvv,consumerId:consumerId},
+			data: {number:number,exp_month:month,exp_year:year,cvc:cvv,consumerUuid:consumerUuid},
 			success: function(data){
 				$("#bg").css("display", "none");//隐藏等待层
 				$("#show").css("display", "none");
@@ -1249,8 +1247,8 @@ $(function(){
 	})
 	
 	$("#pageContent").on("click","span[name='favourite-restaurantName']", function(){
-		var restaurantId = $(this).attr("id");
-		window.location = appPath+'/index/restaurantmenu?restaurantId='+restaurantId;
+		var restaurantUuid = $(this).attr("id");
+		window.location = appPath+'/index/restaurantmenu?restaurantUuid='+restaurantUuid;
 	})
 	
 	

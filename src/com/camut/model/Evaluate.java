@@ -40,7 +40,7 @@ public class Evaluate extends IdEntity implements java.io.Serializable {
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurants_id")
+	@JoinColumn(name = "restaurants_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}
@@ -87,7 +87,7 @@ public class Evaluate extends IdEntity implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="consumers_id")
+	@JoinColumn(name="consumers_uuid")
 	public Consumers getConsumers() {
 		return consumers;
 	}

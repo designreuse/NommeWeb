@@ -46,8 +46,8 @@ public class DishServiceImpl implements DishService {
 	 * @return: List<DishApiModel>
 	 */
 	@Override
-	public List<DishApiModel> getdish(int restaurantId, int type) {
-		List<Dish> dList = dishDao.getdish(restaurantId, type);
+	public List<DishApiModel> getdish(String restaurantUuid, int type) {
+		List<Dish> dList = dishDao.getdish(restaurantUuid, type);
 		List<DishApiModel> damList = new ArrayList<DishApiModel>();
 		for (Dish dish : dList) {
 			DishApiModel dishApiModel = new DishApiModel();
@@ -61,7 +61,7 @@ public class DishServiceImpl implements DishService {
 			dishApiModel.setModby(dish.getModby());
 			dishApiModel.setModon(dish.getModon());
 			dishApiModel.setPrice(dish.getPrice());
-			dishApiModel.setRestaurantId(dish.getRestaurantId());
+			dishApiModel.setRestaurantUuid(dish.getRestaurantUuid());
 			dishApiModel.setIsMsg(dish.getIsMsg());
 			dishApiModel.setSpicy(dish.getSpicy());
 			dishApiModel.setStatus(dish.getStatus());
@@ -253,10 +253,9 @@ public class DishServiceImpl implements DishService {
 	 * @return: List<DishMenuApiModel>
 	 */
 	@Override
-	public List<DishMenuApiModel> getDishMenu(int restaurantId, int type) {
-		//List<RestaurantsDishMenuApiModel> rdmamList = new ArrayList<RestaurantsDishMenuApiModel>();
+	public List<DishMenuApiModel> getDishMenu(String restaurantUuid, int type) {
 		List<DishMenuApiModel> resutl=new ArrayList<DishMenuApiModel>();
-		List<Dish> dLidt = dishDao.getDishMenu(restaurantId, type);//从数据获取到菜品
+		List<Dish> dLidt = dishDao.getDishMenu(restaurantUuid, type);//从数据获取到菜品
 		boolean flag=true;
 	    int num=0;
 		for (Dish dish : dLidt) {	
@@ -364,8 +363,8 @@ public class DishServiceImpl implements DishService {
 	 * @return: List<Dish>
 	 */
 	@Override
-	public List<Dish> getdishs(int restaurantId, int type) {
-		return dishDao.getdish(restaurantId, type);
+	public List<Dish> getdishs(String restaurantUuid, int type) {
+		return dishDao.getdish(restaurantUuid, type);
 	}
 
 }

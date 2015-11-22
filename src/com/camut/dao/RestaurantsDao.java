@@ -34,7 +34,6 @@ public interface RestaurantsDao {
 	public long getCount();
 
 	/*
-	 * 
 	 * @Title: getRestaurantsById
 	 * @Description: 通过商家id查找商家
 	 * @param:    
@@ -43,12 +42,20 @@ public interface RestaurantsDao {
 	public Restaurants getRestaurantsById(long id);
 	
 	/*
+	 * @Title: getRestaurantsByUuid
+	 * @Description: 通过商家id查找商家
+	 * @param:    
+	 * @return: Restaurants
+	 */
+	public Restaurants getRestaurantsByUuid(String restaurantUuid);
+	
+	/*
 	 * @Title: addRestaurants
 	 * @Description: 增加商家
 	 * @param:    restaurants
 	 * @return: int 返回的主键
 	 */
-	public int addRestaurants(Restaurants restaurants);
+	public String addRestaurants(Restaurants restaurants);
 	
 	/*
 	 * @Title: deleteRestaurants
@@ -88,7 +95,7 @@ public interface RestaurantsDao {
 	 * @param:id
 	 * @return Restaurants  
 	 */
-	public Restaurants getRestaurantByIdToAudit(long id);
+	public Restaurants getRestaurantByUuidToAudit(String restaurantUuid);
 	
 	/**
 	 * @Title: auditRestaurant

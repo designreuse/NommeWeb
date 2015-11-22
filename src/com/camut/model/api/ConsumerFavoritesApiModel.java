@@ -16,16 +16,17 @@ public class ConsumerFavoritesApiModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 3631454477320896811L;
-	private long restaurantId=0;//商家ID
+	private String restaurantUuid="";//商家ID
 	private String restaurantName="";// 店名
 	private String restaurantAddress="";// 地址
 	private double stars=0;// 评级
 	
-	public long getRestaurantId() {
-		return restaurantId;
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getRestaurantName() {
 		return restaurantName;

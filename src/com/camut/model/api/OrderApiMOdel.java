@@ -18,8 +18,8 @@ public class OrderApiMOdel implements Serializable {
 	 */
 	private static final long serialVersionUID = 2535162922177677556L;
 	private Integer orderType=1; //订单状态(1:外送 2：自取 3：到店就餐)
-	private long consumerId=1; // 用户编号
-	private Integer restaurantId=1; //店铺编号
+	private String consumerUuid=""; // 用户编号
+	private String restaurantUuid=""; //店铺编号
 	private double total=1.0; //订单总价
 	private Date orderDate=new Date(); //订单时间
 	private Integer number=1; //就餐人数
@@ -39,17 +39,18 @@ public class OrderApiMOdel implements Serializable {
 	public void setOrderType(Integer orderType) {
 		this.orderType = orderType;
 	}
-	public long getConsumerId() {
-		return consumerId;
+	
+	public String getConsumerUuid() {
+		return consumerUuid;
 	}
-	public void setConsumerId(long consumerId) {
-		this.consumerId = consumerId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public double getTotal() {
 		return total;

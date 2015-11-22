@@ -113,17 +113,12 @@
      		<thead>
      			<tr>
      				<th data-field="state" data-radio="true"></th>
-     				<th data-formatter="numberFormatter" data-width="50">No.</th>
-			        <th data-field="restaurantName" data-sortable="true" data-width="300">Restaurant Name</th>
+     				<th data-formatter="numberFormatter" data-width="30">No.</th>
+			        <th data-field="restaurantName" data-sortable="true" data-width="250">Restaurant Name</th>
 			        <th data-field="restaurantContact" data-align="center" data-width="150">Contact</th>
 			        <th data-field="restaurantPhone" data-width="150">Phone</th>
 			        <th data-field="restaurantEmail" data-width="200">Email</th>
-			        <th data-field="restaurantAddress" >Address</th>
-			        <!-- 
-			        <th data-field="distance" data-formatter="distanceFormatter">Delivery</th>
-			        <th data-field="deliverPrice" data-formatter="feeFormatter">Min. Delivery Fee</th>
-			        <th data-field="avgPrice" data-formatter="feeFormatter">Avg. Order Price</th> 
-			        -->
+			        <th data-field="restaurantAddress" data-width="400">Address</th>
 			        <th data-field="status" data-formatter="statusFormatter" data-sortable="true" data-width="100">Status</th>
      			</tr>
      		</thead>
@@ -156,8 +151,8 @@
 	    $(function(){
 	    	var oldStatu;
 	    	var newStatu;
-	    	var id;
-	    	var currentRestaurantId;
+	    	var restaurantUuid;
+	    	var currentRestaurantUuid;
 	     
 	    	$("#refresh").click(function () {//表格工具栏刷新按钮
 				$("#restaurantTable").bootstrapTable('refresh',{
@@ -169,7 +164,7 @@
 	    		var rowData = $("#restaurantTable").bootstrapTable('getSelections')[0];//行点击时获取出行和数据
 	    		if(rowData){
 		    		oldStatu = rowData.status;
-		    		id = rowData.id;
+		    		restaurantUuid = rowData.restaurantUuid;
 	    		 	$("#restaurantName").append(rowData.restaurantName);//获取名称加载到模态框
 	    		 	$("#id").val(rowData.id);//获取餐厅的id
 	    		 	if (oldStatu == 0) {
@@ -190,7 +185,7 @@
 	    			$.ajax({
 	 	    			type: 'POST',
 	 	    			async: false,
-	 	    			data: {id:id, statu:newStatu},
+	 	    			data: {restaurantUuid:restaurantUuid, statu:newStatu},
 	 	    			url: '${ctx}/admin/auditrestaurant',
 	 	    			success:function(data){}
 	 	    		});
@@ -206,7 +201,7 @@
 	    	$("#delete").click(function(){
 				var currentRestaurant = $("#restaurantTable").bootstrapTable('getSelections')[0];//行点击时获取出行和数据
 				if(currentRestaurant!=null){
-					currentRestaurantId = currentRestaurant.id;
+					currentRestaurantUuid = currentRestaurant.restaurantUuid;
 					$("#deleteModal").modal('show');
 				}
 			});
@@ -216,7 +211,7 @@
 					type:'post',
 					async: false,
 					url: '${ctx}/admin/deleterestaurant',
-					data:{id:currentRestaurantId},
+					data:{restaurantUuid:currentRestaurantUuid},
 					success: function(data){
 						var msg = jQuery.parseJSON(data);
 						if(msg.success){//已经删除成功

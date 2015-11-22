@@ -56,7 +56,7 @@ public interface DistancePriceDao {
 	 * @param: restaurantsApiModel
 	 * @return List<DistancePrice> 
 	 */
-	public List<DistancePrice> getDistancePrice(long restaurantId);
+	public List<DistancePrice> getDistancePrice(String restaurantUuid);
 	
 	
 	

@@ -49,10 +49,10 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 			CartHeaderLoginApiModel chlam = new CartHeaderLoginApiModel();
 			CartHeader cartHeader = cartHeaderDao.getCartHeaderByMobileToken(mobileToken);
 			if(cartHeader != null){
-				if (cartHeader.getConsumerId() != null) {
-					chlam.setConsumerId(cartHeader.getConsumerId());
+				if (cartHeader.getConsumerUuid() != null) {
+					chlam.setConsumerUuid(cartHeader.getConsumerUuid());
 				} else {
-					chlam.setConsumerId(0);
+					chlam.setConsumerUuid("0");
 				}
 				chlam.setOrderType(cartHeader.getOrderType());
 				return chlam;
@@ -108,11 +108,11 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 	 * @return
 	 */
 	@Override
-	public int deleteCartDish(String mobileToken, int dishId, Integer consumerId) {
+	public int deleteCartDish(String mobileToken, int dishId, String consumerUuid) {
 		// 获取cartheader
 		CartHeader cartHeader = null;// cartHeaderDao.getCartHeaderByMobileToken(mobileToken,consumerId);
-		if (consumerId != null) {
-			cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+		if (StringUtil.isNotEmpty(consumerUuid)) {
+			cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		} else {
 			cartHeader = cartHeaderDao.getCartHeaderByMobileToken(mobileToken);
 		}
@@ -183,19 +183,18 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 	
 
 	@Override
-	public CartApiModel reCalcCost(String mobileToken, double restaurantLat,
-			double restaurantLng, long discountId, long restaurantId,Integer consumerId) {
+	public CartApiModel reCalcCost(String mobileToken, double restaurantLat, double restaurantLng, long discountId, String restaurantUuid, String consumerUuid) {
 		
 		Discount discount=discountDao.getDiscount(discountId);
-		CartApiModel cartApiModel=cartHeaderDao.getCartInfoForSql(mobileToken,consumerId);
+		CartApiModel cartApiModel=cartHeaderDao.getCartInfoForSql(mobileToken,consumerUuid);
 		//查看是否有送菜
-		cartHeaderDao.deleteFreeCartItem(consumerId);
+		cartHeaderDao.deleteFreeCartItem(consumerUuid);
 		
 		//计算折扣后的总价
 		if(discount.getType()==GlobalConstant.DISCOUNT_TYPE_1){
 			cartApiModel.setTotal(StringUtil.convertLastDouble(cartApiModel.getTotal()-discount.getPrice()));
 			cartApiModel.setDiscount(discount.getPrice());
-			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 			if (cartHeader!=null) {
 				cartHeader.setDiscountId((int)discountId);
 				cartHeaderDao.updateCartHeader(cartHeader);
@@ -203,14 +202,14 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 		}else if(discount.getType()==GlobalConstant.DISCOUNT_TYPE_2){
 			cartApiModel.setDiscount(StringUtil.convertLastDouble(cartApiModel.getTotal()*(discount.getDiscount()/100)));
 			cartApiModel.setTotal(StringUtil.convertLastDouble(cartApiModel.getTotal()-cartApiModel.getDiscount()));			
-			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 			if (cartHeader!=null) {
 				cartHeader.setDiscountId((int)discountId);
 				cartHeaderDao.updateCartHeader(cartHeader);
 			}
 			
 		}else{
-			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 			cartHeader.setDiscountId((int)discountId);
 			CartItem cartItem=new CartItem();
 			cartItem.setcartHeader(cartHeader);
@@ -309,14 +308,14 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 
 	
 	/**
-	 * @Title: getCatrHeaderByConsumerId
+	 * @Title: getCatrHeaderByConsumerUuid
 	 * @Description: 通过用户id获取购物车
 	 * @param: @param consumerId
 	 * @param: @return
 	 * @return CartHeader  
 	 */
-	public CartHeader getCatrHeaderByConsumerId(int consumerId){
-		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+	public CartHeader getCatrHeaderByConsumerUuid(String consumerUuid){
+		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		return cartHeader;
 	}
 
@@ -326,9 +325,9 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 	 * @return
 	 */
 	@Override
-	public CartHeader getCartHeaderByConsumerId(int consumerId) {
-		if(consumerId > 0){
-			return cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+	public CartHeader getCartHeaderByConsumerUuid(String consumerUuid) {
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			return cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		}
 		return null;
 	}
@@ -363,11 +362,11 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 	 * @return
 	 */
 	@Override
-	public PageCartHeader getPageCartHeaderByConsumerId(int consumerId) {
-		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+	public PageCartHeader getPageCartHeaderByConsumerUuid(String consumerUuid) {
+		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		if (cartHeader!=null) {
 			PageCartHeader pageCartHeader = new PageCartHeader();
-			Restaurants restaurants = restaurantsDao.getRestaurantsById(cartHeader.getRestaurantId());
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(cartHeader.getRestaurantUuid());
 			BeanUtils.copyProperties(cartHeader, pageCartHeader);
 			pageCartHeader.setRestaurantName(restaurants.getRestaurantName());
 			return pageCartHeader;
@@ -376,15 +375,15 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 	}
 	
 	/**
-	 * @Title: getWebCartHeaderByConsumerId
+	 * @Title: getWebCartHeaderByConsumerUuid
 	 * @Description: 获取用于web页面显示
 	 * @param: @param consumerId
 	 * @param: @return
 	 * @return CartHeader  
 	 */
 	@Override
-	public CartHeader getWebCartHeaderByConsumerId(int consumerId){
-		CartHeader cartHeader = cartHeaderDao.getWebCartHeaderByConsumerId(consumerId);
+	public CartHeader getWebCartHeaderByConsumerUuid(String consumerUuid){
+		CartHeader cartHeader = cartHeaderDao.getWebCartHeaderByConsumerUuid(consumerUuid);
 		return cartHeader;
 	}
 
