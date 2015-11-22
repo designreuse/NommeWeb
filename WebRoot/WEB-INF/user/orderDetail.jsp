@@ -24,7 +24,7 @@
   	
   		<input type="hidden" value="${order.orderType}" name="modal-orderType">
   		<input type="hidden" value="${order.orderId}" name="modal-orderId">
-  		<input type="hidden" value="${order.restaurantId}" name="modal-restaurantId">
+  		<input type="hidden" value="${order.restaurantUuid}" name="modal-restaurantUuid">
   		<input type="hidden" value="${haveEvaluate}" name="modal-haveEvaluate">
 	    <div class="row">
 	    	<div class="col-md-3 orderModel-field-title">

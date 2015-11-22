@@ -32,13 +32,13 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	 * @return: -1表示添加失败，1 表示添加成功
 	 */
 	@Override
-	public int addFavorites(long consumerId, int restaurantId) {
-		if (restaurantId > 0 && consumerId > 0) {
-			ConsumersFavorites cf = consumersFavoritesDao.existFavoritesByConsumerIdAndrestaurantId(consumerId, restaurantId);
+	public int addFavorites(String consumerUuid, String restaurantUuid) {
+		if (StringUtil.isNotEmpty(consumerUuid)) {
+			ConsumersFavorites cf = consumersFavoritesDao.existFavoritesByConsumerUuidAndrestaurantUuid(consumerUuid, restaurantUuid);
 			if(cf != null){
-				return consumersFavoritesDao.deleteFavoritesByRidCid(consumerId, restaurantId);
+				return consumersFavoritesDao.deleteFavoritesByRidCid(consumerUuid, restaurantUuid);
 			}else {
-				return consumersFavoritesDao.addFavorites(consumerId, restaurantId);
+				return consumersFavoritesDao.addFavorites(consumerUuid, restaurantUuid);
 			}
 		}
 		return -1;
@@ -51,15 +51,15 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	 * @return: List<ConsumerFavoritesApiModel>
 	 */
 	@Override
-	public List<ConsumerFavoritesApiModel> selectFavorites(long id) {
-		List<ConsumersFavorites> cfList = consumersFavoritesDao.selectFavorites(id);
+	public List<ConsumerFavoritesApiModel> selectFavorites(String consumerUuid) {
+		List<ConsumersFavorites> cfList = consumersFavoritesDao.selectFavorites(consumerUuid);
 		List<ConsumerFavoritesApiModel> cfamList = new ArrayList<ConsumerFavoritesApiModel>();
 		for (ConsumersFavorites consumersFavorites : cfList) {
 			ConsumerFavoritesApiModel cfam = new ConsumerFavoritesApiModel();
-			Restaurants restaurants = restaurantsDao.getRestaurantsById(consumersFavorites.getRestaurantsId());
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(consumersFavorites.getRestaurantsUuid());
 			if(restaurants != null){
-				ViewRestaurant vr = viewRestaurantService.getRestaurantScore(restaurants.getId());
-				cfam.setRestaurantId(consumersFavorites.getRestaurantsId());
+				ViewRestaurant vr = viewRestaurantService.getRestaurantScore(restaurants.getUuid());
+				cfam.setRestaurantUuid(consumersFavorites.getRestaurantsUuid());
 				cfam.setRestaurantAddress(restaurants.getRestaurantAddress());
 				cfam.setRestaurantName(restaurants.getRestaurantName());
 				if(vr.getScore() != null){
@@ -95,9 +95,9 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	 * @param: @param restaurantId
 	 * @return int  
 	 */
-	public int existFavoritesByConsumerIdAndrestaurantId (long consumerId, int restaurantId){
+	public int existFavoritesByConsumerUuidAndrestaurantUuid (String consumerUuid, String restaurantUuid){
 		int temp = 0;
-		ConsumersFavorites consumersFavorites = consumersFavoritesDao.existFavoritesByConsumerIdAndrestaurantId (consumerId, restaurantId);
+		ConsumersFavorites consumersFavorites = consumersFavoritesDao.existFavoritesByConsumerUuidAndrestaurantUuid (consumerUuid, restaurantUuid);
 		if(consumersFavorites!=null){
 			temp = 1;
 		}else{
@@ -113,12 +113,12 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	 * @param: @param restaurantId
 	 * @return long  
 	 */
-	public long addConsumerFavorite(long consumerId, int restaurantId){
+	public long addConsumerFavorite(String consumerUuid, String restaurantUuid){
 		ConsumersFavorites consumersFavorites = new ConsumersFavorites();
 		Consumers consumers = new Consumers();
-		consumers.setId(consumerId);
-		consumersFavorites.setConsumers(consumers);
-		consumersFavorites.setRestaurantsId(restaurantId);
+		consumers.setUuid(consumerUuid);
+		consumersFavorites.setConsumersUuid(consumerUuid);
+		consumersFavorites.setRestaurantsUuid(restaurantUuid);
 		consumersFavorites.setFavoritesdate(new Date());
 		return consumersFavoritesDao.addConsumerFavorite(consumersFavorites);
 	}
@@ -130,8 +130,8 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	 * @param: int restaurantId
 	 * @return int
 	 */
-	public int deleteConsumerFavorite(long consumerId, int restaurantId){
-		ConsumersFavorites consumersFavorites = consumersFavoritesDao.existFavoritesByConsumerIdAndrestaurantId(consumerId, restaurantId);
+	public int deleteConsumerFavorite(String consumerUuid, String restaurantUuid){
+		ConsumersFavorites consumersFavorites = consumersFavoritesDao.existFavoritesByConsumerUuidAndrestaurantUuid(consumerUuid, restaurantUuid);
 		if(consumersFavorites!=null){
 			int temp = consumersFavoritesDao.deleteFavorites(consumersFavorites.getId());
 			return temp;
@@ -141,14 +141,14 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	}
 	
 	/**
-	 * @Title: getFavouriteListByconsumerId
+	 * @Title: getFavouriteListByConsumerUuid
 	 * @Description: 获取用户收藏的商家列表（用于Web）
 	 * @param: @param consumerId
 	 * @param: @return
 	 * @return List<PageFavourites>  
 	 */
-	public List<PageFavourites> getFavouriteListByconsumerId(int consumerId, PageFilter pf){
-		return consumersFavoritesDao.getFavouriteListByconsumerId(consumerId,pf);
+	public List<PageFavourites> getFavouriteListByConsumerUuid(String consumerUuid, PageFilter pf){
+		return consumersFavoritesDao.getFavouriteListByconsumerUuid(consumerUuid,pf);
 	}
 	
 	/**
@@ -158,8 +158,8 @@ public class ConsumersFavoritesServiceImpl implements ConsumersFavoritesService 
 	 * @param: @return
 	 * @return int  
 	 */
-	public int countTotalByConsumerId(int consumerId){
-		return consumersFavoritesDao.countTotalByConsumerId(consumerId);
+	public int countTotalByConsumerUuid(String consumerUuid){
+		return consumersFavoritesDao.countTotalByConsumerUuid(consumerUuid);
 	}
 	
 }

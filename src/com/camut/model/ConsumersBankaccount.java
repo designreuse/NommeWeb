@@ -38,7 +38,7 @@ public class ConsumersBankaccount extends IdEntity implements
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "consumer_id")
+	@JoinColumn(name = "consumer_uuid")
 	public Consumers getConsumers() {
 		return consumers;
 	}

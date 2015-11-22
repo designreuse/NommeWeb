@@ -33,7 +33,7 @@
 		<img src="${ctx}/images/loader.gif"><span style="color: #eeeeee;font-size: large;">&nbsp;Loading...</span>
 	</div>
 
-	<input type="hidden" id ="currentConsumerId" value="${consumer.id}">
+	<input type="hidden" id ="currentConsumerUuid" value="${consumer.uuid}">
 	<input type="hidden" id ="clickFlag" value="${flag}">
 	<div class="search_top">
 		<div class="container">
@@ -386,7 +386,7 @@
 		</div>
 
 	<form action="${ctx}/index/restaurantmenu" method="post" id="repeat-goto-restaurantMenu">
-		<input type="hidden" name="restaurantId" id="restaurantId">
+		<input type="hidden" name="restaurantUuid" id="restaurantUuid">
 		<!-- <div style="display:none;">
 			<input type="submit" id ="submitRepeat">
 		</div> -->

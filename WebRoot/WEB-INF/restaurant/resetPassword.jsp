@@ -61,6 +61,7 @@
 	<!-- Bootstrap -->
 	<script src="${ctx }/framework/bootstrap.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/js/restaurant/resetPassword.js"></script>
+	<script src="${ctx }/js/appPath.js" type="text/javascript"></script>
 	<style type="text/css">
 		.popover-content {
 			color: #FA6A6A;

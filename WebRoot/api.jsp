@@ -37,13 +37,13 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户信息修改
    	<form action="${ctx }/api/consumer/update" method="post">
-   		Fristname：<input type="text" name="firstName" value="Yo">
+   		Fristname：<input type="text" name="firstName" value="You">
    		Lastname：<input type="text" name="lastName" value="Ki">
    		邮箱地址：<input type="text" name="email" value="892981821@qq.com">
    		Phone：<input type="text" name="phone" value="1234">
    		原始密码：<input type="password" name="password" value="123123">
    		新密码：<input type="password" name="newpassword" value="">
-   		用户ID：<input type="text" name="consumerId" value="1">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<input type="submit" value="提交">
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,67 +69,31 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户地址列表
    	<form action="${ctx }/api/consumer/address/list" method="post">
-   		用户ID：<input type="text" name="consumerId" value="54">
-   		商家ID：<input type="text" name="restaurantId" value="16">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
+   		商家ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	添加用户地址
    	<form action="${ctx }/api/consumer/address/add" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
-   		省：<input type="text" name="province" value="jiangshu">
-   		城市：<input type="text" name="city" value="changzhou">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
+   		省：<input type="text" name="province" value="js">
+   		城市：<input type="text" name="city" value="cz">
    		街道：<input type="text" name="street" value="新北区 万达广场">
-   		楼：<input type="text" name="floor" value="fff">
+   		楼：<input type="text" name="floor" value="rrr">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	<%-- 修改用户地址
-   	<form action="${ctx }/api/consumer/address/update" method="post">
-   		地址ID：<input type="text" name="addressId" value="34">
-   		省：<input type="text" name="province" value="AB">
-   		城市：<input type="text" name="city" value="cv">
-   		街道：<input type="text" name="street" value="1">
-   		楼：<input type="text" name="floor" value="11">
-   		是否默认：<input type="text" name="isdefault" value="1">
-   		<input type="submit" value="提交" >
-   	</form> --%>
-   	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	<%-- 清除用户地址
-   	<form action="${ctx }/api/consumer/address/delete" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
-   		<input type="submit" value="提交" >
-   	</form> --%>
-   	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	<%-- 用户银行卡列表
-   	<form action="${ctx }/api/consumer/paycard/list" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
-   		<input type="submit" value="提交" >
-   	</form> --%>
-   	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	<%-- 添加用户银行卡
-   	<form action="${ctx }/api/consumer/paycard/add" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
-   		银行卡token：<input type="text" name="paycardToken" value="1">
-   		<input type="submit" value="提交" >
-   	</form> --%>
-   	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	<%-- 删除用户银行卡
-   	<form action="${ctx }/api/consumer/paycard/deleteall" method="post">
-   		银行卡卡号：<input type="text" name="card" value="444444">
-   		<input type="submit" value="提交" >
-   	</form> --%>
-   	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	已完成订单列表
    	<form action="${ctx }/api/consumer/order/history/list" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<!-- 订单类型：<input type="text" name="orderType" value="1"> -->
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	未完成订单列表
    	<form action="${ctx }/api/consumer/order/current/list" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -143,50 +107,37 @@
    	<form action="${ctx }/api/consumer/order/add" method="post">
    		订单内容：<input type="text" name="context" value='
    		{
-    "firstName": "z",
-    "lastName": "x",
-    "phone": "123",
-    "email": "123@qq.com",
-    "orderType": 1,
-    "consumerId": "46",
-    "restaurantId": "16",
-    "addressId": 27,
-    "orderDate": "2015/06/29 20:30",
-    "number": 10,
-    "zipcode": "214200",
-    "tax": 2.1,
-    "tip": 1,
-    "logistics": 4,
-    "charityId": 1,
-    "discountId": 49,
+    "lastName": "ki",
     "payment": 1,
-    "cardId": "card_16YAOkK629Jm0Bi8Xslr3qwT",
-    "meno": "hao",
+    "tax": 0.1,
+    "firstName": "Yo",
+    "consumerUuid": "6c855063536a429bb120c305e017c26e",
+    "cardId": "card_170kUbFBnBnXjU6kPciFP2oV",
+    "memo": "",
     "item": [
         {
-            "dishId": 1,
             "num": 1,
-            "unitprice": 1,
-            "subItem": [
-                {
-                    "garnishItemId": 1,
-                    "garnishNum": 2
-                },
-                {
-                    "garnishItemId": 4,
-                    "garnishNum": 4
-                }
-            ]
+            "dishId": 65,
+            "unitprice": 2
         }
-    ]
+    ],
+    "orderDate": "2015-11-17 21:00",
+    "email": "892981821@qq.com",
+    "total": 2,
+    "tip": 0.2,
+    "phone": "1234567890",
+    "cartHeaderId": 340,
+    "restaurantUuid": "92e67f88c85544c2926a5e65b5e0fb28",
+    "orderType": 2,
+    "logistics": 0
 }'> 
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户添加收藏
    	<form action="${ctx }/api/consumer/collection/add" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
-   		店铺ID：<input type="text" name="restaurantId" value="4">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
+   		店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -198,15 +149,15 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户收藏列表
    	<form action="${ctx }/api/consumer/collection/list" method="post">
-   		用户ID：<input type="text" name="consumerId" value="4">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	发布评论
    	<form action="${ctx }/api/consumer/review/add" method="post">
-   		用户ID：<input type="text" name="consumerId" value="1">
-   		店铺ID：<input type="text" name="restaurantId" value="4">
-   		订单ID：<input type="text" name="orderHeaderId" value="949">
+   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
+   		店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
+   		订单ID：<input type="text" name="orderHeaderId" value="1717">
    		评分：<input type="text" name="score" value="4">
    		评论内容：<input type="text" name="content" value="zxcteatccq">
    		<input type="submit" value="提交" >
@@ -223,15 +174,15 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	营业时间显示
    	<form action="${ctx }/api/restaurant/opentime" method="post">
-   		店铺ID：<input type="text" name="restaurantId" value="16">
+   		店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		类型：<input type="text" name="type" value="1">
-   		年月日：<input type="text" name="date" value="2015-8-14">
+   		年月日：<input type="text" name="date" value="2015-11-18">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店家订单列表（pad）
    	<form action="${ctx }/api/restaurant/order" method="post">
-	   	店铺ID：<input type="text" name="restaurantId" value="16">
+	   	店铺ID：<input type="text" name="restaurantUuid" value="16">
 	   	时间：<input type="text" name="createdate" value="2015-10-17">
 	   	类型：<input type="text" name="orderType" value="1">
    		<input type="submit" value="提交" >
@@ -239,35 +190,35 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	订单处理（pad）
    	<form action="${ctx }/api/restaurant/handle" method="post">
-	   	订单ID：<input type="text" name="orderId" value="13">
+	   	订单ID：<input type="text" name="orderId" value="722">
 	   	处理状态：<input type="text" name="status" value="2">
-	   	备注信息：<input type="text" name="instruction" value="hot...hot...">
+	   	备注信息：<input type="text" name="instruction" value="">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	菜品信息
    	<form action="${ctx }/api/restaurant/dish" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
 	  	类型：<input type="text" name="type" value="3">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店铺详情
    	<form action="${ctx }/api/restaurant/detail" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
-	  	用户ID：<input type="text" name="consumerId" value="1">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
+	  	用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店铺评论
    	<form action="${ctx }/api/restaurant/comment" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="21">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店铺优惠信息
    	<form action="${ctx }/api/restaurant/discount" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
 	  	订单类型：<input type="text" name="orderType" value="3">
 	  	消费金额：<input type="text" name="consumePrice" value="50.00">
    		<input type="submit" value="提交" >
@@ -275,7 +226,7 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取配送费
    	<form action="${ctx }/api/restaurant/distanceprice" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
 	  	<!-- 总金额：<input type="text" name="total" value="4"> -->
 	  	<!-- 距离：<input type="text" name="distance" value="4"> -->
    		<input type="submit" value="提交" >
@@ -283,21 +234,21 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	菜品分类
    	<form action="${ctx }/api/restaurant/garnishheader" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
 	  	类型：<input type="text" name="type" value="3">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取商家桌位数量
    	<form action="${ctx }/api/restaurant/tablecount" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
-	  	预定时间：<input type="text" name="orderDate" value="2015-06-13 9:20">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
+	  	预定时间：<input type="text" name="orderDate" value="2015-11-18 13:30">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取菜单信息
    	<form action="${ctx }/api/restaurant/dish/menu" method="post">
-	  	店铺ID：<input type="text" name="restaurantId" value="4">
+	  	店铺ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
 	  	类型：<input type="text" name="type" value="1">
    		<input type="submit" value="提交" >
    	</form>
@@ -333,18 +284,6 @@
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	<%-- 获取商家数量
-   	<form action="${ctx }/api/search/count" method="post">
-	  	经度：<input type="text" name="restaurantLng" value="-114.06415">
-	  	纬度：<input type="text" name="restaurantLat" value="51.04500">
-	  	餐厅类型：<input type="text" name="classificationName" value="Italian,Pizza,Sea food">
-	  	是否有优惠：<input type="text" name="discountNum" value="1">
-	  	是否在营业：<input type="text" name=opentime value="1">
-	  	是否可以在线预订：<input type="text" name="isdelivery" value="1">
-	  	是否提供外送：<input type="text" name="isDelivery" value="1">
-   		<input type="submit" value="提交" >
-   	</form> --%>
-   	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   	商家分类
    	<form action="${ctx }/api/consumer/classification" method="post">
    		<input type="submit" value="提交" >
@@ -358,45 +297,33 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   	删除购物车信息
    	<form action="${ctx }/api/consumer/cart/delete" method="post">
-   		设备token：<input type="text" name="mobileToken" value="abc">
-   		用户Id：<input type="text" name="consumerId" value="">
+   		设备token：<input type="text" name="mobileToken" value="a57f9875fd0be49188b7dae108d9adfd54d9dbb34536e926936758e7469b317f">
+   		用户Id：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	添加购物车信息
    	<form action="${ctx }/api/consumer/cart/add" method="post">
    		设备token：<input type="input" name="context" value='{
-    "orderType": "1",
-    "mobileToken": "D2FF3F09-4A79-495B-8A8E-9F056A88D4DB",
-    "consumerId": "45",
-    "restaurantId": "31",
-    "restaurantLng": 0.4,
-    "restaurantLat": 0.1,
     "type": 2,
+    "restaurantUuid": "92e67f88c85544c2926a5e65b5e0fb28",
     "item": {
-        "dishId": 72,
         "num": 1,
-        "unitprice": 9.75,
-        "instruction": "\\U6d3b\\U8131\\U8131",
-        "subItem": [
-            {
-                "garnishItemId": 1,
-                "count": 2
-            },
-            {
-                "garnishItemId": 4,
-                "count": 5
-            }
-        ]
-    }
+        "dishId": 65,
+        "unitprice": 2,
+        "instruction": "不"
+    },
+    "mobileToken": "",
+    "orderType": "2",
+    "consumerUuid": "6c855063536a429bb120c305e017c26e"
 }'>
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取购物车信息
    	<form action="${ctx }/api/consumer/cart/getInfo" method="post">
-   		设备token：<input type="text" name="mobileToken" value="EC-55-F9-C4-7D-4C">
-   		用户id：<input type="text" name="consumerId" value="45">
+   		设备token：<input type="text" name="mobileToken" value="79995a58a0ca7698ec3bd4ed9764eec5b4beaa1dcb6b96f3bb4b40add983dc93">
+   		用户id：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		<!-- 经度：<input type="text" name="consumerLng" value="-114.12186">
    		纬度：<input type="text" name="consumerLat" value="51.08358"> -->
    		<input type="submit" value="提交" >
@@ -404,7 +331,7 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取快捷菜单
    	<form action="${ctx }/api/consumer/index/type" method="post">
-   		用户id：<input type="text" name="consumerId" value="21">
+   		用户id：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
    		设备类型：<input type="text" name="type" value="1">
    		<input type="submit" value="提交" >
    	</form>
@@ -417,17 +344,17 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	重复下订单
    	<form action="${ctx }/api/consumer/repeat" method="post">
-   		用户id：<input type="text" name="consumerId" value="21">
-   		订单id：<input type="text" name="orderId" value="56">
+   		用户id：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
+   		订单id：<input type="text" name="orderId" value="2125">
    		设备token：<input type="text" name="mobiletoken" value="reth21453wesrg">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	删除购物车中单个菜品
    	<form action="${ctx }/api/consumer/cart/deleteone" method="post">
-   		设备号：<input type="text" name="mobileToken" value="21">
-   		菜品id：<input type="text" name="dishId" value="56">
-   		用户id：<input type="text" name="consumerId" value="76">	
+   		设备号：<input type="text" name="mobileToken" value="79995a58a0ca7698ec3bd4ed9764eec5b4beaa1dcb6b96f3bb4b40add983dc93">
+   		菜品id：<input type="text" name="dishId" value="86">
+   		用户id：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">	
    		经度：<input type="text" name="consumerLng" value="-114.12186">
    		纬度：<input type="text" name="consumerLat" value="51.08358"> 	
    		<input type="submit" value="提交">
@@ -435,44 +362,44 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店家已取消的订单
    	<form action="${ctx }/api/restaurant/cancelorder" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">   		
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">   		
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店家已完成的订单
    	<form action="${ctx }/api/restaurant/completeorder" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		订单类型：<input type="text" name="status" value="1">   		
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	店家当天未处理的订单id
    	<form action="${ctx }/api/restaurant/live" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	非当天未处理的订单id
    	<form action="${ctx }/api/restaurant/upcoming" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	当天已处理的订单列表
    	<form action="${ctx }/api/restaurant/liveaccept" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	非当天已处理的订单列表
    	<form action="${ctx }/api/restaurant/upcomingaccept" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	当天营业总金额
    	<form action="${ctx }/api/restaurant/totalAmount" method="post">
-   		店家id：<input type="text" name="restaurantId" value="16">
+   		店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -482,14 +409,14 @@
    		纬度restaurantLat<input type="text" name="restaurantLat" value="51.18751"   >
    		经度restaurantLng<input type="text" name="restaurantLng" value="-114.13954" >
    		折扣ID <input type="text" name="discountId" value="43" >   
-   		店家id：<input type="text" name="restaurantId" value="16">
-   		客户id： <input type="text" name="consumerId" value="76" >   			
+   		店家id：<input type="text" name="restaurantUuid" value="16">
+   		客户id： <input type="text" name="consumerUuid" value="76" >   			
    		<input type="submit" value="提交" >
    	</form>
 	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	保存信用卡信息
    	<form action="${ctx }/api/consumer/stripe/addCard" method="post">
-   		客户id： <input type="text" name="consumerId" value="1" >   		
+   		客户id： <input type="text" name="consumerUuid" value="1" >   		
    		卡号：<input type="text" name="number" value="4242424242424242">
    		过期月： <input type="text" name="exp_month" value="5" >
    		过期年：<input type="text" name="exp_year" value="2017"   >
@@ -499,15 +426,15 @@
 	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	列出客户所有的信用卡
    	<form action="${ctx }/api/consumer/stripe/listAllCards" method="post">
-   		客户id： <input type="text" name="consumerId" value="1" >   		
+   		客户id： <input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e" >   		
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	指定的卡付款
    	<form action="${ctx }/api/consumer/stripe/chargeByCardId" method="post">
-   		客户id： <input type="text" name="consumerId" value="1" >   	
+   		客户id： <input type="text" name="consumerUuid" value="1" >   	
    		卡id： <input type="text" name="cardId" value="card_16YALSK629Jm0Bi8SZCbxIWc" >   	
-   		餐厅id： <input type="text" name="restaurantId" value="1" >   	
+   		餐厅id： <input type="text" name="restaurantUuid" value="1" >   	
    		金额： <input type="text" name="amount" value="2000" >   
    		订单id： <input type="text" name="orderId" value="12" >   	
    		<input type="submit" value="提交" >
@@ -521,33 +448,27 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	保存用户与慈善机构的方法
    	<form action="${ctx }/api/save/ordercharity" method="post">
-	   	订单id：<input type="text" name="orderId" value="172" >
+	   	订单id：<input type="text" name="orderId" value="1717" >
 	   	机构id：<input type="text" name="charityId" value="1" >
-	   	用户id：<input type="text" name="consumerId" value="7" >
+	   	用户id：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e" >
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	通过商家id查找商家详细信息（more）
    	<form action="${ctx }/api/restaurant/shopinformore" method="post"> 
-	   	店家id：<input type="text" name="restaurantId" value="16">
+	   	店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	返回商家同意的预定订单
    	<form action="${ctx }/api/restaurant/dineinorder" method="post"> 
-	   	店家id：<input type="text" name="restaurantId" value="16">
-   		<input type="submit" value="提交" >
-   	</form>
-   	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   	取消订单
-   	<form action="${ctx }/api/consumer/order/cancel" method="post"> 
-	   	店家id：<input type="text" name="orderId" value="172">
+	   	店家id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	外卖距离是否超过了商家最大外卖距离
    	<form action="${ctx }/api/restaurant/outOfDistance" method="post"> 
-	   	店家Id：<input type="text" name="restaurantId" value="16">
+	   	店家Id：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
 	   	地址Id：<input type="text" name="addressId" value="46">
    		<input type="submit" value="提交" >
    	</form>
@@ -559,8 +480,8 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	商家已经审核的订单（预定）
    	<form action="${ctx }/api/consumer/dineinorder" method="post"> 
-   		用户Id：<input type="text" name="consumerId" value="1">
-   		店家Id：<input type="text" name="restaurantId" value="16">
+   		用户Id：<input type="text" name="consumerUuid" value="1">
+   		店家Id：<input type="text" name="restaurantUuid" value="16">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -588,7 +509,7 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	商家地址
    	<form action="${ctx }//api/restaurant/raddress" method="post">    		
-   		商家ID:<input type="text" name="restaurantId" value="16">
+   		商家ID:<input type="text" name="restaurantUuid" value="16">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -607,16 +528,16 @@
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	显示默认的用户地址                                 
    	<form action="${ctx }/api/consumer/address/default" method="post">    		
-   		用户Id:<input type="text" name="consumerId" value="54">
-   		商家Id:<input type="text" name="restaurantId" value="16">
+   		用户Id:<input type="text" name="consumerUuid" value="54">
+   		商家Id:<input type="text" name="restaurantUuid" value="16">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	获取营业时间                                 
    	<form action="${ctx }/api/getOpenTime" method="post">    		
-   		订单时间:<input type="text" name="orderDate" value="">
-   		商家Id:<input type="text" name="restaurantId" value="16">
-   		订单类型:<input type="text" name="type" value="1">
+   		订单时间:<input type="text" name="orderDate" value="2015-11-19">
+   		商家Id:<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
+   		订单类型:<input type="text" name="type" value="2">
    		<input type="submit" value="提交" >
    	</form>
    	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

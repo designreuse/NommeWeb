@@ -49,7 +49,7 @@ public class GarnishServiceImpl implements GarnishService {
 	 */
 	@Override
 	public List<PageGarnish> getAllGarnish(Restaurants restaurants) {
-		List<PageGarnish> garnishs = garnishItemDao.getGarnishItemByRestaurantId(restaurants.getId());
+		List<PageGarnish> garnishs = garnishItemDao.getGarnishItemByRestaurantUuid(restaurants.getUuid());
 		return garnishs;
 	}
 

@@ -361,7 +361,7 @@ $(function(){
 									});
 					google.maps.event.addListener(marker, 'click',
 									function() {
-										window.location = path+"/index/restaurantmenu?restaurantId="+item.id;
+										window.location = path+"/index/restaurantmenu?restaurantUuid="+item.restaurantUuid;
 									});
        			})
        			
@@ -530,7 +530,7 @@ $(function(){
 									});
 					google.maps.event.addListener(marker, 'click',
 									function() {
-										window.location = path+"/index/restaurantmenu?restaurantId="+item.id+"&distance="+item.apart;
+										window.location = path+"/index/restaurantmenu?restaurantUuid="+item.restaurantUuid+"&distance="+item.apart;
 									});
        			})
         	}

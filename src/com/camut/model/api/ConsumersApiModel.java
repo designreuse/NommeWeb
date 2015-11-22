@@ -22,6 +22,7 @@ public class ConsumersApiModel implements Serializable {
 	private String newpassword;//新密码
 	private String password;//原始密码
 	private String nickName="";//昵称
+	private String consumerUuid;//通用唯一识别码
 	
 	public String getPassword() {
 		return password;
@@ -77,8 +78,12 @@ public class ConsumersApiModel implements Serializable {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	
-
+	public String getConsumerUuid() {
+		return consumerUuid;
+	}
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
+	}
 	
 	
 }

@@ -25,6 +25,9 @@ public class PageRestaurantUser {
 	private Date lastLoginTime;// 最后登录时间
 	private Integer type;// 员工类型,1代表管理员，2代表普通员工
 	private Integer role;//权限，001只有预定权限，011表示预定和外卖权限，111三种权限都有，100只有自取权限
+	private String uuid;
+	
+	
 	
 	public long getId() {
 		return id;
@@ -85,6 +88,12 @@ public class PageRestaurantUser {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	
 	

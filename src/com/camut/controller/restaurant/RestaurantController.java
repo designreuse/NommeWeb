@@ -161,10 +161,10 @@ public class RestaurantController extends BaseController {
 			viewArea.setAreaId(area);
 			restaurants.setViewArea(viewArea);
 		}
-		long id = restaurantsService.addRestaurants(restaurants);
-		if(id!=-1){
+		String uuid = restaurantsService.addRestaurants(restaurants);
+		if(StringUtil.isNotEmpty(uuid)){
 			Restaurants restaurants2 = new Restaurants();
-			restaurants2.setId(id);
+			restaurants2.setUuid(uuid);
 			restaurantsUser.setRestaurants(restaurants2);
 			restaurantsUser.setType(1);
 			restaurantsUser.setRole(7);//所有权限
@@ -283,6 +283,7 @@ public class RestaurantController extends BaseController {
 		PageMessage pm = new PageMessage();
 			int flag = -1;
 			Restaurants restaurants = this.getRestaurants(request.getSession(), request);
+			//Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 			flag = restaurantsUserService.checkLoginNameForEmployee(restaurantsUser, restaurants);
 		if(flag==-1){
 			pm.setErrorMsg(MessageConstant.LOGINNAME_EXISTS);
@@ -352,9 +353,9 @@ public class RestaurantController extends BaseController {
 	 */
 	@RequestMapping(value="deleteEmployee",method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage deleteEmployee(long id){
+	public PageMessage deleteEmployee(String restaurantUserUuid){
 		PageMessage pm = new PageMessage();
-		int flag = restaurantsUserService.deleteRestaurantsUser(id);
+		int flag = restaurantsUserService.deleteRestaurantsUser(restaurantUserUuid);
 		if(flag==-1){
 			pm.setErrorMsg(MessageConstant.DELETE_FAILED);
 			pm.setSuccess(false);
@@ -409,6 +410,25 @@ public class RestaurantController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value="/verifyTheCode",method = RequestMethod.POST)
+	@ResponseBody
+	public PageMessage verifyTheCode (String webSideCode,HttpSession session){
+		PageMessage pm = new PageMessage();
+		String serverSideCode = session.getAttribute("verificationCode").toString();
+		if(StringUtil.isNotEmpty(serverSideCode) && StringUtil.isNotEmpty(serverSideCode)){
+			if(serverSideCode.equals(webSideCode)){
+				pm.setSuccess(true);
+			}else{
+				pm.setSuccess(false);
+			}
+		}else{
+			pm.setSuccess(false);
+		}
+		return pm;
+	}
+	
+	
+	
 	/**
 	 * @Description: 实现用户密码重置; reset password
 	 * @param @param newPassword
@@ -436,7 +456,7 @@ public class RestaurantController extends BaseController {
 		return "restaurant/login";
 	}
 	
-	@RequestMapping(value="getRestaurantById",method = RequestMethod.POST)
+/*	@RequestMapping(value="getRestaurantById",method = RequestMethod.POST)
 	@ResponseBody
 	public Restaurants getRestaurantById(String restaurantId){
 		if(StringUtil.isNotEmpty(restaurantId)){
@@ -444,5 +464,5 @@ public class RestaurantController extends BaseController {
 		}
 		return null;
 	}
-	
+	*/
 }

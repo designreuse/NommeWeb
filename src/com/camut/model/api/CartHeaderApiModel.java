@@ -16,7 +16,7 @@ public class CartHeaderApiModel {
 
 	private Long cartId;//购物车id
 	private Integer orderType;// 订单种类
-	private Integer restaurantId;// 商家id
+	private String restaurantUuid;// 商家id
 	private String restaurantName; //商家名称
 	private Double total;// 总金额
 	private Double tax;// 税金
@@ -47,11 +47,11 @@ public class CartHeaderApiModel {
 	public void setOrderType(Integer orderType) {
 		this.orderType = orderType;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public Double getTotal() {
 		return this.total;

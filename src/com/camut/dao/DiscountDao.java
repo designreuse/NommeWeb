@@ -21,7 +21,7 @@ public interface DiscountDao {
 	 * @param:  restaurantId
 	 * @return: List<Discount>
 	 */
-	public List<Discount> getDiscountByRestaurantId(long restaurantId, int orderType, double consumePrice);
+	public List<Discount> getDiscountByRestaurantUuid(String restaurantUuid, int orderType, double consumePrice);
 	
 	/**
 	 * @Title: getAllDiscounts

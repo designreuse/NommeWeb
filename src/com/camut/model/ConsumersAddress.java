@@ -43,7 +43,7 @@ public class ConsumersAddress extends IdEntity implements java.io.Serializable {
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "consumer_id")
+	@JoinColumn(name = "consumer_uuid")
 	public Consumers getConsumers() {
 		return consumers;
 	}

@@ -40,13 +40,13 @@ public class OrderServiceTest {
 	 * @return: List<OrderListApiModel>
 	 */
 	//@Test
-	public void selectPastOrder() throws Exception {
+	/*public void selectPastOrder() throws Exception {
 		long consumerId = 1;
 		int orderType = 1;
 		List<OrderListApiModel> ohamList = orderService.selectPastOrder(consumerId);
 		System.out.println(ohamList.size());
 		
-	}
+	}*/
 	
 	/**
 	 * @Title: addOrder
@@ -94,13 +94,13 @@ public class OrderServiceTest {
 	 * @return: List<OrderMenuApiModel>
 	 */
 	//@Test
-	public void getOrder() throws Exception {
+	/*public void getOrder() throws Exception {
 		int type = 1;
 		int restaurantId = 4;
 		long menuId = 12;
 		List<OrderMenuApiModel> omamList = orderService.getOrder(type, restaurantId, menuId);
 		System.out.println(omamList.size());
-	}
+	}*/
 	
 	/**
 	 * @Title: getOrdersByRestaurantId

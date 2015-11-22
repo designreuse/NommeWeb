@@ -100,12 +100,12 @@ public class ConsumersServicesTest {
 		}
 	}
 	
-	@Test
-	public void testReviews ()throws Exception {
+	//@Test
+	/*public void testReviews ()throws Exception {
 		List<EvaluateApiModel> reviewsList = evaluateService.getEvaluatePagingByRestaurantId(16, 1, 10);
 		long count = evaluateService.getCount();
 		System.out.println(count);
 		
 		
-	}
+	}*/
 }

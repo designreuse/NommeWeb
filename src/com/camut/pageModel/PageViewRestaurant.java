@@ -31,6 +31,7 @@ public class PageViewRestaurant {
 	private Double restaurantLat;// 纬度
 	private Double avgPrice;// 平均价格
 	private Long scoreCount;// 评分人数
+	private String restaurantUuid;
 
 	public Long getId() {
 		return id;
@@ -140,6 +141,16 @@ public class PageViewRestaurant {
 	public void setScoreCount(Long scoreCount) {
 		this.scoreCount = scoreCount;
 	}
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
+	}
+	
+	
+	
+	
 	
 	
 }

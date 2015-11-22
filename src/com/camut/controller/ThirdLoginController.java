@@ -112,6 +112,7 @@ public class ThirdLoginController {
 			consumers2.setNickname(map.get("screen_name").toString());
 			consumers2.setLoginType(LoginTypeConstant.TWITTER);
 			consumers2.setStatus(0);
+			consumers2.setUuid(StringUtil.getUUID());
 			consumers2.setRegDate(new Date());
 			int flag = consumersService.addConsumerForNomme(consumers2);
 			if (flag == 1) {// 增加成功
@@ -179,6 +180,7 @@ public class ThirdLoginController {
 			consumers2.setNickname(map.get("name").toString());
 			consumers2.setLoginType(LoginTypeConstant.FACEBOOK);
 			consumers2.setStatus(0);
+			consumers2.setUuid(StringUtil.getUUID());
 			consumers2.setRegDate(new Date());
 			int flag = consumersService.addConsumerForNomme(consumers2);
 			if (flag == 1) {// 增加成功

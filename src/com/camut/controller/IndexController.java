@@ -69,14 +69,13 @@ public class IndexController {
 	 */
 	@RequestMapping(value = "/index")
 	public String indexPage(Model model,HttpSession session){
-		int consumerId = 0;
+		String consumerUuid = "";
 		if(session.getAttribute("consumer")!=null ){
-			consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
+			consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
 		}
-		List<ViewConsumerClassifitionApiModel> list = consumersService.getShortcutMenu(consumerId,3);
+		List<ViewConsumerClassifitionApiModel> list = consumersService.getShortcutMenu(consumerUuid,3);
 		if(list!=null){
 			model.addAttribute("foodClassification", list);
-
 		}
 		return "home/index";
 	}
@@ -107,15 +106,14 @@ public class IndexController {
 	 * @return String  url
 	 */
 	@RequestMapping(value = "/restaurantmenu")
-	public String restaurantMenuPage(String restaurantId, Model model,HttpSession session){
+	public String restaurantMenuPage(String restaurantUuid, Model model,HttpSession session){
 		//System.out.println(session.getId());
-		if(StringUtil.isNotEmpty(restaurantId)){
-			Long restaurantsId = Long.parseLong(restaurantId);
-			PageRestaurant pr = restaurantsService.getPageRestaurantById(restaurantsId);
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			PageRestaurant pr = restaurantsService.getPageRestaurantByUuid(restaurantUuid);
 			if(pr == null){
 				return "redirect:../index/index";
 			}
-			List<PageOpenTime> opentimeList = openTimeService.getAllOpenTime(restaurantsId);
+			List<PageOpenTime> opentimeList = openTimeService.getAllOpenTime(restaurantUuid);
 			PageOpentimeClassify opentimeClassify = new PageOpentimeClassify();
 				List<PageOpenTime> diliveryOpentime = new ArrayList<PageOpenTime>(); 
 				List<PageOpenTime> pickupOpentime = new ArrayList<PageOpenTime>(); 
@@ -137,8 +135,8 @@ public class IndexController {
 			}
 			Object consumer = session.getAttribute("consumer");
 			if(consumer!=null){//如果登陆了，获取用户的购车的类型
-				int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-				CartHeader ch = cartHeaderService.getWebCartHeaderByConsumerId(consumerId);
+				String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();  
+				CartHeader ch = cartHeaderService.getWebCartHeaderByConsumerUuid(consumerUuid);
 				if(ch!=null){
 					String cartHeaderType = ch.getOrderType()+"";
 					model.addAttribute("cartHeaderType", cartHeaderType);
@@ -193,11 +191,11 @@ public class IndexController {
 	@RequestMapping(value = "/user")
 	public String userPage(String flag, Model model,HttpSession session){
 		Consumers consumers = (Consumers)session.getAttribute("consumer");
-		if(consumers!=null && consumers.getId()!=null){//必须是用户已登录
+		if(consumers!=null && StringUtil.isNotEmpty(consumers.getUuid())){//必须是用户已登录
 			//long consumerId = seesion.get
 			//Consumers consumers2 = consumersService.getConsumersById(consumers.getId());//Long.parseLong(
 			model.addAttribute("consumer", consumers);
-			double donatedMoney = orderService.getCharityAmount(consumers.getId());
+			double donatedMoney = orderService.getCharityAmount(consumers.getUuid());
 			model.addAttribute("donatedMoney",Math.floor(donatedMoney*100+0.5)/100.0);
 			if(StringUtil.isNotEmpty(flag)){
 				model.addAttribute("flag",flag);
@@ -216,13 +214,13 @@ public class IndexController {
 	 */
 	@RequestMapping(value = "/regist",method=RequestMethod.GET)
 	public String registPage(HttpSession session){
-		int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
-		int restaurantId = 0;
-		CartHeader cartHeader = cartHeaderService.getWebCartHeaderByConsumerId(consumerId);
+		String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
+		String restaurantUuid = "";
+		CartHeader cartHeader = cartHeaderService.getWebCartHeaderByConsumerUuid(consumerUuid);
 		if(cartHeader!=null){
 			session.setAttribute("checkOutOrderType", cartHeader.getOrderType());
 		}
-		List<ConsumersAddressApiModel> ConsumersAddressList = consumersAddressService.getConsumersAddressById(consumerId, restaurantId);
+		List<ConsumersAddressApiModel> ConsumersAddressList = consumersAddressService.getConsumersAddressById(consumerUuid, restaurantUuid);
 		
 		if(ConsumersAddressList.size()>0){
 			for (ConsumersAddressApiModel consumersAddressApiModel : ConsumersAddressList) {
@@ -320,6 +318,7 @@ public class IndexController {
 		consumers.setStatus(0);
 		consumers.setRegDate(new Date());
 		consumers.setPassword(MD5Util.md5(pageConsumerAccount.getPassword1()));
+		consumers.setUuid(StringUtil.getUUID());
 		int temp  = consumersService.addConsumerForNomme(consumers);
 		//-1增加失败，1增加成功
 		if(temp>0){

@@ -6,7 +6,7 @@ public class PagePastOrderInfo {
 	private int id;//订单头id
 	private String orderNo;//订单号
 	private String restaurantName;//商家名称
-	private int restaurantId;//商家Id
+	private String restaurantUuid;//商家Uuid
 	private String createDate;// 下单时间
 	private String orderDate;//就餐时间
 	private int orderType;// 订单种类，1:外送 2：自取 3：到店就餐; 1:delivery 2:pick up 3dine-in
@@ -55,11 +55,12 @@ public class PagePastOrderInfo {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public int getRestaurantId() {
-		return restaurantId;
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(int restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public int getListSize() {
 		return listSize;

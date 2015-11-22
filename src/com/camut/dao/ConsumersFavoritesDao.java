@@ -22,7 +22,7 @@ public interface ConsumersFavoritesDao {
 	 * @param:  
 	 * @return: -1表示新增失败 ，1表示新增成功
 	 */
-	public int addFavorites(long consumerId, int restaurantId);
+	public int addFavorites(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: selectFavorites
@@ -30,7 +30,7 @@ public interface ConsumersFavoritesDao {
 	 * @param:  
 	 * @return: List<CustomerFavorites>
 	 */
-	public List<ConsumersFavorites> selectFavorites(long id);
+	public List<ConsumersFavorites> selectFavorites(String consumerUuid);
 	
 	/**
 	 * @Title: deleteFavorites
@@ -47,7 +47,7 @@ public interface ConsumersFavoritesDao {
 	 * @param: @param restaurantId
 	 * @return ConsumersFavorites  
 	 */
-	public ConsumersFavorites existFavoritesByConsumerIdAndrestaurantId (long consumerId, int restaurantId);
+	public ConsumersFavorites existFavoritesByConsumerUuidAndrestaurantUuid (String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: addConsumerFavorite
@@ -64,7 +64,7 @@ public interface ConsumersFavoritesDao {
 	 * @param:  
 	 * @return: -1表示新增失败 ，1表示新增成功
 	 */
-	public int deleteFavoritesByRidCid(long consumerId, int restaurantId);
+	public int deleteFavoritesByRidCid(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: getFavouriteListByconsumerId
@@ -73,7 +73,7 @@ public interface ConsumersFavoritesDao {
 	 * @param: @return
 	 * @return List<PageFavourites>  
 	 */
-	public List<PageFavourites> getFavouriteListByconsumerId(int consumerId, PageFilter pf);
+	public List<PageFavourites> getFavouriteListByconsumerUuid(String consumerUuid, PageFilter pf);
 	
 	/**
 	 * @Title: countTotalByConsumerId
@@ -82,7 +82,7 @@ public interface ConsumersFavoritesDao {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int countTotalByConsumerId(int consumerId);
+	public int countTotalByConsumerUuid(String consumerUuid);
 	
 	
 	

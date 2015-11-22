@@ -43,7 +43,7 @@
 			<input type="hidden" name="cartId" value="${cartHeader.cartId}">
 			<div class="row">
 				<div class="col-md-12" align="center">
-					<a name="cart-restaurantName" href="#" value="${cartHeader.restaurantId}" style="color:#7DD700;">
+					<a name="cart-restaurantName" href="#" value="${cartHeader.restaurantUuid}" style="color:#7DD700;">
 						<h4>Order from ${cartHeader.restaurantName}</h4>
 					</a>
 				</div>

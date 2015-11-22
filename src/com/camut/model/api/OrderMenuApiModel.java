@@ -11,7 +11,7 @@ package com.camut.model.api;
 public class OrderMenuApiModel implements Comparable<OrderMenuApiModel>{
 	
 	private long id;//菜品ID
-	private Integer restaurantId=1; //店铺编号
+	private String restaurantUuid=""; //店铺编号
 	private Integer dishId=1; //菜品编号
 	private String chName="";// 菜品名称 繁体中文
 	private double price=1.2;// 价格
@@ -23,11 +23,11 @@ public class OrderMenuApiModel implements Comparable<OrderMenuApiModel>{
 	public void setId(long id) {
 		this.id = id;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public Integer getDishId() {
 		return dishId;

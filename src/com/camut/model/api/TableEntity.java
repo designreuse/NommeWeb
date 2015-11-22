@@ -1,21 +1,22 @@
 package com.camut.model.api;
 
 public class TableEntity {
-	private long consumerId;
-	private long restaurantId;
+	private String consumerUuid;
+	private String restaurantUuid;
 	private int	 number;
 	private Integer count;
-	public long getConsumerId() {
-		return consumerId;
+	
+	public String getConsumerUuid() {
+		return consumerUuid;
 	}
-	public void setConsumerId(long consumerId) {
-		this.consumerId = consumerId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
-	public long getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public int getNumber() {
 		return number;

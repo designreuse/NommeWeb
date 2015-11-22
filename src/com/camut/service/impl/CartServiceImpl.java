@@ -83,10 +83,10 @@ public class CartServiceImpl implements CartService {
 	 * @return: CartHeaderApiModel
 	 */
 	@Override
-	public CartHeaderApiModel getCartHeaderApiModel(String mobileToken, Integer consumerId) {
+	public CartHeaderApiModel getCartHeaderApiModel(String mobileToken, String consumerUuid) {
 		CartHeader cartHeader = null;
-		if(consumerId!=null && !"".equals(consumerId)){
-			cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		}
 		if (cartHeader!=null) {//购物车存在
 			CartHeaderApiModel cartHeaderApiModel = new CartHeaderApiModel();
@@ -138,7 +138,7 @@ public class CartServiceImpl implements CartService {
 			}else{
 				cartHeaderDiscountId=cartHeaderApiModel.getDiscountId();
 			}			 
-			List<Discount> discountList =  discountDao.getDiscountByRestaurantId(cartHeader.getRestaurantId(), cartHeader.getOrderType(),cartHeaderApiModel.getTotal());// cartHeader.getDishFee());
+			List<Discount> discountList =  discountDao.getDiscountByRestaurantUuid(cartHeader.getRestaurantUuid(), cartHeader.getOrderType(),cartHeaderApiModel.getTotal());// cartHeader.getDishFee());
 			if(discountList.size()>0){
 				List<PageDiscount> pageDiscountList = new ArrayList<PageDiscount>();
 				int orderType = cartHeader.getOrderType();
@@ -171,7 +171,7 @@ public class CartServiceImpl implements CartService {
 				cartHeaderApiModel.setDiscountList(pageDiscountList);
 			}
 			// 获取餐厅
-			ViewRestaurant restaurants = viewRestaurantDao.getRestaurantsById(cartHeader.getRestaurantId());
+			ViewRestaurant restaurants = viewRestaurantDao.getRestaurantsByRestaurantUuid(cartHeader.getRestaurantUuid());
 			cartHeaderApiModel.setRestaurantName(restaurants.getRestaurantName());
 			if (cartHeader.getDiscountId()!=null) {
 				Discount tmp = discountDao.getDiscount(cartHeader.getDiscountId());
@@ -197,9 +197,9 @@ public class CartServiceImpl implements CartService {
 	 * @return: CartHeaderApiModel
 	 */
 	@Override
-	public CartHeaderApiModel getCartHeaderApiModelByConsumerId(int consumerId) {//double consumerLng, double consumerLat, 
-		if (consumerId >0) {
-			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+	public CartHeaderApiModel getCartHeaderApiModelByConsumerUuid(String consumerUuid) {//double consumerLng, double consumerLat, 
+		if (StringUtil.isNotEmpty(consumerUuid)) {
+			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 			if (cartHeader == null) {
 				return null;
 			}
@@ -265,7 +265,7 @@ public class CartServiceImpl implements CartService {
 			//获取优惠券
 			//List<PageDiscount> pageDiscountList = new ArrayList<PageDiscount>();
 			//List<Discount> discountList =  discountDao.getAllDiscounts(restaurant);
-			List<Discount> discountList =  discountDao.getDiscountByRestaurantId(cartHeader.getRestaurantId(), cartHeader.getOrderType(),cartHeaderApiModel.getTotal());// cartHeader.getDishFee());
+			List<Discount> discountList =  discountDao.getDiscountByRestaurantUuid(cartHeader.getRestaurantUuid(), cartHeader.getOrderType(),cartHeaderApiModel.getTotal());// cartHeader.getDishFee());
 			if(discountList.size()>0){
 				List<PageDiscount> pageDiscountList = new ArrayList<PageDiscount>();
 				int orderType = cartHeader.getOrderType();
@@ -290,7 +290,7 @@ public class CartServiceImpl implements CartService {
 				cartHeaderApiModel.setDiscountList(pageDiscountList);
 			}
 			// 获取餐厅
-			ViewRestaurant restaurants = viewRestaurantDao.getRestaurantsById(cartHeader.getRestaurantId());
+			ViewRestaurant restaurants = viewRestaurantDao.getRestaurantsByRestaurantUuid(cartHeader.getRestaurantUuid());
 			cartHeaderApiModel.setRestaurantName(restaurants.getRestaurantName());
 			cartHeaderApiModel.setTax(totalPrice*(restaurants.getGst() + restaurants.getPst()));
 			//获取送餐费
@@ -333,9 +333,9 @@ public class CartServiceImpl implements CartService {
 	 * @return: CartHeaderApiModel
 	 */
 	@Override
-	public CartHeaderApiModel getRegistCartHeaderApiModel(int consumerId) {//, Double consumerLng, Double consumerLat
-		if (consumerId >0) {
-			CartHeader cartHeader = cartHeaderDao.getWebCartHeaderByConsumerId(consumerId);
+	public CartHeaderApiModel getRegistCartHeaderApiModel(String consumerUuid) {//, Double consumerLng, Double consumerLat
+		if (StringUtil.isNotEmpty(consumerUuid)) {
+			CartHeader cartHeader = cartHeaderDao.getWebCartHeaderByConsumerUuid(consumerUuid);
 			CartHeaderApiModel cartHeaderApiModel = new CartHeaderApiModel();
 			if (cartHeader==null) {
 				return null;
@@ -422,7 +422,7 @@ public class CartServiceImpl implements CartService {
 			
 			cartHeaderApiModel.setDiscountId(cartHeader.getDiscountId());
 			cartHeaderApiModel.setItem(cartItemApiModels);
-			Restaurants restaurant = restaurantsDao.getRestaurantsById((long)cartHeader.getRestaurantId());
+			Restaurants restaurant = restaurantsDao.getRestaurantsByUuid(cartHeader.getRestaurantUuid());
 			if(restaurant!=null){
 				cartHeaderApiModel.setRestaurantName(restaurant.getRestaurantName());
 			}
@@ -445,8 +445,8 @@ public class CartServiceImpl implements CartService {
 		ResultApiModel ram = new ResultApiModel();
 		Map<String, Object> map = (Map<String, Object>) JSONUtils.parse(context);
 		CartHeader cartHeader = null;
-		if (map.get("consumerId")!=null) {//用户已经登录
-			cartHeader = cartHeaderDao.getCartHeaderByConsumerId(Integer.parseInt(map.get("consumerId").toString()));
+		if (map.get("consumerUuid")!=null) {//用户已经登录
+			cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(map.get("consumerUuid").toString());
 		}
 		else{
 			if (map.get("mobileToken") != null) {
@@ -486,25 +486,25 @@ public class CartServiceImpl implements CartService {
 					}
 					//取订单中数据放入购物车中
 					OrderHeader header = orderService.getOrderById(Long.parseLong(map.get("orderId").toString()));
-					cartHeader.setRestaurantId(header.getRestaurantId());
-					cartHeader.setConsumerId(header.getConsumers().getId().intValue());
+					cartHeader.setRestaurantUuid(header.getRestaurantUuid());
+					cartHeader.setConsumerUuid(header.getConsumers().getUuid());
 					
 				}
 				else{//delivery or pick-up
-					if (map.get("consumerId") != null&&StringUtil.isNotEmpty(map.get("consumerId").toString())) {
-						cartHeader.setConsumerId(Integer.parseInt(map.get("consumerId").toString()));
+					if (map.get("consumerUuid") != null && StringUtil.isNotEmpty(map.get("consumerUuid").toString())) {
+						cartHeader.setConsumerUuid(map.get("consumerUuid").toString());
 					}
 					else{
 						ram.setFlag(-1);
 						ram.setResultMessage("Have no ConsumerId!");
 						return ram;
 					}
-					if (map.get("restaurantId") != null) {
-						cartHeader.setRestaurantId(Integer.parseInt(map.get("restaurantId").toString()));
+					if (map.get("restaurantUuid") != null) {
+						cartHeader.setRestaurantUuid(map.get("restaurantUuid").toString());
 					}
 					else{
 						ram.setFlag(-1);
-						ram.setResultMessage("Have no RestaurantId!");
+						ram.setResultMessage("Have no RestaurantUuid!");
 						return ram;
 					}
 				}
@@ -521,8 +521,8 @@ public class CartServiceImpl implements CartService {
 			}
 			else{//购物车之前存在
 				//判断订单类型 商家id是否与之前一直
-				if (map.get("orderType")!=null && map.get("restaurantId")!=null) {
-					if (Integer.parseInt(map.get("restaurantId").toString())!=cartHeader.getRestaurantId()) {
+				if (map.get("orderType")!=null && map.get("restaurantUuid")!=null) {
+					if (!(map.get("restaurantUuid").toString()).equals(cartHeader.getRestaurantUuid())) {
 						ram.setFlag(-2);
 						ram.setResultMessage(MessageConstant.CARTERROR);
 						return ram;
@@ -543,7 +543,7 @@ public class CartServiceImpl implements CartService {
 				}
 				else{
 					ram.setFlag(-1);
-					ram.setResultMessage("Have no OrderType or RestaurantId!");
+					ram.setResultMessage("Have no OrderType or RestaurantUuid!");
 					return ram;
 				}
 			}
@@ -679,18 +679,18 @@ public class CartServiceImpl implements CartService {
 	public int addWebCart(String context) {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> map = (Map<String, Object>) JSONUtils.parse(context);
-		if (map.get("consumerId") != null) {
-			int consumerId = Integer.parseInt(map.get("consumerId").toString());
+		if (map.get("consumerUuid") != null && StringUtil.isNotBlank(map.get("consumerUuid").toString())) {
+			String consumerUuid = map.get("consumerUuid").toString();
 			// 根据设备号获取购物车头
-			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 			if (cartHeader == null) {//不存在,创建新的
 				cartHeader = new CartHeader();
 				cartHeader.setDishFee((double) 0);
-				if (map.get("consumerId") != null&&map.get("consumerId").toString().length()>0) {
-					cartHeader.setConsumerId(Integer.parseInt(map.get("consumerId").toString()));
+				if (map.get("consumerUuid") != null && StringUtil.isNotBlank(map.get("consumerUuid").toString())) {
+					cartHeader.setConsumerUuid(map.get("consumerUuid").toString());
 				}
-				if (map.get("restaurantId") != null) {
-					cartHeader.setRestaurantId(Integer.parseInt(map.get("restaurantId").toString()));
+				if (map.get("restaurantUuid") != null && StringUtil.isNotBlank(map.get("restaurantUuid").toString())) {
+					cartHeader.setRestaurantUuid(map.get("restaurantUuid").toString());
 				}
 				if (map.get("orderType") != null) {
 					cartHeader.setOrderType(Integer.parseInt(map.get("orderType").toString()));
@@ -712,8 +712,8 @@ public class CartServiceImpl implements CartService {
 			}
 			else{//找到有购物车头
 				boolean flag12 = false;
-				if(map.get("restaurantId") != null) {
-					cartHeader.setRestaurantId(Integer.parseInt(map.get("restaurantId").toString()));
+				if(map.get("restaurantUuid") != null) {
+					cartHeader.setRestaurantUuid(map.get("restaurantUuid").toString());
 					flag12 = true;
 				}
 				if(cartHeader.getDiscountId()!=null){
@@ -723,8 +723,8 @@ public class CartServiceImpl implements CartService {
 				if(flag12){
 					cartHeaderDao.updateCartHeader(cartHeader);					
 				}
-				if(StringUtil.isNotEmpty(map.get("consumerId").toString()) && cartHeader.getConsumerId()==null){
-					cartHeader.setConsumerId(Integer.parseInt(map.get("consumerId").toString()));
+				if(StringUtil.isNotEmpty(map.get("consumerUuid").toString()) && cartHeader.getConsumerUuid()==null){
+					cartHeader.setConsumerUuid(map.get("consumerUuid").toString());
 					cartHeader.setDiscountId(null);
 					int flag = cartHeaderDao.updateCartHeader(cartHeader);
 					if (flag == -1) {
@@ -833,8 +833,8 @@ public class CartServiceImpl implements CartService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int deleteCartByConsumerId(int consumerId){
-		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+	public int deleteCartByConsumerUuid(String consumerUuid){
+		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		int temp = 0;
 		int temp1 = 0;
 		int temp2 = 0;
@@ -875,12 +875,12 @@ public class CartServiceImpl implements CartService {
 	 * @return int  
 	 */
 	@Override
-	public int deleteCartHeader(String mobileToken, String consumerId) {
+	public int deleteCartHeader(String mobileToken, String consumerUuid) {
 		CartHeader cartHeader = new CartHeader(); 
 		if(mobileToken != null && mobileToken.length() > 0){
 			cartHeader = cartHeaderDao.getCartHeaderByMobileToken(mobileToken);
 		}else {
-			cartHeader = cartHeaderDao.getCartHeaderByConsumerId(Integer.parseInt(consumerId));
+			cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		}
 		if(cartHeader!=null){
 			Set<CartItem> cartItems = cartHeader.getCartItems();

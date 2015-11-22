@@ -365,7 +365,7 @@ $(function(){
 				$("input[name='firstName']").val(user.firstName);
 				$("input[name='lastName']").val(user.lastName);
 				$("input[name='password']").val(user.password);
-				$("input[name='id']").val(user.id);
+				$("input[name='uuid']").val(user.uuid);
 				$("select").val(user.type);
 				$("select").attr("disabled", true);
 
@@ -397,7 +397,7 @@ $(function(){
 		$("button[name='delete']").click(function() {
 			user1 = $('table').bootstrapTable('getSelections')[0];
 			$("button[name='delete']").popover('destroy');
-			if (user1 && user1.id!=$("#storeId").val()) {
+			if (user1 && user1.uuid!=$("#storeId").val()) {
 				$('#myModal1').modal('show');
 			}
 		});
@@ -412,7 +412,7 @@ $(function(){
 				type : "POST",
 				url : appPath+"/restaurant/deleteEmployee",
 				data : {
-					'id' : user1.id
+					'restaurantUserUuid' : user1.uuid
 				},
 				success : function(msg) {
 					$("#bg").css("display", "none");

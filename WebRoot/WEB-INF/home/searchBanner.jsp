@@ -4,13 +4,13 @@
 <script type="text/javascript">
 	$(function(){
 		  $("div[name='parent']").click(function(){
-			  window.location = "${ctx}/index/restaurantmenu?restaurantId="+$(this).children("#id").val();
+			  window.location = "${ctx}/index/restaurantmenu?restaurantUuid="+$(this).children("#restaurantUuid").val();
 		}); 
 	});
 </script>
 <c:forEach items="${viewRestaurants.rows}" var="vr">
 	<div class="row lcx-m-sx lcx-bian-bottom lcx-p-b" name="parent" style="cursor: pointer;" align="left">
-		<input type="hidden" id="id" value="${vr.id}"/>
+		<input type="hidden" id="restaurantUuid" value="${vr.restaurantUuid}"/>
 		<div class="col-md-2 lcx-p-0">
 			<c:choose>
 				<c:when test="${empty vr.logourl}">
