@@ -22,7 +22,7 @@ public interface ConsumersAddressDao {
 	 * @param:    id
 	 * @return: List<ConsumersAddress>
 	 */
-	public List<ConsumersAddress> getConsumersAddressById(long consumerId);
+	public List<ConsumersAddress> getConsumersAddressByUuid(String consumerUuid);
 	
 	/**
 	 * @Title: addConsumersAddress
@@ -63,7 +63,7 @@ public interface ConsumersAddressDao {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int setConsumersDefaultAddressNotDefault(long consumerId);
+	public int setConsumersDefaultAddressNotDefault(String consumersUuid);
 	
 	/**
 	 * @Title: getConsumersAddressDefault
@@ -71,15 +71,15 @@ public interface ConsumersAddressDao {
 	 * @param:    consumersid
 	 * @return: ConsumersAddress
 	 */
-	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(long consumerId,long restaurantId);
+	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(String consumersUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: getConsumersAddressDefault
 	 * @Description: 获取用户在配送范围内的地址
-	 * @param:    consumersid
+	 * @param: consumersid
 	 * @return: ConsumersAddress
 	 */
-	public List<ConsumersAddressApiModel> getConsumersAddressInDistance(long consumerId,long restaurantId);
+	public List<ConsumersAddressApiModel> getConsumersAddressInDistance(String consumersUuid,String restaurantUuid);
 	
 	/**
 	 * @Title: ConsumersAddress
@@ -87,6 +87,6 @@ public interface ConsumersAddressDao {
 	 * @param:    id
 	 * @return: List<ConsumersAddress>
 	 */
-	public ConsumersAddress getConsumersAddressDefaultById(long consumerId);
+	public ConsumersAddress getConsumersAddressDefaultByUuid(String consumerUuid);
 	
 }

@@ -62,5 +62,5 @@ public interface RestaurantTableDao {
 	 * @param orderDate
 	 * @return
 	 */
-	public List<TableEntity> getRestaurantTableNumberByOrderTypeAndOrderDate(long restaurantId,int orderType,String orderDate);
+	public List<TableEntity> getRestaurantTableNumberByOrderTypeAndOrderDate(String restaurantUuid,int orderType,String orderDate);
 }

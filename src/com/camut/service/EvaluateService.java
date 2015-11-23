@@ -27,7 +27,7 @@ public interface EvaluateService {
 	 * @param:  restaurantId
 	 * @return: List<EvaluateApiModel>
 	 */
-	public List<EvaluateApiModel> getEvaluateByRestaurantId(long restaurantId);
+	public List<EvaluateApiModel> getEvaluateByRestaurantId(String restaurantUuid);
 	
 	/**
 	 * @Title: existEvaluateByOrderId
@@ -46,7 +46,7 @@ public interface EvaluateService {
 	 * @param: @return
 	 * @return List<EvaluateApiModel>  
 	 */
-	public List<EvaluateApiModel> getEvaluatePagingByRestaurantId(long restaurantId, int offset, int limit);
+	public List<EvaluateApiModel> getEvaluatePagingByRestaurantId(String restaurantUuid, int offset, int limit);
 
 	/**
 	 * @Title: getCount

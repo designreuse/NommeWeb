@@ -105,9 +105,9 @@
 						<p><strong>Phone</strong></p>
 						<p id="orginal-phone">${consumer.phone}</p>
 						<div class="hidden-style" name="phone-edit-div">
-							<p>New Phone: (Required)</p>
+							<p>Please Enter New Phone Number: (Required)</p>
 							<p>
-								<input type="text" class="form-control" id="input-phone">
+								<input type="text" class="form-control" id="input-phone" placeholder="(xxx) xxx-xxxx">
 							</p>
 							<div class="row">
 								<div class="col-md-3"></div>

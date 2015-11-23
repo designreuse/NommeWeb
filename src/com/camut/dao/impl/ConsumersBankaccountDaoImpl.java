@@ -25,10 +25,10 @@ public class ConsumersBankaccountDaoImpl extends BaseDao<ConsumersBankaccount> i
 	 * @return: List<ConsumersBankaccount>
 	 */
 	@Override
-	public List<ConsumersBankaccount> getConsumersBankaccountById(long id) {
-		String hql = "from ConsumersBankaccount ca where ca.consumers.id=:id";
+	public List<ConsumersBankaccount> getConsumersBankaccountByConsumerUuid(String restaurantUuid) {
+		String hql = "from ConsumersBankaccount ca where ca.consumers.uuid=:restaurantUuid";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
+		map.put("restaurantUuid", restaurantUuid);
 		List<ConsumersBankaccount> cbList = this.find(hql, map);
 		return cbList;
 	}

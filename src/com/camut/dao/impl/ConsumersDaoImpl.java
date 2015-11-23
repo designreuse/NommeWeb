@@ -3,6 +3,7 @@
  */
 package com.camut.dao.impl;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +14,10 @@ import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import com.camut.dao.ConsumersDao;
 import com.camut.model.Consumers;
-import com.camut.model.api.AcceptOrderApiModel;
 import com.camut.pageModel.PageFilter;
-import com.camut.pageModel.PageModel;
 import com.camut.pageModel.PageStatementConsumer;
 import com.camut.utils.MD5Util;
+import com.camut.utils.StringUtil;
 
 /**
  * @daoimpl ConsumersDaoImpl.java
@@ -56,6 +56,7 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 	public int addConsumers(Consumers consumers) {
 		try {
 			consumers.setStatus(0);
+			consumers.setUuid(StringUtil.getUUID());
 			consumers.setPassword(MD5Util.md5(consumers.getPassword()));
 			consumers.setRegDate(new Date());
 			this.save(consumers);
@@ -141,6 +142,20 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 		map.put("id", id);
 		return this.get(hql, map);
 	}
+	
+	/**
+	 * @Title: getConsumersByuuId
+	 * @Description: 通uuid查找用户
+	 * @param:    uuid
+	 * @return: Consumers
+	 */
+	@Override
+	public Consumers getConsumersByUuid(String consumerUuid) {
+		String hql = "from Consumers c where c.uuid=:consumerUuid and c.status=0";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("consumerUuid", consumerUuid);
+		return this.get(hql, map);
+	}
 
 	/**
 	 * @Title: saveTokenAndType
@@ -149,14 +164,16 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 	 * @return: id
 	 */
 	@Override
-	public long saveTokenAndType(Consumers consumers) {
+	public String saveTokenAndType(Consumers consumers) {
 		try {
 			consumers.setStatus(0);
 			consumers.setRegDate(new Date());
-			return (Long) this.save(consumers);
+			consumers.setUuid(StringUtil.getUUID());
+			Serializable serializable = this.save(consumers);
+			return serializable.toString();//返回次对象uuid
 		} catch (Exception e) {
 			e.printStackTrace();
-			return -1;
+			return "";
 		}
 	}
 
@@ -228,19 +245,19 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 			ascOrDesc = "desc";
 		}
 		String sql = "select a.id as consumerId, a.firstname as firstName, a.lastname as lastName, a.phone as phone, a.reg_date as regDate, a.last_login_date as lastLoginDate, "
-					+"ifnull(b.count1,0) as completedOrderQuantity, ifnull(b.amount,0.00) as completedOrderAmount, "
-					+"ifnull(c.count1,0) as unfinishedOrderQuantity, ifnull(c.amount,0.00) as unfinishedOrderAmount, "
-					+"ifnull(d.count1,0) as refundOrderQuantity, ifnull(d.amount,0.00) as refundOrderAmount, ifnull(e.oc_money,0.00) as donateAmount, "
-					+"ifnull(a.mobile_type,2) as mobileType "//如果移动设备类型为空，就默认显示为使用web登录的，0：Android 1:IOS
-				+"from tbl_consumers a "
-			+"LEFT JOIN (select oh.consumer_id as oh_consumerId, oh.`status`, count(oh.consumer_id) as count1, FORMAT(sum(oh.amount), 2) as amount from dat_order_header oh WHERE oh.`status`=7 GROUP BY oh.consumer_id) b "
-				+"on b.oh_consumerId = a.id "//完成的订单
-			+"LEFT JOIN (select oh.consumer_id as oh_consumerId, oh.`status`, count(oh.consumer_id) as count1, FORMAT(sum(oh.amount), 2) as amount from dat_order_header oh WHERE oh.`status` in (1,2,3,8,9,10) GROUP BY oh.consumer_id) c "
-				+"on c.oh_consumerId = a.id "//未完成的订单
-			+"LEFT JOIN (select oh.consumer_id as oh_consumerId, oh.`status`, count(oh.consumer_id) as count1, FORMAT(sum(oh.amount), 2) as amount from dat_order_header oh WHERE oh.`status` in (0,4,6) GROUP BY oh.consumer_id) d "
-				+"on d.oh_consumerId = a.id "//退款的订单
-			+"LEFT JOIN (select oc.consumer_id as oc_consumerId, FORMAT(sum(oc.money), 2) as oc_money from tbl_order_charity oc where oc.consumer_id >0 GROUP BY oc.consumer_id) e "
-				+"on e.oc_consumerId = a.id "//捐款
+				+"ifnull(b.count1,0) as completedOrderQuantity, ifnull(b.amount,0.00) as completedOrderAmount, "
+				+"ifnull(c.count1,0) as unfinishedOrderQuantity, ifnull(c.amount,0.00) as unfinishedOrderAmount, "
+				+"ifnull(d.count1,0) as refundOrderQuantity, ifnull(d.amount,0.00) as refundOrderAmount, ifnull(e.oc_money,0.00) as donateAmount, "
+				+"ifnull(a.mobile_type,2) as mobileType "//如果移动设备类型为空，就默认显示为使用web登录的，0：Android 1:IOS
+			+"from tbl_consumers a "
+		+"LEFT JOIN (select oh.consumer_uuid as oh_consumerUuid, oh.`status`, count(oh.consumer_uuid) as count1, FORMAT(sum(oh.amount), 2) as amount from dat_order_header oh WHERE oh.`status`=7 GROUP BY oh.consumer_uuid) b "
+			+"on b.oh_consumerUuid = a.uuid "//完成的订单
+		+"LEFT JOIN (select oh.consumer_uuid as oh_consumerUuid, oh.`status`, count(oh.consumer_uuid) as count1, FORMAT(sum(oh.amount), 2) as amount from dat_order_header oh WHERE oh.`status` in (1,2,3,8,9,10) GROUP BY oh.consumer_uuid) c "
+			+"on c.oh_consumerUuid = a.uuid "//未完成的订单
+		+"LEFT JOIN (select oh.consumer_uuid as oh_consumerUuid, oh.`status`, count(oh.consumer_uuid) as count1, FORMAT(sum(oh.amount), 2) as amount from dat_order_header oh WHERE oh.`status` in (0,4,6) GROUP BY oh.consumer_uuid) d "
+			+"on d.oh_consumerUuid = a.uuid "//退款的订单
+		+"LEFT JOIN (select oc.consumer_uuid as oc_consumerUuid, FORMAT(sum(oc.money), 2) as oc_money from tbl_order_charity oc where oc.consumer_uuid >0 GROUP BY oc.consumer_uuid) e "
+			+"on e.oc_consumerUuid = a.uuid "//捐款
 				+"order by "+orderColumn+" "+ascOrDesc+" limit :offset,:rows";//排序
 		
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);

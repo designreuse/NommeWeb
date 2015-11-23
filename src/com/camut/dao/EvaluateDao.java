@@ -29,7 +29,7 @@ public interface EvaluateDao {
 	 * @param:  restaurantId
 	 * @return: List<Evaluate>
 	 */
-	public List<Evaluate> getEvaluateByRestaurantId(long restaurantId);
+	public List<Evaluate> getEvaluateByRestaurantUuid(String restaurantUuid);
 	
 	/**
 	 * @Title: getEvaluate
@@ -37,7 +37,7 @@ public interface EvaluateDao {
 	 * @param:  restaurantId  consumerId
 	 * @return: Evaluate
 	 */
-	public Evaluate getEvaluate(long restaurantId, long consumerId);
+	public Evaluate getEvaluate(String restaurantUuid, String consumerUuid);
 	
 	/**
 	 * @Title: getEvaluateByOrderId
@@ -57,7 +57,7 @@ public interface EvaluateDao {
 	 * @param: @return
 	 * @return List<EvaluateApiModel>  
 	 */
-	public List<EvaluateApiModel> getEvaluatePagingByRestaurantId(long restaurantId, int offset, int limit);
+	public List<EvaluateApiModel> getEvaluatePagingByRestaurantUuid(String restaurantUuid, int offset, int limit);
 	
 	/**
 	 * @Title: getCount

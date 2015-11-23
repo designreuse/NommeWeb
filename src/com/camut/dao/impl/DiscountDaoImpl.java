@@ -26,10 +26,10 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	 * @return: List<Discount>
 	 */
 	@Override
-	public List<Discount> getDiscountByRestaurantId(long restaurantId, int orderType, double consumePrice) {
-		String hql = "from Discount d where d.restaurants.id=:restaurantId and d.orderType=:orderType and d.consumePrice<="+consumePrice;
+	public List<Discount> getDiscountByRestaurantUuid(String restaurantUuid, int orderType, double consumePrice) {
+		String hql = "from Discount d where d.restaurants.uuid=:restaurantUuid and d.orderType=:orderType and d.consumePrice<="+consumePrice;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("orderType", orderType);
 		List<Discount> dList = this.find(hql, map);
 		return dList;

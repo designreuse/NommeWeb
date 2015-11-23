@@ -147,6 +147,7 @@ public class InformationController extends BaseController {
 		}
 		RestaurantsUser restaurantsUser = ((RestaurantsUser)request.getSession().getAttribute("restaurantsUser"));
 		Restaurants restaurants1 = this.getRestaurants(request.getSession(), request);
+		restaurants.setUuid(restaurants1.getUuid());
 		restaurants.setLogourl(restaurants1.getLogourl());
 		restaurants.setModdy(restaurantsUser.getFirstName()+" "+restaurantsUser.getLastName());
 		restaurants.setStatus(restaurants1.getStatus());

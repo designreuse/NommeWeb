@@ -100,7 +100,7 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 						if(StringUtil.isNotEmpty(orderHeader.getEmail())){
 							MailUtil.sendMail("Order Canceled", "The order is more than 15 minutes and untreated, the system automatically cancel the order.", orderHeader.getEmail());//1:android 2:ios
 						}
-						Consumers c = consumersService.getConsumersById(orderHeader.getConsumers().getId());
+						Consumers c = consumersService.getConsumersByUuid(orderHeader.getConsumers().getUuid());
 						//Restaurants r = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
 						//如果用户信息中有设备号，则推送自动取消的信息给用户
 						if(StringUtil.isNotEmpty(c.getMobileToken())){

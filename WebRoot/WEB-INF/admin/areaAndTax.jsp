@@ -365,7 +365,8 @@
 						}
 					}
 					if(flag1 && flag2){//如果验证通过就可以提交
-						var pid = $("#pid").val();
+						//var pid = $("#pid").val();
+						var pid = $.trim($("#areaSelect").val());
 						var areaname = $("#areaName").val();
 						var tax = $("#tax").val();
 						var id = $("#areaid").val();

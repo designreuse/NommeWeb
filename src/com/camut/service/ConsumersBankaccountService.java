@@ -16,12 +16,12 @@ import com.camut.model.api.ConsumerBankaccountApiModel;
 public interface ConsumersBankaccountService {
 
 	/**
-	 * @Title: getConsumersBankaccountById
+	 * @Title: getConsumersBankaccountByuuId
 	 * @Description: 通用户id查找用户 银行卡
-	 * @param:    id
+	 * @param:    uuid
 	 * @return: List<ConsumerBankaccountApiModel>
 	 */
-	public List<CardEntity> getConsumersBankaccountById(long id);
+	public List<CardEntity> getConsumersBankaccountByUuid(String consumerUuid);
 	
 	/**
 	 * @Title: addBankaccount
@@ -29,7 +29,7 @@ public interface ConsumersBankaccountService {
 	 * @param:  customerBankaccount对象  
 	 * @return: int -1表示添加失败，1表示添加成功    -1: registration failed
 	 */
-	public int addBankaccount(ConsumerBankaccountApiModel consumersBankaccount,String stripeConsumerId);
+	public int addBankaccount(ConsumerBankaccountApiModel consumersBankaccount,String stripeConsumerUuid);
 	
 	/**
 	 * @Title: deleteBankaccount

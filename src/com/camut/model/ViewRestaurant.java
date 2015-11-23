@@ -4,6 +4,7 @@ package com.camut.model;
 
 import java.sql.Timestamp;
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -11,12 +12,13 @@ import javax.persistence.Table;
  */
 @javax.persistence.Entity
 @Table(name = "view_restaurant", catalog = "nomme")
-public class ViewRestaurant extends IdEntity implements java.io.Serializable {
+public class ViewRestaurant implements java.io.Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2699138106972007292L;
+	private String restaurantUuid;//商家唯一编号
 	private String restaurantName;// 商家名称
 	private String restaurantContact; // 商家介绍
 	private String restaurantPhone; // 商家电话
@@ -58,6 +60,17 @@ public class ViewRestaurant extends IdEntity implements java.io.Serializable {
 	}
 
 	// Property accessors
+	
+	@Id
+	@Column(name = "restaurant_uuid")
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
+	}
+	
 
 	@Column(name = "restaurant_name", length = 50)
 	public String getRestaurantName() {

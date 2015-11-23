@@ -224,7 +224,7 @@ public class DishController extends BaseController {
 		RestaurantsMenu menu = new RestaurantsMenu();
 		menu.setId(dishMenuId);
 		dish.setRestaurantsMenu(menu);
-		dish.setRestaurantId(this.getRestaurants(request.getSession(), request).getId().longValue());
+		dish.setRestaurantUuid(this.getRestaurants(request.getSession(), request).getUuid());
 		int flag = dishService.addDish(dish);
 		if(flag==-1){
 			pm.setErrorMsg(MessageConstant.ADD_FAILED);
@@ -253,7 +253,7 @@ public class DishController extends BaseController {
 		RestaurantsMenu menu = new RestaurantsMenu();
 		menu.setId(dishMenuId);
 		dish.setRestaurantsMenu(menu);
-		dish.setRestaurantId(this.getRestaurants(request.getSession(), request).getId().longValue());
+		dish.setRestaurantUuid(this.getRestaurants(request.getSession(), request).getUuid());
 		Dish dish2 = dishService.getDishById(dish.getId()+"");
 		dish.setCreatedate(dish2.getCreatedate());
 		dish.setStatus(dish2.getStatus());

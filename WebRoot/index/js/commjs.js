@@ -263,12 +263,16 @@ $(function(){
 	function phoneNumberValidate(elementId,x,y){
 		var falg = false;
 		var val = $.trim($("#"+elementId).val());
+		var phoneExpReg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 		if(val==""){
 			flag=false;
 			showtips(elementId,'Required',x,y);
-		}else{
+		}else if(val.match(phoneExpReg)){
 			flag = true;
 			hidetips(elementId);
+		}else{
+			flag = false;
+			showtips(elementId,"Invalid Phone",x,y);
 		}
 		return flag;
 	}

@@ -22,7 +22,7 @@ public interface CartHeaderDao {
 	 * @param:    String
 	 * @return: CartHeader
 	 */
-	public CartHeader getCartHeaderByMobileToken(String mobileToken,Integer consumerId);
+	public CartHeader getCartHeaderByMobileToken(String mobileToken,String consumerUuid);
 	
 	/**
 	 * @Title: getCartHeaderByMobileToken
@@ -85,14 +85,14 @@ public interface CartHeaderDao {
 	 * @param mobileToken
 	 * @return
 	 */
-	public CartApiModel getCartInfoForSql(String mobileToken,Integer consumerId);
+	public CartApiModel getCartInfoForSql(String mobileToken,String consumerUuid);
 
 	/**
 	 * 根据设备好删除配送的菜品
 	 * @param mobileToken
 	 * @return
 	 */
-	public int  deleteFreeCartItem(long consumerId);
+	public int  deleteFreeCartItem(String consumerUuid);
 	
 	/**
 	 * 将token保存的已有的用户
@@ -107,16 +107,16 @@ public interface CartHeaderDao {
 	 * @param:    cartHeaderId
 	 * @return: CartHeader
 	 */
-	public CartHeader getCartHeaderByConsumerId(int consumerId);
+	public CartHeader getCartHeaderByConsumerUuid(String consumerUuid);
 	
 
 	/**
-	 * @Title: getCartHeaderById；
+	 * @Title: getWebCartHeaderByConsumerUuid
 	 * @Description: 根据id获取对象
 	 * @param:    cartHeaderId
 	 * @return: CartHeader
 	 */
-	public CartHeader getWebCartHeaderByConsumerId(int consumerId);
+	public CartHeader getWebCartHeaderByConsumerUuid(String consumerUuid);
 	
 	
 }

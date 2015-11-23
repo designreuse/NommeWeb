@@ -58,7 +58,7 @@ public interface DistancePriceService {
 	 * @param: restaurantsApiModel
 	 * @return List<DistancePriceApiModel> 
 	 */
-	public List<DistancePriceApiModel> getDistancePrice(long restaurantId);
+	public List<DistancePriceApiModel> getDistancePrice(String restaurantUuid);
 	
 	/**
 	 * @Title: getOneDistanceByFee
@@ -69,7 +69,7 @@ public interface DistancePriceService {
 	 * @param: @param consumerLat
 	 * @return double  
 	 */
-	public double getOneDistanceByFee(long restaurantId, double subTotal, double consumerLng, double consumerLat);
+	public double getOneDistanceByFee(String restaurantUuid, double subTotal, double consumerLng, double consumerLat);
 	
 	
 	

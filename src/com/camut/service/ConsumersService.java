@@ -74,6 +74,14 @@ public interface ConsumersService {
 	public Consumers getConsumersById(long id);
 	
 	/**
+	 * @Title: getConsumersByuuId
+	 * @Description: 通uuid查找用户
+	 * @param:    uuid
+	 * @return: Consumers
+	 */
+	public Consumers getConsumersByUuid(String consumerUuid);
+	
+	/**
 	 * @Title: getConsumersByEmail
 	 * @Description: 判断email是否存在
 	 * @param:    email
@@ -95,7 +103,7 @@ public interface ConsumersService {
 	 * @param:    consumers
 	 * @return: Consumers
 	 */
-	public long saveTokenAndType(Consumers consumers);
+	public String saveTokenAndType(Consumers consumers);
 	
 	/**
 	 * @Title: updateTokenAndType
@@ -136,7 +144,7 @@ public interface ConsumersService {
 	 * @param:    
 	 * @return: List<ViewConsumerClassifitionApiModel>
 	 */
-	public List<ViewConsumerClassifitionApiModel> getShortcutMenu(int consumerId,Integer type);
+	public List<ViewConsumerClassifitionApiModel> getShortcutMenu(String consumerUuid,Integer type);
 	
 	/**
 	 * @Title: updateConsumersForNomme

@@ -93,6 +93,7 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 		if (restaurantsUser != null) {
 			restaurantsUser.setPassword(MD5Util.md5(restaurantsUser.getPassword()));
 			restaurantsUser.setCreatetime(new Date());
+			restaurantsUser.setUuid(StringUtil.getUUID());
 			return restaurantsUserDao.addRestaurantsUser(restaurantsUser);
 		}
 		return -1;
@@ -140,8 +141,8 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	 * @return: int -1删除失败，1删除成功
 	 */
 	@Override
-	public int deleteRestaurantsUser(long id) {
-		RestaurantsUser restaurantsUser = restaurantsUserDao.getRestaurantsUserById(id);
+	public int deleteRestaurantsUser(String restaurantUserUuid) {
+		RestaurantsUser restaurantsUser = restaurantsUserDao.getRestaurantsUserByUuid(restaurantUserUuid);
 		if (restaurantsUser != null) {
 			return restaurantsUserDao.deleteRestaurantsUser(restaurantsUser);
 		}
@@ -149,7 +150,7 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	}
 
 	/**
-	 * @Title: getRestaurantsUserById
+	 * @Title: getRestaurantsUserByUuid
 	 * 
 	 * @Description: 通过主键查找商家员工
 	 * 
@@ -158,8 +159,8 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	 * @return: RestaurantsUser
 	 */
 	@Override
-	public RestaurantsUser getRestaurantsUserById(long id) {
-		return restaurantsUserDao.getRestaurantsUserById(id);
+	public RestaurantsUser getRestaurantsUserByUuid(String restaurantUserUuid) {
+		return restaurantsUserDao.getRestaurantsUserByUuid(restaurantUserUuid);
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	@Override
 	public int updateRestaurantsUser(RestaurantsUser restaurantsUser) {
 		if (restaurantsUser != null) {
-			RestaurantsUser restaurantsUser2 = restaurantsUserDao.getRestaurantsUserById(restaurantsUser.getId());
+			RestaurantsUser restaurantsUser2 = restaurantsUserDao.getRestaurantsUserByUuid(restaurantsUser.getUuid());
 			if (restaurantsUser2 != null) {
 				restaurantsUser.setRestaurants(restaurantsUser2.getRestaurants());
 				restaurantsUser.setCreatetime(restaurantsUser2.getCreatetime());
@@ -183,7 +184,9 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 				if (!restaurantsUser2.getPassword().equals(restaurantsUser.getPassword())) {// 判断密码是否修改过
 					restaurantsUser.setPassword(MD5Util.md5(restaurantsUser.getPassword()));
 				}
+				long restaurantsUser2Id = restaurantsUser2.getId();
 				BeanUtils.copyProperties(restaurantsUser, restaurantsUser2);
+				restaurantsUser2.setId(restaurantsUser2Id);
 				restaurantsUser2.setModon(new Date());
 				return restaurantsUserDao.UpdateRestaurantsUser(restaurantsUser2);
 			}
@@ -239,13 +242,12 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	 */
 	@Override
 	public int checkLoginNameForEmployee(RestaurantsUser restaurantsUser, Restaurants restaurants) {
-		if (restaurantsUser != null && restaurantsUser.getId() != null) {// 修改用户
+		if (restaurantsUser != null && restaurantsUser.getUuid() != null) {// 修改用户
 			if (restaurantsUser.getCode() != null && restaurantsUser.getCode().length() > 0) {// 工号不为空
 				RestaurantsUser restaurantsUser1 = restaurantsUserDao.getEmployee(restaurantsUser.getCode(), restaurants);
+				//RestaurantsUser restaurantsUser1 = restaurantsUserDao.getRestaurantsUseByLoginName(restaurantsUser.getCode());
 				if (restaurantsUser1 != null) {// 用户名存在
-					if (restaurantsUser.getId().toString().equals(restaurantsUser1.getId().toString())) {// 用户名没修改
-						return 1;
-					}
+					return -1;
 				} else {// 用户名不存在
 					return 1;
 				}
@@ -282,18 +284,18 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	 */
 
 	/**
-	 * @Title: getRestaurantsAdminByRestaurantId
+	 * @Title: getRestaurantsUsersByRestaurantUuid
 	 * @Description: 通过商家id获取该商家的所有员工
 	 * @param: @param restaurantId
 	 * @return List<PageRestaurantAdmins>
 	 */
-	public List<PageRestaurantAdmins> getRestaurantsUsersByRestaurantId(String restaurantId) {
-		long restId = Long.parseLong(restaurantId);
-		List<RestaurantsUser> list = restaurantsUserDao.getRestaurantsUsersByRestaurantId(restId);
+	public List<PageRestaurantAdmins> getRestaurantsUsersByRestaurantUuid(String restaurantUuid) {
+		List<RestaurantsUser> list = restaurantsUserDao.getRestaurantsUsersByRestaurantUuid(restaurantUuid);
 		List<PageRestaurantAdmins> pageAdminList = new ArrayList<PageRestaurantAdmins>();
 		for (RestaurantsUser restaurantsUser : list) {
 			PageRestaurantAdmins admin = new PageRestaurantAdmins();
 			BeanUtils.copyProperties(restaurantsUser, admin);
+			admin.setRestaurantUserUuid(restaurantsUser.getUuid());
 			pageAdminList.add(admin);
 		}
 		return pageAdminList;
@@ -307,8 +309,8 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	 * @param: statu
 	 * @return void  
 	 */
-	public int auditRestaurantAdmin(long id, int statu, String operatorName) {
-		RestaurantsUser restaurantsUser = restaurantsUserDao.getAnyRestaurantsUserById(id);
+	public int auditRestaurantAdmin(String restaurantUserUuid, int statu, String operatorName) {
+		RestaurantsUser restaurantsUser = restaurantsUserDao.getAnyRestaurantsUserByUuid(restaurantUserUuid);
 		restaurantsUser.setStatus(statu);// 设置修改状态
 		restaurantsUser.setModby(operatorName);// 设置操作人
 		restaurantsUser.setModon(new Date());

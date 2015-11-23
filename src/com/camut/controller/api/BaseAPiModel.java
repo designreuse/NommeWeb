@@ -28,7 +28,7 @@ public class BaseAPiModel {
 				//计算距离
 				double distance = CommonUtil.getDistance(lat1, lng1, restaurants.getRestaurantLat(), restaurants.getRestaurantLng());
 				//获取当前商家所有种类的送餐费
-				List<DistancePriceApiModel> distancePriceList = distancePriceService.getDistancePrice(restaurants.getId());
+				List<DistancePriceApiModel> distancePriceList = distancePriceService.getDistancePrice(restaurants.getUuid());
 				for (DistancePriceApiModel distancePrice : distancePriceList) {
 					 //判断在某个距离区间内
 					if (distance <= distancePrice.getEndDistance() && distance > distancePrice.getStartDistance()) {

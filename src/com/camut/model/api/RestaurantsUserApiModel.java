@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class RestaurantsUserApiModel {
 
-	private long restaurantId; //店家id
+	private String restaurantUuid; //店家id
 	private String code;// 员工工号; staff code
 	private String firstName;// 名
 	private String lastName;// 姓
@@ -18,11 +18,13 @@ public class RestaurantsUserApiModel {
 	private Integer role;//权限，001只有预定权限，011表示预定和外卖权限，111三种权限都有，100只有自取权限
 	private String token;//设备编号
 	private String devicetype;//设备类型
-	public long getRestaurantId() {
-		return restaurantId;
+	
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getCode() {
 		return code;

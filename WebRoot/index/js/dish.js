@@ -188,11 +188,11 @@ $(function(){
 	function refreshCart(){
 		var consumerLng = $.cookie("Lng");
 		var consumerLat = $.cookie("Lat");
-		var consumerId = $("#currentConsumerId").val();
+		var consumerUuid = $("#currentConsumerUuid").val();
 		$.ajax({
     		type: 'post',
     		url: appPath+'/consumers/showCart',
-    		data: {consumerLng:consumerLng,consumerLat:consumerLat,consumerId:consumerId},
+    		data: {consumerLng:consumerLng,consumerLat:consumerLat,consumerUuid:consumerUuid},
     		success: function(data){
     			$("#cartContent").html(data);
     		}
@@ -250,19 +250,18 @@ $(function(){
 	/*提交按钮，添加菜品到购物车*/
 	$("#subDish").click(function(){
 		//console.log("aa");
-		//var cartRestaurantId = $.cookie("cartRestaurantId");
-		var cartRestaurantId = $("#cartContent input[name='cartRestaurantId']").val();
-		if(!cartRestaurantId){
-			cartRestaurantId = 0;
+		var cartRestaurantUuid = $("#cartContent input[name='cartRestaurantUuid']").val();
+		if(!cartRestaurantUuid){
+			cartRestaurantUuid = 0;
 		}
-		var currentRestaurantId = $("#restaurantId").val();
+		var currentRestaurantUuid = $("#restaurantUuid").val();
 		//alert(cartRestaurantId+" -- "+currentRestaurantId)
 		//alert($("#cartContent input[name='cartId']").val());
-		if(!$("#currentConsumerId").val()){//判断是否已经登录，如果没有登录弹出登录框
+		if(!$("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
 			$("#myModal1").modal('hide');
 			$("#myModal").modal('show');
 			
-		}else if(cartRestaurantId!=currentRestaurantId &&cartRestaurantId!=0){
+		}else if(cartRestaurantUuid!=currentRestaurantUuid &&cartRestaurantUuid!=0){
 			//alert(currentRestaurantId +"---"+cartRestaurantId);
 			var cartChangeTip = "You’ve changed your order. Do you wish to cancel your previous order?";
 			$("div[name='clearCartTip']").text(cartChangeTip);
@@ -378,10 +377,10 @@ $(function(){
 					
 				var unitprice = (parseFloat($("#aDishQuantity").val()) * parseFloat($("span[name='price']").text())).toFixed(2);
 				var dish = new Dish($("#currentDishId").val(),$("#cartItemId").val(),$("#aDishQuantity").val(), unitprice, $("#dishRemark").val(), garnishItemList);
-				function CartHeader (orderType,consumerId,restaurantId,total,tax,logistics,item,orderId){
+				function CartHeader (orderType,consumerUuid,restaurantUuid,total,tax,logistics,item,orderId){
 					this.orderType = orderType;//订单类型
-					this.consumerId = consumerId;//用户Id
-					this.restaurantId = restaurantId;//商家id
+					this.consumerUuid = consumerUuid;//用户Id
+					this.restaurantUuid = restaurantUuid;//商家id
 					this.tax = tax;//税额
 					this.total = total;//总金额
 					this.item = item;//菜品
@@ -393,7 +392,7 @@ $(function(){
 				var tax = parseFloat($("#aDishTotal").text())*parseFloat($("#restaurantTaxRate").val());
 				var orderId =  $.cookie("cart-orderId");
 				//创建购物车对象
-				var cartHeader = new CartHeader(orderType,$("#currentConsumerId").val(),$("#restaurantId").val(), 0,tax,0,dish,orderId);
+				var cartHeader = new CartHeader(orderType,$("#currentConsumerUuid").val(),$("#restaurantUuid").val(), 0,tax,0,dish,orderId);
 				//console.log(cartHeader);
 				if($(this).attr("name")=="add"){//说明是新增
 					addCartItem(cartHeader);

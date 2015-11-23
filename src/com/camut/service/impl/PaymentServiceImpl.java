@@ -157,9 +157,9 @@ public class PaymentServiceImpl implements PaymentService {
 	 * @return: int 1成功，其他失败
 	 */
 	@Override
-	public int addCard(CardEntity cardEntity,String consumerId) {
-		if(cardEntity!=null && StringUtil.isNotEmpty(consumerId)){
-			Consumers consumers = consumersDao.getConsumersById(Long.parseLong(consumerId));
+	public int addCard(CardEntity cardEntity,String consumerUuid) {
+		if(cardEntity!=null && StringUtil.isNotEmpty(consumerUuid)){
+			Consumers consumers = consumersDao.getConsumersByUuid(consumerUuid);
 			if(consumers!=null){
 				String customerId = consumers.getStripeCustomerId();
 				if (StringUtil.isEmpty(customerId)) {//还没有注册
@@ -189,9 +189,9 @@ public class PaymentServiceImpl implements PaymentService {
 	 * @return: List<CardEntity> null失败,没有
 	 */
 	@Override
-	public List<CardEntity> listAllCards(String consumerId) {
-		if(StringUtil.isNotEmpty(consumerId)){
-			Consumers consumers = consumersDao.getConsumersById(Long.parseLong(consumerId));
+	public List<CardEntity> listAllCards(String consumerUuid) {
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			Consumers consumers = consumersDao.getConsumersByUuid(consumerUuid);
 			if(consumers!=null && StringUtil.isNotEmpty(consumers.getStripeCustomerId())){
 				List<CardEntity> list = CommonUtil.listAllCards(consumers.getStripeCustomerId());
 				return list;
@@ -286,8 +286,8 @@ public class PaymentServiceImpl implements PaymentService {
 	 * @return: int -1失败  1成功
 	 */
 	@Override
-	public int deleteCard(String cardId, String consumerId) {
-		Consumers consumers = consumersDao.getConsumersById(Long.parseLong(consumerId));
+	public int deleteCard(String cardId, String consumerUuid) {
+		Consumers consumers = consumersDao.getConsumersByUuid(consumerUuid);
 		if (consumers!=null && StringUtil.isNotEmpty(consumers.getStripeCustomerId())) {
 			return CommonUtil.deleteCard(consumers.getStripeCustomerId(), cardId);
 		}

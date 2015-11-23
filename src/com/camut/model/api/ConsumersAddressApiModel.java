@@ -16,7 +16,7 @@ public class ConsumersAddressApiModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5596032932563131857L;
-	private long consumerId;
+	private String consumerUuid;
 	private long addressId;
 	private String street;// 街道
 	private Integer isDefault;// 是否默认1:是,2否
@@ -33,12 +33,6 @@ public class ConsumersAddressApiModel implements Serializable {
 	}
 	public void setAddressId(long addressId) {
 		this.addressId = addressId;
-	}
-	public long getConsumerId() {
-		return consumerId;
-	}
-	public void setConsumerId(long consumerId) {
-		this.consumerId = consumerId;
 	}
 	public String getStreet() {
 		return street;
@@ -92,19 +86,18 @@ public class ConsumersAddressApiModel implements Serializable {
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
-	/*@Override
-	public String toString() {
-		return "ConsumersAddressApiModel [consumerId=" + consumerId + ", addressId=" + addressId + ", street=" + street + ", isDefault=" + isDefault
-				+ ", floor=" + floor + ", city=" + city + ", province=" + province + ", address=" + address + ", consignee=" + consignee + ", phone="
-				+ phone + "]";
-	}*/
+	public String getConsumerUuid() {
+		return consumerUuid;
+	}
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
+	}
 	@Override
 	public String toString() {
-		return "ConsumersAddressApiModel [consumerId=" + consumerId + ", addressId=" + addressId + ", street=" + street + ", isDefault=" + isDefault 
+		return "ConsumersAddressApiModel [consumerUuid=" + consumerUuid + ", addressId=" + addressId + ", street=" + street + ", isDefault=" + isDefault 
 				+ ", floor=" + floor + ", city=" + city + ", province=" + province + ", address=" + address + ", consignee=" + consignee + ", phone="
 				+ phone + ", distance=" + distance + "]";
 	}
-	
 	
 	
 }

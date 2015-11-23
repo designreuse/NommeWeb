@@ -52,7 +52,15 @@ public interface RestaurantsUserDao {
 	 * @param:    
 	 * @return: RestaurantsUser
 	 */
-	public RestaurantsUser getRestaurantsUserById(long id);
+	public RestaurantsUser getRestaurantsUserByUuid(String restaurantUserUuid);
+	
+	/**
+	 * @Title: getRestaurantsUserById
+	 * @Description: 通过主键查找商家员工,用于系统管理员审核商家管理员
+	 * @param: long
+	 * @return: RestaurantsUser
+	 */
+	public RestaurantsUser getAnyRestaurantsUserByUuid(String restaurantUserUuid);
 	
 	/**
 	 * @Title: updateRestaurantsUser
@@ -100,15 +108,9 @@ public interface RestaurantsUserDao {
 	 * @param: 
 	 * @return List<PageRestaurantsAdmin>  
 	 */
-	public List<RestaurantsUser> getRestaurantsUsersByRestaurantId(long restId);
+	public List<RestaurantsUser> getRestaurantsUsersByRestaurantUuid(String restaurantUuid);
 	
-	/**
-	 * @Title: getRestaurantsUserById
-	 * @Description: 通过主键查找商家员工,用于系统管理员审核商家管理员
-	 * @param: long
-	 * @return: RestaurantsUser
-	 */
-	public RestaurantsUser getAnyRestaurantsUserById(long id);
+	
 	
 	/**
 	 * @Title: saveTokenAndType

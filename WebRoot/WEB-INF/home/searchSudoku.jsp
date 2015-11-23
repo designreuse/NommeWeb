@@ -3,14 +3,14 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <script type="text/javascript">
 	$("div[name='restaurant']").click(function(){
-		window.location = "${ctx}/index/restaurantmenu?restaurantId="+$(this).children("#id").val();
+		window.location = "${ctx}/index/restaurantmenu?restaurantUuid="+$(this).children("#restaurantUuid").val();
 	});
 </script>
 <ul>
 	<c:forEach items="${viewRestaurants.rows}" var="vr">
 		<Li>
 		<div name="restaurant" style="cursor: pointer;">
-		<input type="hidden" id="id" value="${vr.id}"/>
+		<input type="hidden" id="restaurantUuid" value="${vr.restaurantUuid}"/>
 		<p>
 			<c:choose>
 				<c:when test="${empty vr.logourl}">

@@ -150,7 +150,7 @@ public class RestaurantsMenuServiceIml implements RestaurantsMenuService {
 	public List<RestaurantsMenuApiModel> getAllDishMenu(Restaurants restaurants) {
 		List<RestaurantsMenuApiModel> list = new ArrayList<RestaurantsMenuApiModel>();
 		if(restaurants!=null){		
-			List<Dish> dishs =  dishDao.getdish(restaurants.getId(), restaurants.getIsdelivery().intValue());
+			List<Dish> dishs =  dishDao.getdish(restaurants.getUuid(), restaurants.getIsdelivery().intValue());
 			for (Dish dish : dishs) {
 				if(list.size()==0){
 					RestaurantsMenuApiModel apiModel=new RestaurantsMenuApiModel();

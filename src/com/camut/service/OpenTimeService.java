@@ -22,7 +22,7 @@ public interface OpenTimeService {
 	 * @param:  restaurantId
 	 * @return: List<OpenTimeApiModel>
 	 */
-	public List<String> selectOpenTime(long restaurantId, int type, String date);
+	public List<String> selectOpenTime(String restaurantUuid, int type, String date);
 	
 	/**
 	 * @Title: getAllOpenTime
@@ -30,7 +30,7 @@ public interface OpenTimeService {
 	 * @param:    Restaurants
 	 * @return: PageOpenTime
 	 */
-	public List<PageOpenTime> getAllOpenTime(long restaurantsId);
+	public List<PageOpenTime> getAllOpenTime(String restaurantUuid);
 	
 	/**
 	 * @Title: addOpenTime
@@ -54,7 +54,7 @@ public interface OpenTimeService {
 	 * @param:    RestaurantId
 	 * @return: List<OpenTimeListApiModel>
 	 */
-	public List<Map<String, Object>> getOpenTime(long restaurantId);
+	public List<Map<String, Object>> getOpenTime(String restaurantUuid);
 	
 	/**
 	 * @Title: orderDateAtOpenTime
@@ -62,7 +62,7 @@ public interface OpenTimeService {
 	 * @param:    Date orderDate,int restaurantId
 	 * @return: int -1不在 1在
 	 */
-	public int orderDateAtOpenTime(Date orderDate,int restaurantId,int orderType);
+	public int orderDateAtOpenTime(Date orderDate,String restaurantUuid,int orderType);
 	
 	/**
 	 * @Title: getOpenTimeByOrderDate
@@ -70,5 +70,5 @@ public interface OpenTimeService {
 	 * @param:    
 	 * @return: String[]
 	 */
-	public String[] getOpenTimeByOrderDate(Date orderDate,long restaurantId,int type);
+	public String[] getOpenTimeByOrderDate(Date orderDate,String restaurantUuid,int type);
 }

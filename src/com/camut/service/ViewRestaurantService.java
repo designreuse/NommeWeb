@@ -58,5 +58,5 @@ public interface ViewRestaurantService {
 	 * @param:    
 	 * @return: ViewRestaurant
 	 */
-	public ViewRestaurant getRestaurantScore(long id);
+	public ViewRestaurant getRestaurantScore(String restaurantUuid);
 }

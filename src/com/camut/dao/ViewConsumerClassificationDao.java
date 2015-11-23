@@ -23,7 +23,7 @@ public interface ViewConsumerClassificationDao {
 	 * @param:    int
 	 * @return: List<String>
 	 */
-	public List<ViewConsumerClassification> getClassificationNames(int consumerId);
+	public List<ViewConsumerClassification> getClassificationNames(String consumerUuid);
 	
 	/**
 	 * @Title: getClassificationNames
@@ -31,5 +31,5 @@ public interface ViewConsumerClassificationDao {
 	 * @param:    int
 	 * @return: List<String>
 	 */
-	public List<ViewConsumerClassification> getClassificationNamesAndroid(int consumerId);
+	public List<ViewConsumerClassification> getClassificationNamesAndroid(String consumerUuid);
 }
