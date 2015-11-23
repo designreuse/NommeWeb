@@ -103,8 +103,8 @@
 				</div>
 				<p>Phone Number</p>
 				<div class="controls">
-					<input type="text" class="form-control" id="phone" placeholder="(xxx)xxx-xxxx"
-						maxlength="13" style="height:35px;margin-bottom:10px;">
+					<input type="text" class="form-control" id="phone" placeholder="(xxx) xxx-xxxx"
+						style="height:35px;margin-bottom:10px;">
 				</div>
 				<!-- <div align="left" style="margin:10px 0;">
 					password

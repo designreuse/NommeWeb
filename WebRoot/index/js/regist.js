@@ -635,17 +635,17 @@ $(function(){
 	//验证电话号码
 	function phoneNumberValidate(elementId,x,y){
 		var falg = false;
-		var phoneExpReg = /(^[0-9]{3}\ ?[0-9]{3}-?[0-9]{4}$)|(^[0-9]{3}-[0-9]{3}-?[0-9]{4}$)|(^\([0-9]{3}\)\ ?[0-9]{3}-?[0-9]{4}$)/;
+		var phoneExpReg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 		var val = $.trim($("#"+elementId).val());
 		if(val==""){
 			flag=false;
 			showtips(elementId,'Required',x,y);
-		}else if(phoneExpReg.test(val)){
+		}else if(val.match(phoneExpReg)){
 			flag = true;
 			hidetips(elementId);
 		}else{
 			flag = false;
-			showtips(elementId,"Not a phone",x,y);
+			showtips(elementId,"Invalid Phone",x,y);
 		}
 		return flag;
 	}
