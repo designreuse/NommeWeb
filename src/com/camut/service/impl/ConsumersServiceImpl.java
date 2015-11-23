@@ -292,11 +292,12 @@ public class ConsumersServiceImpl implements ConsumersService {
 			list = viewConsumerClassificationDao.getClassificationNames(consumerUuid);
 		}
 		List<ViewConsumerClassifitionApiModel> apiModels = new ArrayList<ViewConsumerClassifitionApiModel>();
-		int num = 0;
-		if(type!=null && type==3){//当是网站调用的时候需要显示5个
-			num = 0;
-		}
+		
 		if (list!=null&&list.size()>0) {
+			int num = list.size()>3?4:list.size();
+			if(type!=null && type==3){//当是网站调用的时候需要显示5个
+				num = list.size()>4?5:list.size();
+			}
 			if(list.size()>=num){//够展示的4个
 				for(int i=0;i<num;i++){
 					ViewConsumerClassifitionApiModel apiModel = new ViewConsumerClassifitionApiModel();
@@ -371,6 +372,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 		else{
 			List<Classification> list1 = classificationDao.getAllClassification();
 			if(list1!=null && list1.size()>0){
+				int num = list1.size()>0?1:list1.size();
 				for(int i=0;i<num;i++){
 					ViewConsumerClassifitionApiModel apiModel = new ViewConsumerClassifitionApiModel();
 					apiModel.setClassification(list1.get(i).getClassificationName());
