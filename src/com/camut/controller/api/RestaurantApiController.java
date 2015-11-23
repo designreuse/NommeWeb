@@ -216,7 +216,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 			ram.setFlag(1);
 			//推送
 			OrderHeader oh = orderServicr.getOrderById(orderItemApiModel.getOrderId());
-			Consumers c = consumersService.getConsumersById(oh.getConsumers().getId());
+			Consumers c = consumersService.getConsumersByUuid(oh.getConsumers().getUuid());
 			Restaurants r = restaurantsService.getRestaurantsByUuid(oh.getRestaurantUuid());
 			String restaurant = r.getRestaurantName();//店名
 			String rejection = oh.getRejection();//拒绝理由
