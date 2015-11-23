@@ -252,27 +252,34 @@ public class AdminController {
 	 */
 	@RequestMapping(value="/sendemail",method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage sendEmail(String emailAddress,HttpSession session){
-		//int temp = 0;
+	public PageMessage sendEmail(String emailAddress, HttpSession session) {
+		// int temp = 0;
 		PageMessage pm = new PageMessage();
-		
-		PageAdminUser admin = adminService.getAdminByLoginname(emailAddress);
-		if(admin == null){
 
-			pm.setErrorMsg(MessageConstant.LOGINNAME_ERROR);//no such login name(email)
+		PageAdminUser admin = adminService.getAdminByLoginname(emailAddress);
+		if (admin == null) {
+
+			pm.setErrorMsg(MessageConstant.LOGINNAME_ERROR);// no such login
+															// name(email)
 			pm.setSuccess(false);
 			return pm;
-		}else{
-			String verificationCode = (int)(Math.random()*900000+100000)+"";//生成6位验证码; generate 6 digits code
-			//System.out.println(verificationCode);
+		} else {
+			String verificationCode = (int) (Math.random() * 900000 + 100000) + "";// 生成6位验证码;
+																					// generate
+																					// 6
+																					// digits
+																					// code
+			// System.out.println(verificationCode);
 			session.setAttribute("verificationCode", verificationCode);
-			session.setAttribute("loginname",admin.getLoginname());
-			String title = "Verification code by Nomme";
-			String content = "To reset you own "+emailAddress+" password , please enter in this verification code: <span style='color:#064977'>" 
-					+ verificationCode + "</span> to the retrieve password input box, and then click the button to reset the password."
-					+ "<br> Note: please use the verification code within 30 minutes.";
+			session.setAttribute("loginname", admin.getLoginname());
+			String title = "Verification code from Nomme";
+			String content = "To reset the password of your Nomme account " + emailAddress
+					+ ", please enter in this verification code <span style='color:#064977'>" + verificationCode
+					+ "</span> in the input box to retrieve your password, and then click the button to reset the password."
+					+ " Please use the verification code within 30 minutes.";
 			MailUtil.sendMail(title, content, emailAddress);
-			//String user = ((Admin)session.getAttribute("adminUser")).getLoginname();
+			// String user =
+			// ((Admin)session.getAttribute("adminUser")).getLoginname();
 			Log4jUtil.info("管理员", "测试发送邮件");
 			pm.setSuccess(true);
 			return pm;
