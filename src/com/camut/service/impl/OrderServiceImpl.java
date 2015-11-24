@@ -176,8 +176,9 @@ public class OrderServiceImpl implements OrderService {
 		if (orderHeader != null) {
 			orderHeader.setOrderNo(CreateOrderNumber.createUnique());
 			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
-			Date restaurantLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(), restaurants.getRestaurantLng()).toDate();
-			orderHeader.setCreatedate(restaurantLocalTime);
+			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
+					restaurants.getRestaurantLng());
+			orderHeader.setCreatedate(currentLocalTime);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(orderHeader.getOrderDate());
 			int orderDay = calendar.get(Calendar.DATE);
