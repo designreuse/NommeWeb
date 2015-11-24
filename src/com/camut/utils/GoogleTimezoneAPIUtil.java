@@ -9,10 +9,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONObject;
 
 public class GoogleTimezoneAPIUtil {
+	
 	public static TimeZone getTimeZoneFromGeoLocation(double latitude, double longitude) {
 		Calendar calendar = Calendar.getInstance();
 		TimeZone timezone = calendar.getTimeZone();
@@ -76,4 +80,11 @@ public class GoogleTimezoneAPIUtil {
 		Log4jUtil.info("Something went wrong with getting timezone, setting machine timezone: " + timezone.getID());
 		return timezone;
 	}
+	
+	public static DateTime getLocalDateTime(double latitude, double longitude) {
+		TimeZone timezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
+		DateTime localTime = DateTime.now(DateTimeZone.forID(timezone.getID()));
+		return localTime;
+	}
+
 }
