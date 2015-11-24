@@ -69,7 +69,7 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 	private String memo;// 订单备注
 	private Integer discountId;// 优惠券id
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "consumer_uuid")
 	public Consumers getConsumers() {
 		return this.consumers;

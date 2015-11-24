@@ -179,7 +179,7 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 		consumersAddress.setFullAddress(consumersAddressApiModel.getStreet()+",#"+consumersAddressApiModel.getFloor()+","+consumersAddressApiModel.getCity()+","+consumersAddressApiModel.getProvince());
 		consumersAddress.setIsdefault(2);
 		//获取地址经纬度
-		/*String address = consumersAddressApiModel.getFloor()+consumersAddressApiModel.getStreet()+consumersAddressApiModel.getProvince()+consumersAddressApiModel.getCity();
+		String address = consumersAddressApiModel.getFloor()+consumersAddressApiModel.getStreet()+consumersAddressApiModel.getProvince()+consumersAddressApiModel.getCity();
 		Map<String, Object> map = GetLatLngByAddress.getCoordinate(address, false);//地址,是否使用代理，默认不使用
 		if(map.get("status").toString().equals("OK")){//能获取到经纬度
 			Object o=  map.get("result");
@@ -190,9 +190,7 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 			String lng = map2.get("lng").toString();
 			consumersAddress.setLat(Double.parseDouble(lat));
 			consumersAddress.setLng(Double.parseDouble(lng));
-		}*/
-		consumersAddress.setLat(51.1);
-		consumersAddress.setLng(-114.15);
+		}
 		return consumersAddressDao.addConsumersAddress(consumersAddress);
 	}
 
