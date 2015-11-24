@@ -2,6 +2,7 @@ package com.camut.controller;
 
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -168,7 +169,8 @@ public class IndexController {
 			restaurant.setRestaurantLng(viewRestaurant.getRestaurantLng());
 			model.addAttribute("restaurantLng", restaurant.getRestaurantLng());
 			model.addAttribute("restaurantLat", restaurant.getRestaurantLat());
-			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(viewRestaurant.getRestaurantLat(), viewRestaurant.getRestaurantLng()).toDate();
+			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(viewRestaurant.getRestaurantLat(),
+					viewRestaurant.getRestaurantLng());
 			model.addAttribute("date", new SimpleDateFormat("HH:mm").format(currentLocalTime));
 			List<PageClassification> list = classificationService.getAllClassification();
 			model.addAttribute("classifications", list);

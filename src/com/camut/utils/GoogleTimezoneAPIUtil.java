@@ -7,7 +7,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -81,10 +84,21 @@ public class GoogleTimezoneAPIUtil {
 		return timezone;
 	}
 	
-	public static DateTime getLocalDateTime(double latitude, double longitude) {
+	public static Date getLocalDateTime(double latitude, double longitude) {
 		TimeZone timezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
-		DateTime localTime = DateTime.now(DateTimeZone.forID(timezone.getID()));
-		return localTime;
+		DateTime localDateTime = DateTime.now(DateTimeZone.forID(timezone.getID()));
+
+		Date currentLocalTime;
+		try {
+			currentLocalTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+					.parse(localDateTime.toString("yyyy-MM-dd HH:mm:ss"));
+		} catch (ParseException e) {
+			Log4jUtil.error(e);
+			Log4jUtil.info("Something went wrong when trying to convert DateTime to Date");
+			currentLocalTime = new Date();
+		}
+
+		return currentLocalTime;
 	}
 
 }
