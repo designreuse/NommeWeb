@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @memo
  */
 @Entity
-@Table(name = "tbl_restaurant_menu", catalog = "nomme")
+@Table(name = "tbl_restaurant_menu")
 public class RestaurantsMenu extends IdEntity implements java.io.Serializable,Comparable<RestaurantsMenu> {
 
 	/**

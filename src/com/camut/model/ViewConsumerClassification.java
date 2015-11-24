@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * ViewConsumerClassificationId entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "view_consumer_classification", catalog = "nomme")
+@Table(name = "view_consumer_classification")
 public class ViewConsumerClassification  implements java.io.Serializable {
 
 

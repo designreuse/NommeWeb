@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  * @memo ratings and reviews
  */
 @Entity
-@Table(name = "tbl_evaluate", catalog = "nomme")
+@Table(name = "tbl_evaluate")
 public class Evaluate extends IdEntity implements java.io.Serializable {
 
 	// Fields

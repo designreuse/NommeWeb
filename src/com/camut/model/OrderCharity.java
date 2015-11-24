@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * 捐款历史表 OrderCharity entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "tbl_order_charity", catalog = "nomme")
+@Table(name = "tbl_order_charity")
 public class OrderCharity extends IdEntity implements java.io.Serializable {
 
 	// Fields

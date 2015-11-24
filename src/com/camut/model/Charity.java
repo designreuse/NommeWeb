@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * Charity entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "tbl_charity", catalog = "nomme")
+@Table(name = "tbl_charity")
 public class Charity extends IdEntity implements java.io.Serializable {
 
 	// Fields

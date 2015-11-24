@@ -731,6 +731,7 @@ $(function(){
 	
 	//评论模态框关闭  触发展开显示订单详情模态框内容
 	$('#confirmModal').on('show.bs.modal', function() {
+		$("button[name='confirmModal-confirm']").removeAttr("disabled");
 		$("button[name='confirmModal-cancel']").removeAttr("disabled");
 	})
 	//评论模态框关闭  触发展开显示订单详情模态框内容

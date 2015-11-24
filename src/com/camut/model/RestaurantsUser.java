@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "tbl_restaurants_user", catalog = "nomme")
+@Table(name = "tbl_restaurants_user")
 public class RestaurantsUser implements java.io.Serializable {
 
 	// Fields

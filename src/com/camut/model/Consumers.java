@@ -24,7 +24,7 @@ import javax.persistence.TemporalType;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_consumers", catalog = "nomme")
+@Table(name = "tbl_consumers")
 public class Consumers implements java.io.Serializable {
 
 	

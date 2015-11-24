@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.camut.dao.OrderDao;
@@ -55,6 +56,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: ResultApiModel
 	 */
 	@Override
+	@Cacheable(value="myCache",key="#consumerUuid")
 	public List<OrderHeader> selectPastOrder(String consumerUuid) {
 		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
 		Map<String, Object> map = new HashMap<String, Object>();

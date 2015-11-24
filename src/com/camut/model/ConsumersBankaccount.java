@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_customer_bankaccount", catalog = "nomme")
+@Table(name = "tbl_customer_bankaccount")
 public class ConsumersBankaccount extends IdEntity implements
 		java.io.Serializable {
 
