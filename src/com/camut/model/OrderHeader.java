@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "dat_order_header", catalog = "nomme")
+@Table(name = "dat_order_header")
 public class OrderHeader extends IdEntity implements java.io.Serializable {
 
 	// Fields

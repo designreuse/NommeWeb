@@ -29,7 +29,7 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "dat_restaurants", catalog = "nomme")
+@Table(name = "dat_restaurants")
 public class Restaurants implements java.io.Serializable {
 
 	// Fields
@@ -256,7 +256,7 @@ public class Restaurants implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "res_restaurant_classification", catalog = "nomme", joinColumns = { @JoinColumn(name = "restaurants_uuid", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "classification_id", nullable = false, updatable = false) })
+	@JoinTable(name = "res_restaurant_classification", joinColumns = { @JoinColumn(name = "restaurants_uuid", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "classification_id", nullable = false, updatable = false) })
 	public Set<Classification> getClassificationsSet() {
 		return this.classificationsSet;
 	}

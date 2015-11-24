@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @memo ingredients
  */
 @Entity
-@Table(name = "tbl_garnish_header", catalog = "nomme")
+@Table(name = "tbl_garnish_header")
 public class GarnishHeader extends IdEntity implements java.io.Serializable,Comparable<GarnishHeader> {
 
 	/**

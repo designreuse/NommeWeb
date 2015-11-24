@@ -16,7 +16,7 @@ import javax.persistence.Table;
  * OrderDishGarnish entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "res_order_dish_garnish", catalog = "nomme")
+@Table(name = "res_order_dish_garnish")
 public class OrderDishGarnish implements java.io.Serializable {
 
 	// Fields

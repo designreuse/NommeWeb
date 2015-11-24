@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * ViewRestaurantId entity. @author MyEclipse Persistence Tools
  */
 @javax.persistence.Entity
-@Table(name = "view_restaurant", catalog = "nomme")
+@Table(name = "view_restaurant")
 public class ViewRestaurant implements java.io.Serializable {
 
 	/**

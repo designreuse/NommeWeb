@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * ViewAreaId entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "view_area", catalog = "nomme")
+@Table(name = "view_area")
 public class ViewArea implements java.io.Serializable {
 
 	/**

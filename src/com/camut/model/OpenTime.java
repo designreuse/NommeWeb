@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @memo business hours
  */
 @Entity
-@Table(name = "tbl_open_time", catalog = "nomme")
+@Table(name = "tbl_open_time")
 public class OpenTime extends IdEntity implements java.io.Serializable {
 
 	// Fields

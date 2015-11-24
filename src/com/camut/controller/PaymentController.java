@@ -76,7 +76,9 @@ public class PaymentController {
 	public String getTestPay(HttpSession session,Model model) {
 		Consumers consumers = (Consumers) session.getAttribute(GlobalConstant.SESSION_CONSUMER);
 		if(consumers!=null && consumers.getStripeCustomerId()!=null){//之前保存过
-			List<CardEntity> list = CommonUtil.listAllCards(consumers.getStripeCustomerId());
+			Consumers consumers2 = consumersService.getConsumersByUuid(consumers.getUuid());
+			session.setAttribute("consumer", consumers2);
+			List<CardEntity> list = CommonUtil.listAllCards(consumers2.getStripeCustomerId());
 			model.addAttribute("cards", list);
 		}
 		PageCartHeader pageCartHeader = cartHeaderService.getPageCartHeaderByConsumerUuid(consumers.getUuid());

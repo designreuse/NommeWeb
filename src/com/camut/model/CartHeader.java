@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * OrderCart entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "dat_cart_header", catalog = "nomme")
+@Table(name = "dat_cart_header")
 public class CartHeader extends IdEntity implements java.io.Serializable {
 
 	// Fields

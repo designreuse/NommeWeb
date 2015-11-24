@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_complain_reply", catalog = "nomme")
+@Table(name = "tbl_complain_reply")
 public class ComplainReply extends IdEntity implements java.io.Serializable {
 
 	// Fields

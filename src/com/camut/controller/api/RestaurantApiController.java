@@ -815,6 +815,10 @@ public class RestaurantApiController  extends BaseAPiModel {
 			sb.append("<p style = 'line-height:0.1'>Charge No: "+item.getChargeId()+"</p>");
 		}
 		sb.append("<p style = 'line-height:0.1'>Order Type: "+item.getOrderTypeStr()+"</p>");
+		if(item.getOrderType() == 3){
+			sb.append("<p style = 'line-height:0.1'>Service time: "+item.getOrderDate()+"</p>");
+			sb.append("<p style = 'line-height:0.1'>Number of people: "+item.getNumber()+"</p>");
+		}
 		sb.append("</th>");
 		sb.append("</tr>");
 		sb.append("</tbody>");

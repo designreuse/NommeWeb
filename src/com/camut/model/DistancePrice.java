@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @memo delivery fee based on the distance
  */
 @Entity
-@Table(name = "tbl_distance_price", catalog = "nomme")
+@Table(name = "tbl_distance_price")
 public class DistancePrice extends IdEntity implements java.io.Serializable {
 
 	// Fields
