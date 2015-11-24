@@ -81,7 +81,6 @@ $(function(){
 						if(orgCartAddress && orgCartAddress.city && orgCartAddress.street && orgCartAddress.province){//判断如果是返回到的regist页面，能获取到之前填写的地址信息
 							//orgAddressOption = "<option value='-1'>"+orgCartAddress.street+" "+orgCartAddress.floor+" "+orgCartAddress.city+" "+orgCartAddress.province+" &nbsp;&nbsp;(Last time address)</option>";
 							$("#address-name").val(orgCartAddress.consignee);
-							$("#address-phone").val(orgCartAddress.phone);
 							$("#address-street").val(orgCartAddress.street);
 							$("#address-city").val(orgCartAddress.city);
 							$("#address-province").val(orgCartAddress.province);
@@ -143,7 +142,6 @@ $(function(){
 						$("#saveAddress").attr("disabled",true);
 					}*/
 					$("#address-name").val(orgCartAddress.consignee);
-					$("#address-phone").val(orgCartAddress.phone);
 					$("#address-street").val(orgCartAddress.street);
 					$("#address-city").val(orgCartAddress.city);
 					$("#address-province").val(orgCartAddress.province);
@@ -174,7 +172,6 @@ $(function(){
 					for(var k = 0; k < addressList.length; k++){
 						if(addressList[k].addressId ==currentAddressId){
 							selectFullAddress = addressList[k].street+" "+addressList[k].city+" "+addressList[k].province;
-							$("#address-name").val(addressList[k].consignee);
 							$("#address-phone").val(addressList[k].phone);
 							$("#address-street").val(addressList[k].street);
 							$("#address-city").val(addressList[k].city);
