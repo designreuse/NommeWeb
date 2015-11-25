@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,7 @@ import com.camut.service.PaymentService;
 import com.camut.service.task.TaskDemoService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.CreateOrderNumber;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.StringUtil;
 
@@ -171,29 +173,32 @@ public class OrderServiceImpl implements OrderService {
 	@SuppressWarnings("deprecation")
 	@Override
 	public int addOrder(OrderHeader orderHeader) {
-		if (orderHeader!=null) {
+		if (orderHeader != null) {
 			orderHeader.setOrderNo(CreateOrderNumber.createUnique());
-			Date nowDate=new Date();
-			orderHeader.setCreatedate(new Date());	
-			 Calendar calendar = Calendar.getInstance();   
-			 calendar.setTime(orderHeader.getOrderDate());
-			 int orderDay = calendar.get(Calendar.DATE);  
-			 calendar.setTime(new Date());
-			 int nowDay=calendar.get(Calendar.DATE);  
-			if(orderDay>nowDay){
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
+			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
+					restaurants.getRestaurantLng());
+			orderHeader.setCreatedate(currentLocalTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(orderHeader.getOrderDate());
+			int orderDay = calendar.get(Calendar.DATE);
+			calendar.setTime(new Date());
+			int nowDay = calendar.get(Calendar.DATE);
+			if (orderDay > nowDay) {
 				orderHeader.setStatus(3);
 			}
-			//orderHeader.setStatus(1);//未付款
-			//添加dinein 类型的订单到原有的reservation订单中
-			if (orderHeader.getOrderType()==3&&orderHeader.getOrderItems()!=null&&orderHeader.getOrderItems().size()>0) {
-					int flag = orderDao.updateOrderHeader(orderHeader);
-					Log4jUtil.info("新增订单==> 订单类型:"+orderHeader.getOrderType() +"-->id:"+orderHeader.getId());
-					if (flag==-1) {
-						return -1;
-					}else{
-						taskDemoService.pushOrderid(orderHeader.getId());
-						taskDemoService.timerTaskOrder();
-					}
+			// orderHeader.setStatus(1);//未付款
+			// 添加dinein 类型的订单到原有的reservation订单中
+			if (orderHeader.getOrderType() == 3 && orderHeader.getOrderItems() != null
+					&& orderHeader.getOrderItems().size() > 0) {
+				int flag = orderDao.updateOrderHeader(orderHeader);
+				Log4jUtil.info("新增订单==> 订单类型:" + orderHeader.getOrderType() + "-->id:" + orderHeader.getId());
+				if (flag == -1) {
+					return -1;
+				} else {
+					taskDemoService.pushOrderid(orderHeader.getId());
+					taskDemoService.timerTaskOrder();
+				}
 			}
 			else{//delivery or pick-up
 				long ohid = orderDao.addOrder(orderHeader);

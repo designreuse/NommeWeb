@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @memo 菜品配菜关系表： relationship between dish and garnishItem(ingredients)
  */
 @Entity
-@Table(name = "res_dish_garnish", catalog = "nomme")
+@Table(name = "res_dish_garnish")
 public class DishGarnish extends IdEntity implements java.io.Serializable {
 
 	// Fields

@@ -18,9 +18,7 @@ import javax.persistence.Table;
  * @memo 
  */
 @Entity
-@Table(name="tbl_restaurant_table"
-    ,catalog="nomme"
-)
+@Table(name="tbl_restaurant_table")
 
 public class RestaurantTable extends IdEntity implements java.io.Serializable {
 

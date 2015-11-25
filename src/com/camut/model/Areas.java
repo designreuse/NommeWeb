@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * @memo
  */
 @Entity
-@Table(name = "sys_areas", catalog = "nomme")
+@Table(name = "sys_areas")
 public class Areas extends IdEntity implements java.io.Serializable {
 
 	// Fields

@@ -2,6 +2,7 @@ package com.camut.controller;
 
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import com.camut.model.ViewRestaurant;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.framework.constant.MessageConstant;
 import com.camut.model.Consumers;
+import com.camut.model.Restaurants;
 import com.camut.model.api.ConsumersAddressApiModel;
 import com.camut.model.api.ViewConsumerClassifitionApiModel;
 import com.camut.pageModel.PageClassification;
@@ -41,6 +43,7 @@ import com.camut.service.OpenTimeService;
 import com.camut.service.OrderService;
 import com.camut.service.RestaurantsService;
 import com.camut.service.ViewRestaurantService;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.MD5Util;
 import com.camut.utils.MailUtil;
@@ -159,28 +162,26 @@ public class IndexController {
 	 * @return String  url
 	 */
 	@RequestMapping(value = "/searchlist")
-	public String searchListPage(ViewRestaurant viewRestaurant,Model model){
-		 ViewRestaurant restaurant = new ViewRestaurant();
-		if (viewRestaurant.getRestaurantLat()!=null && viewRestaurant.getRestaurantLng()!=null) {
+	public String searchListPage(ViewRestaurant viewRestaurant, Model model) {
+		ViewRestaurant restaurant = new ViewRestaurant();
+		if (viewRestaurant.getRestaurantLat() != null && viewRestaurant.getRestaurantLng() != null) {
 			restaurant.setRestaurantLat(viewRestaurant.getRestaurantLat());
 			restaurant.setRestaurantLng(viewRestaurant.getRestaurantLng());
 			model.addAttribute("restaurantLng", restaurant.getRestaurantLng());
 			model.addAttribute("restaurantLat", restaurant.getRestaurantLat());
-			model.addAttribute("date", new SimpleDateFormat("HH:mm").format(new Date()));
+			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(viewRestaurant.getRestaurantLat(),
+					viewRestaurant.getRestaurantLng());
+			model.addAttribute("date", new SimpleDateFormat("HH:mm").format(currentLocalTime));
 			List<PageClassification> list = classificationService.getAllClassification();
 			model.addAttribute("classifications", list);
 			model.addAttribute("classification", viewRestaurant.getClassificationName());
 			model.addAttribute("userLatLng", "true");
 			return "home/searchList";
-		}else{
+		} else {
 			model.addAttribute("userLatLng", "false");
-			//return "redirect:home/index";
-			return "redirect:"+"../index/index";
+			// return "redirect:home/index";
+			return "redirect:" + "../index/index";
 		}
-		
-		
-		
-		
 	}
 	
 	/**

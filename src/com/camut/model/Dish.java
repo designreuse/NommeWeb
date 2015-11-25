@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "dat_dish", catalog = "nomme")
+@Table(name = "dat_dish")
 public class Dish extends IdEntity implements java.io.Serializable,Comparable<Dish> {
 
 	// Fields
