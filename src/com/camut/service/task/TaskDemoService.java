@@ -1,6 +1,6 @@
 package com.camut.service.task;
 
-
+@Deprecated
 public interface TaskDemoService {
 	
 	/**
