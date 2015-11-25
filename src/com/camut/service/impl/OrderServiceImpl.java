@@ -65,6 +65,7 @@ import com.camut.pageModel.PageOrderItem;
 import com.camut.pageModel.PageRestaurantOrderStatement;
 import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.service.CartService;
+import com.camut.service.ConsumersAddressService;
 import com.camut.service.ConsumersService;
 import com.camut.service.DishGarnishService;
 import com.camut.service.DishService;
@@ -98,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired private OrderDishGarnishDao orderDishGarnishDao;
 	@Autowired private DishService dishService;
 	@Autowired private ConsumersService consumersService;
+	@Autowired private ConsumersAddressService consumersAddressService;
 	@Autowired private DishGarnishService dishGarnishService;
 	@Autowired private GarnishItemService garnishItemService;
 	@Autowired private GarnishHeaderDao garnishHeaderDao;
@@ -1225,8 +1227,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: @return
 	 * @return List<PagePastOrderInfo>  
 	 */
-	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid,int orderType, PageFilter pf){
-		PageMessage pm = orderDao.getPastOrderInfoByConsumerUuid(consumerUuid,orderType,pf);
+	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int orderType, PageFilter pf) {
+		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		PageMessage pm = orderDao.getPastOrderInfoByConsumerUuid(consumerUuid, orderType, localTime, pf);
 		return pm;
 	}
 

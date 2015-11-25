@@ -1,6 +1,7 @@
 package com.camut.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.camut.pageModel.PageConsumersAddress;
 import com.camut.service.ConsumersAddressService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.GetLatLngByAddress;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.StringUtil;
 
 /**
@@ -365,6 +367,31 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 			return cadam;
 		}
 		return null;
+	}
+
+	/**
+	 * @Title: getCurrentLocalTimeFromConsumersAddressDefaultByConsumerUuid
+	 * @Description: get the local time from customer default address
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	@Override
+	public Date getCurrentLocalTimeFromConsumersDefaultAddress(String consumerUuid) {
+		ConsumersAddress consumersDefautAddress = consumersAddressDao.getConsumersAddressDefaultByUuid(consumerUuid);
+		Date currentLocalTime = new Date();
+		if (consumersDefautAddress != null) {
+			currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(consumersDefautAddress.getLat(),
+					consumersDefautAddress.getLng());
+		} else {
+			List<ConsumersAddress> addressList = consumersAddressDao.getConsumersAddressByUuid(consumerUuid);
+			if (addressList != null) {
+				if (addressList.size() > 0) {
+					currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(addressList.get(0).getLat(),
+							addressList.get(0).getLng());
+				}
+			}
+		}
+		return currentLocalTime;
 	}
 
 

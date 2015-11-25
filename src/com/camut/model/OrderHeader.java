@@ -41,6 +41,8 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 	private String restaurantUuid;// 商家编号
 	private Integer status;// 订单状态 0：订单取消状态 1:未付款 2：已付款 3：已接单 4:拒绝接单  6：已退款
 							// 7：完成的订单  8：line up  9：现金付款   10:待审核
+							// 0: cancelled, 1: unpaid, 2: paid, 3: has orders, 4: refuse, 6: refunded, 7: completed, 8: line-up, 9: pay cash, 10: pending 
+	
 	private Date orderDate;// 送货时间
 	private Integer number;// 就餐人数
 	private String address;// 地址

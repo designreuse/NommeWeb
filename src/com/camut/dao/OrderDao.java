@@ -219,7 +219,7 @@ public interface OrderDao {
 	 * @param: @return
 	 * @return List<PagePastOrderInfo>  
 	 */
-	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid,int orderType, PageFilter pf);
+	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int statusType, Date localTime, PageFilter pf);
 	
 	/**
 	 * @Title: handleOrder
