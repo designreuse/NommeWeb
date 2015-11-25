@@ -1,5 +1,6 @@
 package com.camut.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.camut.model.ConsumersAddress;
@@ -128,5 +129,13 @@ public interface ConsumersAddressService {
 	 */
 	public ConsumersAddressDefaultApiModel getConsumersAddressDefaultByConsumerUuid(String consumerUuid);
 	
+	
+	/**
+	 * @Title: getCurrentLocalTimeFromConsumersAddressDefaultByConsumerUuid
+	 * @Description: get the local time from customer default address
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeFromConsumersDefaultAddress(String consumerUuid);
 
 }

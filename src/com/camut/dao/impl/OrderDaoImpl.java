@@ -541,10 +541,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @param: @return
 	 * @return List<PagePastOrderInfo>  
 	 */
-	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int statusType, PageFilter pf){
+	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int statusType, Date localTime, PageFilter pf){
 		PageMessage pm = new PageMessage();
 		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
-		String today = smp.format(new Date());//当天日期
+		String today = smp.format(localTime);//当天日期
 		
 		Calendar calendar=Calendar.getInstance(); 
 		calendar.add(Calendar.DAY_OF_MONTH, -7);
