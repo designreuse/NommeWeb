@@ -635,7 +635,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 */
 	@Override
 	public double getCharityAmount(String consumerUuid) {
-		String sql = "select sum(money) from tbl_order_charity a where a.consumer_uuid ='"+consumerUuid+"'";
+		String sql = "select sum(money) from tbl_order_charity a, dat_order_header b where a.consumer_uuid ='"+consumerUuid+"' and a.order_id = b.id and b.status = 7";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		Object object= query.uniqueResult();
 		if(object!=null){
