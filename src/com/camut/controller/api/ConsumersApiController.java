@@ -773,6 +773,16 @@ public class ConsumersApiController extends BaseAPiModel {
 					orderHeader.setPeopleName(map.get("firstName").toString()+" "+map.get("lastName"));
 				}
 				if(map.get("phone")!=null){
+					Consumers consumers = consumersService.getConsumersByUuid(map.get("consumerUuid").toString());
+					if(!StringUtil.isNotEmpty(consumers.getPhone())){
+						ConsumersApiModel consumersApiModel = null;
+						consumersApiModel.setConsumerUuid(consumers.getUuid());
+						consumersApiModel.setFirstName(consumers.getFirstName());
+						consumersApiModel.setLastName(consumers.getLastName());
+						consumersApiModel.setPhone(map.get("phone").toString());
+						consumersApiModel.setEmail(consumers.getEmail());
+						consumersService.updateConsumers(consumersApiModel);
+					}
 					orderHeader.setPhoneNumber(map.get("phone").toString());
 				}
 				if(map.get("email")!=null){

@@ -119,7 +119,7 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 		if (cartHeader != null) {
 			double fee = 0;
 			for (CartItem cartItem : cartHeader.getCartItems()) {
-				if (cartItem.getDishId() == dishId) {
+				if (cartItem.getId() == dishId) {
 					fee = cartItem.getUnitprice();
 					for (CartDishGarnish subItem : cartItem.getCartDishGarnishs()) {
 						int i = cartDishGarnishDao.deleteCartDishGarnish(subItem.getId().getGarnishItemId(), subItem.getId().getCartItemId());
@@ -132,7 +132,8 @@ public class CartHeaderServiceImpl implements CartHeaderService {
 			}
 
 			// 删除cartitem
-			int i = cartHeaderDao.deleteCartDish(cartHeader.getId(), dishId);
+			//int i = cartHeaderDao.deleteCartDish(cartHeader.getId(), dishId);
+			int i = cartHeaderDao.deleteCartDish(dishId);
 			// 总价减去删除菜品的价格
 			if (i == 1) {
 				cartHeader.setDishFee(StringUtil.convertLastDouble(cartHeader.getDishFee() - fee));

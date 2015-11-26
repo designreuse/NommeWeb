@@ -3,6 +3,7 @@
  */
 package com.camut.model.api;
 
+import java.io.Serializable;
 import com.camut.utils.StringUtil;
 
 /**
@@ -13,7 +14,7 @@ import com.camut.utils.StringUtil;
  * @updateTime
  * @memo
  */
-public class ViewConsumerClassifitionApiModel {
+public class ViewConsumerClassifitionApiModel implements  Serializable{
 
 	private String classification;//餐厅分类名称
 	private int classificationId;//餐厅分类id

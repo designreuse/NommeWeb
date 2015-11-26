@@ -69,8 +69,8 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户地址列表
    	<form action="${ctx }/api/consumer/address/list" method="post">
-   		用户ID：<input type="text" name="consumerUuid" value="6c855063536a429bb120c305e017c26e">
-   		商家ID：<input type="text" name="restaurantUuid" value="92e67f88c85544c2926a5e65b5e0fb28">
+   		用户ID：<input type="text" name="consumerUuid" value="da9b3de1396e4ccb829f95d6589111ad">
+   		商家ID：<input type="text" name="restaurantUuid" value="9b740d70ad8c4214ba6561e512ea8949">
    		<input type="submit" value="提交" >
    	</form>
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

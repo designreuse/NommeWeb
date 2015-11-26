@@ -104,6 +104,7 @@ public class CartServiceImpl implements CartService {
 					cartItemApiModel.setDishName(dish.getEnName());
 					cartItemApiModel.setPhotoUrl(dish.getPhotoUrl());
 					cartItemApiModel.setCartItemId(cartItem.getId().intValue());
+					cartItemApiModel.setDishId(cartItem.getId().intValue());
 						List<CartDishGarnishApiModel> apiModels = new ArrayList<CartDishGarnishApiModel>();
 						// 遍历购物车配菜表
 						for (CartDishGarnish cartDishGarnish : cartItem.getCartDishGarnishs()) {
