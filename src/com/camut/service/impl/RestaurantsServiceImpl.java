@@ -44,6 +44,7 @@ import com.camut.pageModel.PageRestaurantName;
 import com.camut.pageModel.PageRestaurantsMenu;
 import com.camut.service.RestaurantsService;
 import com.camut.service.RestaurantsUserService;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.MailUtil;
 import com.camut.utils.PageEvaluteComparator;
@@ -572,6 +573,23 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 			return rmam;
 		}
 		return null;
+	}
+	
+	/**
+	 * @Title: getCurrentLocalTimeFromRestaurantsUuid
+	 * @Description: get the local time from restaurant's uuid
+	 * @param: restaurantUuid
+	 * @return: Date
+	 */
+	@Override
+	public Date getCurrentLocalTimeFromRestaurantsUuid(String restaurantUuid) {
+		Restaurants restaurant = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
+		Date currentLocalTime = new Date();
+		if (restaurant != null) {
+			currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurant.getRestaurantLat(),
+					restaurant.getRestaurantLng());
+		}
+		return currentLocalTime;
 	}
 
 }
