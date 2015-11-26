@@ -2,7 +2,6 @@ package com.camut.service.task.impl;
 
 import java.util.TimerTask;
 
-@Deprecated
 public class OrderTask extends TimerTask{
 
 	private String orderId;
