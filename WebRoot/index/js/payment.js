@@ -434,6 +434,13 @@ $(function(){
 	});
   });
   
+  $("button[name='noDonation']").click(function(){
+	  $.cookie("selectReservationOrderId", "",{expires:10,path: '/' }); 
+	  $.cookie("orderSelectDate", "",{expires:10,path: '/' }); 
+	  $.cookie("orderSelectTime", "",{expires:10,path: '/' }); 
+	  location.replace(appPath+"/index/user?flag=4");
+  });
+  
   $("button[name='sure']").click(function(){
 	  var s = $("#charity > option");
 	  if(s.length>0){
@@ -448,12 +455,6 @@ $(function(){
 				  $("#displayAfter").css('display','block');
 			  }
 		  });
-	  }
-	  else{
-		  	$.cookie("selectReservationOrderId", "",{expires:10,path: '/' }); 
-			$.cookie("orderSelectDate", "",{expires:10,path: '/' }); 
-			$.cookie("orderSelectTime", "",{expires:10,path: '/' }); 
-	  		location.replace(appPath+"/index/user?flag=4");
 	  }
   });
   
