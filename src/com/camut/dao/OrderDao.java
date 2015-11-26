@@ -87,7 +87,7 @@ public interface OrderDao {
 	 * @param:  consumerId  
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> selectCurrentOrder(String consumerUuid);
+	public List<OrderHeader> selectCurrentOrder(String consumerUuid, Date localTime);
 	
 	/**
 	 * @Title: cancelOrder

@@ -173,11 +173,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> selectCurrentOrder(String consumerUuid) {
+	public List<OrderHeader> selectCurrentOrder(String consumerUuid, Date localTime) {
 		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(1,2,3,8,9,10) and date_format(oh.orderDate,'%Y-%m-%d')>=:dt order by oh.orderDate desc";//
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-		String tablename1 = dateFormat1.format(new Date());
+		String tablename1 = dateFormat1.format(localTime);
 		map.put("dt", tablename1);
 		map.put("consumerUuid", consumerUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
