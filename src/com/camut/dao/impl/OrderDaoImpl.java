@@ -309,14 +309,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: liveOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeaderId> liveOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<OrderHeaderId> liveOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
 				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
@@ -330,14 +330,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: upcomingOrder
 	 * @Description: 非当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeaderId> upcomingOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<OrderHeaderId> upcomingOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
 				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);

@@ -449,6 +449,12 @@ $(function(){
 			  }
 		  });
 	  }
+	  else{
+		  	$.cookie("selectReservationOrderId", "",{expires:10,path: '/' }); 
+			$.cookie("orderSelectDate", "",{expires:10,path: '/' }); 
+			$.cookie("orderSelectTime", "",{expires:10,path: '/' }); 
+	  		location.replace(appPath+"/index/user?flag=4");
+	  }
   });
   
   //四舍五入，保留两位小数
