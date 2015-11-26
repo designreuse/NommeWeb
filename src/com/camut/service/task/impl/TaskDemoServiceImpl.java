@@ -24,7 +24,7 @@ import com.camut.utils.MailUtil;
 import com.camut.utils.PushUtil;
 import com.camut.utils.StringUtil;
 
-
+@Deprecated
 @Service
 public class TaskDemoServiceImpl implements TaskDemoService {
 	@Autowired OrderService orderService;

@@ -109,9 +109,11 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired private ConsumersAddressDao consumersAddressDao;
 	@Autowired private DiscountDao discountDao;
 	@Autowired private CartService cartService;
-	@Autowired private PaymentService paymentService;  
-	@Autowired private TaskDemoService taskDemoService;
+	@Autowired private PaymentService paymentService; 
 	@Autowired private OrderCharityService orderCharityService;
+	
+	//Deprecated
+	//@Autowired private TaskDemoService taskDemoService;
 	
 	private static long newOrderId = 0;
 	
@@ -198,8 +200,9 @@ public class OrderServiceImpl implements OrderService {
 				if (flag == -1) {
 					return -1;
 				} else {
-					taskDemoService.pushOrderid(orderHeader.getId());
-					taskDemoService.timerTaskOrder();
+					//Deprecated
+					//taskDemoService.pushOrderid(orderHeader.getId());
+					//taskDemoService.timerTaskOrder();
 				}
 			}
 			else{//delivery or pick-up
@@ -207,9 +210,10 @@ public class OrderServiceImpl implements OrderService {
 				Log4jUtil.info("新增订单==> 订单类型:"+orderHeader.getOrderType() +"-->id:"+ohid);
 				if (ohid==-1) {
 					return -1;
-				}			
-				taskDemoService.pushOrderid(ohid);
-				taskDemoService.timerTaskOrder();
+				}
+				//Deprecated 
+				//taskDemoService.pushOrderid(ohid);
+				//taskDemoService.timerTaskOrder();
 				orderHeader.setId(ohid);
 			}
 			
