@@ -371,6 +371,25 @@ public class PaymentController {
 	};
 	
 	/**
+	 * @Title: getAllCharityFirstLetters
+	 * @Description: gets the unique first letters for all available charities
+	 * @return: List<String>
+	 */
+	@RequestMapping(value = "getAllCharityFirstLetters")
+	@ResponseBody
+	public List<String> getAllCharityFirstLetters() {
+		List<Charity> charityList = charityService.getAllCharity();
+		List<String> charityFirstLetters = new ArrayList<String>();
+		for (Charity charity : charityList) {
+			String currentFirstLetter = Character.toString(charity.getCharityName().charAt(0));
+			if (charityFirstLetters.contains(currentFirstLetter) == false) {
+				charityFirstLetters.add(currentFirstLetter);
+			}
+		}
+		return charityFirstLetters;
+	}
+	
+	/**
 	 * @Title: getAllCharity
 	 * @Description: 根据首字母获取慈善机构
 	 * @param:    
