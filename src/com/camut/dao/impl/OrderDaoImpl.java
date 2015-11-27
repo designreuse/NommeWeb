@@ -352,13 +352,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @Title: acceptOrder
 	 * @Description: 当天已处理的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId, o.createdate as createdate, o.order_date as orderDate, o.phone_number as phone,o.order_type as orderType, "
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
@@ -382,13 +382,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @Title: acceptUpcomingOrder
 	 * @Description: 已处理非当天的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId, o.createdate as createdate, o.order_date as orderDate, o.phone_number as phone,o.order_type as orderType, "
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "

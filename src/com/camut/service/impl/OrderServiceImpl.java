@@ -835,7 +835,8 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<AcceptOrderApiModel> ohList = orderDao.acceptOrder(restaurantUuid);
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			List<AcceptOrderApiModel> ohList = orderDao.acceptOrder(restaurantUuid, localTime);
 			for (AcceptOrderApiModel a : ohList) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				String tablename = dateFormat.format(a.getOrderDate());
@@ -875,7 +876,8 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<AcceptOrderApiModel> ohList = orderDao.acceptUpcomingOrder(restaurantUuid);
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			List<AcceptOrderApiModel> ohList = orderDao.acceptUpcomingOrder(restaurantUuid, localTime);
 			for (AcceptOrderApiModel a : ohList) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				String tablename = dateFormat.format(a.getOrderDate());
