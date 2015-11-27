@@ -261,7 +261,6 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.setParameter("consumerUuid", consumerUuid);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderType", orderType);
-		System.out.println("currentTime="+ currentTime+ ", currentOrderNo=" + currentOrderNo +", consumerUuid=" + consumerUuid + ", restaurantUuid=" + restaurantUuid + ", orderType=" + orderType );
 		//query.setParameter("status", status);
 		//query.setParameter("endDate", endDate);
 		query.setResultTransformer(Transformers.aliasToBean(PageSelectItemReservationOrder.class));
@@ -271,9 +270,6 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("itemSize",new org.hibernate.type.IntegerType());
 		List<PageSelectItemReservationOrder> list = query.list();
-		if(list!= null){
-			System.out.println("count="+ list.size());
-		}
 		return list;
 		
 	}
