@@ -5,24 +5,31 @@ $(function(){
 	$("#bg").css("display", "block");
 	$("#show").css("display", "block");
 	
-	for (var i = 65; i < 91; i++) {
-		$("#az").append("<option value="+String.fromCharCode(i)+">"+String.fromCharCode(i)+"</option>");
-	}
-	
 	$.ajax({
-  			 type: "POST",
-   			 url: appPath+'/payment/getAllCharity',
-   			 data:{
-   			 	'letter':$("#az").val()
-   			 },
-   			 success: function(msg){
-   			 	var charitys = $.parseJSON(msg);
-   			 	$.each(charitys,function(index,item){
-   			 		$("#charity").append("<option value="+item.id+">"+item.charityName+"</option>");
-   			 	});
-     			
-   			 }
-		});
+		type: "GET",
+		url: appPath+'/payment/getAllCharityFirstLetters',
+		success: function(msg){
+			var charityFirstLetters = $.parseJSON(msg);
+			for(var i = 0; i < charityFirstLetters.length; i++) {
+				$("#az").append("<option value="+charityFirstLetters[i]+">"+charityFirstLetters[i]+"</option>");
+			}
+			
+			// Now that the first letters are populated, get the selected first letter's default charity.
+			$.ajax({
+				 type: "POST",
+				 url: appPath+'/payment/getAllCharity',
+				 data:{
+					'letter':$("#az").val()
+				 },
+				 success: function(msg){
+					var charitys = $.parseJSON(msg);
+					$.each(charitys,function(index,item){
+						$("#charity").append("<option value="+item.id+">"+item.charityName+"</option>");
+					});
+				 }
+			});
+		}
+	});
 	
 	$("#az").change(function(){
 		$("#charity").empty();
