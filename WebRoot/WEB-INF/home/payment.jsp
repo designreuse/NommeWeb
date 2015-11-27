@@ -63,7 +63,11 @@
 		<div id="bg" style="display: block;">
 		</div>
 		<div id="charityDisplay">
-			<div id="charityNum" style="margin: 0px auto;width: 400px;margin-top: 50px;font-size: x-large;color: #666666;">please select a charity to donations<br></div>
+			<div id="charityNum" style="margin: 0px auto;width: 400px;margin-top: 50px;font-size: medium;color: #666666;">
+				Order placed. You can view your order information at My Nomme.
+				<br>
+				Please select an optional charity to donate to.
+			</div>
 			<div style="width: 150px;margin-top: 50px;margin-left: 160px;" class="row" >
 				<div class="col-md-4">
 					<select id="az" style="height: 35px;">
@@ -74,7 +78,8 @@
 					</select>
 				</div>
 			</div> 
-			<div style="margin: 0px auto;width: 260px;margin-top: 20px;">
+			<div id="charityButtonArea" style="margin: 0px auto;width: 260px;margin-top: 20px;">
+				<button type="button" name="noDonation" class="btn xc-btn-success btn-lg btn-block" data-placement="top">NO THANKS</button>
 				<button type="button" name="sure" class="btn xc-btn-success btn-lg btn-block" data-placement="top">OK</button>
 			</div>
 		</div>
@@ -84,9 +89,7 @@
 		<div id="bg" style="display: block;"></div>
 		<div id="charityAfter">
 			<div style="margin: 0px auto;width: 450px;margin-top: 50px;font-size: large;color: #666666;">
-				Thank you for your contributions to the foundation!<br>
-				Your order has been completed,<br>
-				You can view your order information at My Nomme.<br>
+				Thank you for your contribution!
 			</div>
 			<div style="margin: 0px auto;width: 260px;margin-top: 50px;">
 				<button type="button" name="sureAfter" class="btn xc-btn-success btn-lg btn-block" data-placement="top">OK</button>
