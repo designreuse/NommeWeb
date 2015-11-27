@@ -73,6 +73,7 @@ import com.camut.service.GarnishItemService;
 import com.camut.service.OrderCharityService;
 import com.camut.service.OrderService;
 import com.camut.service.PaymentService;
+import com.camut.service.RestaurantsService;
 import com.camut.service.task.TaskDemoService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.CreateOrderNumber;
@@ -112,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired private PaymentService paymentService;  
 	@Autowired private TaskDemoService taskDemoService;
 	@Autowired private OrderCharityService orderCharityService;
+	@Autowired private RestaurantsService restaurantsService;
 	
 	private static long newOrderId = 0;
 	
@@ -787,14 +789,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: liveOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
 	 * @return: List<OrderHeader>
 	 */
 	@Override
 	public LiveOrderApiMdoel liveOrder(String restaurantUuid) {
 		List<Long> orderId = new ArrayList<Long>();
 		LiveOrderApiMdoel liveOrderApiMdoel = new LiveOrderApiMdoel();
-		List<OrderHeaderId> oh = orderDao.liveOrder(restaurantUuid);
+		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		List<OrderHeaderId> oh = orderDao.liveOrder(restaurantUuid, localTime);
 		for (OrderHeaderId orderHeader : oh) {
 			orderId.add(orderHeader.getOrderId());
 		}
@@ -806,14 +809,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: upcomingOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
 	 * @return: List<OrderHeader>
 	 */
 	@Override
 	public LiveOrderApiMdoel upcomingOrder(String restaurantUuid) {
 		List<Long> orderId = new ArrayList<Long>();
 		LiveOrderApiMdoel liveOrderApiMdoel = new LiveOrderApiMdoel();
-		List<OrderHeaderId> oh = orderDao.upcomingOrder(restaurantUuid);
+		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		List<OrderHeaderId> oh = orderDao.upcomingOrder(restaurantUuid, localTime);
 		for (OrderHeaderId orderHeader : oh) {
 			orderId.add(orderHeader.getOrderId());
 		}

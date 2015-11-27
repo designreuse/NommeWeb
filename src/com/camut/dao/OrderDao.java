@@ -135,18 +135,20 @@ public interface OrderDao {
 	/**
 	 * @Title: liveOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeaderId> liveOrder(String restaurantUuid);
+	public List<OrderHeaderId> liveOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: upcomingOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeaderId> upcomingOrder(String restaurantUuid);
+	public List<OrderHeaderId> upcomingOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: acceptOrder
