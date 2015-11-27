@@ -155,17 +155,19 @@ public interface OrderDao {
 	 * @Title: acceptOrder
 	 * @Description: 当天已处理的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid);
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: acceptUpcomingOrder
 	 * @Description: 已处理非当天的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid);
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: totalAmount
