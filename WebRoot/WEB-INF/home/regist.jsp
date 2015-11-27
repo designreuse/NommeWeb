@@ -224,7 +224,7 @@
 	</c:if>
 	<!-- dibu kaishi-->
 	<div style="display:none;" id="sessionCartAddress">${sessionScope.cartAddress}</div>
-	<input type="hidden" id = "currentConsumerId" value="${sessionScope.consumer.id}">
+	<input type="hidden" id = "currentConsumerUuid" value="${sessionScope.consumer.uuid}">
 	<input type="hidden" id = "checkOutOrderType" value="${sessionScope.checkOutOrderType}"><!-- 订购单类型 -->
 	<div class="search-bottom" align="center">
 

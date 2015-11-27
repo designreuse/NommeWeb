@@ -121,7 +121,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 	@Override
 	public int updateConsumers(ConsumersApiModel consumersApiModel) {
 		if(consumersApiModel != null){
-			Consumers consumers2 = consumersDao.getConsumersById(consumersApiModel.getConsumerId());
+			Consumers consumers2 = consumersDao.getConsumersByUuid(consumersApiModel.getConsumerUuid());
 			if(consumers2 != null){
 				consumers2.setFirstName(consumersApiModel.getFirstName());
 				consumers2.setLastName(consumersApiModel.getLastName());
@@ -156,6 +156,20 @@ public class ConsumersServiceImpl implements ConsumersService {
 		return null;
 	}
 
+	/**
+	 * @Title: getConsumersByUuid
+	 * @Description: 通id查找用户
+	 * @param:    id
+	 * @return: Consumers
+	 */
+	@Override
+	public Consumers getConsumersByUuid(String consumerUuid) {
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			return consumersDao.getConsumersByUuid(consumerUuid);
+		}
+		return null;
+	}
+	
 	/**
 	 * @Title: forgetPassword
 	 * @Description: 判断email是否存在
@@ -196,7 +210,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 	 * @return: Consumers
 	 */
 	@Override
-	public long saveTokenAndType(Consumers consumers) {
+	public String saveTokenAndType(Consumers consumers) {
 		return consumersDao.saveTokenAndType(consumers);
 	}
 
@@ -272,17 +286,18 @@ public class ConsumersServiceImpl implements ConsumersService {
 	 * @return: List<ViewConsumerClassifitionApiModel>
 	 */
 	@Override
-	public List<ViewConsumerClassifitionApiModel> getShortcutMenu(int consumerId,Integer type) {
+	public List<ViewConsumerClassifitionApiModel> getShortcutMenu(String consumerUuid,Integer type) {
 		List<ViewConsumerClassification> list =null;
-		if(consumerId!=0){
-			list = viewConsumerClassificationDao.getClassificationNames(consumerId);
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			list = viewConsumerClassificationDao.getClassificationNames(consumerUuid);
 		}
 		List<ViewConsumerClassifitionApiModel> apiModels = new ArrayList<ViewConsumerClassifitionApiModel>();
-		int num = 4;
-		if(type!=null && type==3){//当是网站调用的时候需要显示5个
-			num = 5;
-		}
+		
 		if (list!=null&&list.size()>0) {
+			int num = list.size()>3?4:list.size();
+			if(type!=null && type==3){//当是网站调用的时候需要显示5个
+				num = list.size()>4?5:list.size();
+			}
 			if(list.size()>=num){//够展示的4个
 				for(int i=0;i<num;i++){
 					ViewConsumerClassifitionApiModel apiModel = new ViewConsumerClassifitionApiModel();
@@ -357,6 +372,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 		else{
 			List<Classification> list1 = classificationDao.getAllClassification();
 			if(list1!=null && list1.size()>0){
+				int num = list1.size()>0?1:list1.size();
 				for(int i=0;i<num;i++){
 					ViewConsumerClassifitionApiModel apiModel = new ViewConsumerClassifitionApiModel();
 					apiModel.setClassification(list1.get(i).getClassificationName());

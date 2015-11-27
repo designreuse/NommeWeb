@@ -19,7 +19,7 @@ public class OrderDetailsApiModel implements Serializable {
 	 */
 	private static final long serialVersionUID = -1657564694878468672L;
 	private long orderId;
-	private Integer restaurantId;// 商家编号
+	private String restaurantUuid;// 商家编号
 	private String restaurantName="";// 店名
 	private String restaurantAddress="";// 餐厅地址
 	private Integer orderType;//订单种类，1:外送 2：自取 3：到店就餐;
@@ -35,7 +35,7 @@ public class OrderDetailsApiModel implements Serializable {
 	private Integer status;// 订单状态  0：订单取消状态 1:未付款 2：已付款 3：已接单 4:拒绝接单 5：退单 6：已退款 7：完成的订单
 	private String orderDate;// 送货时间	
 	private String orderDateStr; //long类型的订单时间
-	private long consumersId; //用户
+	private String consumerUuid; //用户
 	private String consumersName="";
 	private String consumersIdPhone="";	
 	private Integer payment;// 付款类型
@@ -157,11 +157,11 @@ public class OrderDetailsApiModel implements Serializable {
 	public void setItem(List<CartItemApiModel> item) {
 		this.item = item;
 	}
-	public long getConsumersId() {
-		return consumersId;
+	public String getConsumerUuid() {
+		return consumerUuid;
 	}
-	public void setConsumersId(long consumersId) {
-		this.consumersId = consumersId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
 	public String getConsumersName() {
 		return consumersName;
@@ -181,11 +181,11 @@ public class OrderDetailsApiModel implements Serializable {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getDiscountText() {
 		return discountText;

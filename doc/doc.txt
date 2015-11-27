@@ -16,4 +16,9 @@ Email send interface:
   SimpleMailSender sms = new SimpleMailSender();  
   sms.sendTextMail(mailInfo);//sendTextMail发送文体格式   
   //sms.sendHtmlMail(mailInfo);//sendHtmlMail发送html格式  
-	
+  
+  
+  2015-11-23 张云飞修改
+  src/com/camut/controller/api/CommonController.java  
+       第219行  Consumers c = consumersService.getConsumersById(oh.getConsumers().getId());
+       改成   Consumers c = consumersService.getConsumersByUuid(oh.getConsumers().getUuid());

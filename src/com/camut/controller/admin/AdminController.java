@@ -252,27 +252,34 @@ public class AdminController {
 	 */
 	@RequestMapping(value="/sendemail",method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage sendEmail(String emailAddress,HttpSession session){
-		//int temp = 0;
+	public PageMessage sendEmail(String emailAddress, HttpSession session) {
+		// int temp = 0;
 		PageMessage pm = new PageMessage();
-		
-		PageAdminUser admin = adminService.getAdminByLoginname(emailAddress);
-		if(admin == null){
 
-			pm.setErrorMsg(MessageConstant.LOGINNAME_ERROR);//no such login name(email)
+		PageAdminUser admin = adminService.getAdminByLoginname(emailAddress);
+		if (admin == null) {
+
+			pm.setErrorMsg(MessageConstant.LOGINNAME_ERROR);// no such login
+															// name(email)
 			pm.setSuccess(false);
 			return pm;
-		}else{
-			String verificationCode = (int)(Math.random()*900000+100000)+"";//生成6位验证码; generate 6 digits code
-			//System.out.println(verificationCode);
+		} else {
+			String verificationCode = (int) (Math.random() * 900000 + 100000) + "";// 生成6位验证码;
+																					// generate
+																					// 6
+																					// digits
+																					// code
+			// System.out.println(verificationCode);
 			session.setAttribute("verificationCode", verificationCode);
-			session.setAttribute("loginname",admin.getLoginname());
-			String title = "Verification code by Nomme";
-			String content = "To reset you own "+emailAddress+" password , please enter in this verification code: <span style='color:#064977'>" 
-					+ verificationCode + "</span> to the retrieve password input box, and then click the button to reset the password."
-					+ "<br> Note: please use the verification code within 30 minutes.";
+			session.setAttribute("loginname", admin.getLoginname());
+			String title = "Verification code from Nomme";
+			String content = "To reset the password of your Nomme account " + emailAddress
+					+ ", please enter in this verification code <span style='color:#064977'>" + verificationCode
+					+ "</span> in the input box to retrieve your password, and then click the button to reset the password."
+					+ " Please use the verification code within 30 minutes.";
 			MailUtil.sendMail(title, content, emailAddress);
-			//String user = ((Admin)session.getAttribute("adminUser")).getLoginname();
+			// String user =
+			// ((Admin)session.getAttribute("adminUser")).getLoginname();
 			Log4jUtil.info("管理员", "测试发送邮件");
 			pm.setSuccess(true);
 			return pm;
@@ -331,7 +338,7 @@ public class AdminController {
 		newAdmin.setPassword(MD5Util.md5(pageAdminUser.getPassword()));
 		//newAdmin.setSex(Integer.parseInt(pageAdminUser.getSex()));
 		//newAdmin.setAge(Integer.parseInt(pageAdminUser.getAge()));
-		newAdmin.setUsertype(1);
+		newAdmin.setUsertype(Integer.parseInt(pageAdminUser.getUsertype()));
 		newAdmin.setState(0);
 		newAdmin.setModon(new Date());
 		newAdmin.setModby(operator.getFirstName()+" "+operator.getLastName());
@@ -637,9 +644,9 @@ public class AdminController {
 	 */
 	@RequestMapping(value="auditrestaurant", method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage auditRestaurant(long id, int statu){
+	public PageMessage auditRestaurant(String restaurantUuid, int statu){
 		PageMessage pm= new PageMessage(); 
-		int temp = restaurantsService.auditRestaurant(id, statu);
+		int temp = restaurantsService.auditRestaurant(restaurantUuid, statu);
 		// -1修改失败, 1修改成功
 		if(temp>0){
 			pm.setSuccess(true);
@@ -654,15 +661,15 @@ public class AdminController {
 	 * @Title: deleteRestaurant
 	 * @Description: 删除餐厅商家
 	 * @param: int id
-	 * @return PageMessage  
+	 * @return PageMessage 
 	 */
 	@RequestMapping(value="/deleterestaurant",method=RequestMethod.POST)
 	@ResponseBody
-	public PageMessage deleteRestaurant(String id){
+	public PageMessage deleteRestaurant(String restaurantUuid){
 		PageMessage pm = new PageMessage();
 		int temp = 0;
-		if(StringUtil.isNotEmpty(id)){
-			temp = restaurantsService.deleteRestaurants(Long.parseLong(id));
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			temp = restaurantsService.deleteRestaurants(restaurantUuid);
 		}
 		if(temp>0){
 			pm.setSuccess(true);
@@ -680,10 +687,10 @@ public class AdminController {
 	 * @param: order
 	 * @return List<PageRestaurantAdmins>  
 	 */
-	@RequestMapping(value="getrestaurantadminsbyrestaurantid", method = RequestMethod.GET)
+	@RequestMapping(value="getrestaurantadminsbyrestaurantUuid", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PageRestaurantAdmins> getRestaurantsAdminByRestaurantId(String restaurantId,String order){
-		List<PageRestaurantAdmins> restaurantAdminsList = restaurantsUserService.getRestaurantsUsersByRestaurantId(restaurantId);
+	public List<PageRestaurantAdmins> getRestaurantsAdminByRestaurantUuid(String restaurantUuid,String order){
+		List<PageRestaurantAdmins> restaurantAdminsList = restaurantsUserService.getRestaurantsUsersByRestaurantUuid(restaurantUuid);
 		//List<PageRestaurantsAdmin> admins = restaurantsService.getAllRestaurantsAdmin();
 		return restaurantAdminsList;
 	}
@@ -697,7 +704,7 @@ public class AdminController {
 	 */
 	@RequestMapping(value = "/auditrestaurantadmin", method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage auditRestaurantAdmin(long id, int statu, HttpSession httpSession){
+	public PageMessage auditRestaurantAdmin(String restaurantUserUuid, int statu, HttpSession httpSession){
 		PageAdminUser operator = (PageAdminUser) httpSession.getAttribute("adminUserLoginname");//session中获取当前系统的用户信息，用于设置审核商家的操作人
 		PageMessage pm = new PageMessage();
 		if(operator==null){//如果取不到session中的值，说明该用户登录超时了，提醒重新登录
@@ -706,7 +713,7 @@ public class AdminController {
 			return pm;
 		}
 		String operatorName = operator.getFirstName()+" "+operator.getLastName();
-		int temp = restaurantsUserService.auditRestaurantAdmin(id,statu,operatorName);
+		int temp = restaurantsUserService.auditRestaurantAdmin(restaurantUserUuid,statu,operatorName);
 		if(temp>0){
 			pm.setSuccess(true);
 			

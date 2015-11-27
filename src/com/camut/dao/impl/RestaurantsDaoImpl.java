@@ -72,10 +72,24 @@ public class RestaurantsDaoImpl extends BaseDao<Restaurants> implements Restaura
 	 */
 	@Override
 	public Restaurants getRestaurantsById(long id) {
-		if(id != 0){
+		if(id>0){
 			String hql = "from Restaurants r where r.id=:id and r.status>=0";
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("id", id);
+			return this.get(hql, map);
+		}
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.camut.dao.RestaurantsDao#getRestaurantsById(java.lang.String)
+	 */
+	@Override
+	public Restaurants getRestaurantsByUuid(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			String hql = "from Restaurants r where r.uuid=:restaurantUuid and r.status>=0";
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("restaurantUuid", restaurantUuid);
 			return this.get(hql, map);
 		}
 		return null;
@@ -88,13 +102,13 @@ public class RestaurantsDaoImpl extends BaseDao<Restaurants> implements Restaura
 	 * @return: int 返回的主键
 	 */
 	@Override
-	public int addRestaurants(Restaurants restaurants) {
+	public String addRestaurants(Restaurants restaurants) {
 			try {
 				Serializable serializable = this.save(restaurants);
-				return Integer.parseInt(serializable+"");
+				return serializable.toString();
 			} catch (Exception e) {
 				// TODO: handle exception
-				return 0;
+				return null;
 			}
 	}
 
@@ -166,11 +180,11 @@ public class RestaurantsDaoImpl extends BaseDao<Restaurants> implements Restaura
 	 * @param: id
 	 * @return Restaurants  
 	 */
-	public Restaurants getRestaurantByIdToAudit(long id){
-		if(id != 0){
-			String hql = "from Restaurants r where r.id=:id and r.status>=-1";
+	public Restaurants getRestaurantByUuidToAudit(String uuid){
+		if(StringUtil.isNotEmpty(uuid)){
+			String hql = "from Restaurants r where r.uuid=:uuid and r.status>=-1";
 			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("id", id);
+			map.put("uuid", uuid);
 			return this.get(hql, map);
 		}
 		return null;

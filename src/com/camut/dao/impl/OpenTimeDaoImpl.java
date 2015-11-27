@@ -25,10 +25,10 @@ public class OpenTimeDaoImpl extends BaseDao<OpenTime> implements OpenTimeDao {
 	 * @return: List<OpenTime>
 	 */
 	@Override
-	public List<OpenTime> selectOpenTime(long restaurantId) {
-		String hql = "from OpenTime o where o.restaurants.id=:restaurantId order by o.type,o.week,o.starttime";
+	public List<OpenTime> selectOpenTime(String restaurantUuid) {
+		String hql = "from OpenTime o where o.restaurants.uuid=:restaurantUuid order by o.type,o.week,o.starttime";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		List<OpenTime> otList = this.find(hql, map);
 		return otList;
 	}
@@ -77,10 +77,10 @@ public class OpenTimeDaoImpl extends BaseDao<OpenTime> implements OpenTimeDao {
 	 * @return: List<OpenTime>
 	 */
 	@Override
-	public List<OpenTime> getOpenTime(long restaurantId, int type, int week) {
-		String hql = "from OpenTime o where o.restaurants.id=:restaurantId and o.type=:type and o.week=:week";
+	public List<OpenTime> getOpenTime(String restaurantUuid, int type, int week) {
+		String hql = "from OpenTime o where o.restaurants.uuid=:restaurantUuid and o.type=:type and o.week=:week";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("type", type);
 		map.put("week", week);
 		List<OpenTime> otList = this.find(hql, map);
@@ -94,10 +94,10 @@ public class OpenTimeDaoImpl extends BaseDao<OpenTime> implements OpenTimeDao {
 	 * @return: List<OpenTime>
 	 */
 	@Override
-	public List<OpenTime> getOpenTimeByRestaurantIdAndType(long restaurantId, int type) {
-		String hql = "from OpenTime o where o.restaurants.id=:restaurantId and o.type=:type";
+	public List<OpenTime> getOpenTimeByRestaurantUuidAndType(String restaurantUuid, int type) {
+		String hql = "from OpenTime o where o.restaurants.uuid=:restaurantUuid and o.type=:type";
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		map.put("type", type);
 		return this.find(hql, map);
 	}

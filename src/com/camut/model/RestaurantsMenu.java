@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @memo
  */
 @Entity
-@Table(name = "tbl_restaurant_menu", catalog = "nomme")
+@Table(name = "tbl_restaurant_menu")
 public class RestaurantsMenu extends IdEntity implements java.io.Serializable,Comparable<RestaurantsMenu> {
 
 	/**
@@ -44,7 +44,7 @@ public class RestaurantsMenu extends IdEntity implements java.io.Serializable,Co
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurants_id")
+	@JoinColumn(name = "restaurants_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}

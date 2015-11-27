@@ -45,7 +45,7 @@
 							 <!-- onerror="noFindImage();" -->
 						</div>
 						<div class="col-md-7">
-							<p><h4 class="aDishButton"><span name="favourite-restaurantName" id="${fav.restaurantId}">${fav.restaurantName}</span></h4></p>
+							<p><h4 class="aDishButton"><span name="favourite-restaurantName" id="${fav.restaurantUuid}">${fav.restaurantName}</span></h4></p>
 							<p >
 								<h4>
 								<c:if test="${fav.avgStars!=1 && fav.avgStars!=2 && fav.avgStars!=3 && fav.avgStars!=4 && fav.avgStars!=5}">

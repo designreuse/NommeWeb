@@ -105,10 +105,10 @@ public class RestaurantsMenuDaoImpl extends BaseDao<RestaurantsMenu> implements 
 	 * @return List<RestaurantsMenu>  
 	 */
 	@Override
-	public List<RestaurantsMenu> getRestaurantsMenuByRestaurantsId(long restaurantId){
-		String hql = "from RestaurantsMenu r where r.restaurants.id=:restaurantId order by r.menuName desc"; //where r.Restaurants.id=t=:restaurantId"; //order by r.menuName desc";
+	public List<RestaurantsMenu> getRestaurantsMenuByRestaurantsUuid(String restaurantUuid){
+		String hql = "from RestaurantsMenu r where r.restaurants.uuid=:restaurantUuid order by r.menuName desc"; //where r.Restaurants.id=t=:restaurantId"; //order by r.menuName desc";
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("restaurantId", restaurantId);
+		map.put("restaurantUuid", restaurantUuid);
 		return this.find(hql,map);
 	}
 

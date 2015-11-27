@@ -8,6 +8,9 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -26,15 +29,19 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "dat_restaurants", catalog = "nomme")
-public class Restaurants extends IdEntity implements java.io.Serializable {
+@Table(name = "dat_restaurants")
+public class Restaurants implements java.io.Serializable {
 
 	// Fields
 
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = -3363966588190195756L;
+	
+	
+	private Long id;//
 	private String restaurantName;// 店名
 	private String restaurantContact;// 餐厅负责人
 	private String restaurantPhone;// 联系电话
@@ -66,12 +73,27 @@ public class Restaurants extends IdEntity implements java.io.Serializable {
 	private Integer deliverTime;// 送餐所需时间
 	private Set<DistancePrice> distancePricesSet = new HashSet<DistancePrice>();// 与配送费一对多
 	private String stripeAccount;// 餐厅的托管账号
+	private String uuid;//通用唯一识别码
 
 	// Property accessors
+	
+	
+	@Column(name = "id")
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	
 	@Column(name = "restaurant_name")
 	public String getRestaurantName() {
 		return this.restaurantName;
 	}
+
+	
 
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
@@ -234,7 +256,7 @@ public class Restaurants extends IdEntity implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "res_restaurant_classification", catalog = "nomme", joinColumns = { @JoinColumn(name = "restaurants_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "classification_id", nullable = false, updatable = false) })
+	@JoinTable(name = "res_restaurant_classification", joinColumns = { @JoinColumn(name = "restaurants_uuid", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "classification_id", nullable = false, updatable = false) })
 	public Set<Classification> getClassificationsSet() {
 		return this.classificationsSet;
 	}
@@ -342,4 +364,18 @@ public class Restaurants extends IdEntity implements java.io.Serializable {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
+
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@Column(name = "uuid")
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
+	
+	
 }

@@ -62,9 +62,9 @@ public class restaurantStatementController {
 		PageModel pm = new PageModel();
 		RestaurantsUser restaurantsUser = (RestaurantsUser)session.getAttribute("restaurantsUser");
 		if(restaurantsUser!=null){
-			String restaurantId = restaurantsUser.getRestaurants().getId()+"";
-			if(StringUtil.isNotEmpty(restaurantId)){
-				List<PageRestaurantOrderStatement> list = orderService.getRestaurantStatement(searchKey, pf, restaurantId);
+			String restaurantUuid = restaurantsUser.getRestaurants().getUuid()+"";
+			if(StringUtil.isNotEmpty(restaurantUuid)){
+				List<PageRestaurantOrderStatement> list = orderService.getRestaurantStatement(searchKey, pf, restaurantUuid);
 				pm.setRows(list);
 				pm.setTotal(list.size());				
 			}

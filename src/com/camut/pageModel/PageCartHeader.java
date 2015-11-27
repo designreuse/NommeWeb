@@ -5,7 +5,7 @@ public class PageCartHeader {
 	
 	private long id;
 	private String restaurantName;//餐厅名称
-	private Integer restaurantId;//餐厅id
+	private String restaurantUuid;//餐厅id
 	private String peopleName;//收货人姓名
 	private String email;//收货人邮箱
 	private String phone;//电话
@@ -13,7 +13,7 @@ public class PageCartHeader {
 	private String floor;//楼层门牌
 	private String memo;//备注
 	private Integer orderType;// 订单种类
-	private Integer consumerId;// 客户id
+	private String consumerUuid;// 客户id
 	private Double tax;// 税金
 	private Double logistics;//运费
 	
@@ -71,17 +71,18 @@ public class PageCartHeader {
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
 	}
-	public Integer getConsumerId() {
-		return consumerId;
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setConsumerId(Integer consumerId) {
-		this.consumerId = consumerId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
-	public Integer getRestaurantId() {
-		return restaurantId;
+	public String getConsumerUuid() {
+		return consumerUuid;
 	}
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
 	public Double getTax() {
 		return tax;

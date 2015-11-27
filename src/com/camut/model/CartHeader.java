@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * OrderCart entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "dat_cart_header", catalog = "nomme")
+@Table(name = "dat_cart_header")
 public class CartHeader extends IdEntity implements java.io.Serializable {
 
 	// Fields
@@ -26,8 +26,8 @@ public class CartHeader extends IdEntity implements java.io.Serializable {
 	private static final long serialVersionUID = 2622616905936191207L;
 	private String mobileToken;// 设备编号
 	private Integer orderType;// 订单种类
-	private Integer consumerId;// 客户id
-	private Integer restaurantId;// 商家id
+	private String consumerUuid;// 客户uuid
+	private String restaurantUuid;// 商家id
 	private Integer discountId;//优惠券Id
 	private Double dishFee;//菜品的所有金额
 	private Double total;// 总金额
@@ -64,22 +64,22 @@ public class CartHeader extends IdEntity implements java.io.Serializable {
 		this.orderType = orderType;
 	}
 
-	@Column(name = "consumer_id")
-	public Integer getConsumerId() {
-		return this.consumerId;
+	@Column(name = "consumer_uuid")
+	public String getConsumerUuid() {
+		return this.consumerUuid;
 	}
 
-	public void setConsumerId(Integer consumerId) {
-		this.consumerId = consumerId;
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
 	}
 
-	@Column(name = "restaurant_id")
-	public Integer getRestaurantId() {
-		return this.restaurantId;
+	@Column(name = "restaurant_uuid")
+	public String getRestaurantUuid() {
+		return this.restaurantUuid;
 	}
 
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 
 	@Column(name = "total", precision = 22, scale = 0)

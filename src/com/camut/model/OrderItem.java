@@ -24,7 +24,7 @@ import javax.persistence.TemporalType;
  * @memo order details
  */
 @Entity
-@Table(name = "dat_order_item", catalog = "nomme")
+@Table(name = "dat_order_item")
 public class OrderItem extends IdEntity implements java.io.Serializable,Comparable<OrderItem> {
 
 	// Fields
@@ -98,7 +98,7 @@ public class OrderItem extends IdEntity implements java.io.Serializable,Comparab
 	}
 
 	
-	@OneToMany(fetch=FetchType.LAZY,mappedBy="orderItem")
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="orderItem")
 	public Set<OrderDishGarnish> getOrderDishGarnishs() {
 		return orderDishGarnishs;
 	}

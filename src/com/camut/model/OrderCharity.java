@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * 捐款历史表 OrderCharity entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "tbl_order_charity", catalog = "nomme")
+@Table(name = "tbl_order_charity")
 public class OrderCharity extends IdEntity implements java.io.Serializable {
 
 	// Fields
@@ -22,7 +22,7 @@ public class OrderCharity extends IdEntity implements java.io.Serializable {
     private Integer orderId;
     private Integer charityId;
     private Double money;
-    private Integer consumerId;
+    private String consumerUuid;
 
 
    // Constructors
@@ -30,20 +30,16 @@ public class OrderCharity extends IdEntity implements java.io.Serializable {
    /** default constructor */
    public OrderCharity() {
    }
-
    
    /** full constructor */
-   public OrderCharity(Integer orderId, Integer charityId,  Integer consumerId ,double money) {
+   public OrderCharity(Integer orderId, Integer charityId,  String consumerUuid ,double money) {
        this.orderId = orderId;
        this.charityId = charityId;
        this.money = money;
-       this.consumerId = consumerId;
+       this.consumerUuid = consumerUuid;
    }
-
-
    
    @Column(name="order_id")
-
    public Integer getOrderId() {
        return this.orderId;
    }
@@ -53,7 +49,6 @@ public class OrderCharity extends IdEntity implements java.io.Serializable {
    }
    
    @Column(name="charity_id")
-
    public Integer getCharityId() {
        return this.charityId;
    }
@@ -63,7 +58,6 @@ public class OrderCharity extends IdEntity implements java.io.Serializable {
    }
    
    @Column(name="money", precision=22, scale=0)
-
    public Double getMoney() {
        return this.money;
    }
@@ -71,14 +65,15 @@ public class OrderCharity extends IdEntity implements java.io.Serializable {
    public void setMoney(Double money) {
        this.money = money;
    }
-   
-   @Column(name="consumer_id")
 
-   public Integer getConsumerId() {
-       return this.consumerId;
-   }
+   @Column(name="consumer_uuid")
+	public String getConsumerUuid() {
+		return consumerUuid;
+	}
+	
+	public void setConsumerUuid(String consumerUuid) {
+		this.consumerUuid = consumerUuid;
+	}
    
-   public void setConsumerId(Integer consumerId) {
-       this.consumerId = consumerId;
-   }
+   
 }

@@ -37,6 +37,7 @@ import com.camut.service.ClassificationService;
 import com.camut.service.RestaurantsService;
 import com.camut.utils.AWSUtil;
 import com.camut.utils.ImageUtils;
+import com.camut.utils.Log4jUtil;
 import com.camut.utils.StringUtil;
 
 /**
@@ -147,6 +148,7 @@ public class InformationController extends BaseController {
 		}
 		RestaurantsUser restaurantsUser = ((RestaurantsUser)request.getSession().getAttribute("restaurantsUser"));
 		Restaurants restaurants1 = this.getRestaurants(request.getSession(), request);
+		restaurants.setUuid(restaurants1.getUuid());
 		restaurants.setLogourl(restaurants1.getLogourl());
 		restaurants.setModdy(restaurantsUser.getFirstName()+" "+restaurantsUser.getLastName());
 		restaurants.setStatus(restaurants1.getStatus());
@@ -154,12 +156,18 @@ public class InformationController extends BaseController {
 		restaurants.setCreatetime(restaurants1.getCreatetime());
 		restaurants.setStripeAccount(restaurants1.getStripeAccount());
 		String[] ClassificationId = request.getParameterValues("ClassificationId");
-		for(String id:ClassificationId){
-			Classification classification = new Classification();
-			classification.setId(Long.parseLong(id));
-			set.add(classification);
+		if(ClassificationId==null){
+			Log4jUtil.info("Warning: The restaurant has no cuisines");
 		}
-		restaurants.setClassificationsSet(set);
+		else{
+			for(String id:ClassificationId){
+				Classification classification = new Classification();
+				classification.setId(Long.parseLong(id));
+				set.add(classification);
+			}
+			restaurants.setClassificationsSet(set);
+		}
+		
 		int flag = restaurantsService.updateRestaurants(restaurants);
 		if(flag==-1){
 			pm.setErrorMsg(MessageConstant.UPDATE_FAILED);

@@ -19,11 +19,30 @@
 						placement: "right"
 					});
 					$(this).popover('show');
-				}else if($.trim($(this).val()) == $("#validate").val()){
-					flag1 = true;
-					$(this).popover('destroy');
-					$("#password1").attr("type","password");
-					$("#password2").attr("type","password");
+				}else if($.trim($(this).val()).length==6){
+					$.ajax({
+						type: 'post',
+						url:appPath+'/restaurant/verifyTheCode',
+						data: {webSideCode:$.trim($("#verificationCode").val())},
+						success:function(data){
+							var msg = $.parseJSON(data);
+							if(msg.success){
+								flag1 = true;
+								$("#password1").attr("type","password");
+								$("#password2").attr("type","password");
+							}else{
+								flag1 = false;
+								$("#password1").attr("type","hidden");
+								$("#password2").attr("type","hidden");
+								$("#verificationCode").popover('destroy');
+								$("#verificationCode").popover({
+									content:" Wrong code",
+									placement: "right"
+								});
+								$("#verificationCode").popover('show');
+							}
+						}
+					})
 				}else {
 					flag1 = false;
 					$("#password1").attr("type","hidden");

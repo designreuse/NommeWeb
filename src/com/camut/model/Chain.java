@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_chain", catalog = "nomme")
+@Table(name = "tbl_chain")
 public class Chain extends IdEntity implements java.io.Serializable {
 
 	// Fields

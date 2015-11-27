@@ -53,7 +53,7 @@ public class OpenTimeController extends BaseController{
 	@ResponseBody
 	public List<PageOpenTime> getAllOpenTime(HttpServletRequest request){
 		Restaurants restaurants = this.getRestaurants(request.getSession(), request);
-		return openTimeService.getAllOpenTime(restaurants.getId());
+		return openTimeService.getAllOpenTime(restaurants.getUuid());
 	}
 	
 	/**

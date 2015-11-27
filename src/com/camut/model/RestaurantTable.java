@@ -18,9 +18,7 @@ import javax.persistence.Table;
  * @memo 
  */
 @Entity
-@Table(name="tbl_restaurant_table"
-    ,catalog="nomme"
-)
+@Table(name="tbl_restaurant_table")
 
 public class RestaurantTable extends IdEntity implements java.io.Serializable {
 
@@ -32,8 +30,8 @@ public class RestaurantTable extends IdEntity implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -1946073436417100708L;
 	private Restaurants restaurants;//与商家多对一
-     private Integer acceptanceNum;//桌位容纳人数
-     private Integer tableNum;//桌位数量
+    private Integer acceptanceNum;//桌位容纳人数
+    private Integer tableNum;//桌位数量
 
 
     // Property accessors
@@ -60,7 +58,7 @@ public class RestaurantTable extends IdEntity implements java.io.Serializable {
     }
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="restaurant_id")
+    @JoinColumn(name="restaurant_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}

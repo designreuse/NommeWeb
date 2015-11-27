@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "dat_dish", catalog = "nomme")
+@Table(name = "dat_dish")
 public class Dish extends IdEntity implements java.io.Serializable,Comparable<Dish> {
 
 	// Fields
@@ -37,7 +37,7 @@ public class Dish extends IdEntity implements java.io.Serializable,Comparable<Di
 	private static final long serialVersionUID = -2865117859135458421L;
 	private RestaurantsMenu restaurantsMenu;// 与菜品分类多对一关系 many-to-one: many dish
 											// to one restaurantsMenu
-	private Long restaurantId;// 商家编号
+	private String restaurantUuid;// 商家编号
 	private String enName;// 菜品名称
 	private String chName;// 菜品名称 繁体中文
 	private String enIntro;// 菜品介绍
@@ -67,13 +67,13 @@ public class Dish extends IdEntity implements java.io.Serializable,Comparable<Di
 		this.restaurantsMenu = restaurantsMenu;
 	}
 
-	@Column(name = "restaurant_id")
-	public Long getRestaurantId() {
-		return this.restaurantId;
+	@Column(name = "restaurant_uuid")
+	public String getRestaurantUuid() {
+		return this.restaurantUuid;
 	}
 
-	public void setRestaurantId(Long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 
 	@Column(name = "en_name", length = 200)

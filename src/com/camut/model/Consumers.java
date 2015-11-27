@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,22 +24,31 @@ import javax.persistence.TemporalType;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_consumers", catalog = "nomme")
-public class Consumers extends IdEntity implements java.io.Serializable {
+@Table(name = "tbl_consumers")
+public class Consumers implements java.io.Serializable {
+
+	
 
 	@Override
 	public String toString() {
-		return "Consumers [email=" + email + ", password=" + password + ", phone=" + phone + ", otherCode=" + otherCode + ", loginType=" + loginType
-				+ ", lastName=" + lastName + ", firstName=" + firstName + ", status=" + status + ", score=" + score + ", memo=" + memo
-				+ ", mobileToken=" + mobileToken + ", regDate=" + regDate + ", lastLoginDate=" + lastLoginDate + ", mobileType=" + mobileType
-				+ ", consumersAddressesSet=" + consumersAddressesSet + ", nickname=" + nickname + ", stripeCustomerId=" + stripeCustomerId + "]";
+		return "Consumers [id=" + id + ", email=" + email + ", password="
+				+ password + ", phone=" + phone + ", otherCode=" + otherCode
+				+ ", loginType=" + loginType + ", lastName=" + lastName
+				+ ", firstName=" + firstName + ", status=" + status
+				+ ", score=" + score + ", memo=" + memo + ", mobileToken="
+				+ mobileToken + ", regDate=" + regDate + ", lastLoginDate="
+				+ lastLoginDate + ", mobileType=" + mobileType
+				+ ", consumersAddressesSet=" + consumersAddressesSet
+				+ ", nickname=" + nickname + ", stripeCustomerId="
+				+ stripeCustomerId + ", uuid=" + uuid + "]";
 	}
-
 	// Fields
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7326122489293145405L;
+	
+	private Long id;//
 	private String email;// 登陆邮箱
 	private String password;// 密码
 	private String phone;// 联系电话
@@ -55,8 +66,17 @@ public class Consumers extends IdEntity implements java.io.Serializable {
 	private Set<ConsumersAddress> consumersAddressesSet;//与地址一对多的关系
 	private String nickname;//昵称
 	private String stripeCustomerId;//stripe的客户编号
+	private String uuid;//通用唯一识别码
 	// Property accessors
 
+	@Column(name = "id")
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	@Column(name = "email", length = 50)
 	public String getEmail() {
 		return this.email;
@@ -212,5 +232,15 @@ public class Consumers extends IdEntity implements java.io.Serializable {
 		this.stripeCustomerId = stripeCustomerId;
 	}
 
+	@Id
+	@Column(name = "uuid")
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
+	
 
 }

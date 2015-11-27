@@ -80,12 +80,12 @@ public class CommonController extends BaseAPiModel{
 	 */
 	@RequestMapping(value ="/restaurant/dish/menu", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getDishMenu(int restaurantId, int type) {
-		Log4jUtil.info("获取菜单信息接口==>"+"restaurantId"+restaurantId+"type"+type);
+	public ResultApiModel getDishMenu(String restaurantUuid, int type) {
+		Log4jUtil.info("获取菜单信息接口==>"+"restaurantUuid"+restaurantUuid+"type"+type);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(dishService.getDishMenu(restaurantId, type));
+			ram.setBody(dishService.getDishMenu(restaurantUuid, type));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -244,8 +244,8 @@ public class CommonController extends BaseAPiModel{
 	 */
 	@RequestMapping(value="/getOpenTime",method=RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel test(String orderDate,String restaurantId,String type){
-		Log4jUtil.info("获取营业时间接口==>"+"orderDate="+orderDate+"restaurantId="+restaurantId+"type="+type);
+	public ResultApiModel test(String orderDate,String restaurantUuid,String type){
+		Log4jUtil.info("获取营业时间接口==>"+"orderDate="+orderDate+"restaurantUuid="+restaurantUuid+"type="+type);
 		ResultApiModel ram = new ResultApiModel();
 		Date date = null;
 		try {
@@ -258,7 +258,7 @@ public class CommonController extends BaseAPiModel{
 			return ram;
 		}
 		ram.setFlag(1);
-		ram.setBody(openTimeService.getOpenTimeByOrderDate(date, Long.parseLong(restaurantId), Integer.parseInt(type))==null?"":openTimeService.getOpenTimeByOrderDate(date, Long.parseLong(restaurantId), Integer.parseInt(type)));
+		ram.setBody(openTimeService.getOpenTimeByOrderDate(date, restaurantUuid, Integer.parseInt(type))==null?"":openTimeService.getOpenTimeByOrderDate(date, restaurantUuid, Integer.parseInt(type)));
 		return ram;
 	}
 	

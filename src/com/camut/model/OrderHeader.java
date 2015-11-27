@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "dat_order_header", catalog = "nomme")
+@Table(name = "dat_order_header")
 public class OrderHeader extends IdEntity implements java.io.Serializable {
 
 	// Fields
@@ -38,9 +38,11 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 	private Integer orderType;// 订单种类，1:外送 2：自取 3：到店就餐; 1:delivery 2:pick up
 								// 3：dine-in/reservation
 	private Date createdate;// 下单时间
-	private Integer restaurantId;// 商家编号
+	private String restaurantUuid;// 商家编号
 	private Integer status;// 订单状态 0：订单取消状态 1:未付款 2：已付款 3：已接单 4:拒绝接单  6：已退款
 							// 7：完成的订单  8：line up  9：现金付款   10:待审核
+							// 0: cancelled, 1: unpaid, 2: paid, 3: has orders, 4: refuse, 6: refunded, 7: completed, 8: line-up, 9: pay cash, 10: pending 
+	
 	private Date orderDate;// 送货时间
 	private Integer number;// 就餐人数
 	private String address;// 地址
@@ -69,8 +71,8 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 	private String memo;// 订单备注
 	private Integer discountId;// 优惠券id
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "consumer_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "consumer_uuid")
 	public Consumers getConsumers() {
 		return this.consumers;
 	}
@@ -98,13 +100,13 @@ public class OrderHeader extends IdEntity implements java.io.Serializable {
 		this.createdate = createdate;
 	}
 
-	@Column(name = "restaurant_id")
-	public Integer getRestaurantId() {
-		return this.restaurantId;
+	@Column(name = "restaurant_uuid")
+	public String getRestaurantUuid() {
+		return this.restaurantUuid;
 	}
 
-	public void setRestaurantId(Integer restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 
 	@Column(name = "total", precision = 22, scale = 0)

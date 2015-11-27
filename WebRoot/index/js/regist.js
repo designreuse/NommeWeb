@@ -21,19 +21,19 @@ $(function(){
 		//console.log(orgCartAddress);
 	}
 	
-	var consumerId = $("#currentConsumerId").val();
-	var restaurantId = $.cookie("restaurantId");
+	var consumerUuid = $("#currentConsumerUuid").val();
+	var restaurantUuid = $.cookie("restaurantUuid");
 	$("button[name='changeOrder']").click(function(){
-		window.location = appPath+"/index/restaurantmenu?restaurantId="+restaurantId;
+		window.location = appPath+"/index/restaurantmenu?restaurantUuid="+restaurantUuid;
 	});
 	
 	function refreshCart (){
-		if(consumerId){
+		if(consumerUuid){
 			$.ajax({
 				type: 'post',
 				async: false,
 				url: appPath+'/consumers/showRegistCart',
-				data: {consumerId:consumerId},
+				data: {consumerUuid:consumerUuid},
 				success: function(data){
 					$("#cartContent").html(data);
 				}
@@ -60,12 +60,12 @@ $(function(){
 		//var indexAddress = $.cookie("indexAddress");
 		//var lat = $.cookie("Lat");
 		//var lng = $.cookie("Lng");
-		if(consumerId){//判断是否登录
+		if(consumerUuid){//判断是否登录
 			$.ajax({
 				type: 'post',
 				async: false,
 				url: appPath+'/consumers/getConsumersAddressList',
-				data: {consumerId:consumerId},
+				data: {consumerUuid:consumerUuid},
 				success: function(data){
 					if(data){
 						addressList = $.parseJSON(data);
@@ -80,8 +80,6 @@ $(function(){
 						var orgAddressOption = "";
 						if(orgCartAddress && orgCartAddress.city && orgCartAddress.street && orgCartAddress.province){//判断如果是返回到的regist页面，能获取到之前填写的地址信息
 							//orgAddressOption = "<option value='-1'>"+orgCartAddress.street+" "+orgCartAddress.floor+" "+orgCartAddress.city+" "+orgCartAddress.province+" &nbsp;&nbsp;(Last time address)</option>";
-							$("#address-name").val(orgCartAddress.consignee);
-							$("#address-phone").val(orgCartAddress.phone);
 							$("#address-street").val(orgCartAddress.street);
 							$("#address-city").val(orgCartAddress.city);
 							$("#address-province").val(orgCartAddress.province);
@@ -142,8 +140,6 @@ $(function(){
 					/*if(addressObj.isSaveAddress==1){//如果之前设置过保存地址并提交，那么初始化出来的原来填的地址禁用保存地址选项
 						$("#saveAddress").attr("disabled",true);
 					}*/
-					$("#address-name").val(orgCartAddress.consignee);
-					$("#address-phone").val(orgCartAddress.phone);
 					$("#address-street").val(orgCartAddress.street);
 					$("#address-city").val(orgCartAddress.city);
 					$("#address-province").val(orgCartAddress.province);
@@ -174,8 +170,6 @@ $(function(){
 					for(var k = 0; k < addressList.length; k++){
 						if(addressList[k].addressId ==currentAddressId){
 							selectFullAddress = addressList[k].street+" "+addressList[k].city+" "+addressList[k].province;
-							$("#address-name").val(addressList[k].consignee);
-							$("#address-phone").val(addressList[k].phone);
 							$("#address-street").val(addressList[k].street);
 							$("#address-city").val(addressList[k].city);
 							$("#address-province").val(addressList[k].province);
@@ -250,7 +244,7 @@ $(function(){
 			type: "post",
 			url: appPath+"/consumers/getDeliveryFee",
 			async: false,
-			data:{lng:obj1.lng, lat:obj1.lat,subTotal:obj1.subTotal, restaurantId:restaurantId},//restaurantId在上面用已用cookie获取
+			data:{lng:obj1.lng, lat:obj1.lat,subTotal:obj1.subTotal, restaurantUuid:restaurantUuid},//restaurantUuid在上面用已用cookie获取
 			success: function(data){
 				$("#bg").css("display", "none");//隐藏等待层
 				$("#show").css("display", "none");
@@ -423,7 +417,7 @@ $(function(){
 				$.ajax({
 					type: "post",
 					async: false,
-					data: {address:newFullAddress, subTotal:subTotal, restaurantId:restaurantId},
+					data: {address:newFullAddress, subTotal:subTotal, restaurantUuid:restaurantUuid},
 					url: appPath+"/consumers/getLatLng",
 					success: function(data){
 						$("#bg").css("display", "none");//隐藏等待层
@@ -635,17 +629,17 @@ $(function(){
 	//验证电话号码
 	function phoneNumberValidate(elementId,x,y){
 		var falg = false;
-		var phoneExpReg = /(^[0-9]{3}\ ?[0-9]{3}-?[0-9]{4}$)|(^[0-9]{3}-[0-9]{3}-?[0-9]{4}$)|(^\([0-9]{3}\)\ ?[0-9]{3}-?[0-9]{4}$)/;
+		var phoneExpReg = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 		var val = $.trim($("#"+elementId).val());
 		if(val==""){
 			flag=false;
 			showtips(elementId,'Required',x,y);
-		}else if(phoneExpReg.test(val)){
+		}else if(val.match(phoneExpReg)){
 			flag = true;
 			hidetips(elementId);
 		}else{
 			flag = false;
-			showtips(elementId,"Not a phone",x,y);
+			showtips(elementId,"Invalid Phone",x,y);
 		}
 		return flag;
 	}

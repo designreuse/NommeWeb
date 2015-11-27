@@ -34,12 +34,21 @@ public interface RestaurantsService {
 	public Restaurants getRestaurantsById(long id);
 	
 	/*
+	 * 
+	 * @Title: getRestaurantsByUuid
+	 * @Description: 通过商家id查找商家
+	 * @param:    商家uuid
+	 * @return: Restaurants
+	 */
+	public Restaurants getRestaurantsByUuid(String restaurantUuid);
+	
+	/*
 	 * @Title: addRestaurants
 	 * @Description: 增加商家
 	 * @param:    restaurants
 	 * @return: Restaurants
 	 */
-	public long addRestaurants(Restaurants restaurants);
+	public String addRestaurants(Restaurants restaurants);
 	
 	/*
 	 * @Title: deleteRestaurants
@@ -47,7 +56,7 @@ public interface RestaurantsService {
 	 * @param:    long
 	 * @return: int -1删除失败 1删除成功
 	 */
-	public int deleteRestaurants(long id);
+	public int deleteRestaurants(String restaurantUuid);
 	
 	/*
 	 * @Title: updateRestaurants
@@ -79,7 +88,7 @@ public interface RestaurantsService {
 	 * @param: statu
 	 * @return int  
 	 */
-	public int auditRestaurant(long id, int statu);
+	public int auditRestaurant(String restaurantUuid, int statu);
 	
 	/**
 	 * @Title: auditRestaurant
@@ -95,14 +104,14 @@ public interface RestaurantsService {
 	 * @param: restaurantId
 	 * @return restaurantsDetailApiModel
 	 */
-	public RestaurantsDetailApiModel restaurantsDetailApiModel(long restaurantId, long consumerId);
+	public RestaurantsDetailApiModel restaurantsDetailApiModel(String restaurantUuid, String consumerUuid);
 	
 	/**
 	 * @Title: getPageRestaurantById
 	 * @Description: 打开商家页面获取商家基础信息
 	 * @return PageRestaurant  
 	 */
-	public PageRestaurant getPageRestaurantById(long id);
+	public PageRestaurant getPageRestaurantByUuid(String restaurantUuid);
 	
 	/**
 	 * @Title: getPageRestaurantById
@@ -111,7 +120,7 @@ public interface RestaurantsService {
 	 * @param: int isPickup
 	 * @return List<PageRestaurantsMenu>  
 	 */
-	public List<PageRestaurantsMenu> getRestaurantsMenusByRestaurantsIdAndIsPickup(long id);
+	public List<PageRestaurantsMenu> getRestaurantsMenusByRestaurantsIdAndIsPickup(String restaurantUuid);
 	
 	/** 
 	 * @Title: getRestaurantsById
@@ -119,7 +128,7 @@ public interface RestaurantsService {
 	 * @param:    商家id
 	 * @return: RestaurantsDetailApiModel
 	 */
-	public RestaurantsApiModel getRestaurantById(long id);
+	public RestaurantsApiModel getRestaurantByUuid(String restaurantUuid);
 	
 	/** 
 	 * @Title: getRestaurantMoreById
@@ -127,6 +136,6 @@ public interface RestaurantsService {
 	 * @param:    商家id
 	 * @return: RestaurantsMoreApiModel
 	 */
-	public RestaurantsMoreApiModel getRestaurantMoreById(long id);
+	public RestaurantsMoreApiModel getRestaurantMoreById(String restaurantUuid);
 	
 }

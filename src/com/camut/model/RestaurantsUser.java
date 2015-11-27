@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,8 +22,8 @@ import javax.persistence.TemporalType;
  * @memo
  */
 @Entity
-@Table(name = "tbl_restaurants_user", catalog = "nomme")
-public class RestaurantsUser extends IdEntity implements java.io.Serializable {
+@Table(name = "tbl_restaurants_user")
+public class RestaurantsUser implements java.io.Serializable {
 
 	// Fields
 
@@ -30,6 +31,9 @@ public class RestaurantsUser extends IdEntity implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4005254613897374419L;
+	
+	private Long id;//
+	
 	private Restaurants restaurants;// 与商家多对一; many RestaurantsUser : 1
 									// Restaurants
 	private String code;// 员工工号; staff code
@@ -45,10 +49,20 @@ public class RestaurantsUser extends IdEntity implements java.io.Serializable {
 	private Integer role;//权限，001只有预定权限，011表示预定和外卖权限，111三种权限都有，100只有自取权限
 	private String token;//设备编号
 	private String devicetype;//设备类型
+	private String uuid;//通用唯一识别码
+	
 	// Property accessors
+	
+	@Column(name = "id")
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurants_id")
+	@JoinColumn(name = "restaurants_uuid")
 	public Restaurants getRestaurants() {
 		return restaurants;
 	}
@@ -176,6 +190,18 @@ public class RestaurantsUser extends IdEntity implements java.io.Serializable {
 	public void setDevicetype(String devicetype) {
 		this.devicetype = devicetype;
 	}
+	
+	@Id
+	@Column(name = "uuid")
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
+	
 	
 	
 }

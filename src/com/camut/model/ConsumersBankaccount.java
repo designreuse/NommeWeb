@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_customer_bankaccount", catalog = "nomme")
+@Table(name = "tbl_customer_bankaccount")
 public class ConsumersBankaccount extends IdEntity implements
 		java.io.Serializable {
 
@@ -38,7 +38,7 @@ public class ConsumersBankaccount extends IdEntity implements
 	// Property accessors
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "consumer_id")
+	@JoinColumn(name = "consumer_uuid")
 	public Consumers getConsumers() {
 		return consumers;
 	}

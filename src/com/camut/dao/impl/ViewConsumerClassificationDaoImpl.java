@@ -25,10 +25,10 @@ public class ViewConsumerClassificationDaoImpl extends BaseDao<ViewConsumerClass
 	 * @return: List<String>
 	 */
 	@Override
-	public List<ViewConsumerClassification> getClassificationNames(int consumerId) {
-		String hql = "from ViewConsumerClassification v where v.consumerId=:consumerId";
+	public List<ViewConsumerClassification> getClassificationNames(String consumerUuid) {
+		String hql = "from ViewConsumerClassification v where v.consumerUuid=:consumerUuid";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		return this.find(hql, map);
 	}
 	
@@ -39,10 +39,10 @@ public class ViewConsumerClassificationDaoImpl extends BaseDao<ViewConsumerClass
 	 * @return: List<String>
 	 */
 	@Override
-	public List<ViewConsumerClassification> getClassificationNamesAndroid(int consumerId) {
-		String hql = "from ViewConsumerClassification v where v.consumerId=:consumerId";
+	public List<ViewConsumerClassification> getClassificationNamesAndroid(String consumerUuid) {
+		String hql = "from ViewConsumerClassification v where v.consumerUui=:consumerUuid";
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("consumerId", consumerId);
+		map.put("consumerUuid", consumerUuid);
 		return this.find(hql, map);
 	}
 

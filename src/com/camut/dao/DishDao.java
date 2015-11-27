@@ -20,7 +20,7 @@ public interface DishDao {
 	 * @param:    restaurantId , type
 	 * @return: List<Dish>
 	 */
-	public List<Dish> getdish(long restaurantId, int type);
+	public List<Dish> getdish(String restaurantUuid, int type);
 	
 	/**
 	 * @Title: getDishById
@@ -60,7 +60,7 @@ public interface DishDao {
 	 * @param:    restaurantId , type 
 	 * @return: List<Dish>
 	 */
-	public  List<Dish> getDishMenu(long restaurantId, int type);
+	public  List<Dish> getDishMenu(String restaurantUuid, int type);
 	
 	/**
 	 * @Title: getAllAvailableDish
@@ -77,6 +77,6 @@ public interface DishDao {
 	 * @param: long restaurantsMenuId
 	 * @return List<Dish>  
 	 */
-	public List<Dish> getDishListByRestaurantsMenuIdAndRestaurantsId(int restaurantId,long restaurantsMenuId);
+	public List<Dish> getDishListByRestaurantsMenuIdAndRestaurantsId(String restaurantUuid,long restaurantsMenuId);
 	
 }

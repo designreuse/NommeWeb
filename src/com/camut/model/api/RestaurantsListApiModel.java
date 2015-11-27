@@ -16,7 +16,7 @@ public class RestaurantsListApiModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 3035032156802298966L;
-	private long restaurantId=0;
+	private String restaurantUuid="";
 	private String logo=""; // logo
 	private String restaurantName="";// 店名
 	private double avgPrice=12;// 人均小费价格
@@ -24,11 +24,12 @@ public class RestaurantsListApiModel implements Serializable {
 	private double stars=1;// 评级
 	private Integer chainid=1;// 连锁店
 
-	public long getRestaurantId() {
-		return restaurantId;
+	
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getLogo() {
 		return logo;

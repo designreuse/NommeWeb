@@ -36,12 +36,12 @@ public class OrderDaoTest {
 	 * @return: List<OrderHeader>
 	 */
 	//@Test
-	public void selectPastOrder() throws Exception{
+	/*public void selectPastOrder() throws Exception{
 		long consumerId = 1;
 		int orderType = 1;
 		List<OrderHeader> orderHeader = orderDao.selectPastOrder(consumerId);
 		System.out.println(orderHeader.size());
-	}
+	}*/
 	
 	/**
 	 * @Title: addOrder
@@ -124,7 +124,7 @@ public class OrderDaoTest {
 	 * @return: List<OrderHeader>
 	 */
 	//@Test
-	public void getOrder() throws Exception{
+	/*public void getOrder() throws Exception{
 		int type = 4;
 		int restaurantId = 1;
 		long menuId = 1;
@@ -132,7 +132,7 @@ public class OrderDaoTest {
 		if(orderHeader != null){
 			System.out.println(orderHeader.getId());
 		}
-	}
+	}*/
 	
 	/**
 	 * @Title: getOrdersByRestaurantId

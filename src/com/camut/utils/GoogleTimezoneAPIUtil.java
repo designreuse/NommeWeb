@@ -7,12 +7,19 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONObject;
 
 public class GoogleTimezoneAPIUtil {
+	
 	public static TimeZone getTimeZoneFromGeoLocation(double latitude, double longitude) {
 		Calendar calendar = Calendar.getInstance();
 		TimeZone timezone = calendar.getTimeZone();
@@ -76,4 +83,22 @@ public class GoogleTimezoneAPIUtil {
 		Log4jUtil.info("Something went wrong with getting timezone, setting machine timezone: " + timezone.getID());
 		return timezone;
 	}
+	
+	public static Date getLocalDateTime(double latitude, double longitude) {
+		TimeZone timezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
+		DateTime localDateTime = DateTime.now(DateTimeZone.forID(timezone.getID()));
+
+		Date currentLocalTime;
+		try {
+			currentLocalTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+					.parse(localDateTime.toString("yyyy-MM-dd HH:mm:ss"));
+		} catch (ParseException e) {
+			Log4jUtil.error(e);
+			Log4jUtil.info("Something went wrong when trying to convert DateTime to Date");
+			currentLocalTime = new Date();
+		}
+
+		return currentLocalTime;
+	}
+
 }

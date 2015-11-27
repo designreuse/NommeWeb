@@ -16,7 +16,7 @@ import javax.persistence.Table;
  * CartItem entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "dat_cart_item", catalog = "nomme")
+@Table(name = "dat_cart_item")
 public class CartItem extends IdEntity implements java.io.Serializable {
 
 	// Fields

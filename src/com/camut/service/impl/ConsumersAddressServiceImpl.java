@@ -1,6 +1,7 @@
 package com.camut.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.camut.pageModel.PageConsumersAddress;
 import com.camut.service.ConsumersAddressService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.GetLatLngByAddress;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.StringUtil;
 
 /**
@@ -44,14 +46,14 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @return: List<ConsumersAddressApiModel>
 	 */
 	@Override
-	public List<ConsumersAddressApiModel> getConsumersAddressById(long consumerId, long restaurantId) {
+	public List<ConsumersAddressApiModel> getConsumersAddressById(String consumerUuid, String restaurantUuid) {
 		List<ConsumersAddressApiModel> caamList = new ArrayList<ConsumersAddressApiModel>();
 		Restaurants restaurants = new Restaurants();
-		if(restaurantId > 0){
-			restaurants = restaurantsDao.getRestaurantsById(restaurantId);
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			restaurants = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		}
-		if(consumerId > 0){
-			List<ConsumersAddress> caList = consumersAddressDao.getConsumersAddressById(consumerId);
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			List<ConsumersAddress> caList = consumersAddressDao.getConsumersAddressByUuid(consumerUuid);
 			for (ConsumersAddress consumersAddress : caList) {
 				ConsumersAddressApiModel caam = new ConsumersAddressApiModel();
 				caam.setStreet(consumersAddress.getStreet());
@@ -66,11 +68,11 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 				caam.setFloor(consumersAddress.getFloor());
 				caam.setCity(consumersAddress.getCity());
 				caam.setProvince(consumersAddress.getProvince());
-				caam.setConsumerId(consumersAddress.getConsumers().getId());
+				caam.setConsumerUuid(consumersAddress.getConsumers().getUuid());
 				caam.setAddressId(consumersAddress.getId());
 				//距离
 				double distance = 0;
-				if(consumersAddress.getLat() != null && consumersAddress.getLng() != null && restaurants.getRestaurantLng() != null && restaurants.getRestaurantLat() != null){
+				if(consumersAddress.getLat() != null && consumersAddress.getLng() != null && restaurants!=null && restaurants.getRestaurantLng() != null && restaurants.getRestaurantLat() != null){
 					distance = CommonUtil.getDistance(consumersAddress.getLat(), consumersAddress.getLng(), restaurants.getRestaurantLng(), restaurants.getRestaurantLat());
 				}
 				caam.setDistance(distance);
@@ -87,14 +89,14 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @param: restaurantId
 	 * @return: List<PageConsumersAddress>
 	 */
-	public List<PageConsumersAddress> getPageConsumersAddressListById(long consumerId, long restaurantId){
+	public List<PageConsumersAddress> getPageConsumersAddressListByConsumerUuid(String consumerUuid){
 		List<PageConsumersAddress> caamList = new ArrayList<PageConsumersAddress>();
-		Restaurants restaurants = new Restaurants();
-		if(restaurantId > 0){
-			restaurants = restaurantsDao.getRestaurantsById(restaurantId);
-		}
-		if(consumerId > 0){
-			List<ConsumersAddress> caList = consumersAddressDao.getConsumersAddressById(consumerId);
+		/*Restaurants restaurants = new Restaurants();
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			restaurants = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
+		}*/
+		if(StringUtil.isNotEmpty(consumerUuid)){
+			List<ConsumersAddress> caList = consumersAddressDao.getConsumersAddressByUuid(consumerUuid);
 			for (ConsumersAddress consumersAddress : caList) {
 				PageConsumersAddress caam = new PageConsumersAddress();
 				caam.setStreet(consumersAddress.getStreet());
@@ -133,8 +135,8 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @param: @return
 	 * @return List<PageConsumersAddress>  
 	 */
-	public List<PageConsumersAddress> getPageConsumersAddressById(long consumerId){
-		List<ConsumersAddress> caList = consumersAddressDao.getConsumersAddressById(consumerId);
+	public List<PageConsumersAddress> getPageConsumersAddressByConsumerUuid(String consumerUuid){
+		List<ConsumersAddress> caList = consumersAddressDao.getConsumersAddressByUuid(consumerUuid);
 		List<PageConsumersAddress> pcaList = new ArrayList<PageConsumersAddress>();
 		for (ConsumersAddress consumersAddress : caList) {
 			PageConsumersAddress pca = new PageConsumersAddress();
@@ -153,7 +155,7 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 			pca.setPhone(consumersAddress.getPhone());
 			pca.setZipcode(consumersAddress.getZipcode());
 			pca.setConsignee(consumersAddress.getConsignee());
-			pca.setFullAddress(consumersAddress.getStreet()+" "+consumersAddress.getCity()+" "+consumersAddress.getProvince());
+			pca.setFullAddress(consumersAddress.getStreet()+" "+consumersAddress.getFloor()+" "+consumersAddress.getCity()+" "+consumersAddress.getProvince());
 			pcaList.add(pca);
 		}
 		return pcaList;
@@ -169,7 +171,8 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	public int addConsumersAddress(ConsumersAddressApiModel consumersAddressApiModel) {
 		ConsumersAddress consumersAddress = new ConsumersAddress();
 		Consumers consumers = new Consumers();
-		consumers.setId(consumersAddressApiModel.getConsumerId());
+		//consumers.setId(consumersAddressApiModel.getConsumerId());
+		consumers.setUuid(consumersAddressApiModel.getConsumerUuid());
 		consumersAddress.setConsumers(consumers);
 		consumersAddress.setStreet(consumersAddressApiModel.getStreet());
 		consumersAddress.setFloor(consumersAddressApiModel.getFloor());
@@ -190,8 +193,6 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 			consumersAddress.setLat(Double.parseDouble(lat));
 			consumersAddress.setLng(Double.parseDouble(lng));
 		}
-		//consumersAddress.setLat(51.1);
-		//consumersAddress.setLng(-114.15);
 		return consumersAddressDao.addConsumersAddress(consumersAddress);
 	}
 
@@ -273,9 +274,9 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int updateWebConsumersAddress(ConsumersAddress consumersAddress,long consumerId){
+	public int updateWebConsumersAddress(ConsumersAddress consumersAddress,String consumerUuid){
 		if(consumersAddress.getIsdefault()==1){//如果干修改的新地址设为默认的，将原来地址设为非默认
-			int temp = consumersAddressDao.setConsumersDefaultAddressNotDefault(consumerId);
+			int temp = consumersAddressDao.setConsumersDefaultAddressNotDefault(consumerUuid);
 			if(temp>0){
 				int temp2 = consumersAddressDao.updateConsumersAddress(consumersAddress);
 				if(temp2>0){
@@ -305,9 +306,9 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int addWebConsumersAddress(ConsumersAddress consumersAddress, long consumerId){
+	public int addWebConsumersAddress(ConsumersAddress consumersAddress, String consumerUuid){
 		if(consumersAddress.getIsdefault()==1){//如果修改的新地址设为默认的，将原来地址设为非默认
-			int temp = consumersAddressDao.setConsumersDefaultAddressNotDefault(consumerId);
+			int temp = consumersAddressDao.setConsumersDefaultAddressNotDefault(consumerUuid);
 			if(temp>0){
 				int temp2 = consumersAddressDao.addConsumersAddress(consumersAddress);
 				if(temp2>0){
@@ -335,8 +336,8 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @return: ConsumersAddress
 	 */
 	@Override
-	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(long consumerId,long restaurantId) {
-		return consumersAddressDao.getConsumersAddressDefault(consumerId, restaurantId);
+	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(String consumerUuid, String restaurantUuid) {
+		return consumersAddressDao.getConsumersAddressDefault(consumerUuid, restaurantUuid);
 	}
 	
 	/**
@@ -346,8 +347,8 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @return: ConsumersAddress
 	 */
 	@Override
-	public List<ConsumersAddressApiModel> getConsumersAddressInDistance(long consumerId, long restaurantId) {
-		return consumersAddressDao.getConsumersAddressInDistance(consumerId, restaurantId);
+	public List<ConsumersAddressApiModel> getConsumersAddressInDistance(String consumerUuid, String restaurantUuid) {
+		return consumersAddressDao.getConsumersAddressInDistance(consumerUuid, restaurantUuid);
 	}
 	
 	/**
@@ -357,8 +358,8 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 	 * @return: ConsumersAddress
 	 */
 	@Override
-	public ConsumersAddressDefaultApiModel getConsumersAddressDefaultById(long consumerId) {
-		ConsumersAddress ca = consumersAddressDao.getConsumersAddressDefaultById(consumerId);
+	public ConsumersAddressDefaultApiModel getConsumersAddressDefaultByConsumerUuid(String consumerUuid) {
+		ConsumersAddress ca = consumersAddressDao.getConsumersAddressDefaultByUuid(consumerUuid);
 		ConsumersAddressDefaultApiModel cadam = new ConsumersAddressDefaultApiModel();
 		if(ca != null){
 			cadam.setAddressId(ca.getId());
@@ -367,5 +368,32 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 		}
 		return null;
 	}
+
+	/**
+	 * @Title: getCurrentLocalTimeFromConsumersAddressDefaultByConsumerUuid
+	 * @Description: get the local time from customer default address
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	@Override
+	public Date getCurrentLocalTimeFromConsumersDefaultAddress(String consumerUuid) {
+		ConsumersAddress consumersDefautAddress = consumersAddressDao.getConsumersAddressDefaultByUuid(consumerUuid);
+		Date currentLocalTime = new Date();
+		if (consumersDefautAddress != null) {
+			currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(consumersDefautAddress.getLat(),
+					consumersDefautAddress.getLng());
+		} else {
+			List<ConsumersAddress> addressList = consumersAddressDao.getConsumersAddressByUuid(consumerUuid);
+			if (addressList != null) {
+				if (addressList.size() > 0) {
+					currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(addressList.get(0).getLat(),
+							addressList.get(0).getLng());
+				}
+			}
+		}
+		return currentLocalTime;
+	}
+
+
 
 }

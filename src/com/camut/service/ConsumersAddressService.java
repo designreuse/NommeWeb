@@ -1,5 +1,6 @@
 package com.camut.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.camut.model.ConsumersAddress;
@@ -24,7 +25,7 @@ public interface ConsumersAddressService {
 	 * @param: restaurantId
 	 * @return: List<ConsumersAddressApiModel>
 	 */
-	public List<ConsumersAddressApiModel> getConsumersAddressById(long consumerId, long restaurantId);
+	public List<ConsumersAddressApiModel> getConsumersAddressById(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: getPageConsumersAddressListById
@@ -33,7 +34,7 @@ public interface ConsumersAddressService {
 	 * @param: restaurantId
 	 * @return: List<PageConsumersAddress>
 	 */
-	public List<PageConsumersAddress> getPageConsumersAddressListById(long consumerId, long restaurantId);
+	public List<PageConsumersAddress> getPageConsumersAddressListByConsumerUuid(String consumerUuid);
 	
 	/**
 	 * @Title: getPageConsumersAddressById
@@ -42,7 +43,7 @@ public interface ConsumersAddressService {
 	 * @param: @return
 	 * @return List<PageConsumersAddress>  
 	 */
-	public List<PageConsumersAddress> getPageConsumersAddressById(long consumerId);
+	public List<PageConsumersAddress> getPageConsumersAddressByConsumerUuid(String consumerUuid);
 	
 	/**
 	 * @Title: addConsumersAddress
@@ -92,7 +93,7 @@ public interface ConsumersAddressService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int updateWebConsumersAddress(ConsumersAddress consumersAddress, long consumerId);
+	public int updateWebConsumersAddress(ConsumersAddress consumersAddress, String consumerUuid);
 	
 	/**
 	 * @Title: addWebConsumersAddress
@@ -102,7 +103,7 @@ public interface ConsumersAddressService {
 	 * @param: @return
 	 * @return int  
 	 */
-	public int addWebConsumersAddress(ConsumersAddress consumersAddress, long consumerId);
+	public int addWebConsumersAddress(ConsumersAddress consumersAddress, String consumerUuid);
 	
 	/**
 	 * @Title: getConsumersAddressDefault
@@ -110,7 +111,7 @@ public interface ConsumersAddressService {
 	 * @param:    consumersid
 	 * @return: ConsumersAddress
 	 */
-	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(long consumerId,long restaurantId);
+	public ConsumersAddressDefaultApiModel getConsumersAddressDefault(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: getConsumersAddressDefault
@@ -118,7 +119,7 @@ public interface ConsumersAddressService {
 	 * @param:    consumersid
 	 * @return: ConsumersAddress
 	 */
-	public List<ConsumersAddressApiModel>  getConsumersAddressInDistance(long consumerId,long restaurantId);
+	public List<ConsumersAddressApiModel>  getConsumersAddressInDistance(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: ConsumersAddressDefaultApiModel
@@ -126,7 +127,15 @@ public interface ConsumersAddressService {
 	 * @param:    consumersid
 	 * @return: ConsumersAddress
 	 */
-	public ConsumersAddressDefaultApiModel getConsumersAddressDefaultById(long consumerId);
+	public ConsumersAddressDefaultApiModel getConsumersAddressDefaultByConsumerUuid(String consumerUuid);
 	
+	
+	/**
+	 * @Title: getCurrentLocalTimeFromConsumersAddressDefaultByConsumerUuid
+	 * @Description: get the local time from customer default address
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeFromConsumersDefaultAddress(String consumerUuid);
 
 }

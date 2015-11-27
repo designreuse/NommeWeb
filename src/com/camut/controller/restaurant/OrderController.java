@@ -31,8 +31,8 @@ public class OrderController {
 	@ResponseBody
 	public PageModel ToData(HttpSession session, PageFilter pf,String status, String orderDate){
 		//获取商家id
-		int restaurantId = ((RestaurantsUser)session.getAttribute("restaurantsUser")).getRestaurants().getId().intValue();
-		PageModel pm = orderService.getOrdersByRestaurantId(restaurantId, pf,status,orderDate);
+		String restaurantUuid = ((RestaurantsUser)session.getAttribute("restaurantsUser")).getRestaurants().getUuid();
+		PageModel pm = orderService.getOrdersByRestaurantUuid(restaurantUuid, pf,status,orderDate);
 		return pm;
 	}
 	

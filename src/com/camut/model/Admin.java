@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
  * @memo 
  */
 @Entity
-@Table(name = "sys_admin", catalog = "nomme")
+@Table(name = "sys_admin")
 public class Admin extends IdEntity implements java.io.Serializable {
 
 	/**

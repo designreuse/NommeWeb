@@ -34,11 +34,11 @@ public class RestaurantMenuController {
 	 */
 	@RequestMapping(value="getRestaurantMenus", method=RequestMethod.POST)
 	@ResponseBody
-	public PageRestaurant getRestaurantMenus (String restaurantId, String isPickup){
-		if(StringUtil.isNotEmpty(restaurantId) &&StringUtil.isNotEmpty(isPickup)){
-			Long id = Long.parseLong(restaurantId);
+	public PageRestaurant getRestaurantMenus (String restaurantUuid, String isPickup){
+		if(StringUtil.isNotEmpty(restaurantUuid) &&StringUtil.isNotEmpty(isPickup)){
+			//Long id = Long.parseLong(restaurantId);
 			//int isPickup2 =Integer.parseInt(isPickup); 
-			PageRestaurant pageRestaurant = restaurantsService.getPageRestaurantById(id);
+			PageRestaurant pageRestaurant = restaurantsService.getPageRestaurantByUuid(restaurantUuid);
 			return pageRestaurant;
 		}
 		return null;
@@ -53,11 +53,10 @@ public class RestaurantMenuController {
 	 * @return String  
 	 */
 	@RequestMapping(value="getDishes", method=RequestMethod.POST)
-	public String getDishes(String restaurantId, Model model){
-		if(StringUtil.isNotEmpty(restaurantId)){
-			Long id = Long.parseLong(restaurantId);
-			
-			List<PageRestaurantsMenu> prmList = restaurantsService.getRestaurantsMenusByRestaurantsIdAndIsPickup(id);
+	public String getDishes(String restaurantUuid, Model model){
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			//Long id = Long.parseLong(restaurantId);
+			List<PageRestaurantsMenu> prmList = restaurantsService.getRestaurantsMenusByRestaurantsIdAndIsPickup(restaurantUuid);
 			model.addAttribute("menuList", prmList);
 		}
 		return "home/menuList";
@@ -109,29 +108,17 @@ public class RestaurantMenuController {
 	 */
 	@RequestMapping(value="getDelivaryFee", method = RequestMethod.POST)
 	@ResponseBody
-	public String chooseDiscount(String restaurantId, String subTotal, String consumerLng, String consumerLat){
+	public String chooseDiscount(String restaurantUuid, String subTotal, String consumerLng, String consumerLat){
 		String strDistancePrice = "";
-		if(StringUtil.isNotEmpty(restaurantId)&&StringUtil.isNotEmpty(subTotal)&&StringUtil.isNotEmpty(consumerLng)&&StringUtil.isNotEmpty(consumerLat)){
-			long restaurantId2 = Long.parseLong(restaurantId);//商家Id
+		if(StringUtil.isNotEmpty(restaurantUuid)&&StringUtil.isNotEmpty(subTotal)&&StringUtil.isNotEmpty(consumerLng)&&StringUtil.isNotEmpty(consumerLat)){
+			//long restaurantId2 = Long.parseLong(restaurantId);//商家Id
 			double subTotal2 = Double.parseDouble(subTotal);//菜品总价
 			double consumerLng2 = Double.parseDouble(consumerLng);//经度
 			double consumerLat2 = Double.parseDouble(consumerLat);//纬度
-			double distancePrice = distancePriceService.getOneDistanceByFee(restaurantId2,subTotal2,consumerLng2,consumerLat2);
+			double distancePrice = distancePriceService.getOneDistanceByFee(restaurantUuid,subTotal2,consumerLng2,consumerLat2);
 			strDistancePrice = distancePrice+"";
 		}
 		return strDistancePrice;
 	}
-	/**
-	 * @Title: tableCount
-	 * @Description: 获取商家可预订的座位
-	 * @param: @param restaurantId
-	 * @param: @param orderDate
-	 * @param: @return
-	 * @return List<RestaurantTableApiModel>  
-	 */
-	/*@RequestMapping(value="tableCount", method = RequestMethod.POST)
-	@ResponseBody
-	public List<RestaurantTableApiModel> tableCount(String restaurantId,String orderDate){
-		
-	}*/
+
 }

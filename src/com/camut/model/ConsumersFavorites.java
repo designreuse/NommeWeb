@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  * @memo 
  */
 @Entity
-@Table(name = "tbl_customer_favorites", catalog = "nomme")
+@Table(name = "tbl_customer_favorites")
 public class ConsumersFavorites extends IdEntity implements java.io.Serializable {
 
 	/**
@@ -30,29 +30,29 @@ public class ConsumersFavorites extends IdEntity implements java.io.Serializable
 	private static final long serialVersionUID = 6896426220188550803L;
 	// Fields
 
-	private Consumers consumers;// 与用户一对一单向关联; one-to-one relationship with Consumers
-	private Integer restaurantsId;// 商家id;  restaurants ID
+	private String consumersUuid;// 与用户一对一单向关联; one-to-one relationship with Consumers
+	private String restaurantsUuid;// 商家id;  restaurants ID
 	private Date favoritesdate;// 收藏时间; date of adding a restaurant to Favorites
 
 	// Property accessors
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="consumers_id")
-	public Consumers getConsumers() {
-		return consumers;
+	
+	@Column(name="consumers_uuid")
+	public String getConsumersUuid() {
+		return consumersUuid;
 	}
 
-	public void setConsumers(Consumers consumers) {
-		this.consumers = consumers;
+	public void setConsumersUuid(String consumersUuid) {
+		this.consumersUuid = consumersUuid;
 	}
 
-	@Column(name = "restaurants_id")
-	public Integer getRestaurantsId() {
-		return this.restaurantsId;
+	@Column(name = "restaurants_uuid")
+	public String getRestaurantsUuid() {
+		return this.restaurantsUuid;
 	}
 
-	public void setRestaurantsId(Integer restaurantsId) {
-		this.restaurantsId = restaurantsId;
+	public void setRestaurantsUuid(String restaurantsUuid) {
+		this.restaurantsUuid = restaurantsUuid;
 	}
 
 	@Temporal(TemporalType.DATE)

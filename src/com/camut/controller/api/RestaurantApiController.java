@@ -95,7 +95,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 		if(restaurantsUser != null){
 			int flag = restaurantsUserService.appRestaurantsUserLogin(restaurantsUser);
 			RestaurantsUser ru = restaurantsUserService.Login(restaurantsUser);
-			RestaurantsApiModel rdam = restaurantsService.getRestaurantById(ru.getRestaurants().getId());
+			RestaurantsApiModel rdam = restaurantsService.getRestaurantByUuid(ru.getRestaurants().getUuid());
 			if(flag == GlobalConstant.LOGINNAME_ERROR){//用户名不存在
 				ram.setFlag(-1);
 				ram.setResultMessage(MessageConstant.LOGINNAME_ERROR);
@@ -123,12 +123,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/opentime", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel selectOpenTime(String restaurantId, int type, String date) {
-		Log4jUtil.info("营业时间显示接口==>"+"restaurantId="+restaurantId+"type="+type+"date="+date);
+	public ResultApiModel selectOpenTime(String restaurantUuid, int type, String date) {
+		Log4jUtil.info("营业时间显示接口==>"+"restaurantUuid="+restaurantUuid+"type="+type+"date="+date);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(openTimeService.selectOpenTime(Long.parseLong(restaurantId), type, date));
+			ram.setBody(openTimeService.selectOpenTime(restaurantUuid, type, date));
 			//ram.setBody(openTimeService.selectOpenTime(Long.parseLong(restaurantId)));
 			ram.setResultMessage("");
 		} catch (Exception e) {
@@ -147,8 +147,8 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel selectRestaurantOrder(int restaurantId, String orderType, String createdate) throws ParseException{
-		Log4jUtil.info("营业时间显示接口==>"+"restaurantId="+restaurantId+"orderType="+orderType+"createdate="+createdate);
+	public ResultApiModel selectRestaurantOrder(String restaurantUuid, String orderType, String createdate) throws ParseException{
+		Log4jUtil.info("营业时间显示接口==>"+"restaurantUuid="+restaurantUuid+"orderType="+orderType+"createdate="+createdate);
 		ResultApiModel ram = new ResultApiModel();
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 		Date dt = null;
@@ -159,8 +159,8 @@ public class RestaurantApiController  extends BaseAPiModel {
 		}
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.selectRestaurantOrder(restaurantId, orderType, sim.format(dt)));
-			List<CancelOrderApiModel> coamList = orderServicr.selectRestaurantOrder(restaurantId, orderType, sim.format(dt));
+			ram.setBody(orderServicr.selectRestaurantOrder(restaurantUuid, orderType, sim.format(dt)));
+			List<CancelOrderApiModel> coamList = orderServicr.selectRestaurantOrder(restaurantUuid, orderType, sim.format(dt));
 			double total = 0;
 			double subtotal = 0;
 			double delivery = 0;
@@ -173,7 +173,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 			double totalscore = b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();//保留小数后一位
 			ram.setTotal(totalscore);
 			
-			List<OrderHeader> ohList = orderServicr.completeOrder(restaurantId,createdate, orderType);
+			List<OrderHeader> ohList = orderServicr.completeOrder(restaurantUuid,createdate, orderType);
 			if(ohList.size() > 0){
 				for (OrderHeader orderHeader : ohList) {
 					subtotal += orderHeader.getTotal();
@@ -189,7 +189,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
-			ram.setResultMessage(e.toString());
+			ram.setResultMessage("Data exception");
 		}
 		return ram;
 	}
@@ -216,8 +216,8 @@ public class RestaurantApiController  extends BaseAPiModel {
 			ram.setFlag(1);
 			//推送
 			OrderHeader oh = orderServicr.getOrderById(orderItemApiModel.getOrderId());
-			Consumers c = consumersService.getConsumersById(oh.getConsumers().getId());
-			Restaurants r = restaurantsService.getRestaurantsById(oh.getRestaurantId());
+			Consumers c = consumersService.getConsumersByUuid(oh.getConsumers().getUuid());
+			Restaurants r = restaurantsService.getRestaurantsByUuid(oh.getRestaurantUuid());
 			String restaurant = r.getRestaurantName();//店名
 			String rejection = oh.getRejection();//拒绝理由
 			if(orderItemApiModel.getStatus() == 3){//接单
@@ -274,12 +274,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/dish", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getdish(int restaurantId, int type) {
-		Log4jUtil.info("菜品信息接口==>"+"restaurantId="+restaurantId+"type="+type);
+	public ResultApiModel getdish(String restaurantUuid, int type) {
+		Log4jUtil.info("菜品信息接口==>"+"restaurantUuid="+restaurantUuid+"type="+type);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(dishService.getdish(restaurantId, type));
+			ram.setBody(dishService.getdish(restaurantUuid, type));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -296,18 +296,13 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getRestaurantsById(String restaurantId, String consumerId) {
-		Log4jUtil.info("店铺详情接口==>"+"restaurantId="+restaurantId+"consumerId="+consumerId);
+	public ResultApiModel getRestaurantsById(String restaurantUuid, String consumerUuid) {
+		Log4jUtil.info("店铺详情接口==>"+"restaurantUuid="+restaurantUuid+"consumerUuid="+consumerUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if(restaurantId != null && restaurantId.length() > 0){
-			long rid = Long.parseLong(restaurantId);
-			long cid = 0;
-			if(consumerId != null && consumerId.length() > 0){
-				cid = Long.parseLong(consumerId);
-			}
+		if(StringUtil.isNotEmpty(restaurantUuid)){			
 			try {
 				ram.setFlag(1);
-				ram.setBody(restaurantsService.restaurantsDetailApiModel(rid, cid));
+				ram.setBody(restaurantsService.restaurantsDetailApiModel(restaurantUuid, consumerUuid));
 				ram.setResultMessage("");
 			} catch (Exception e) {
 				ram.setFlag(-1);
@@ -325,12 +320,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getEvaluateByRestaurantId(long restaurantId) {
-		Log4jUtil.info("店铺评论接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel getEvaluateByRestaurantId(String restaurantUuid) {
+		Log4jUtil.info("店铺评论接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(evaluateService.getEvaluateByRestaurantId(restaurantId));
+			ram.setBody(evaluateService.getEvaluateByRestaurantId(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -347,12 +342,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/discount", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getDiscountByRestaurantId(long restaurantId, int orderType, double consumePrice) {
-		Log4jUtil.info("店铺优惠信息接口==>"+"restaurantId="+restaurantId+"orderType="+orderType+"consumePrice="+consumePrice);
+	public ResultApiModel getDiscountByRestaurantId(String restaurantUuid, int orderType, double consumePrice) {
+		Log4jUtil.info("店铺优惠信息接口==>"+"restaurantUuid="+restaurantUuid+"orderType="+orderType+"consumePrice="+consumePrice);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(discountService.getDiscountByRestaurantId(restaurantId, orderType, consumePrice));
+			ram.setBody(discountService.getDiscountByRestaurantId(restaurantUuid, orderType, consumePrice));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -369,12 +364,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/distanceprice", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getDistancePrice(long restaurantId) {
-		Log4jUtil.info("获取配送费接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel getDistancePrice(String restaurantUuid) {
+		Log4jUtil.info("获取配送费接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(distancePriceService.getDistancePrice(restaurantId));
+			ram.setBody(distancePriceService.getDistancePrice(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -391,10 +386,10 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/garnishheader", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getGarnishHeaderByRestaurantId(long restaurantId,	int type) {
-		Log4jUtil.info("菜品分类接口==>"+"restaurantId="+restaurantId+"type="+type);
+	public ResultApiModel getGarnishHeaderByRestaurantId(String restaurantUuid,	int type) {
+		Log4jUtil.info("菜品分类接口==>"+"restaurantUuid="+restaurantUuid+"type="+type);
 		Restaurants restaurants = new Restaurants();
-		restaurants.setId(restaurantId);
+		restaurants.setUuid(restaurantUuid);
 		if (type > 0) {
 			if (type == 1) {
 				restaurants.setIsdelivery(1);
@@ -424,10 +419,10 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/tablecount", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getRestaurantTable(String restaurantId,String orderDate){
-		Log4jUtil.info("获取商家的桌位信息接口==>"+"restaurantId="+restaurantId+"orderDate="+orderDate);
+	public ResultApiModel getRestaurantTable(String restaurantUuid,String orderDate){
+		Log4jUtil.info("获取商家的桌位信息接口==>"+"restaurantUuid="+restaurantUuid+"orderDate="+orderDate);
 		Restaurants restaurants = new Restaurants();
-		restaurants.setId(Long.parseLong(restaurantId));
+		restaurants.setUuid(restaurantUuid);
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date dt = null;
 		if (StringUtil.isEmpty(orderDate)) {
@@ -459,12 +454,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/cancelorder", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel cancelOrder(int restaurantId){
-		Log4jUtil.info("已取消的订单列表接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel cancelOrder(String restaurantUuid){
+		Log4jUtil.info("已取消的订单列表接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.cancelOrder(restaurantId));
+			ram.setBody(orderServicr.cancelOrder(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -481,13 +476,13 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/completeorder", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel completeOrder(int restaurantId, String status){
-		Log4jUtil.info("已取完成订单列表接口==>"+"restaurantId="+restaurantId+"status="+status);
+	public ResultApiModel completeOrder(String restaurantUuid, String status){
+		Log4jUtil.info("已取完成订单列表接口==>"+"restaurantUuid="+restaurantUuid+"status="+status);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.completeOrder(restaurantId, status));
-			List<CancelOrderApiModel> coamList = orderServicr.completeOrder(restaurantId, status);
+			ram.setBody(orderServicr.completeOrder(restaurantUuid, status));
+			List<CancelOrderApiModel> coamList = orderServicr.completeOrder(restaurantUuid, status);
 			double total = 0;
 			double subtotal = 0;
 			double delivery = 0;
@@ -500,7 +495,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 			double totalscore = b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();//保留小数后一位
 			ram.setTotal(totalscore);
 			
-			List<OrderHeader> ohList = orderServicr.completeOrderAll(restaurantId, status);
+			List<OrderHeader> ohList = orderServicr.completeOrderAll(restaurantUuid, status);
 			if(ohList.size() > 0){
 				for (OrderHeader orderHeader : ohList) {
 					subtotal += orderHeader.getTotal();
@@ -530,12 +525,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/live", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel liveOrder(int restaurantId){
-		Log4jUtil.info("已取消的订单列表接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel liveOrder(String restaurantUuid){
+		Log4jUtil.info("已取消的订单列表接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.liveOrder(restaurantId));
+			ram.setBody(orderServicr.liveOrder(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -552,12 +547,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/upcoming", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel upcomingOrder(int restaurantId){
-		Log4jUtil.info("非当天未处理的订单接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel upcomingOrder(String restaurantUuid){
+		Log4jUtil.info("非当天未处理的订单接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.upcomingOrder(restaurantId));
+			ram.setBody(orderServicr.upcomingOrder(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -574,12 +569,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/liveaccept", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel acceptOrder(int restaurantId){
-		Log4jUtil.info("当天已处理的订单列表接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel acceptOrder(String restaurantUuid){
+		Log4jUtil.info("当天已处理的订单列表接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.acceptOrder(restaurantId));
+			ram.setBody(orderServicr.acceptOrder(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -596,12 +591,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/upcomingaccept", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel acceptUpcomingOrder(int restaurantId){
-		Log4jUtil.info("已处理非当天的订单列表接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel acceptUpcomingOrder(String restaurantUuid){
+		Log4jUtil.info("已处理非当天的订单列表接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.acceptUpcomingOrder(restaurantId));
+			ram.setBody(orderServicr.acceptUpcomingOrder(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -618,12 +613,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/totalAmount", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel totalAmount(int restaurantId) {
-		Log4jUtil.info("当天营业总金额接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel totalAmount(String restaurantUuid) {
+		Log4jUtil.info("当天营业总金额接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.totalAmount(restaurantId));
+			ram.setBody(orderServicr.totalAmount(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -640,23 +635,23 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */
 	@RequestMapping(value = "/shopinformore", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getRestaurantMoreById(String restaurantId) {
-		Log4jUtil.info("通过商家id查找商家详细信息（more）接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel getRestaurantMoreById(String restaurantUuid) {
+		Log4jUtil.info("通过商家id查找商家详细信息（more）接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("opentime", openTimeService.getOpenTime(Long.parseLong(restaurantId)));
-			map.put("evaluate", evaluateService.getEvaluateByRestaurantId(Long.parseLong(restaurantId)));
+			map.put("opentime", openTimeService.getOpenTime(restaurantUuid));
+			map.put("evaluate", evaluateService.getEvaluateByRestaurantId(restaurantUuid));
 			
-			if(viewRestaurantService.getRestaurantScore(Long.parseLong(restaurantId)).getScore() != null){
-				BigDecimal b = new BigDecimal(viewRestaurantService.getRestaurantScore(Long.parseLong(restaurantId)).getScore());//商家评分  
+			if(viewRestaurantService.getRestaurantScore(restaurantUuid).getScore() != null){
+				BigDecimal b = new BigDecimal(viewRestaurantService.getRestaurantScore(restaurantUuid).getScore());//商家评分  
 				double totalscore = b.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();//保留小数后一位
 				map.put("totalscore", totalscore);
 			} else {
 				map.put("totalscore", 0);
 			}
-			map.put("about",restaurantsService.getRestaurantMoreById(Long.parseLong(restaurantId)).getFeatures());
+			map.put("about",restaurantsService.getRestaurantMoreById(restaurantUuid).getFeatures());
 			ram.setBody(map);
 			ram.setResultMessage("");
 		} catch (Exception e) {
@@ -674,12 +669,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */ 
 	@RequestMapping(value = "/dineinorder", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel getDineinOrder(int restaurantId) {
-		Log4jUtil.info("返回商家同意的预定订单接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel getDineinOrder(String restaurantUuid) {
+		Log4jUtil.info("返回商家同意的预定订单接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.getDineinOrder(restaurantId));
+			ram.setBody(orderServicr.getDineinOrder(restaurantUuid));
 			ram.setResultMessage("");
 		} catch (Exception e) {
 			ram.setFlag(-1);
@@ -696,12 +691,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */ 
 	@RequestMapping(value = "/outOfDistance", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel outOfDistance(String restaurantId,String addressId) {
-		Log4jUtil.info("外卖距离是否超过了商家最大外卖距离接口==>"+"restaurantId="+restaurantId+"addressId="+addressId);
+	public ResultApiModel outOfDistance(String restaurantUuid,String addressId) {
+		Log4jUtil.info("外卖距离是否超过了商家最大外卖距离接口==>"+"restaurantUuid="+restaurantUuid+"addressId="+addressId);
 		ResultApiModel ram = new ResultApiModel();
-		Restaurants restaurants = restaurantsService.getRestaurantsById(Long.parseLong(restaurantId));
+		Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 		ConsumersAddress consumersAddress = consumersAddressService.getAddressById(Long.parseLong(addressId));
-		CartHeader ch = cartHeaderService.getCartHeaderByConsumerId(Integer.parseInt(consumersAddress.getConsumers().getId()+""));
+		CartHeader ch = cartHeaderService.getCartHeaderByConsumerUuid(consumersAddress.getConsumers().getUuid()+"");
 		if(restaurants.getRestaurantLat() != null && restaurants.getRestaurantLng() != null && 
 				consumersAddress.getLat() != null && consumersAddress.getLng() != null){
 			double distance = CommonUtil.getDistance(consumersAddress.getLat(), consumersAddress.getLng(), restaurants.getRestaurantLng(), restaurants.getRestaurantLat());
@@ -731,11 +726,11 @@ public class RestaurantApiController  extends BaseAPiModel {
 	 */ 
 	@RequestMapping(value = "/raddress", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultApiModel restaurantsAddress(Long restaurantId) {
-		Log4jUtil.info("外卖距离是否超过了商家最大外卖距离接口==>"+"restaurantId="+restaurantId);
+	public ResultApiModel restaurantsAddress(String restaurantUuid) {
+		Log4jUtil.info("外卖距离是否超过了商家最大外卖距离接口==>"+"restaurantUuid="+restaurantUuid);
 		ResultApiModel ram = new ResultApiModel();
-		if(restaurantId!=null){
-			Restaurants restaurants = restaurantsService.getRestaurantsById(restaurantId);
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 			if (restaurants!=null) {
 				ram.setFlag(1);
 				Map<String, Object> map=new HashMap<String, Object>();
@@ -820,6 +815,10 @@ public class RestaurantApiController  extends BaseAPiModel {
 			sb.append("<p style = 'line-height:0.1'>Charge No: "+item.getChargeId()+"</p>");
 		}
 		sb.append("<p style = 'line-height:0.1'>Order Type: "+item.getOrderTypeStr()+"</p>");
+		if(item.getOrderType() == 3){
+			sb.append("<p style = 'line-height:0.1'>Service time: "+item.getOrderDate()+"</p>");
+			sb.append("<p style = 'line-height:0.1'>Number of people: "+item.getNumber()+"</p>");
+		}
 		sb.append("</th>");
 		sb.append("</tr>");
 		sb.append("</tbody>");

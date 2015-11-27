@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,9 @@ import com.camut.pageModel.PageModel;
 import com.camut.pageModel.PageOrderHeader;
 import com.camut.pageModel.PageOrderItem;
 import com.camut.pageModel.PageRestaurantOrderStatement;
+import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.service.CartService;
+import com.camut.service.ConsumersAddressService;
 import com.camut.service.ConsumersService;
 import com.camut.service.DishGarnishService;
 import com.camut.service.DishService;
@@ -73,6 +76,7 @@ import com.camut.service.PaymentService;
 import com.camut.service.task.TaskDemoService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.CreateOrderNumber;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.StringUtil;
 
@@ -95,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired private OrderDishGarnishDao orderDishGarnishDao;
 	@Autowired private DishService dishService;
 	@Autowired private ConsumersService consumersService;
+	@Autowired private ConsumersAddressService consumersAddressService;
 	@Autowired private DishGarnishService dishGarnishService;
 	@Autowired private GarnishItemService garnishItemService;
 	@Autowired private GarnishHeaderDao garnishHeaderDao;
@@ -128,12 +133,12 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: ResultApiModel
 	 */
 	@Override
-	public List<OrderListApiModel> selectPastOrder(long consumerId) {
-		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerId);
+	public List<OrderListApiModel> selectPastOrder(String consumerUuid) {
+		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
-			int a = orderHeader.getRestaurantId();
-			Restaurants restaurants = restaurantsDao.getRestaurantsById(a);
+			String a = orderHeader.getRestaurantUuid();
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(a);
 			if(restaurants!=null){
 				OrderListApiModel olam = new OrderListApiModel();
 				olam.setOrderId(orderHeader.getId());
@@ -170,29 +175,32 @@ public class OrderServiceImpl implements OrderService {
 	@SuppressWarnings("deprecation")
 	@Override
 	public int addOrder(OrderHeader orderHeader) {
-		if (orderHeader!=null) {
+		if (orderHeader != null) {
 			orderHeader.setOrderNo(CreateOrderNumber.createUnique());
-			Date nowDate=new Date();
-			orderHeader.setCreatedate(new Date());	
-			 Calendar calendar = Calendar.getInstance();   
-			 calendar.setTime(orderHeader.getOrderDate());
-			 int orderDay = calendar.get(Calendar.DATE);  
-			 calendar.setTime(new Date());
-			 int nowDay=calendar.get(Calendar.DATE);  
-			if(orderDay>nowDay){
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
+			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
+					restaurants.getRestaurantLng());
+			orderHeader.setCreatedate(currentLocalTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(orderHeader.getOrderDate());
+			int orderDay = calendar.get(Calendar.DATE);
+			calendar.setTime(new Date());
+			int nowDay = calendar.get(Calendar.DATE);
+			if (orderDay > nowDay) {
 				orderHeader.setStatus(3);
 			}
-			//orderHeader.setStatus(1);//未付款
-			//添加dinein 类型的订单到原有的reservation订单中
-			if (orderHeader.getOrderType()==3&&orderHeader.getOrderItems()!=null&&orderHeader.getOrderItems().size()>0) {
-					int flag = orderDao.updateOrderHeader(orderHeader);
-					Log4jUtil.info("新增订单==> 订单类型:"+orderHeader.getOrderType() +"-->id:"+orderHeader.getId());
-					if (flag==-1) {
-						return -1;
-					}else{
-						taskDemoService.pushOrderid(orderHeader.getId());
-						taskDemoService.timerTaskOrder();
-					}
+			// orderHeader.setStatus(1);//未付款
+			// 添加dinein 类型的订单到原有的reservation订单中
+			if (orderHeader.getOrderType() == 3 && orderHeader.getOrderItems() != null
+					&& orderHeader.getOrderItems().size() > 0) {
+				int flag = orderDao.updateOrderHeader(orderHeader);
+				Log4jUtil.info("新增订单==> 订单类型:" + orderHeader.getOrderType() + "-->id:" + orderHeader.getId());
+				if (flag == -1) {
+					return -1;
+				} else {
+					taskDemoService.pushOrderid(orderHeader.getId());
+					taskDemoService.timerTaskOrder();
+				}
 			}
 			else{//delivery or pick-up
 				long ohid = orderDao.addOrder(orderHeader);
@@ -250,12 +258,12 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderMenuApiModel>
 	 */
 	@Override
-	public List<OrderMenuApiModel> getOrder(int type, int restaurantId, long menuId) {
-		OrderHeader ohList = orderDao.getOrder(type, restaurantId, menuId);
+	public List<OrderMenuApiModel> getOrder(int type, String restaurantUuid, long menuId) {
+		OrderHeader ohList = orderDao.getOrder(type, restaurantUuid, menuId);
 		List<OrderMenuApiModel> omam = new ArrayList<OrderMenuApiModel>();
 		OrderMenuApiModel orderMenuApiModel = new OrderMenuApiModel();
 		orderMenuApiModel.setId(ohList.getId());
-		orderMenuApiModel.setRestaurantId(ohList.getRestaurantId());
+		orderMenuApiModel.setRestaurantUuid(ohList.getRestaurantUuid());
 		Set<OrderItem> orderItems = ohList.getOrderItems();
 		for (OrderItem orderItem : orderItems) {
 			orderMenuApiModel.setDishId(orderItem.getDishId());
@@ -284,10 +292,10 @@ public class OrderServiceImpl implements OrderService {
 	 	最终订单费用 = 基本费+联邦税+省税
 	 	PS:小费不参加税金计算，也未放入最终订单费用中
 	  */
-	public PageModel getOrdersByRestaurantId(int restaurantId, PageFilter pf,String status, String orderDate){
+	public PageModel getOrdersByRestaurantUuid(String restaurantUuid, PageFilter pf,String status, String orderDate){
 		PageModel pm = new PageModel();
-		List<OrderHeader> orderHeaderList = orderDao.getOrdersByRestaurantId(restaurantId, pf,status,orderDate);
-		if(orderHeaderList.size()>0){//如果有订单
+		List<OrderHeader> orderHeaderList = orderDao.getOrdersByRestaurantUuid(restaurantUuid, pf,status,orderDate);
+		if(orderHeaderList!=null && orderHeaderList.size()>0){//如果有订单
 			List<PageOrderHeader> pageOrderList = new ArrayList<PageOrderHeader>();
 			for (OrderHeader oh : orderHeaderList){//遍历组装每一个订单头
 				//double totalFee = oh.getLogistics();//设置初始化当前订单的总金额为运费
@@ -386,9 +394,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: PageModel
 	 */
 	@Override
-	public List<CancelOrderApiModel> selectRestaurantOrder(int restaurantId, String orderType, String createdate) {
-		if(restaurantId > 0){
-			List<OrderHeader> ohList = orderDao.completeOrder(restaurantId,createdate, orderType);
+	public List<CancelOrderApiModel> selectRestaurantOrder(String restaurantUuid, String orderType, String createdate) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<OrderHeader> ohList = orderDao.completeOrder(restaurantUuid,createdate, orderType);
 			List<CancelOrderApiModel> coamList = new ArrayList<CancelOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				CancelOrderApiModel coam = new CancelOrderApiModel();
@@ -437,12 +445,13 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderListApiModel> selectCurrentOrder(long consumerId) {
-		List<OrderHeader> ohList = orderDao.selectCurrentOrder(consumerId);
+	public List<OrderListApiModel> selectCurrentOrder(String consumerUuid) {
+		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		List<OrderHeader> ohList = orderDao.selectCurrentOrder(consumerUuid, localTime);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
-			int a = orderHeader.getRestaurantId();
-			Restaurants restaurants = restaurantsDao.getRestaurantsById(a);
+			String a = orderHeader.getRestaurantUuid();
+			Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(a);
 			OrderListApiModel olam = new OrderListApiModel();
 			olam.setOrderId(orderHeader.getId());
 			String orderTypeStr ="";
@@ -537,10 +546,10 @@ public class OrderServiceImpl implements OrderService {
 		OrderHeader orderHeader = orderDao.getOrderById(orderId);
 		// 返回
 		if (orderHeader != null && orderHeader.getStatus() == 7 && orderHeader.getOrderType()!=3) {// 订单存在并且是一件完成的订单
-			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(orderHeader.getConsumers().getId().intValue());
+			CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(orderHeader.getConsumers().getUuid());
 			if (cartHeader!=null) {
 				//购物车存在，先删除
-				int i = cartService.deleteCartByConsumerId(orderHeader.getConsumers().getId().intValue());
+				int i = cartService.deleteCartByConsumerUuid(orderHeader.getConsumers().getUuid());
 				if (i!=1) {//删除失败
 					return -1;
 				}
@@ -568,8 +577,8 @@ public class OrderServiceImpl implements OrderService {
 	 * @return PageMessage  
 	 */
 	@Override
-	public int repeatOrderWebUsed(int orderId, int consumerId) {
-		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerId(consumerId);
+	public int repeatOrderWebUsed(int orderId, String consumerUuid) {
+		CartHeader cartHeader = cartHeaderDao.getCartHeaderByConsumerUuid(consumerUuid);
 		if(cartHeader == null){
 			cartHeader = new CartHeader();
 		}
@@ -631,7 +640,7 @@ public class OrderServiceImpl implements OrderService {
         }
 		
 		Consumers consumers = new Consumers();
-		consumers.setId(Long.parseLong(map.get("consumerId").toString()));
+		consumers.setUuid(map.get("consumerUuid").toString());
 		oh.setConsumers(consumers);
 		oh.setOrderType(Integer.parseInt(map.get("orderType").toString()));
 		oh.setCreatedate(new Date());
@@ -642,8 +651,7 @@ public class OrderServiceImpl implements OrderService {
 			oh.setMemo(map.get("specialRequest").toString());
 		}
 		oh.setPayment(0);
-		oh.setRestaurantId(Integer.parseInt(map.get("restaurantId").toString()));
-		
+		oh.setRestaurantUuid(map.get("restaurantUuid").toString());
 		oh.setNumber(Integer.parseInt(map.get("peopleNumber").toString()));
 		oh.setOrderNo(CreateOrderNumber.createUnique());
 		oh.setPeopleName(map.get("firstName").toString()+" "+map.get("lastName").toString());
@@ -668,29 +676,10 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: @param status
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageOrderHeader> getUnpaidReservationOrders(int resId, int conId, int orderType,long currentOrderNo){
-		List<PageOrderHeader> orderHeaderList = orderDao.getUnpaidReservationOrders(resId, conId, orderType, currentOrderNo);
-		List<PageOrderHeader> orderHeaderList2 = new ArrayList<PageOrderHeader>(); 
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
-		long nowTime = new Date().getTime();
-		for (int i=0;i< orderHeaderList.size(); i++){
-			PageOrderHeader pageOrderHeader = orderHeaderList.get(i);
-			if(pageOrderHeader.getItemSize()==0){
-				long orderTime = pageOrderHeader.getOrderDate().getTime();
-				Date d =  pageOrderHeader.getOrderDate();
-				String time = format.format(d);  
-				pageOrderHeader.setStrOrderDate(time);
-				//如果有当前订单号传进来 并且要订单的订单号与传入的订单号相等时，且订单时间要大于当前时间的，才给予显示出来
-				if(currentOrderNo == pageOrderHeader.getId() && orderTime<nowTime){
-					continue;
-				}else{
-					orderHeaderList2.add(pageOrderHeader);
-					
-				}
-			}
-		}
-		return orderHeaderList2;
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType,long currentOrderNo){
+		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, orderType, currentOrderNo);
+		
+		return orderHeaderList;
 	}
 
 	/**
@@ -700,9 +689,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<CancelOrderApiModel> cancelOrder(int restaurantId) {
-		if(restaurantId > 0){
-			List<OrderHeader> ohList = orderDao.cancelOrder(restaurantId);
+	public List<CancelOrderApiModel> cancelOrder(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<OrderHeader> ohList = orderDao.cancelOrder(restaurantUuid);
 			List<CancelOrderApiModel> coamList = new ArrayList<CancelOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				CancelOrderApiModel coam = new CancelOrderApiModel();
@@ -751,9 +740,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<CancelOrderApiModel> completeOrder(int restaurantId, String status) {
-		if(restaurantId > 0){
-			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantId, status);
+	public List<CancelOrderApiModel> completeOrder(String restaurantUuid, String status) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, status);
 			List<CancelOrderApiModel> coamList = new ArrayList<CancelOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				CancelOrderApiModel coam = new CancelOrderApiModel();
@@ -802,10 +791,10 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public LiveOrderApiMdoel liveOrder(int restaurantId) {
+	public LiveOrderApiMdoel liveOrder(String restaurantUuid) {
 		List<Long> orderId = new ArrayList<Long>();
 		LiveOrderApiMdoel liveOrderApiMdoel = new LiveOrderApiMdoel();
-		List<OrderHeaderId> oh = orderDao.liveOrder(restaurantId);
+		List<OrderHeaderId> oh = orderDao.liveOrder(restaurantUuid);
 		for (OrderHeaderId orderHeader : oh) {
 			orderId.add(orderHeader.getOrderId());
 		}
@@ -821,10 +810,10 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public LiveOrderApiMdoel upcomingOrder(int restaurantId) {
+	public LiveOrderApiMdoel upcomingOrder(String restaurantUuid) {
 		List<Long> orderId = new ArrayList<Long>();
 		LiveOrderApiMdoel liveOrderApiMdoel = new LiveOrderApiMdoel();
-		List<OrderHeaderId> oh = orderDao.upcomingOrder(restaurantId);
+		List<OrderHeaderId> oh = orderDao.upcomingOrder(restaurantUuid);
 		for (OrderHeaderId orderHeader : oh) {
 			orderId.add(orderHeader.getOrderId());
 		}
@@ -840,9 +829,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<AcceptOrderApiModel>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptOrder(int restaurantId) {
-		if(restaurantId > 0){
-			List<AcceptOrderApiModel> ohList = orderDao.acceptOrder(restaurantId);
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<AcceptOrderApiModel> ohList = orderDao.acceptOrder(restaurantUuid);
 			for (AcceptOrderApiModel a : ohList) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				String tablename = dateFormat.format(a.getOrderDate());
@@ -880,9 +869,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(int restaurantId) {
-		if(restaurantId > 0){
-			List<AcceptOrderApiModel> ohList = orderDao.acceptUpcomingOrder(restaurantId);
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<AcceptOrderApiModel> ohList = orderDao.acceptUpcomingOrder(restaurantUuid);
 			for (AcceptOrderApiModel a : ohList) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				String tablename = dateFormat.format(a.getOrderDate());
@@ -920,9 +909,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public TotalAmountApiModel totalAmount(int restaurantId) {
+	public TotalAmountApiModel totalAmount(String restaurantUuid) {
 		TotalAmountApiModel amountApiModel = new TotalAmountApiModel();
-		List<OrderHeader> orderHeaderList = orderDao.totalAmount(restaurantId);
+		List<OrderHeader> orderHeaderList = orderDao.totalAmount(restaurantUuid);
 		double total = 0.0;
 		if (orderHeaderList.size() > 0) {
 			for (OrderHeader orderHeader : orderHeaderList) {
@@ -954,9 +943,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */ 
 	@Override
-	public List<DineinOrderApiModel> getDineinOrder(int restaurantId) {
-		if(restaurantId > 0){
-			List<OrderHeader> ohList = orderDao.getDineinOrder(restaurantId);
+	public List<DineinOrderApiModel> getDineinOrder(String restaurantUuid) {
+		if(StringUtil.isNotEmpty(restaurantUuid)){
+			List<OrderHeader> ohList = orderDao.getDineinOrder(restaurantUuid);
 			List<DineinOrderApiModel> doamList = new ArrayList<DineinOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				DineinOrderApiModel doam = new DineinOrderApiModel();
@@ -977,9 +966,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderDineInApiModel>
 	 */
 	@Override
-	public List<OrderDineInApiModel> getDineIn(long consumerId, int restaurantId) {
-		if (consumerId > 0) {
-			List<OrderHeader> ohlist = orderDao.getDineIn(consumerId, restaurantId);
+	public List<OrderDineInApiModel> getDineIn(String consumerUuid, String restaurantUuid) {
+		if (StringUtil.isNotEmpty(consumerUuid)) {
+			List<OrderHeader> ohlist = orderDao.getDineIn(consumerUuid, restaurantUuid);
 			List<OrderDineInApiModel> odamList = new ArrayList<OrderDineInApiModel>();
 			for (OrderHeader orderHeader : ohlist) {
 				if (orderHeader.getOrderItems() == null || orderHeader.getOrderItems().size() == 0) {
@@ -1017,7 +1006,7 @@ public class OrderServiceImpl implements OrderService {
 					omam.setOrderType("Reservation/Dine-in");
 				}*/
 				
-				Restaurants r = restaurantsDao.getRestaurantsById(ch.getRestaurantId());
+				Restaurants r = restaurantsDao.getRestaurantsByUuid(ch.getRestaurantUuid());
 				double unitprice = 0.00;//菜+配菜
 				double disPrice = 0.00;//获取配送费
 				double tax = 0.00;//税率
@@ -1122,11 +1111,11 @@ public class OrderServiceImpl implements OrderService {
 				orderHeader = new OrderHeader();
 				Consumers consumers = new Consumers();
 				orderHeader.setOrderType(cartHeader.getOrderType());
-				orderHeader.setRestaurantId(cartHeader.getRestaurantId());
+				orderHeader.setRestaurantUuid(cartHeader.getRestaurantUuid());
 				//orderHeader.setOrderDate(cartHeader.getOrderTime());
 				//orderHeader.setEmail(cartHeader.getEmail());
 				//orderHeader.setMemo(cartHeader.getMemo());
-				consumers.setId((long)cartHeader.getConsumerId());
+				consumers.setUuid(cartHeader.getConsumerUuid());
 				orderHeader.setConsumers(consumers);
 				//orderHeader.setPhoneNumber(cartHeader.getPhone());
 			}
@@ -1182,11 +1171,11 @@ public class OrderServiceImpl implements OrderService {
 				orderHeader = new OrderHeader();
 				Consumers consumers = new Consumers();
 				orderHeader.setOrderType(cartHeader.getOrderType());
-				orderHeader.setRestaurantId(cartHeader.getRestaurantId());
+				orderHeader.setRestaurantUuid(cartHeader.getRestaurantUuid());
 				orderHeader.setOrderDate(cartHeader.getOrderTime());
 				orderHeader.setEmail(cartHeader.getEmail());
 				orderHeader.setMemo(cartHeader.getMemo());
-				consumers.setId((long)cartHeader.getConsumerId());
+				consumers.setUuid(cartHeader.getConsumerUuid());
 				orderHeader.setConsumers(consumers);
 				orderHeader.setPhoneNumber(cartHeader.getPhone());
 				orderHeader.setPeopleName(cartHeader.getPeopleName());
@@ -1239,8 +1228,9 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: @return
 	 * @return List<PagePastOrderInfo>  
 	 */
-	public PageMessage getPastOrderInfoByConsumerId(int consumerId,int orderType, PageFilter pf){
-		PageMessage pm = orderDao.getPastOrderInfoByConsumerId(consumerId,orderType,pf);
+	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int orderType, PageFilter pf) {
+		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		PageMessage pm = orderDao.getPastOrderInfoByConsumerUuid(consumerUuid, orderType, localTime, pf);
 		return pm;
 	}
 
@@ -1473,8 +1463,8 @@ public class OrderServiceImpl implements OrderService {
 	 * 获取用户所有订单的捐款总额
 	 */
 	@Override
-	public double getCharityAmount(long consumerId) {
-		return orderDao.getCharityAmount(consumerId);
+	public double getCharityAmount(String consumerUuid) {
+		return orderDao.getCharityAmount(consumerUuid);
 	}
 	
 	/**
@@ -1488,8 +1478,8 @@ public class OrderServiceImpl implements OrderService {
 	private int repeatOrderMethod (OrderHeader orderHeader, CartHeader cartHeader){
 		boolean flag = false;
 		cartHeader.setOrderType(orderHeader.getOrderType());// 订单种类
-		cartHeader.setConsumerId(orderHeader.getConsumers().getId().intValue());// 用户id
-		cartHeader.setRestaurantId(orderHeader.getRestaurantId());// 店家id
+		cartHeader.setConsumerUuid(orderHeader.getConsumers().getUuid());// 用户id
+		cartHeader.setRestaurantUuid(orderHeader.getRestaurantUuid());// 店家id
 		cartHeader.setDishFee((double)0);
 		int chid = cartHeaderDao.addCartHeader(cartHeader);// 保存购车头
 		if (chid != -1) {// 保存头成功
@@ -1578,8 +1568,8 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> completeOrder(int restaurantId, String createdate, String orderType) {
-		return orderDao.completeOrder(restaurantId, createdate, orderType);
+	public List<OrderHeader> completeOrder(String restaurantUuid, String createdate, String orderType) {
+		return orderDao.completeOrder(restaurantUuid, createdate, orderType);
 	}
 
 	/**
@@ -1589,8 +1579,8 @@ public class OrderServiceImpl implements OrderService {
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(int restaurantId, String status) {
-		return orderDao.completeOrderAll(restaurantId, status);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String status) {
+		return orderDao.completeOrderAll(restaurantUuid, status);
 	}
 	
 	/**
@@ -1625,8 +1615,8 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: @return
 	 * @return PageModel  
 	 */
-	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf, String restaurantId){
-		List<PageRestaurantOrderStatement> list = orderDao.getRestaurantStatement(searchKey, pf, restaurantId);
+	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf, String restaurantUuid){
+		List<PageRestaurantOrderStatement> list = orderDao.getRestaurantStatement(searchKey, pf, restaurantUuid);
 		if(list!=null &&list.size()>0){
 			PageRestaurantOrderStatement pros = new PageRestaurantOrderStatement();
 			int orderQuantity =0;

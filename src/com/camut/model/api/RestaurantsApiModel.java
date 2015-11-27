@@ -17,7 +17,7 @@ public class RestaurantsApiModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 6370444968153891237L;
-	private long restaurantId=0;
+	private String restaurantUuid="";
 	private String restaurantName="";// 店名
 	private String restaurantContact="";// 餐厅负责人
 	private String restaurantPhone="";// 联系电话
@@ -41,11 +41,11 @@ public class RestaurantsApiModel implements Serializable {
 	public void setDeliverTime(Integer deliverTime) {
 		this.deliverTime = deliverTime;
 	}
-	public long getRestaurantId() {
-		return restaurantId;
+	public String getRestaurantUuid() {
+		return restaurantUuid;
 	}
-	public void setRestaurantId(long restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
 	}
 	public String getRestaurantName() {
 		return restaurantName;
