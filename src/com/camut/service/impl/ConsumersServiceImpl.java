@@ -3,6 +3,7 @@ package com.camut.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.camut.dao.ClassificationDao;
 import com.camut.dao.ConsumersDao;
@@ -286,6 +287,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 	 * @return: List<ViewConsumerClassifitionApiModel>
 	 */
 	@Override
+	@Cacheable(value="myCache",key="#consumerUuid+'menu'")
 	public List<ViewConsumerClassifitionApiModel> getShortcutMenu(String consumerUuid,Integer type) {
 		List<ViewConsumerClassification> list =null;
 		if(StringUtil.isNotEmpty(consumerUuid)){

@@ -1,6 +1,7 @@
 package com.camut.service.task.impl;
 
-
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -12,8 +13,12 @@ import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.Consumers;
 import com.camut.model.OrderHeader;
 import com.camut.model.Restaurants;
+import com.camut.model.api.CartDishGarnishApiModel;
+import com.camut.model.api.CartItemApiModel;
+import com.camut.model.api.OrderDetailsApiModel;
 import com.camut.service.ConsumersService;
 import com.camut.service.OrderCharityService;
+import com.camut.service.OrderItemService;
 import com.camut.service.OrderService;
 import com.camut.service.PaymentService;
 import com.camut.service.RestaurantsService;
@@ -33,6 +38,7 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 	@Autowired OrderCharityService orderCharityService;
 	@Autowired ConsumersService consumersService;
 	@Autowired RestaurantsService restaurantsService;
+	@Autowired OrderItemService orderItemService;
 
 	//private long currentOrderId;
 	private List<Long> orderIdList = new ArrayList<Long>();
@@ -98,7 +104,7 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 						Log4jUtil.info("订单id："+orderHeader.getId()+" 下单超过"+GlobalConstant.TIME_CANCEL_ORDER/60000+"分钟，商家未处理，系统自动取消 ");
 						//向用户发送订单自动取消的邮件
 						if(StringUtil.isNotEmpty(orderHeader.getEmail())){
-							MailUtil.sendMail("Order Canceled", "The order is more than 15 minutes and untreated, the system automatically cancel the order.", orderHeader.getEmail());//1:android 2:ios
+							MailUtil.sendMail("Order Canceled", convertHtml1(orderHeader), orderHeader.getEmail());//1:android 2:ios
 						}
 						Consumers c = consumersService.getConsumersByUuid(orderHeader.getConsumers().getUuid());
 						//Restaurants r = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
@@ -110,51 +116,7 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 						timerTaskOrder();
 						currentOrderId=orderHeader.getId();
 					}
-					/*if(StringUtil.isNotEmpty(orderHeader.getChargeId())){//使用stripe付款的订单
-						String refundId = CommonUtil.refundAll(orderHeader.getChargeId());//退款
-						Log4jUtil.info("订单id："+orderHeader.getId()+" 下单超过"+GlobalConstant.TIME_CANCEL_ORDER/60000+"分钟，商家未处理，系统自动取消 ");
-						if (StringUtil.isNotEmpty(refundId)) {
-							orderHeader.setChargeId(refundId);
-							long time=  System.currentTimeMillis()- orderHeader.getCreatedate().getTime();
-							if(time > GlobalConstant.TIME_CANCEL_ORDER){
-								System.out.println("系统取消了信用卡支付的订单");
-								orderHeader.setStatus(0);
-								if(StringUtil.isNotEmpty(orderHeader.getRejection())){
-									orderHeader.setRejection(orderHeader.getRejection()+" The order is more than 15 minutes and untreated, the system automatically cancel the order.");
-								}else{
-									orderHeader.setRejection("The order is more than 15 minutes and untreated, the system automatically cancel the order.");
-								}
-								temp = orderService.updateOrder(orderHeader);
-								if(temp>0){//取消订单成功，需要删除这笔订单的捐款
-									temp = orderCharityService.deleteOrderCharity(orderHeader.getId().intValue());
-								}
-							}else{
-								timerTaskOrder();
-								currentOrderId=orderHeader.getId();
-							}
-							//System.out.println("退款成功 refundId："+refundId);
-						}
-					}else{
-						long time=  System.currentTimeMillis()- orderHeader.getCreatedate().getTime();
-						if(time > GlobalConstant.TIME_CANCEL_ORDER){
-							orderHeader.setStatus(0);
-							System.out.println("系统取消了现金支付的订单");
-							//设置更新订单拒绝理由
-							if(StringUtil.isNotEmpty(orderHeader.getRejection())){
-								orderHeader.setRejection(orderHeader.getRejection()+" The order is more than 15 minutes and untreated, the system automatically cancel the order.");
-							}else{
-								orderHeader.setRejection("The order is more than 15 minutes and untreated, the system automatically cancel the order.");
-							}
-							temp = orderService.updateOrder(orderHeader);
-							Log4jUtil.info("订单id："+orderHeader.getId()+" 下单超过"+GlobalConstant.TIME_CANCEL_ORDER/60000+"分钟，商家未处理，系统自动取消 ");
-							if(temp>0){//取消订单成功，需要删除这笔订单的捐款
-								temp = orderCharityService.deleteOrderCharity(orderHeader.getId().intValue());
-							}
-						}else{
-							timerTaskOrder();
-							currentOrderId=orderHeader.getId();
-						}
-					}*/
+					
 				}else{
 					//如果订单不为空且状态不等于1：未付款，2：已付款，9：现金付款，10：待审核  其中的一个，就清除list中的当前的第一条数据
 					orderIdList.remove(0);
@@ -166,34 +128,87 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 	@Override
 	public void pushOrderid(long currentOrderId) {
 		// TODO Auto-generated method stub
-		//this.currentOrderId=currentOrderId;
 		this.orderIdList.add(currentOrderId);
 	}
 	
 	
-	/*@Override
-	public void test() {
-		//System.out.println("定时任务执行...");
-		List<OrderHeader> orderList =  orderService.getUndisposedOrders();
-		
-		if(orderList!=null && orderList.size()>0){
-			System.out.println("需要处理的订单数量："+orderList.size());
-			
-			System.out.print("处理的订单Id：");
-			for (OrderHeader orderHeader : orderList) {
-				if(StringUtil.isNotEmpty(orderHeader.getChargeId())){
-					int refundTemp = paymentService.refundByOrder(orderHeader.getId());
-					
+	private String convertHtml1(OrderHeader orderHeader){
+		StringBuffer sb=new StringBuffer();
+		sb.append("<!DOCTYPE html>");
+		sb.append("<html>");
+		sb.append("<head>");
+		sb.append("</head>");
+		sb.append("<body style=\"font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.428571429;	color: #333;background-color: #fff;\">");
+		sb.append("<table align='center'  style='width: 800px;margin-bottom: 20px;background-color: transparent;border-collapse: collapse;border-spacing: 0;border-color: gray;'>  	 ");
+		sb.append("<thead>");
+		sb.append("<tr>");
+		sb.append("<th colspan='6' align='left'>"+"The order is more than 15 minutes and untreated, the system automatically cancel the order."+"</th>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<th colspan='6' align='left'>repeipt: </th>");
+		sb.append("</tr>");
+		OrderDetailsApiModel odam = orderItemService.selectHistoryOrder(orderHeader.getId());
+		if(odam.getItem()!=null&&odam.getItem().size()>0){
+			sb.append("<tr>");
+			sb.append("<th width='1%'></th>");
+			sb.append("<th width='8%'>Qty</th>");
+			sb.append("<th width='20%'>Dish Name</th>");
+			sb.append("<th width='20%'>Item</th>");
+			sb.append("<th width='20%'>Special</th>");
+			sb.append("<th width='20%'>Total</th>");
+			sb.append("</tr>");
+			sb.append("</thead>");
+			sb.append("<tbody style='border-top:1px solid #CCCCCC'>");
+			//start
+			DecimalFormat df = new DecimalFormat("######0.00");   
+			for (CartItemApiModel subItem : odam.getItem()) {
+				sb.append("<tr>");
+				sb.append("<td></td>");
+				sb.append("<td>"+subItem.getNum()+"</td>");
+				sb.append("<th>"+subItem.getDishName()+"</th>");
+				String str="";
+				for (CartDishGarnishApiModel subsubitem : subItem.getSubItem()) {
+					str+="<p style = 'line-height:0.1'>"+subsubitem.getGarnishName()+"</p>";
 				}
-				System.out.print(orderHeader.getId()+",");
+				sb.append("<th style='display: table-cell;vertical-align: inherit;'>"+str+"</th>");
+				if(subItem.getInstruction()!=null&&subItem.getInstruction()!=""){
+					sb.append("<th>"+subItem.getInstruction()+"</th>");	
+				}else{
+					sb.append("<th></th>");
+				}
+				sb.append("<th>"+df.format(subItem.getUnitprice())+"</th>");
+				sb.append("</tr>");
 			}
-			System.out.println("");
-			
-			int temp = orderDao.updateUndisposedOrders(orderList);
-			System.out.println("处理过的订单数量:"+temp);
-		}else{
-			System.out.println("没有需要设置的订单");
+			//end			
+			sb.append("<tr  style='border-top:1px solid #CCCCCC'>");
+			sb.append("<th align='right' colspan='6' class='text-right'>");
+			sb.append("<p style = 'line-height:0.1;margin-top:5px;margin-right: 70px;'>Subtotal:$ "+df.format(odam.getTotal())+"</p>");
+			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Delivery:$ "+df.format(odam.getDeliveryfee())+"</p>");
+			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Tax:$ "+df.format(odam.getTax())+"</p>");
+			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Tip: "+df.format(odam.getTip())+"</p>");
+			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Total: "+df.format(odam.getAmount())+"</p>");
+			sb.append("</th>");
+			sb.append("</tr>");
 		}
-	}*/
+		sb.append("<tr  style='border-top:1px solid #CCCCCC'>");
+		sb.append("<th align='left' colspan='6'>");
+		sb.append("<p style = 'line-height:0.1;margin-top:5px'>Name: "+odam.getConsumersName()+"</p>");
+		sb.append("<p style = 'line-height:0.1'>Phone: "+odam.getConsumersIdPhone()+"</p>");
+		if(odam.getChargeId()!=null&&odam.getChargeId()!=""){
+			sb.append("<p style = 'line-height:0.1'>Charge No: "+odam.getChargeId()+"</p>");
+		}
+		sb.append("<p style = 'line-height:0.1'>Order Type: "+odam.getOrderTypeStr()+"</p>");
+		sb.append("<p style = 'line-height:0.1'>Service time: "+odam.getOrderDate()+"</p>");
+		if(odam.getOrderType() == 3){
+			sb.append("<p style = 'line-height:0.1'>Number of people: "+odam.getNumber()+"</p>");
+		}
+		sb.append("</th>");
+		sb.append("</tr>");
+		sb.append("</tbody>");
+		sb.append("</table>");
+		sb.append("</body>");
+		sb.append("</html>	");				
+		return sb.toString();
+	}
 
 }
