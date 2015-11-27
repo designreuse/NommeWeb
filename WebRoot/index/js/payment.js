@@ -264,6 +264,66 @@ $(function(){
 	
   $("button[name='placeOrder']").click(function(){
   	if($("#cardDetail").css('display')=='block'){//输入卡的详细信息付款
+  		
+  		function stripeResponseHandler(status, response) {
+  		  var $form = $('#payment-form');
+  		  if (response.error) {
+  		    var param = response.error.param;
+  		    if(param=='number'){
+  		    	$("#numberdiv").css('border-color','red');
+  		    }
+  		    else if(param=='exp_month'){
+  		    	$("#month").parent().css('border-color','red');
+  		    }
+  		    else if(param=='exp_year'){
+  		    	$("#year").parent().css('border-color','red');
+  		    }
+  		    else if(param=='cvc'){
+  		    	$("#cvv").parent().css('border-color','red');
+  		    }
+  		    $("button[name='placeOrder']").prop('disabled', false);
+  		  } else {
+  		    var token = response.id;
+  		    $("#bg").css("display", "block");
+  			$("#show").css("display", "block");
+  		    $.ajax({
+  		  		type: "POST",
+  		   		url: appPath+"/payment/payByDetail",
+  		   		data: {
+  		   			'token':token,
+  		   			'amount':(parseFloat($("#cartTotal").text())*100).toFixed(0),
+  		   			'consumerUuid':$("#consumerUuid").val(),
+  		   			'save':save,
+  		   			'orderId':$("#orderId").val()
+  		   		},
+  		   		success: function(msg){
+  		   			$("#bg").css("display", "none");
+  					$("#show").css("display", "none");
+  		   			$("button[name='placeOrder']").prop('disabled', false);
+  		     		msg = $.parseJSON(msg);
+  		     		if(msg.flag>0){//订单已经增加过
+  		     				$("#orderId").val(msg.flag);
+  		     			}
+  		     		if(!msg.success){//不成功
+  		     			$("button[name='placeOrder']").popover({
+  							content :msg.errorMsg
+  						});
+  						$("button[name='placeOrder']").popover('show');
+  						setTimeout(function(){
+  							$("button[name='placeOrder']").popover('destroy');
+  						},5000)
+  		     		}
+  		     		else{
+  		     			//捐款
+  		     			$.cookie("cart-orderId", 0,{expires:10,path: '/' })
+  		     			$("#charityNum").append("You will donate $"+(parseFloat($("#subTotal").text())*0.05).toFixed(2));
+  		     			$("#display").css('display','block');
+  		     		}
+  		   		}
+  			});
+  		  }
+  		};
+  		
   		if($("input[name='save']").prop("checked")){
 	  		save = 1;
 	  	}
@@ -282,71 +342,10 @@ $(function(){
 	  	if(flag && flag1 && flag2 && flag3){//表单验证通过
 	  		var $form = $("#payment-form");
 
-    	$("button[name='placeOrder']").prop('disabled', true);
+	  		$("button[name='placeOrder']").prop('disabled', true);
 
-    	Stripe.card.createToken($form, stripeResponseHandler);
-  	}
-  	
-  	
-  	 function stripeResponseHandler(status, response) {
-		  var $form = $('#payment-form');
-		  if (response.error) {
-		    var param = response.error.param;
-		    if(param=='number'){
-		    	$("#numberdiv").css('border-color','red');
-		    }
-		    else if(param=='exp_month'){
-		    	$("#month").parent().css('border-color','red');
-		    }
-		    else if(param=='exp_year'){
-		    	$("#year").parent().css('border-color','red');
-		    }
-		    else if(param=='cvc'){
-		    	$("#cvv").parent().css('border-color','red');
-		    }
-		    $("button[name='placeOrder']").prop('disabled', false);
-		  } else {
-		    var token = response.id;
-		    $("#bg").css("display", "block");
-			$("#show").css("display", "block");
-		    $.ajax({
-		  		type: "POST",
-		   		url: appPath+"/payment/payByDetail",
-		   		data: {
-		   			'token':token,
-		   			'amount':(parseFloat($("#cartTotal").text())*100).toFixed(0),
-		   			'consumerUuid':$("#consumerUuid").val(),
-		   			'save':save,
-		   			'orderId':$("#orderId").val()
-		   		},
-		   		success: function(msg){
-		   			$("#bg").css("display", "none");
-					$("#show").css("display", "none");
-		   			$("button[name='placeOrder']").prop('disabled', false);
-		     		msg = $.parseJSON(msg);
-		     		if(msg.flag>0){//订单已经增加过
-		     				$("#orderId").val(msg.flag);
-		     			}
-		     		if(!msg.success){//不成功
-		     			$("button[name='placeOrder']").popover({
-							content :msg.errorMsg
-						});
-						$("button[name='placeOrder']").popover('show');
-						setTimeout(function(){
-							$("button[name='placeOrder']").popover('destroy');
-						},5000)
-		     		}
-		     		else{
-		     			//捐款
-		     			$.cookie("cart-orderId", 0,{expires:10,path: '/' })
-		     			$("#charityNum").append("You will donate $"+(parseFloat($("#subTotal").text())*0.05).toFixed(2));
-		     			$("#display").css('display','block');
-		     		}
-		   		}
-			});
-		  }
-		};
-  	
+    		Stripe.card.createToken($form, stripeResponseHandler);
+	  	}
   	}
   	else{//用存好的卡付款
   		var cardId = '';
