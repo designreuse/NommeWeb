@@ -100,13 +100,14 @@ public interface OrderDao {
 	/**
 	 * @Title: getUnpaidReservationOrders
 	 * @Description: 获取某人某商家的reservation类型的未付款且时间有效的订单
-	 * @param: @param resId
-	 * @param: @param conId
+	 * @param: @param restaurantUuid
+	 * @param: @param consumerUuid
 	 * @param: @param orderType
-	 * @param: @param status
+	 * @param: @param currentOrderNo
+	 * @param: @param localTime
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo);
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo, Date localTime);
 	
 	/**
 	 * @Title: cancelOrder
