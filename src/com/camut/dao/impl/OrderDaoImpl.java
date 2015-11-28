@@ -741,7 +741,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}
 		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
 		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
-				+"ON b.oh_restaurantuuid = a.id ";
+				+"ON b.oh_restaurantuuid = a.uuid ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
 		
