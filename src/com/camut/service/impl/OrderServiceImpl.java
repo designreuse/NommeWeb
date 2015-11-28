@@ -136,7 +136,8 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<OrderListApiModel> selectPastOrder(String consumerUuid) {
-		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid);
+		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid, localTime);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
 			String a = orderHeader.getRestaurantUuid();
