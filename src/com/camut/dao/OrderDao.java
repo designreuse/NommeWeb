@@ -29,7 +29,7 @@ public interface OrderDao {
 	 * @param:  consumerId   
 	 * @return: ResultApiModel
 	 */
-	public List<OrderHeader> selectPastOrder(String consumerUuid);
+	public List<OrderHeader> selectPastOrder(String consumerUuid, Date localTime);
 	
 	/**
 	 * @Title: addOrder
