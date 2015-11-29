@@ -745,7 +745,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
 		}
 		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
-		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
+		sql += " and oh.`status`=7 GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
 				+"ON b.oh_restaurantuuid = a.uuid ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
@@ -808,12 +808,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			startDate = valueArray[0];
 			endDate = valueArray[1];
 		}
-		String sql = "select oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_uuid) as orderQuantity, "
+		String sql = "select    orderType,paymentType,orderQuantity,subtotal,deliveryFee, gst,tips,nommeFee,stripeFee,income  "
+				+ "from ( select oh.status,oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_uuid) as orderQuantity, "
 			+"SUM(oh.total) as subtotal, round(sum(oh.logistics),2) as deliveryFee, "
 			+"sum(oh.tax) as gst, sum(oh.tip) as tips, "
 			+"round(sum((oh.total*1.05)*0.1),2) as nommeFee, if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as stripeFee,"
 			+"sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income "	
-				+"from dat_order_header oh where oh.restaurant_uuid=:restaurantUuid and oh.status=7 ";//已完成的订单状态：7
+				+"from dat_order_header oh where oh.restaurant_uuid=:restaurantUuid ";//已完成的订单状态：7
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -825,7 +826,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}else if(StringUtil.isNotEmpty(endDate)){
 			sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
 		}
-		sql += "GROUP BY oh.order_type, oh.payment ";
+		sql += "GROUP BY oh.order_type, oh.payment ) as gg  WHERE gg.`status`=7 ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(PageRestaurantOrderStatement.class));
