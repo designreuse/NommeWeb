@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.camut.dao.OrderDao;
+import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.OrderHeader;
 import com.camut.model.api.AcceptOrderApiModel;
 import com.camut.model.api.OrderHeaderId;
@@ -207,65 +208,32 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getUnpaidReservationOrders
 	 * @Description: 获取某人某商家的reservation类型的未付款且时间有效的订单
-	 * @param: @param resId
-	 * @param: @param conId
-	 * @param: @param orderType
-	 * @param: @param status
-	 * @return List<PageOrderHeader>  
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
+	 * @return List<PageOrderHeader>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, int orderType, long currentOrderNo, Date localTime){
-		//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
-		//java.sql.Date endDate = new java.sql.Date(nowTime);
-		//Long a = num;
-		//String b =Long.toString(nowTime);
-		//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, Date localTime){
 		String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(localTime);
 		String sqlDateFormat = "'%Y-%m-%d %T'";
 		
+		// Query for all accepted reservations with no items in order.
 		String sql = "";
-		if(currentOrderNo>0){
-			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date, " + sqlDateFormat + ") as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
-					+"from dat_order_header o " 
-					+"left join dat_order_item i on o.id=i.order_id"
-					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid " 
-					+" and o.order_type=:orderType "
-					+"and ((DATE_FORMAT(o.order_date," + sqlDateFormat + ") > DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") or "
-					+"(DATE_FORMAT(o.order_date," + sqlDateFormat + ") = DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") and "
-					+" DATE_FORMAT(o.createdate," + sqlDateFormat + ") < DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") and "
-					+"(o.order_date > date_add('"
-					+ currentTime + "',interval 30 MINUTE)) and (o.`status`=3 )) or "
-					+"(DATE_FORMAT(o.order_date," + sqlDateFormat + ") = DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") and  "
-					+"DATE_FORMAT(o.createdate," + sqlDateFormat + ") = DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") and  "
-					+"(o.order_date > date_add('"
-					+ currentTime + "',interval 30 MINUTE)) and (o.`status`=3 ))))" //(o.id="+currentOrderNo
-					//+" and  DATE_FORMAT(o.order_date,'%Y-%m-%d%T') >= DATE_FORMAT(NOW(),'%Y-%m-%d%T'))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
-					+" group by o.id order by o.order_date asc";
-		} else {
-			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
-					+ "from dat_order_header o " + "left join dat_order_item i on o.id=i.order_id"
-					+ " where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid "
-					+ "and o.order_type=:orderType " + "and (DATE_FORMAT(o.order_date," + sqlDateFormat + ") > DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") or " + "(DATE_FORMAT(o.order_date," + sqlDateFormat + ") = DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") and " + " DATE_FORMAT(o.createdate," + sqlDateFormat + ") < DATE_FORMAT('"
-					+ currentTime + "'," + sqlDateFormat + ") and " + "(o.order_date > date_add('" + currentTime
-					+ "',interval 30 MINUTE)) and (o.`status`=3 )) or "
-					+ "(DATE_FORMAT(o.order_date," + sqlDateFormat + ") = DATE_FORMAT('" + currentTime + "'," + sqlDateFormat + ") and  "
-					+ "DATE_FORMAT(o.createdate," + sqlDateFormat + ") = DATE_FORMAT('" + currentTime + "'," + sqlDateFormat + ") and  "
-					+ "(o.order_date > date_add('" + currentTime + "',interval 30 MINUTE)) and (o.`status`=3 ))) "// 如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
-					+ " group by o.id order by o.order_date asc";
-		}
+		sql += "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %T') as strOrderDate, o.number as number, COUNT(i.id) as itemSize ";
+		sql += "from dat_order_header o left join dat_order_item i on o.id=i.order_id ";
+		sql += "where o.consumer_uuid=:consumerUuid ";
+		sql += "and o.restaurant_uuid=:restaurantUuid " ;
+		sql += "and o.order_type=" + GlobalConstant.TYPE_RESERVATION + " ";
+		sql += "and o.status=3 ";
+		sql += "and (DATE_FORMAT(o.order_date," + sqlDateFormat + ") > DATE_FORMAT('" + currentTime + "'," + sqlDateFormat + ")) ";
+		sql += "and (SELECT(COUNT(i.id))=0) ";
+		sql += "group by o.id ";
+		sql += "order by o.order_date asc;";
+		
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("consumerUuid", consumerUuid);
 		query.setParameter("restaurantUuid", restaurantUuid);
-		query.setParameter("orderType", orderType);
-		//query.setParameter("status", status);
-		//query.setParameter("endDate", endDate);
 		query.setResultTransformer(Transformers.aliasToBean(PageSelectItemReservationOrder.class));
 		query.addScalar("id",new org.hibernate.type.IntegerType());
 		query.addScalar("orderDate",new org.hibernate.type.TimestampType());
@@ -274,7 +242,6 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.addScalar("itemSize",new org.hibernate.type.IntegerType());
 		List<PageSelectItemReservationOrder> list = query.list();
 		return list;
-		
 	}
 
 	/**

@@ -673,15 +673,13 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: getUnpaidReservationOrders
 	 * @Description: 获取某人某商家的reservation类型的未付款且时间有效的订单
-	 * @param: @param resId
-	 * @param: @param conId
-	 * @param: @param orderType
-	 * @param: @param status
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType,long currentOrderNo){
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid){
 		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
-		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, orderType, currentOrderNo, localTime);
+		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, localTime);
 		
 		return orderHeaderList;
 	}
