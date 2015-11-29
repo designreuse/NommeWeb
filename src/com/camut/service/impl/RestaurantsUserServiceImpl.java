@@ -56,7 +56,7 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 			if (restaurantsUser2 != null) {// 用户名存在
 				if (restaurantsUser2.getStatus() == 0) {// 状态正常
 					if (restaurantsUser2.getType() == 1) {// 是管理员
-						if (restaurantsUser2.getRestaurants().getStatus() == 0) {// 商家状态正常
+						if (restaurantsUser2.getRestaurants().getStatus() == 0 || restaurantsUser2.getRestaurants().getStatus() == 3) {// 商家状态正常
 							if (restaurantsUser2.getPassword().equals(MD5Util.md5(restaurantsUser.getPassword()))) {// 密码正确
 								restaurantsUserDao.updateLastLoginTime(restaurantsUser2);// 修改最后一次登陆时间
 								return 1;
