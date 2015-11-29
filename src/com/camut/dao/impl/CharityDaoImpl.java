@@ -298,7 +298,7 @@ public class CharityDaoImpl extends BaseDao<Charity> implements CharityDao {
 								+"from ( "
 									+"select res.restaurant_name as resName, oh.id as ohId, oh.createdate as createDate "
 									+"from dat_order_header oh "
-									+"LEFT JOIN dat_restaurants res on oh.restaurant_id=res.id "
+									+"LEFT JOIN dat_restaurants res on oh.restaurant_uuid=res.uuid "
 								+")b "
 							+"RIGHT JOIN tbl_order_charity a on a.order_id=b.ohId "
 							+"where DATE_FORMAT(b.createDate,'%Y-%m')=:searchMonth and a.charity_id=:charityId "

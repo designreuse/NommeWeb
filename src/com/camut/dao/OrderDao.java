@@ -29,7 +29,7 @@ public interface OrderDao {
 	 * @param:  consumerId   
 	 * @return: ResultApiModel
 	 */
-	public List<OrderHeader> selectPastOrder(String consumerUuid);
+	public List<OrderHeader> selectPastOrder(String consumerUuid, Date localTime);
 	
 	/**
 	 * @Title: addOrder
@@ -196,10 +196,12 @@ public interface OrderDao {
 	/**
 	 * @Title: getDineIn
 	 * @Description: 商家已经审核的订单（预定）
-	 * @param:  restaurantId   
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid);
+	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: getlineup

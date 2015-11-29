@@ -136,7 +136,8 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<OrderListApiModel> selectPastOrder(String consumerUuid) {
-		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid);
+		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid, localTime);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
 			String a = orderHeader.getRestaurantUuid();
@@ -969,13 +970,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: getDineIn
 	 * @Description: 商家已经审核的订单（预定）
-	 * @param:  restaurantId   
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
 	 * @return: List<OrderDineInApiModel>
 	 */
 	@Override
 	public List<OrderDineInApiModel> getDineIn(String consumerUuid, String restaurantUuid) {
 		if (StringUtil.isNotEmpty(consumerUuid)) {
-			List<OrderHeader> ohlist = orderDao.getDineIn(consumerUuid, restaurantUuid);
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			List<OrderHeader> ohlist = orderDao.getDineIn(consumerUuid, restaurantUuid, localTime);
 			List<OrderDineInApiModel> odamList = new ArrayList<OrderDineInApiModel>();
 			for (OrderHeader orderHeader : ohlist) {
 				if (orderHeader.getOrderItems() == null || orderHeader.getOrderItems().size() == 0) {
