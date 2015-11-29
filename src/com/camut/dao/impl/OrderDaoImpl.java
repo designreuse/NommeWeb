@@ -499,16 +499,18 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getDineIn
 	 * @Description: 商家已经审核的订单（预定）
-	 * @param:  restaurantId   
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid) {
+	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid, Date localTime) {
 		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.restaurantUuid=:restaurantUuid and oh.status=3 and oh.orderType=3 and oh.orderDate > :currentDate";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("consumerUuid", consumerUuid);
 		map.put("restaurantUuid", restaurantUuid);
-		map.put("currentDate", new Date());
+		map.put("currentDate", localTime);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
