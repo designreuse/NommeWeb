@@ -392,10 +392,8 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			}
 			// 找出订单日期的星期
 			// calendar.setTime(orderDate);
-			int week = originalAdjustedDateTime.getDayOfWeek() - 1;
-			if (week == 0) {
-				week = 7;
-			}
+			int week = originalAdjustedDateTime.getDayOfWeek();
+			
 			// 根据餐厅id，类型，星期找出当天的营业时间
 			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
 
