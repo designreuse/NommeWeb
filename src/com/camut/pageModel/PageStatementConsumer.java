@@ -6,6 +6,7 @@ public class PageStatementConsumer {
 	private String firstName=" ";//
 	private String lastName=" ";//
 	private String phone=" ";//电话号码
+	private String email=" ";//consumer email
 	private String regDate=" ";//注册时间
 	private String lastLoginDate = " ";//最后一次登录时间
 	private String completedOrderQuantity = "0";//完成订单数量
@@ -40,6 +41,12 @@ public class PageStatementConsumer {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getRegDate() {
 		return regDate;

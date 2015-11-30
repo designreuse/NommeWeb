@@ -244,7 +244,7 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 		if("desc".equals(pf.getOrder())){
 			ascOrDesc = "desc";
 		}
-		String sql = "select a.id as consumerId, a.firstname as firstName, a.lastname as lastName, a.phone as phone, a.reg_date as regDate, a.last_login_date as lastLoginDate, "
+		String sql = "select a.id as consumerId, a.firstname as firstName, a.lastname as lastName, a.phone as phone, a.email as email, a.reg_date as regDate, a.last_login_date as lastLoginDate, "
 				+"ifnull(b.count1,0) as completedOrderQuantity, ifnull(b.amount,0.00) as completedOrderAmount, "
 				+"ifnull(c.count1,0) as unfinishedOrderQuantity, ifnull(c.amount,0.00) as unfinishedOrderAmount, "
 				+"ifnull(d.count1,0) as refundOrderQuantity, ifnull(d.amount,0.00) as refundOrderAmount, ifnull(e.oc_money,0.00) as donateAmount, "
@@ -271,6 +271,7 @@ public class ConsumersDaoImpl extends BaseDao<Consumers> implements	ConsumersDao
 		query.addScalar("firstName",new org.hibernate.type.StringType());
 		query.addScalar("lastName",new org.hibernate.type.StringType());
 		query.addScalar("phone",new org.hibernate.type.StringType());
+		query.addScalar("email",new org.hibernate.type.StringType());
 		query.addScalar("regDate",new org.hibernate.type.StringType());
 		query.addScalar("lastLoginDate",new org.hibernate.type.StringType());
 		query.addScalar("completedOrderQuantity",new org.hibernate.type.StringType());
