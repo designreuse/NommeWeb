@@ -52,7 +52,7 @@
 							<%-- <span style="font-style:italic;font-size: 12px;">&nbsp;&nbsp;${str.describe}</span> --%>
 						</a>
 						<c:if test="${!empty str.describe}">
-							<a class="cursorPointer" style="padding-left: 10px; " title="${str.describe}"><img alt="${str.describe}" src="${ctx}/images/info.png" style="height: 15px;"> </a>
+							<a class="cursorPointer" style="padding-left: 10px; " title="${str.describe}"><img alt="${str.describe}" src="${ctx}/images/infoGreen.png" style="height: 15px;"> </a>
 						
 						</c:if>
 						<div style="float:right;" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwomore">
@@ -120,7 +120,7 @@
 							aria-expanded="true" aria-controls="collapse-${status.count}" style="">${str.menuName}
 						</a>
 						<c:if test="${!empty str.describe}">
-							<a class="cursorPointer" style="padding-left: 10px; " title="${str.describe}"><img alt="${str.describe}" src="${ctx}/images/info.png" style="height: 15px;"> </a>
+							<a class="cursorPointer" style="padding-left: 10px; " title="${str.describe}"><img alt="${str.describe}" src="${ctx}/images/infoGreen.png" style="height: 15px;"> </a>
 						</c:if>
 						 
 						<div style="float:right;" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwomore">
