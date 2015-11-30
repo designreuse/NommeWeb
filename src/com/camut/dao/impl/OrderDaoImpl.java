@@ -272,7 +272,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	@Override
 	public List<OrderHeader> completeOrder(String restaurantUuid, String createdate,String orderType) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in (0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in (7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
 		map.put("restaurantUuid", restaurantUuid);
 		map.put("dt", createdate);
 		if(StringUtil.isNotEmpty(orderType)){
@@ -451,7 +451,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		String strDate = fmt.format(date);
-		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
 		if(StringUtil.isNotEmpty(status)){
 			int type = Integer.parseInt(status);
 			hql += " and oh.orderType=:type";
@@ -683,9 +683,8 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getStatementAllOrders
 	 * @Description: 管理员报表查看所有的订单
-	 * @param: @param searchKey
-	 * @param: @param pf
-	 * @param: @return
+	 * @param: searchKey
+	 * @param: pf
 	 * @return List<PageAdminStatementOrders>  
 	 */
 	@Override
@@ -698,22 +697,31 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			endDate = valueArray[1];
 		}
 		
-		String sql="select a.restaurant_name as restaurantName, b.oh_order_type as orderType, b.oh_payment as paymentType, b.oh_amount as amount from dat_restaurants a "
-				+"INNER JOIN (select oh.restaurant_uuid as oh_restaurantUuid, oh.order_type as oh_order_type, oh.payment as oh_payment, FORMAT(sum(ifnull(oh.amount,0)), 2) as oh_amount from dat_order_header oh ";
-		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
-			if(startDate.equals(endDate)){
-				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
-			}else{
-				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '"+startDate+"' and DATE_FORMAT(oh.order_date,'%Y-%m-%d') <= '"+endDate+"' ";
+		String sql = "select a.restaurant_name as restaurantName, ";
+		sql += "b.oh_order_type as orderType,";
+		sql += "b.oh_payment as paymentType, ";
+		sql += "b.oh_total as amount ";
+		sql += "from dat_restaurants a INNER JOIN (";
+		sql += "select oh.restaurant_uuid as oh_restaurantUuid, ";
+		sql += "oh.order_type as oh_order_type, ";
+		sql += "oh.payment as oh_payment, ";
+		sql += "FORMAT(sum(ifnull(oh.total,0)), 2) as oh_total ";
+		sql += "from dat_order_header oh ";
+		if (StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)) {
+			if (startDate.equals(endDate)) {
+				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate + "' ";
+			} else {
+				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '" + startDate
+						+ "' and DATE_FORMAT(oh.order_date,'%Y-%m-%d') <= '" + endDate + "' ";
 			}
-		}else if(StringUtil.isNotEmpty(startDate)){
-			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
-		}else if(StringUtil.isNotEmpty(endDate)){
-			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
+		} else if (StringUtil.isNotEmpty(startDate)) {
+			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate + "' ";
+		} else if (StringUtil.isNotEmpty(endDate)) {
+			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate + "' ";
 		}
-		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
-		sql += " and oh.`status`=7 GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
-				+"ON b.oh_restaurantuuid = a.uuid ";
+		sql += "and oh.`status`=7 ";
+		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment ";
+		sql += ") b ON b.oh_restaurantuuid = a.uuid ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
 		
@@ -762,10 +770,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getRestaurantOrders
 	 * @Description: 商家获取订单报表数据加载到表格
-	 * @param: @param pf
-	 * @param: @param searchKey
-	 * @param: @return
-	 * @return PageModel  
+	 * @param: searchKey
+	 * @param: pf
+	 * @param: restaurantUuid
+	 * @return List<PageRestaurantOrderStatement>  
 	 */
 	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf,String restaurantUuid){
 		String startDate = "";//开始时间
@@ -775,13 +783,20 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			startDate = valueArray[0];
 			endDate = valueArray[1];
 		}
-		String sql = "select    orderType,paymentType,orderQuantity,subtotal,deliveryFee, gst,tips,nommeFee,stripeFee,income  "
-				+ "from ( select oh.status,oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_uuid) as orderQuantity, "
-			+"SUM(oh.total) as subtotal, round(sum(oh.logistics),2) as deliveryFee, "
-			+"sum(oh.tax) as gst, sum(oh.tip) as tips, "
-			+"round(sum((oh.total*1.05)*0.1),2) as nommeFee, if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as stripeFee,"
-			+"sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income "	
-				+"from dat_order_header oh where oh.restaurant_uuid=:restaurantUuid ";//已完成的订单状态：7
+		
+		String sql = "select oh.order_type as orderType, ";
+		sql += "oh.payment as paymentType, ";
+		sql += "count(oh.id) as orderQuantity, ";
+		sql += "SUM(oh.total) as subtotal,";
+		sql += "round(sum(oh.logistics),2) as deliveryFee, ";
+		sql += "sum(oh.tax) as gst, ";
+		sql += "sum(oh.tip) as tips, ";
+		sql += "round(sum((oh.total*1.05)*0.1),2) as nommeFee, ";
+		sql += "if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as stripeFee, ";
+		sql += "sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income ";
+		sql += "from dat_order_header oh ";
+		sql += "where oh.restaurant_uuid=:restaurantUuid ";
+		sql += "and oh.status=7 ";
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -793,7 +808,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}else if(StringUtil.isNotEmpty(endDate)){
 			sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
 		}
-		sql += "GROUP BY oh.order_type, oh.payment ) as gg  WHERE gg.`status`=7 ";
+		sql += "GROUP BY oh.order_type, oh.payment;";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(PageRestaurantOrderStatement.class));
