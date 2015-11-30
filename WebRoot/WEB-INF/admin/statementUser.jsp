@@ -35,6 +35,7 @@
 					<th data-field="firstName" >First Name</th>
 					<th data-field="lastName" >Last Name</th>
 					<th data-field="phone" >Phone Number</th>
+					<th data-field="email" >Email</th>
 					<th data-field="regDate" >Regist Date</th>
 					<th data-field="lastLoginDate" >Last Login Date</th>
 					<th data-field="completedOrderQuantity" data-sortable="true" data-align="right">Completed Quantity</th>
