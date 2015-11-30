@@ -321,7 +321,8 @@ public class ConsumersController {
 			List<PageSelectItemReservationOrder> orderHeaderList2 = new ArrayList<PageSelectItemReservationOrder>(); 
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
-			long nowTime = new Date().getTime();
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			long nowTime = localTime.getTime();
 			for (int i=0;i< orderHeaderList.size(); i++){
 				PageSelectItemReservationOrder pageOrderHeader = orderHeaderList.get(i);
 				if(pageOrderHeader.getItemSize()==0){
