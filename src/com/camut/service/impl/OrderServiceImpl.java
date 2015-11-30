@@ -677,10 +677,10 @@ public class OrderServiceImpl implements OrderService {
 	 * @param: restaurantUuid
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid){
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid){
 		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
-		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, localTime);
-		
+		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(consumerUuid,
+				restaurantUuid, localTime);
 		return orderHeaderList;
 	}
 

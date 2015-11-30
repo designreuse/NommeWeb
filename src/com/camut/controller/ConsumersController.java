@@ -315,7 +315,7 @@ public class ConsumersController {
 	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid,String restaurantUuid,String currentReservationOrderNumber){
 		List<PageSelectItemReservationOrder> orderHeaderList = new ArrayList<PageSelectItemReservationOrder>();
 		if(StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(consumerUuid)){
-			orderHeaderList = orderService.getUnpaidReservationOrders(restaurantUuid, consumerUuid);
+			orderHeaderList = orderService.getUnpaidReservationOrders(consumerUuid, restaurantUuid);
 		}
 		if(orderHeaderList!=null &&orderHeaderList.size()>0){
 			List<PageSelectItemReservationOrder> orderHeaderList2 = new ArrayList<PageSelectItemReservationOrder>(); 

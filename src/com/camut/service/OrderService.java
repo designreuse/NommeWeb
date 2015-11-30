@@ -134,7 +134,7 @@ public interface OrderService {
 	 * @param: restaurantUuid
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid);
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid);
 	
 	/**
 	 * @Title: cancelOrder
