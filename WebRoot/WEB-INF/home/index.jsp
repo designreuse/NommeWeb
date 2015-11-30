@@ -139,7 +139,7 @@
 
 	<div class="xc-bottom" align="center">
 		<p>
-			<a href="#" id = "index-contactus"><span style="color: #8DD039;">Contact Us</span></a>
+			<a href="#" id = "index-contactus"><span>Contact Us</span></a>
 			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
 			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
 			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
