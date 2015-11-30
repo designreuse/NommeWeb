@@ -24,6 +24,7 @@ import com.camut.pageModel.PagePastOrderInfo;
 import com.camut.pageModel.PageRestaurantOrderStatement;
 import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.utils.StringUtil;
+import com.camut.utils.DateUtil;
 
 /**
  * @dao OrderDaoImpl.java
@@ -56,15 +57,17 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: ResultApiModel
 	 */
 	@Override
-	@Cacheable(value="myCache",key="#consumerUuid")
-	public List<OrderHeader> selectPastOrder(String consumerUuid) {
-		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
+	//@Cacheable(value="myCache",key="#consumerUuid", unless="#result == null")
+	public List<OrderHeader> selectPastOrder(String consumerUuid, Date localTime) {
+		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')>:startDate and date_format(oh.orderDate,'%Y-%m-%d')<=:endDate order by oh.orderDate desc";
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-		String tablename1 = dateFormat1.format(new Date());
-		map.put("dt", tablename1);
+		
+		Date startDate = DateUtil.AddDays(localTime, -30);
+		map.put("startDate", DateUtil.FormatDate(startDate, DateUtil.HqlDateFormat));
+		map.put("endDate", DateUtil.FormatDate(localTime, DateUtil.HqlDateFormat));
 		map.put("consumerUuid", consumerUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
+		
 		return ohList;
 	}
 
@@ -741,7 +744,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}
 		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
 		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
-				+"ON b.oh_restaurantuuid = a.id ";
+				+"ON b.oh_restaurantuuid = a.uuid ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
 		
