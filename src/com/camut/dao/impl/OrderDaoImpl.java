@@ -272,7 +272,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	@Override
 	public List<OrderHeader> completeOrder(String restaurantUuid, String createdate,String orderType) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in (0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in (7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
 		map.put("restaurantUuid", restaurantUuid);
 		map.put("dt", createdate);
 		if(StringUtil.isNotEmpty(orderType)){
@@ -451,7 +451,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		Date date = new Date();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		String strDate = fmt.format(date);
-		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
+		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
 		if(StringUtil.isNotEmpty(status)){
 			int type = Integer.parseInt(status);
 			hql += " and oh.orderType=:type";
