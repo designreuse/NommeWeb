@@ -220,12 +220,12 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		
 		// Query for all accepted reservations with no items in order.
 		String sql = "";
-		sql += "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %T') as strOrderDate, o.number as number, COUNT(i.id) as itemSize ";
+		sql += "select o.id as id, o.order_date as orderDate, o.status as status, DATE_FORMAT(o.order_date,'%Y-%m-%d %T') as strOrderDate, o.number as number, COUNT(i.id) as itemSize ";
 		sql += "from dat_order_header o left join dat_order_item i on o.id=i.order_id ";
 		sql += "where o.consumer_uuid=:consumerUuid ";
 		sql += "and o.restaurant_uuid=:restaurantUuid " ;
 		sql += "and o.order_type=" + GlobalConstant.TYPE_RESERVATION + " ";
-		sql += "and o.status=3 ";
+		sql += "and o.status IN (3,10) ";
 		sql += "and (DATE_FORMAT(o.order_date," + sqlDateFormat + ") > DATE_FORMAT('" + currentTime + "'," + sqlDateFormat + ")) ";
 		sql += "and (SELECT(COUNT(i.id))=0) ";
 		sql += "group by o.id ";
@@ -240,6 +240,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		query.addScalar("strOrderDate",new org.hibernate.type.StringType());
 		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("itemSize",new org.hibernate.type.IntegerType());
+		query.addScalar("status",new org.hibernate.type.IntegerType());
 		List<PageSelectItemReservationOrder> list = query.list();
 		return list;
 	}
