@@ -77,7 +77,6 @@ import com.camut.service.RestaurantsService;
 import com.camut.service.task.TaskDemoService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.CreateOrderNumber;
-import com.camut.utils.DateUtil;
 import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.StringUtil;
@@ -186,15 +185,19 @@ public class OrderServiceImpl implements OrderService {
 					restaurants.getRestaurantLng());
 			orderHeader.setCreatedate(currentLocalTime);
 			
-			Date nowDay = null;
-			Date orderDay = null;
-			nowDay = DateUtil.SetToMidnightTime(currentLocalTime);
-			orderDay = DateUtil.SetToMidnightTime(orderHeader.getOrderDate());
-			if (nowDay != null && orderDay != null) {
+			Date nowDay = null ;
+			Date orderDay = null; 
+			try {
+				nowDay = new SimpleDateFormat("yyyy-MM-dd").parse(currentLocalTime.toString());
+				orderDay = new SimpleDateFormat("yyyy-MM-dd").parse(orderHeader.getOrderDate().toString());
 				if (orderDay.after(nowDay)) {
 					orderHeader.setStatus(3);
 				}
+			} catch (ParseException e) {
+				Log4jUtil.error(e);
+				Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
 			}
+			
 			// orderHeader.setStatus(1);//未付款
 			// 添加dinein 类型的订单到原有的reservation订单中
 			if (orderHeader.getOrderType() == 3 && orderHeader.getOrderItems() != null
@@ -640,14 +643,19 @@ public class OrderServiceImpl implements OrderService {
 		Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
 				restaurants.getRestaurantLng());
 
+		
 		Date nowDay = null ;
 		Date orderDay = null; 
-		nowDay = DateUtil.SetToMidnightTime(currentLocalTime);
-		orderDay = DateUtil.SetToMidnightTime(oh.getOrderDate());
-		if (nowDay != null && orderDay != null) {
+		oh.setStatus(10);
+		try {
+			nowDay = new SimpleDateFormat("yyyy-MM-dd").parse(currentLocalTime.toString());
+			orderDay = new SimpleDateFormat("yyyy-MM-dd").parse(oh.getOrderDate().toString());
 			if (orderDay.after(nowDay)) {
 				oh.setStatus(3);
 			}
+		} catch (ParseException e) {
+			Log4jUtil.error(e);
+			Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
 		}
 		
 		temp = (int)(orderDao.addOrder(oh));

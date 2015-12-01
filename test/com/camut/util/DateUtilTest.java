@@ -23,21 +23,4 @@ public class DateUtilTest {
 		assertEquals(expected, result);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testSetToMidnightTime()
-	{
-		Date nowDay = new Date();
-
-		
-		
-		nowDay = DateUtil.SetToMidnightTime(nowDay);
-		int hours = nowDay.getHours();
-		int min = nowDay.getMinutes();
-		int sec = nowDay.getSeconds();
-		assertEquals(0, hours);
-		assertEquals(0, min);
-		assertEquals(0, sec);
-	}
-	
 }

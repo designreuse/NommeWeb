@@ -65,7 +65,6 @@ import com.camut.service.PaymentService;
 import com.camut.service.RestaurantsService;
 import com.camut.service.RestaurantsUserService;
 import com.camut.utils.CommonUtil;
-import com.camut.utils.DateUtil;
 import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.MD5Util;
@@ -1099,16 +1098,21 @@ public class ConsumersApiController extends BaseAPiModel {
 			//预定并且没有点菜
 			
 			orderHeader.setStatus(10);
+			
 			Date nowDay = null ;
 			Date orderDay = null; 
-			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
-					restaurants.getRestaurantLng());
-			nowDay = DateUtil.SetToMidnightTime(currentLocalTime);
-			orderDay = DateUtil.SetToMidnightTime(orderHeader.getOrderDate());
-			if (nowDay != null && orderDay != null) {
+			try {
+				Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
+						restaurants.getRestaurantLng());
+				
+				nowDay = new SimpleDateFormat("yyyy-MM-dd").parse(currentLocalTime.toString());
+				orderDay = new SimpleDateFormat("yyyy-MM-dd").parse(orderHeader.getOrderDate().toString());
 				if (orderDay.after(nowDay)) {
 					orderHeader.setStatus(3);
 				}
+			} catch (ParseException e) {
+				Log4jUtil.error(e);
+				Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
 			}
 		}
 	

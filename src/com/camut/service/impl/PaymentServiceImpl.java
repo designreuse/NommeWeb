@@ -225,7 +225,6 @@ public class PaymentServiceImpl implements PaymentService {
 				if(StringUtil.isNotEmpty(orderId)){
 					if (order != null) {
 						order.setChargeId(chargeId);
-						//TODO: paid orders still not be accepted automatically
 						order.setStatus(2);// 订单状态修改为已支付
 						orderDao.updateOrderHeader(order);
 					}
