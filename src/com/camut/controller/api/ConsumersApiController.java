@@ -245,7 +245,7 @@ public class ConsumersApiController extends BaseAPiModel {
 			ram.setFlag(1);
 			ram.setResultMessage("");
 			if(StringUtil.isNotEmpty(consumers.getEmail())){
-				MailUtil.sendMail("Create Nomme Account Success", "Thank you for creating Nomme user, your account name is "+consumers.getEmail(), consumers.getEmail()); 
+				MailUtil.sendMail("Nomme.ca: New account", "Hi " +  consumers.getFirstName() + ",\r\nThank you for creating a Nomme account! Your login is " + consumers.getEmail() + ".\r\n\r\nHave a great day!,\r\nThe Nomme team.", consumers.getEmail()); 
 			}
 		}
 		return ram;
