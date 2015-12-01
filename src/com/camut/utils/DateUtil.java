@@ -1,4 +1,5 @@
 package com.camut.utils;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,5 +21,21 @@ public class DateUtil {
 		cal.add(Calendar.DATE, offset);
 		return cal.getTime();
 	}
+	
+	public static Date SetToMidnightTime(Date date)
+	{
+		if(date != null){
+			try {
+				return new SimpleDateFormat("yyyy-MM-dd").parse((new SimpleDateFormat("yyyy-MM-dd").format(date)));
+			} catch (ParseException e) {
+				Log4jUtil.error(e);
+				Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
+			}
+		}
+		Log4jUtil.info("SetToMidnightTime(Date date) set time to midnight failed");
+		
+		return null;
+	}
+	
 
 }
