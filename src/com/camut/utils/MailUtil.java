@@ -17,6 +17,11 @@ public class MailUtil {
 	private static String serverHost = "smtpout.secureserver.net";
 	private static String serverport = "25";
 
+	public static void sendRegistrationEmail(String firstName, String address)
+	{
+		MailUtil.sendMail("Nomme.ca: New account", "<p>Hi " +  firstName + ",</p><p>Thank you for creating a Nomme account! Your login is " + address + ".</p><p>Have a great day!<br>The Nomme team</p>", address); 
+	}
+	
 	/**
 	 * 发送调用方法
 	 * @param subject    邮件标题
