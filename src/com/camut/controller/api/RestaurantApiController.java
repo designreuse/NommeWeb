@@ -176,10 +176,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 			List<OrderHeader> ohList = orderServicr.completeOrder(restaurantUuid,createdate, orderType);
 			if(ohList.size() > 0){
 				for (OrderHeader orderHeader : ohList) {
-					subtotal += orderHeader.getTotal();
-					delivery += orderHeader.getLogistics();
-					tax += orderHeader.getTax();
-					tip += orderHeader.getTip();
+					if(orderHeader.getStatus() == 7){
+						subtotal += orderHeader.getTotal();
+						delivery += orderHeader.getLogistics();
+						tax += orderHeader.getTax();
+						tip += orderHeader.getTip();
+					}
 				}	
 			}
 			ram.setSubtotal(StringUtil.convertLastDouble(subtotal));
