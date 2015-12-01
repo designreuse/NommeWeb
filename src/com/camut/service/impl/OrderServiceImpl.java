@@ -186,6 +186,7 @@ public class OrderServiceImpl implements OrderService {
 					restaurants.getRestaurantLng());
 			orderHeader.setCreatedate(currentLocalTime);
 			
+			orderHeader.setStatus(10);
 			Date nowDay = null;
 			Date orderDay = null;
 			nowDay = DateUtil.SetToMidnightTime(currentLocalTime);
@@ -640,6 +641,7 @@ public class OrderServiceImpl implements OrderService {
 		Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
 				restaurants.getRestaurantLng());
 
+		oh.setStatus(10);
 		Date nowDay = null ;
 		Date orderDay = null; 
 		nowDay = DateUtil.SetToMidnightTime(currentLocalTime);
@@ -657,7 +659,8 @@ public class OrderServiceImpl implements OrderService {
 			if(GlobalConstant.currentOrderId >0){
 				taskDemoService.timerTaskOrder();
 			}*/
-		}
+		}	
+		System.out.println("temp=" + temp);
 		return temp;
 	}
 	
