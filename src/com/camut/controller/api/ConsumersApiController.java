@@ -1098,7 +1098,9 @@ public class ConsumersApiController extends BaseAPiModel {
 		if (orderHeader.getOrderType()==3 && (orderHeader.getOrderItems()==null || orderHeader.getOrderItems().size()==0)) {
 			//预定并且没有点菜
 			
-			orderHeader.setStatus(10);
+			if(orderHeader.getStatus()== null){
+				orderHeader.setStatus(10);
+			}
 			Date nowDay = null ;
 			Date orderDay = null; 
 			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
