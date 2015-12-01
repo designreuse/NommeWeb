@@ -324,7 +324,7 @@ public class IndexController {
 		//-1增加失败，1增加成功
 		if(temp>0){
 			pm.setSuccess(true);
-			MailUtil.sendMail("Create Nomme Account Success", "Thank you for creating Nomme user, your account name is "+pageConsumerAccount.getEmail(), pageConsumerAccount.getEmail());
+			MailUtil.sendRegistrationEmail(consumers.getFirstName(), consumers.getEmail());
 		}else{
 			pm.setSuccess(false);
 			pm.setErrorMsg(MessageConstant.CREATE_ACCOUNT_ERROR);
