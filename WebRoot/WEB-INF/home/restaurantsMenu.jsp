@@ -732,15 +732,12 @@
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						<h4 id="myModalLabel3" align="center">No Reservation Or Reservation Is Still Pending</h4>
+						<h4 id="myModalLabel3" align="center">No Reservation</h4>
 					</div>
 					<div class="modal-body">
 						<h4>
 							<div class="controls" name="isOrderDishTip" style="width:428; margin-left: 15px;margin-bottom: 20px;">
-								If you already made a reservation, please wait for 15 minutes until the restaurant find you a table.
-								<br>
-								If you have not make a reservation, 
-								please make one now!
+								Please make a reservation now.
 							</div>
 						</h4>
 						<div style=" padding:0 15px 15px;">
