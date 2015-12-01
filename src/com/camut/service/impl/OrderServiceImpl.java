@@ -495,51 +495,54 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public int cancelOrder(long orderId) {
-			OrderHeader orderHeader = orderDao.getOrderById(orderId);
-			if(orderHeader != null&&orderHeader.getStatus()!=7){
-				if (orderHeader.getOrderType()==1) {//delivery  >30m
-					if (orderHeader.getOrderDate().before(new Date(new Date().getTime()+30*60*1000))) {
-						return -2;
-					}
-				}
-				else if(orderHeader.getOrderType()==2){//pick-up >15m
-					if (orderHeader.getOrderDate().before(new Date(new Date().getTime()+30*60*1000))) {
-						return -2;
-					}
-				}
-				else if(orderHeader.getOrderType()==3){//reservation >60m
-					if (orderHeader.getOrderDate().before(new Date(new Date().getTime()+30*60*1000))) {
-						return -2;
-					}
-				}
-				if (orderHeader.getPayment()==1) {
-					//信用卡支付
-					if (orderHeader.getChargeId()!=null) {
-						String refundId = CommonUtil.refundAll(orderHeader.getChargeId());
-						if (StringUtil.isNotEmpty(refundId)) {//退款成功
-							orderHeader.setStatus(0);
-							orderHeader.setChargeId(refundId);
-							int flag = orderDao.updateOrderHeader(orderHeader);
-							if (flag==1) {
-								//取消订单成功，需要删除这笔订单的捐款
-								flag = orderCharityService.deleteOrderCharity(orderHeader.getId().intValue());
-								return 1;
-							}
-							
-						}
-					}
-				}
-				else{
-					orderHeader.setStatus(0);
-					int flag = orderDao.updateOrderHeader(orderHeader);
-					if (flag==1) {
-						//取消订单成功，需要删除这笔订单的捐款
-						flag = orderCharityService.deleteOrderCharity(orderHeader.getId().intValue());
-						return 1;
-					}
-					
+		// Get the restaurant's local time.
+		OrderHeader orderHeader = orderDao.getOrderById(orderId);
+		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(orderHeader.getRestaurantUuid());
+		
+		if(orderHeader != null&&orderHeader.getStatus()!=7){
+			if (orderHeader.getOrderType()==1) {//delivery  >30m
+				if (orderHeader.getOrderDate().before(new Date(localTime.getTime()+30*60*1000))) {
+					return -2;
 				}
 			}
+			else if(orderHeader.getOrderType()==2){//pick-up >15m
+				if (orderHeader.getOrderDate().before(new Date(localTime.getTime()+30*60*1000))) {
+					return -2;
+				}
+			}
+			else if(orderHeader.getOrderType()==3){//reservation >60m
+				if (orderHeader.getOrderDate().before(new Date(localTime.getTime()+30*60*1000))) {
+					return -2;
+				}
+			}
+			if (orderHeader.getPayment()==1) {
+				//信用卡支付
+				if (orderHeader.getChargeId()!=null) {
+					String refundId = CommonUtil.refundAll(orderHeader.getChargeId());
+					if (StringUtil.isNotEmpty(refundId)) {//退款成功
+						orderHeader.setStatus(0);
+						orderHeader.setChargeId(refundId);
+						int flag = orderDao.updateOrderHeader(orderHeader);
+						if (flag==1) {
+							//取消订单成功，需要删除这笔订单的捐款
+							flag = orderCharityService.deleteOrderCharity(orderHeader.getId().intValue());
+							return 1;
+						}
+						
+					}
+				}
+			}
+			else{
+				orderHeader.setStatus(0);
+				int flag = orderDao.updateOrderHeader(orderHeader);
+				if (flag==1) {
+					//取消订单成功，需要删除这笔订单的捐款
+					flag = orderCharityService.deleteOrderCharity(orderHeader.getId().intValue());
+					return 1;
+				}
+				
+			}
+		}
 		return -1;
 	}
 
