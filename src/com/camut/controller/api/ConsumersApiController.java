@@ -65,6 +65,7 @@ import com.camut.service.PaymentService;
 import com.camut.service.RestaurantsService;
 import com.camut.service.RestaurantsUserService;
 import com.camut.utils.CommonUtil;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.MD5Util;
 import com.camut.utils.MailUtil;
@@ -1095,11 +1096,23 @@ public class ConsumersApiController extends BaseAPiModel {
 
 		if (orderHeader.getOrderType()==3 && (orderHeader.getOrderItems()==null || orderHeader.getOrderItems().size()==0)) {
 			//预定并且没有点菜
-			if(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).equals(new SimpleDateFormat("yyyy-MM-dd").format(orderHeader.getOrderDate()))){
-				orderHeader.setStatus(10);
-			}
-			else{
-				orderHeader.setStatus(3);
+			
+			orderHeader.setStatus(10);
+			
+			Date nowDay = null ;
+			Date orderDay = null; 
+			try {
+				Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
+						restaurants.getRestaurantLng());
+				
+				nowDay = new SimpleDateFormat("yyyy-MM-dd").parse(currentLocalTime.toString());
+				orderDay = new SimpleDateFormat("yyyy-MM-dd").parse(orderHeader.getOrderDate().toString());
+				if (orderDay.after(nowDay)) {
+					orderHeader.setStatus(3);
+				}
+			} catch (ParseException e) {
+				Log4jUtil.error(e);
+				Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
 			}
 		}
 	

@@ -60,8 +60,12 @@ public class GlobalConstant {
 	
 	public static final int GOOGLEMAP_MAX_DISTANCE = 15000000;//搜索页面地图方式下用户所在位置指定范围内商家显示出来
 	
-	public static final int REJECTED_ORDER = 4;//拒绝接单状态
+	// 0: cancelled, 1: unpaid, 2: paid, 3: has orders, 4: refuse, 6: refunded, 7: completed, 8: line-up, 9: pay cash, 10: pending 
 	public static final int CANCELED_ORDER = 0;//取消订单状态
+	public static final int UNPAID_ORDER = 1;
+	public static final int PAID_ORDER = 2;
+	public static final int REJECTED_ORDER = 4;//拒绝接单状态
+	
 	
 	public static final String DOMAIN_NAME = "http://www.metaorder.ca";//服务器域名
 }
