@@ -370,13 +370,11 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 		int pickupInterval = 20;
 		int deliveryInterval = 45;
 		
-		// Adjust times for restaurant local time
-		// TODO: This assumes users are in the same time zone as the
-		// restaurant!!
+		// Get the restaurant's local time.
+		// TODO: This assumes users are in the same time zone as the restaurant!!
 		Restaurants restaurant = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		double latitude = restaurant.getRestaurantLat();
 		double longitude = restaurant.getRestaurantLng();
-
 		Date originalAdjustedDate = GoogleTimezoneAPIUtil.getLocalDateTime(latitude, longitude);	
 		DateTime originalAdjustedDateTime = new DateTime(originalAdjustedDate);
 
@@ -386,31 +384,35 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 		try {
 			// 注释掉的是之前做的开始时间结束时间都减少15分钟的方案， 现在是不减时间的
 			String orderDateStr = new SimpleDateFormat("yyyy-MM-dd").format(orderDate);
-			// 传来的日期如果是今天之前的日期直接返回null
+			
+			// If the request's date is before the restaurant's local date, return null.
 			if (orderDate.before(new SimpleDateFormat("yyyy-MM-dd").parse(originalAdjustedDateTime.toString("yyyy-MM-dd")))) {
 				return null;
 			}
-			// 找出订单日期的星期
-			// calendar.setTime(orderDate);
-			int week = originalAdjustedDateTime.getDayOfWeek();
 			
-			// 根据餐厅id，类型，星期找出当天的营业时间
-			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
-
+			// Create a string to store the available times.
 			StringBuffer buffer = new StringBuffer();
 			String startStr = "";
-
-			for (OpenTime openTime : list) {
-				Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(orderDateStr + " " + openTime.getEndtime());
-
-				DateTime nowDateTime = originalAdjustedDateTime;
+			
+			// Get the times the restaurant is open for the request's date.
+			DateTime orderDateTime = new DateTime(orderDate);
+			int week = orderDateTime.getDayOfWeek();
+			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
+			if (list.size() > 0) {
+				OpenTime openTime = list.get(0);
 				
-				if (originalAdjustedDate.after(end)) {
-					continue;
+				// If the request's date matches the restaurant's local date, use the restaurant's local time as the start time.
+				// Otherwise, use the restaurant's start time as the start time.
+				String startTime = openTime.getStarttime();
+				String endTime = openTime.getEndtime();
+				if (orderDate.equals(originalAdjustedDate)) {
+					startTime = originalAdjustedDateTime.toString("HH:mm");
 				}
 				
+				DateTime nowDateTime = originalAdjustedDateTime;
+				
 				// 现在时间加半小时在开门时间之后
-				if (originalAdjustedDate.after(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(orderDateStr + " " + openTime.getStarttime()))) {
+				if (originalAdjustedDate.after(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(orderDateStr + " " + startTime))) {
 
 					if (type == GlobalConstant.TYPE_PICKUP) {
 						nowDateTime = nowDateTime.plusMinutes(pickupInterval);
@@ -439,8 +441,8 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 						startStr = currentH + ":15";
 					}
 				} else {
-					int startH = Integer.parseInt(openTime.getStarttime().split(":")[0]);
-					int startM = Integer.parseInt(openTime.getStarttime().split(":")[1]);
+					int startH = Integer.parseInt(startTime.split(":")[0]);
+					int startM = Integer.parseInt(startTime.split(":")[1]);
 					startStr = startH + ":" + startM;
 				}
 				Date start = new SimpleDateFormat("HH:mm").parse(startStr);
@@ -448,7 +450,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 
 				System.out.println(startDateTime.toString());
 				
-				while (!(getDateFromDateTime(startDateTime).after(new SimpleDateFormat("HH:mm").parse(openTime.getEndtime())))) {
+				while (!(getDateFromDateTime(startDateTime).after(new SimpleDateFormat("HH:mm").parse(endTime)))) {
 					buffer.append(new SimpleDateFormat("HH:mm").format(getDateFromDateTime(startDateTime)) + ",");
 					startDateTime = startDateTime.plusMinutes(15);
 				}
