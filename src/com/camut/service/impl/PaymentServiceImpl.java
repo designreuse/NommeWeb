@@ -3,6 +3,8 @@
  */
 package com.camut.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,8 +22,10 @@ import com.camut.model.CardEntity;
 import com.camut.model.ChargeEntity;
 import com.camut.model.Consumers;
 import com.camut.model.OrderHeader;
+import com.camut.model.Restaurants;
 import com.camut.service.PaymentService;
 import com.camut.utils.CommonUtil;
+import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.StringUtil;
 import com.stripe.Stripe;
@@ -219,21 +223,11 @@ public class PaymentServiceImpl implements PaymentService {
 			Log4jUtil.info("付款==>"+"collectedFee="+collectedFee);
 			if (StringUtil.isNotEmpty(chargeId)) {
 				if(StringUtil.isNotEmpty(orderId)){
-					if (order!=null) {
-						order.setChargeId(chargeId);						
-						 Calendar calendar = Calendar.getInstance();   
-						 calendar.setTime(order.getOrderDate());
-						 int orderDay = calendar.get(Calendar.DATE);  
-						 calendar.setTime(new Date());
-						 int nowDay=calendar.get(Calendar.DATE);  
-						if(orderDay>nowDay){
-							order.setStatus(3);
-						}else{
-							order.setStatus(2);//订单状态修改为已支付
-						}
+					if (order != null) {
+						order.setChargeId(chargeId);
+						order.setStatus(2);// 订单状态修改为已支付
 						orderDao.updateOrderHeader(order);
 					}
-					
 				}
 				return 1;
 			}
