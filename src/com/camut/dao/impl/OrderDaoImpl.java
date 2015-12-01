@@ -297,7 +297,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
@@ -318,7 +318,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
