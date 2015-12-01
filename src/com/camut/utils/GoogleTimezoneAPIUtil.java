@@ -21,7 +21,9 @@ import org.json.JSONObject;
 public class GoogleTimezoneAPIUtil {
 	
 	public static TimeZone getTimeZoneFromGeoLocation(double latitude, double longitude) {
-		Calendar calendar = Calendar.getInstance();
+		return TimeZone.getTimeZone("America/Edmonton");
+		
+		/*Calendar calendar = Calendar.getInstance();
 		TimeZone timezone = calendar.getTimeZone();
 
 		// Convert milliseconds to second (UNIX time stamp)
@@ -81,7 +83,7 @@ public class GoogleTimezoneAPIUtil {
 		}
 
 		Log4jUtil.info("Something went wrong with getting timezone, setting machine timezone: " + timezone.getID());
-		return timezone;
+		return timezone;*/
 	}
 	
 	public static Date getLocalDateTime(double latitude, double longitude) {

@@ -6,10 +6,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.camut.dao.ClassificationDao;
+import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.Classification;
 import com.camut.pageModel.PageClassification;
 import com.camut.pageModel.PageMessage;
 import com.camut.service.ClassificationService;
+import com.camut.utils.StringUtil;
 
 @Service
 public class ClassificationServiceImpl implements ClassificationService {
@@ -32,6 +34,22 @@ public class ClassificationServiceImpl implements ClassificationService {
 			if(classification!=null){
 				BeanUtils.copyProperties(classification, pageClassification);
 			}
+			if(StringUtil.isNotEmpty(classification.getAndroidImageUrl())){
+				pageClassification.setAndroidImageUrl(GlobalConstant.DOMAIN_NAME + classification.getAndroidImageUrl());
+			}
+			if(StringUtil.isNotEmpty(classification.getAndroidHoverImageUrl())){
+				pageClassification.setAndroidHoverImageUrl(GlobalConstant.DOMAIN_NAME + classification.getAndroidHoverImageUrl());
+			}
+			if(StringUtil.isNotEmpty(classification.getIosImageUrl())){
+				pageClassification.setIosImageUrl(GlobalConstant.DOMAIN_NAME + classification.getIosImageUrl());
+			}
+			if(StringUtil.isNotEmpty(classification.getIosHoverImageUrl())){
+				pageClassification.setIosHoverImageUrl(GlobalConstant.DOMAIN_NAME + classification.getIosHoverImageUrl());
+			}
+			if(StringUtil.isNotEmpty(classification.getWebImageUrl())){
+				pageClassification.setWebImageUrl(GlobalConstant.DOMAIN_NAME + classification.getWebImageUrl());
+			}
+			
 			list.add(pageClassification);
 		}
 		return list;

@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -365,100 +367,65 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 */
 	@Override
 	public String[] getOpenTimeByOrderDate(Date orderDate, String restaurantUuid, int type) {
-		Calendar calendar = Calendar.getInstance();
-		TimeZone originalTimeZone = calendar.getTimeZone();
-		Date originalTime = calendar.getTime();
-
+		int pickupInterval = 20;
+		int deliveryInterval = 45;
+		
 		// Adjust times for restaurant local time
 		// TODO: This assumes users are in the same time zone as the
 		// restaurant!!
 		Restaurants restaurant = restaurantsDao.getRestaurantsByUuid(restaurantUuid);
 		double latitude = restaurant.getRestaurantLat();
 		double longitude = restaurant.getRestaurantLng();
-		TimeZone restaurantTimezone = GoogleTimezoneAPIUtil.getTimeZoneFromGeoLocation(latitude, longitude);
-		calendar.setTimeZone(restaurantTimezone);
 
-		// Adjust the current calendar time using the difference between the two
-		// time zones.
-		int millisecondsOffset = restaurantTimezone.getRawOffset() - originalTimeZone.getRawOffset();
-		calendar.add(Calendar.MILLISECOND, millisecondsOffset);
+		Date originalAdjustedDate = GoogleTimezoneAPIUtil.getLocalDateTime(latitude, longitude);	
+		DateTime originalAdjustedDateTime = new DateTime(originalAdjustedDate);
 
-		// Apply daylight saving time correction, depending on the daylight
-		// saving time status of each zone
-		if (originalTimeZone.inDaylightTime(originalTime) && restaurantTimezone.inDaylightTime(calendar.getTime())) {
-			int offset = restaurantTimezone.getDSTSavings() - originalTimeZone.getDSTSavings();
-			calendar.add(Calendar.MILLISECOND, offset);
-			millisecondsOffset += offset;
-		} else if (!originalTimeZone.inDaylightTime(originalTime)
-				&& restaurantTimezone.inDaylightTime(calendar.getTime())) {
-			int offset = restaurantTimezone.getDSTSavings();
-			calendar.add(Calendar.MILLISECOND, offset);
-			millisecondsOffset += offset;
-		} else if (originalTimeZone.inDaylightTime(originalTime)
-				&& !restaurantTimezone.inDaylightTime(calendar.getTime())) {
-			int offset = 0 - originalTimeZone.getDSTSavings();
-			calendar.add(Calendar.MILLISECOND, offset);
-			millisecondsOffset += offset;
-		}
-		int hoursOffset = (int) TimeUnit.MILLISECONDS.toHours(millisecondsOffset);
+		System.out.println("local time: " + originalAdjustedDate.toString());
+		System.out.println("order day: " + orderDate.toString());
 
 		try {
 			// 注释掉的是之前做的开始时间结束时间都减少15分钟的方案， 现在是不减时间的
 			String orderDateStr = new SimpleDateFormat("yyyy-MM-dd").format(orderDate);
 			// 传来的日期如果是今天之前的日期直接返回null
-			if (orderDate.before(new SimpleDateFormat("yyyy-MM-dd")
-					.parse(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime())))) {
+			if (orderDate.before(new SimpleDateFormat("yyyy-MM-dd").parse(originalAdjustedDateTime.toString("yyyy-MM-dd")))) {
 				return null;
 			}
 			// 找出订单日期的星期
 			// calendar.setTime(orderDate);
-			int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-			if (week == 0) {
-				week = 7;
-			}
+			int week = originalAdjustedDateTime.getDayOfWeek();
+			
 			// 根据餐厅id，类型，星期找出当天的营业时间
 			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
 
 			StringBuffer buffer = new StringBuffer();
 			String startStr = "";
 
-			Date now = calendar.getTime();
 			for (OpenTime openTime : list) {
-				calendar.setTime(now);
-
 				Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(orderDateStr + " " + openTime.getEndtime());
 
-				if (calendar.getTime().after(end)) {
+				DateTime nowDateTime = originalAdjustedDateTime;
+				
+				if (originalAdjustedDate.after(end)) {
 					continue;
 				}
-
+				
 				// 现在时间加半小时在开门时间之后
-				if (calendar.getTime().after(
-						new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(orderDateStr + " " + openTime.getStarttime()))) {
+				if (originalAdjustedDate.after(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(orderDateStr + " " + openTime.getStarttime()))) {
 
 					if (type == GlobalConstant.TYPE_PICKUP) {
-						calendar.add(Calendar.MINUTE, 20);
+						nowDateTime = nowDateTime.plusMinutes(pickupInterval);
 					} else if (type == GlobalConstant.TYPE_DELIVERY) {
-						calendar.add(Calendar.MINUTE, 45);
+						nowDateTime = nowDateTime.plusMinutes(deliveryInterval);
 					} else {
 						//// calendar.setTime(new Date());
 					}
-
-					// This will still return correct time zone, but
-					// overadjusted, we have to scale back
-					int serverH = calendar.get(Calendar.HOUR_OF_DAY);
-
-					// Adjust overflow in each direction
-					if (serverH - hoursOffset < 0) {
-						serverH += 24;
-					} else if (serverH - hoursOffset > 24) {
-						serverH -= 24;
-					}
-
+					
 					// Apply hour offset to get to the current time zone
-					int currentH = serverH - hoursOffset;
-					int currentM = calendar.get(Calendar.MINUTE);
-
+					int currentH = nowDateTime.getHourOfDay();
+					int currentM = nowDateTime.getMinuteOfHour();
+					
+					System.out.println("  Time: " + currentH + ":" + currentM);
+					
 					if (currentM > 0 && currentM <= 15) {
 						startStr = currentH + ":15";
 					} else if (currentM > 15 && currentM <= 30) {
@@ -477,11 +444,13 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 					startStr = startH + ":" + startM;
 				}
 				Date start = new SimpleDateFormat("HH:mm").parse(startStr);
-				calendar.setTime(start);
+				DateTime startDateTime = new DateTime(start);
 
-				while (!(calendar.getTime().after(new SimpleDateFormat("HH:mm").parse(openTime.getEndtime())))) {
-					buffer.append(new SimpleDateFormat("HH:mm").format(calendar.getTime()) + ",");
-					calendar.add(Calendar.MINUTE, 15);
+				System.out.println(startDateTime.toString());
+				
+				while (!(getDateFromDateTime(startDateTime).after(new SimpleDateFormat("HH:mm").parse(openTime.getEndtime())))) {
+					buffer.append(new SimpleDateFormat("HH:mm").format(getDateFromDateTime(startDateTime)) + ",");
+					startDateTime = startDateTime.plusMinutes(15);
 				}
 			}
 			String[] strs = buffer.toString().split(",");
@@ -496,6 +465,17 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+		}
+	}
+		
+	private Date getDateFromDateTime(DateTime dateTime)
+	{
+		try
+		{
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateTime.toString("yyyy-MM-dd HH:mm:ss"));
+		}catch (ParseException e)
+		{
 			return null;
 		}
 	}

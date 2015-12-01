@@ -315,23 +315,14 @@ public class ConsumersController {
 	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid,String restaurantUuid,String currentReservationOrderNumber){
 		List<PageSelectItemReservationOrder> orderHeaderList = new ArrayList<PageSelectItemReservationOrder>();
 		if(StringUtil.isNotEmpty(restaurantUuid) && StringUtil.isNotEmpty(consumerUuid)){
-			int orderType = GlobalConstant.TYPE_RESERVATION; 
-			long currentOrderNo = 0;
-			if(StringUtil.isNotEmpty(currentReservationOrderNumber)){
-				currentOrderNo = Long.parseLong(currentReservationOrderNumber);
-			}
-			orderHeaderList = orderService.getUnpaidReservationOrders(consumerUuid,restaurantUuid,orderType,currentOrderNo);
-			
-			
-			
-			
-			
+			orderHeaderList = orderService.getUnpaidReservationOrders(consumerUuid, restaurantUuid);
 		}
 		if(orderHeaderList!=null &&orderHeaderList.size()>0){
 			List<PageSelectItemReservationOrder> orderHeaderList2 = new ArrayList<PageSelectItemReservationOrder>(); 
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
-			long nowTime = new Date().getTime();
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			long nowTime = localTime.getTime();
 			for (int i=0;i< orderHeaderList.size(); i++){
 				PageSelectItemReservationOrder pageOrderHeader = orderHeaderList.get(i);
 				if(pageOrderHeader.getItemSize()==0){

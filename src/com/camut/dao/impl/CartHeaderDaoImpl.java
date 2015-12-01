@@ -128,11 +128,10 @@ public class CartHeaderDaoImpl extends BaseDao<CartHeader> implements CartHeader
 	 * @return
 	 */
 	@Override
-	public int deleteCartDish(long cartId, int dishId) {
-		String hql="delete from CartItem c where c.cartHeader.id=:cartId and c.dishId=:dishId";
+	public int deleteCartDish(int cartItemId) {
+		String hql="delete from CartItem c where c.id=:cartItemId";
 		Map<String, Object> map=new HashMap<String, Object>();
-		map.put("cartId", cartId);
-		map.put("dishId", dishId);
+		map.put("cartItemId", (long)cartItemId);
 		try {
 			this.executeHql(hql,map);
 			return 1;

@@ -29,7 +29,7 @@ public interface OrderDao {
 	 * @param:  consumerId   
 	 * @return: ResultApiModel
 	 */
-	public List<OrderHeader> selectPastOrder(String consumerUuid);
+	public List<OrderHeader> selectPastOrder(String consumerUuid, Date localTime);
 	
 	/**
 	 * @Title: addOrder
@@ -100,13 +100,12 @@ public interface OrderDao {
 	/**
 	 * @Title: getUnpaidReservationOrders
 	 * @Description: 获取某人某商家的reservation类型的未付款且时间有效的订单
-	 * @param: @param resId
-	 * @param: @param conId
-	 * @param: @param orderType
-	 * @param: @param status
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType, long currentOrderNo);
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: cancelOrder
@@ -135,34 +134,38 @@ public interface OrderDao {
 	/**
 	 * @Title: liveOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeaderId> liveOrder(String restaurantUuid);
+	public List<OrderHeaderId> liveOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: upcomingOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeaderId> upcomingOrder(String restaurantUuid);
+	public List<OrderHeaderId> upcomingOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: acceptOrder
 	 * @Description: 当天已处理的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid);
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: acceptUpcomingOrder
 	 * @Description: 已处理非当天的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid);
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: totalAmount
@@ -191,10 +194,12 @@ public interface OrderDao {
 	/**
 	 * @Title: getDineIn
 	 * @Description: 商家已经审核的订单（预定）
-	 * @param:  restaurantId   
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid);
+	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid, Date localTime);
 	
 	/**
 	 * @Title: getlineup

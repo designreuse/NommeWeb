@@ -73,6 +73,7 @@ import com.camut.service.GarnishItemService;
 import com.camut.service.OrderCharityService;
 import com.camut.service.OrderService;
 import com.camut.service.PaymentService;
+import com.camut.service.RestaurantsService;
 import com.camut.service.task.TaskDemoService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.CreateOrderNumber;
@@ -109,11 +110,10 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired private ConsumersAddressDao consumersAddressDao;
 	@Autowired private DiscountDao discountDao;
 	@Autowired private CartService cartService;
-	@Autowired private PaymentService paymentService; 
+	@Autowired private PaymentService paymentService;  
+	@Autowired private TaskDemoService taskDemoService;
 	@Autowired private OrderCharityService orderCharityService;
-	
-	//Deprecated
-	//@Autowired private TaskDemoService taskDemoService;
+	@Autowired private RestaurantsService restaurantsService;
 	
 	private static long newOrderId = 0;
 	
@@ -136,7 +136,8 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<OrderListApiModel> selectPastOrder(String consumerUuid) {
-		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid);
+		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid, localTime);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
 			String a = orderHeader.getRestaurantUuid();
@@ -200,9 +201,8 @@ public class OrderServiceImpl implements OrderService {
 				if (flag == -1) {
 					return -1;
 				} else {
-					//Deprecated
-					//taskDemoService.pushOrderid(orderHeader.getId());
-					//taskDemoService.timerTaskOrder();
+					taskDemoService.pushOrderid(orderHeader.getId());
+					taskDemoService.timerTaskOrder();
 				}
 			}
 			else{//delivery or pick-up
@@ -210,10 +210,9 @@ public class OrderServiceImpl implements OrderService {
 				Log4jUtil.info("新增订单==> 订单类型:"+orderHeader.getOrderType() +"-->id:"+ohid);
 				if (ohid==-1) {
 					return -1;
-				}
-				//Deprecated 
-				//taskDemoService.pushOrderid(ohid);
-				//taskDemoService.timerTaskOrder();
+				}			
+				taskDemoService.pushOrderid(ohid);
+				taskDemoService.timerTaskOrder();
 				orderHeader.setId(ohid);
 			}
 			
@@ -674,15 +673,14 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: getUnpaidReservationOrders
 	 * @Description: 获取某人某商家的reservation类型的未付款且时间有效的订单
-	 * @param: @param resId
-	 * @param: @param conId
-	 * @param: @param orderType
-	 * @param: @param status
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
 	 * @return List<PageOrderHeader>  
 	 */
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String restaurantUuid, String consumerUuid, int orderType,long currentOrderNo){
-		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(restaurantUuid, consumerUuid, orderType, currentOrderNo);
-		
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid){
+		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		List<PageSelectItemReservationOrder> orderHeaderList = orderDao.getUnpaidReservationOrders(consumerUuid,
+				restaurantUuid, localTime);
 		return orderHeaderList;
 	}
 
@@ -791,14 +789,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: liveOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
 	 * @return: List<OrderHeader>
 	 */
 	@Override
 	public LiveOrderApiMdoel liveOrder(String restaurantUuid) {
 		List<Long> orderId = new ArrayList<Long>();
 		LiveOrderApiMdoel liveOrderApiMdoel = new LiveOrderApiMdoel();
-		List<OrderHeaderId> oh = orderDao.liveOrder(restaurantUuid);
+		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		List<OrderHeaderId> oh = orderDao.liveOrder(restaurantUuid, localTime);
 		for (OrderHeaderId orderHeader : oh) {
 			orderId.add(orderHeader.getOrderId());
 		}
@@ -810,14 +809,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: upcomingOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
 	 * @return: List<OrderHeader>
 	 */
 	@Override
 	public LiveOrderApiMdoel upcomingOrder(String restaurantUuid) {
 		List<Long> orderId = new ArrayList<Long>();
 		LiveOrderApiMdoel liveOrderApiMdoel = new LiveOrderApiMdoel();
-		List<OrderHeaderId> oh = orderDao.upcomingOrder(restaurantUuid);
+		Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		List<OrderHeaderId> oh = orderDao.upcomingOrder(restaurantUuid, localTime);
 		for (OrderHeaderId orderHeader : oh) {
 			orderId.add(orderHeader.getOrderId());
 		}
@@ -835,7 +835,8 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<AcceptOrderApiModel> ohList = orderDao.acceptOrder(restaurantUuid);
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			List<AcceptOrderApiModel> ohList = orderDao.acceptOrder(restaurantUuid, localTime);
 			for (AcceptOrderApiModel a : ohList) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				String tablename = dateFormat.format(a.getOrderDate());
@@ -875,7 +876,8 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<AcceptOrderApiModel> ohList = orderDao.acceptUpcomingOrder(restaurantUuid);
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			List<AcceptOrderApiModel> ohList = orderDao.acceptUpcomingOrder(restaurantUuid, localTime);
 			for (AcceptOrderApiModel a : ohList) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 				String tablename = dateFormat.format(a.getOrderDate());
@@ -966,13 +968,15 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: getDineIn
 	 * @Description: 商家已经审核的订单（预定）
-	 * @param:  restaurantId   
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
 	 * @return: List<OrderDineInApiModel>
 	 */
 	@Override
 	public List<OrderDineInApiModel> getDineIn(String consumerUuid, String restaurantUuid) {
 		if (StringUtil.isNotEmpty(consumerUuid)) {
-			List<OrderHeader> ohlist = orderDao.getDineIn(consumerUuid, restaurantUuid);
+			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			List<OrderHeader> ohlist = orderDao.getDineIn(consumerUuid, restaurantUuid, localTime);
 			List<OrderDineInApiModel> odamList = new ArrayList<OrderDineInApiModel>();
 			for (OrderHeader orderHeader : ohlist) {
 				if (orderHeader.getOrderItems() == null || orderHeader.getOrderItems().size() == 0) {

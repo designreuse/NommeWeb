@@ -90,6 +90,7 @@ public class PushUtil {
 	           String host="gateway.sandbox.push.apple.com";  //测试用的苹果推送服务器
 	           int port = 2195;          
 	           
+	           //String certificatePath = path+"/p12/aps_production_Server.p12"; //刚才在mac系统下导出的证书
 	           String certificatePath = path+"/p12/aps_Service_developer.p12"; //刚才在mac系统下导出的证书
 	           
 	           String certificatePassword= "1";

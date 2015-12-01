@@ -9,6 +9,7 @@ public class PageSelectItemReservationOrder {
 	private Integer number;
 	private Integer itemSize;
 	private String strOrderDate;// 字符串就餐时间
+	private Integer status;
 	
 	public Date getOrderDate() {
 		return orderDate;
@@ -40,8 +41,12 @@ public class PageSelectItemReservationOrder {
 	public void setStrOrderDate(String strOrderDate) {
 		this.strOrderDate = strOrderDate;
 	}
-	
-	
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 	
 	
 	

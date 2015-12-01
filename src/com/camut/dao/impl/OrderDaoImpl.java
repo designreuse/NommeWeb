@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.camut.dao.OrderDao;
+import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.OrderHeader;
 import com.camut.model.api.AcceptOrderApiModel;
 import com.camut.model.api.OrderHeaderId;
@@ -24,6 +25,7 @@ import com.camut.pageModel.PagePastOrderInfo;
 import com.camut.pageModel.PageRestaurantOrderStatement;
 import com.camut.pageModel.PageSelectItemReservationOrder;
 import com.camut.utils.StringUtil;
+import com.camut.utils.DateUtil;
 
 /**
  * @dao OrderDaoImpl.java
@@ -56,15 +58,17 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @return: ResultApiModel
 	 */
 	@Override
-	@Cacheable(value="myCache",key="#consumerUuid")
-	public List<OrderHeader> selectPastOrder(String consumerUuid) {
-		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
+	//@Cacheable(value="myCache",key="#consumerUuid", unless="#result == null")
+	public List<OrderHeader> selectPastOrder(String consumerUuid, Date localTime) {
+		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')>:startDate and date_format(oh.orderDate,'%Y-%m-%d')<=:endDate order by oh.orderDate desc";
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-		String tablename1 = dateFormat1.format(new Date());
-		map.put("dt", tablename1);
+		
+		Date startDate = DateUtil.AddDays(localTime, -30);
+		map.put("startDate", DateUtil.FormatDate(startDate, DateUtil.HqlDateFormat));
+		map.put("endDate", DateUtil.FormatDate(localTime, DateUtil.HqlDateFormat));
 		map.put("consumerUuid", consumerUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
+		
 		return ohList;
 	}
 
@@ -204,66 +208,41 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getUnpaidReservationOrders
 	 * @Description: 获取某人某商家的reservation类型的未付款且时间有效的订单
-	 * @param: @param resId
-	 * @param: @param conId
-	 * @param: @param orderType
-	 * @param: @param status
-	 * @return List<PageOrderHeader>  
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
+	 * @return List<PageOrderHeader>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, int orderType, long currentOrderNo){
-		//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
-		//java.sql.Date endDate = new java.sql.Date(nowTime);
-		//Long a = num;
-		//String b =Long.toString(nowTime);
-		//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	public List<PageSelectItemReservationOrder> getUnpaidReservationOrders(String consumerUuid, String restaurantUuid, Date localTime){
+		String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(localTime);
+		String sqlDateFormat = "'%Y-%m-%d %T'";
 		
+		// Query for all accepted reservations with no items in order.
 		String sql = "";
-		if(currentOrderNo>0){
-			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
-					+"from dat_order_header o " 
-					+"left join dat_order_item i on o.id=i.order_id"
-					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid " 
-					+" and o.order_type=:orderType "
-					+"and ((DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or "
-					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and "
-					+" DATE_FORMAT(o.createdate,'%Y-%m-%d') < DATE_FORMAT(NOW(),'%Y-%m-%d') and "
-					+"(o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3 )) or "
-					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and  "
-					+"DATE_FORMAT(o.createdate,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and  "
-					+"(o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3 ))) or o.id="+currentOrderNo+")" //(o.id="+currentOrderNo
-					//+" and  DATE_FORMAT(o.order_date,'%Y-%m-%d%T') >= DATE_FORMAT(NOW(),'%Y-%m-%d%T'))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
-					+" group by o.id order by o.order_date asc";
-		}else{
-			sql = "select o.id as id, o.order_date as orderDate, DATE_FORMAT(o.order_date,'%Y-%m-%d %H:%i') as strOrderDate, o.number as number, COUNT(i.id) as itemSize "
-					+"from dat_order_header o " 
-					+"left join dat_order_item i on o.id=i.order_id"
-					+" where o.consumer_uuid=:consumerUuid and o.restaurant_uuid=:restaurantUuid "
-					+"and o.order_type=:orderType "
-					+"and (DATE_FORMAT(o.order_date,'%Y-%m-%d') > DATE_FORMAT(NOW(),'%Y-%m-%d') or "
-					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and "
-					+" DATE_FORMAT(o.createdate,'%Y-%m-%d') < DATE_FORMAT(NOW(),'%Y-%m-%d') and "
-					+"(o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3 )) or "
-					+"(DATE_FORMAT(o.order_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and  "
-					+"DATE_FORMAT(o.createdate,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') and  "
-					+"(o.order_date > date_add(NOW(),interval 30 MINUTE)) and (o.`status`=3 ))) "//如果是当天订的当天的reservation订单，需要商家审核通过后才可以用于dinein
-					+" group by o.id order by o.order_date asc";
-		}
+		sql += "select o.id as id, o.order_date as orderDate, o.status as status, DATE_FORMAT(o.order_date,'%Y-%m-%d %T') as strOrderDate, o.number as number, COUNT(i.id) as itemSize ";
+		sql += "from dat_order_header o left join dat_order_item i on o.id=i.order_id ";
+		sql += "where o.consumer_uuid=:consumerUuid ";
+		sql += "and o.restaurant_uuid=:restaurantUuid " ;
+		sql += "and o.order_type=" + GlobalConstant.TYPE_RESERVATION + " ";
+		sql += "and o.status IN (3,10) ";
+		sql += "and (DATE_FORMAT(o.order_date," + sqlDateFormat + ") > DATE_FORMAT('" + currentTime + "'," + sqlDateFormat + ")) ";
+		sql += "and (SELECT(COUNT(i.id))=0) ";
+		sql += "group by o.id ";
+		sql += "order by o.order_date asc;";
+		
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("consumerUuid", consumerUuid);
 		query.setParameter("restaurantUuid", restaurantUuid);
-		query.setParameter("orderType", orderType);
-		//query.setParameter("status", status);
-		//query.setParameter("endDate", endDate);
 		query.setResultTransformer(Transformers.aliasToBean(PageSelectItemReservationOrder.class));
 		query.addScalar("id",new org.hibernate.type.IntegerType());
 		query.addScalar("orderDate",new org.hibernate.type.TimestampType());
 		query.addScalar("strOrderDate",new org.hibernate.type.StringType());
 		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("itemSize",new org.hibernate.type.IntegerType());
+		query.addScalar("status",new org.hibernate.type.IntegerType());
 		List<PageSelectItemReservationOrder> list = query.list();
 		return list;
-		
 	}
 
 	/**
@@ -309,14 +288,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: liveOrder
 	 * @Description: 当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeaderId> liveOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<OrderHeaderId> liveOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
 				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
@@ -330,14 +309,14 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: upcomingOrder
 	 * @Description: 非当天未处理的订单
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeaderId> upcomingOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<OrderHeaderId> upcomingOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
 				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
@@ -352,13 +331,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @Title: acceptOrder
 	 * @Description: 当天已处理的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<AcceptOrderApiModel> acceptOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId, o.createdate as createdate, o.order_date as orderDate, o.phone_number as phone,o.order_type as orderType, "
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
@@ -382,13 +361,13 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	 * @Title: acceptUpcomingOrder
 	 * @Description: 已处理非当天的订单列表
 	 * @param:  restaurantId   
+	 * @param:  localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid) {
-		Date date = new Date();
+	public List<AcceptOrderApiModel> acceptUpcomingOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String strDate = fmt.format(date);
+		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId, o.createdate as createdate, o.order_date as orderDate, o.phone_number as phone,o.order_type as orderType, "
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
@@ -488,16 +467,18 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getDineIn
 	 * @Description: 商家已经审核的订单（预定）
-	 * @param:  restaurantId   
+	 * @param: consumerUuid
+	 * @param: restaurantUuid
+	 * @param: localTime
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid) {
+	public List<OrderHeader> getDineIn(String consumerUuid, String restaurantUuid, Date localTime) {
 		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.restaurantUuid=:restaurantUuid and oh.status=3 and oh.orderType=3 and oh.orderDate > :currentDate";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("consumerUuid", consumerUuid);
 		map.put("restaurantUuid", restaurantUuid);
-		map.put("currentDate", new Date());
+		map.put("currentDate", localTime);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
 	}
@@ -703,9 +684,8 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getStatementAllOrders
 	 * @Description: 管理员报表查看所有的订单
-	 * @param: @param searchKey
-	 * @param: @param pf
-	 * @param: @return
+	 * @param: searchKey
+	 * @param: pf
 	 * @return List<PageAdminStatementOrders>  
 	 */
 	@Override
@@ -718,22 +698,31 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			endDate = valueArray[1];
 		}
 		
-		String sql="select a.restaurant_name as restaurantName, b.oh_order_type as orderType, b.oh_payment as paymentType, b.oh_amount as amount from dat_restaurants a "
-				+"INNER JOIN (select oh.restaurant_uuid as oh_restaurantUuid, oh.order_type as oh_order_type, oh.payment as oh_payment, FORMAT(sum(ifnull(oh.amount,0)), 2) as oh_amount from dat_order_header oh ";
-		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
-			if(startDate.equals(endDate)){
-				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
-			}else{
-				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '"+startDate+"' and DATE_FORMAT(oh.order_date,'%Y-%m-%d') <= '"+endDate+"' ";
+		String sql = "select a.restaurant_name as restaurantName, ";
+		sql += "b.oh_order_type as orderType,";
+		sql += "b.oh_payment as paymentType, ";
+		sql += "b.oh_total as amount ";
+		sql += "from dat_restaurants a INNER JOIN (";
+		sql += "select oh.restaurant_uuid as oh_restaurantUuid, ";
+		sql += "oh.order_type as oh_order_type, ";
+		sql += "oh.payment as oh_payment, ";
+		sql += "FORMAT(sum(ifnull(oh.total,0)), 2) as oh_total ";
+		sql += "from dat_order_header oh ";
+		if (StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)) {
+			if (startDate.equals(endDate)) {
+				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate + "' ";
+			} else {
+				sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '" + startDate
+						+ "' and DATE_FORMAT(oh.order_date,'%Y-%m-%d') <= '" + endDate + "' ";
 			}
-		}else if(StringUtil.isNotEmpty(startDate)){
-			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
-		}else if(StringUtil.isNotEmpty(endDate)){
-			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
+		} else if (StringUtil.isNotEmpty(startDate)) {
+			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate + "' ";
+		} else if (StringUtil.isNotEmpty(endDate)) {
+			sql += "where DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate + "' ";
 		}
-		//+"where DATE_FORMAT(oh.order_date,'%Y-%m-%d') >= '2015-09-30' and DATE_FORMAT(oh.order_date,'%Y-%m-%d')<='2015-10-08' "
-		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment) b "
-				+"ON b.oh_restaurantuuid = a.id ";
+		sql += "and oh.`status`=7 ";
+		sql += "GROUP BY oh.restaurant_uuid, oh.order_type, oh.payment ";
+		sql += ") b ON b.oh_restaurantuuid = a.uuid ";
 		
 		count = this.countBySql("select count(*) from ("+sql+") c").intValue();
 		
@@ -782,10 +771,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: getRestaurantOrders
 	 * @Description: 商家获取订单报表数据加载到表格
-	 * @param: @param pf
-	 * @param: @param searchKey
-	 * @param: @return
-	 * @return PageModel  
+	 * @param: searchKey
+	 * @param: pf
+	 * @param: restaurantUuid
+	 * @return List<PageRestaurantOrderStatement>  
 	 */
 	public List<PageRestaurantOrderStatement> getRestaurantStatement(String searchKey, PageFilter pf,String restaurantUuid){
 		String startDate = "";//开始时间
@@ -795,12 +784,20 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 			startDate = valueArray[0];
 			endDate = valueArray[1];
 		}
-		String sql = "select oh.order_type as orderType, oh.payment as paymentType, count(oh.restaurant_uuid) as orderQuantity, "
-			+"SUM(oh.total) as subtotal, round(sum(oh.logistics),2) as deliveryFee, "
-			+"sum(oh.tax) as gst, sum(oh.tip) as tips, "
-			+"round(sum((oh.total*1.05)*0.1),2) as nommeFee, if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as stripeFee,"
-			+"sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income "	
-				+"from dat_order_header oh where oh.restaurant_uuid=:restaurantUuid and oh.status=7 ";//已完成的订单状态：7
+		
+		String sql = "select oh.order_type as orderType, ";
+		sql += "oh.payment as paymentType, ";
+		sql += "count(oh.id) as orderQuantity, ";
+		sql += "SUM(oh.total) as subtotal,";
+		sql += "round(sum(oh.logistics),2) as deliveryFee, ";
+		sql += "sum(oh.tax) as gst, ";
+		sql += "sum(oh.tip) as tips, ";
+		sql += "round(sum((oh.total*1.05)*0.1),2) as nommeFee, ";
+		sql += "if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as stripeFee, ";
+		sql += "sum(oh.amount)-round(sum((oh.total*1.05)*0.1),2) - if (oh.payment=0,0,round(sum((oh.amount*0.029)+0.3),2)) as income ";
+		sql += "from dat_order_header oh ";
+		sql += "where oh.restaurant_uuid=:restaurantUuid ";
+		sql += "and oh.status=7 ";
 		if(StringUtil.isNotEmpty(startDate) && StringUtil.isNotEmpty(endDate)){
 			if(startDate.equals(endDate)){
 				sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + startDate+"' ";
@@ -812,7 +809,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		}else if(StringUtil.isNotEmpty(endDate)){
 			sql += "and DATE_FORMAT(oh.order_date,'%Y-%m-%d') = '" + endDate+"' ";
 		}
-		sql += "GROUP BY oh.order_type, oh.payment ";
+		sql += "GROUP BY oh.order_type, oh.payment;";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(PageRestaurantOrderStatement.class));

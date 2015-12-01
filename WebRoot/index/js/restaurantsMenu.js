@@ -304,19 +304,23 @@ $(function(){
 			async: false,
 			url: appPath+"/consumers/getUnpaidReservationOrders",
 			data: {"restaurantUuid":restaurantUuid,"consumerUuid":consumerUuid,"currentReservationOrderNumber":reservationOrderId},
-			success: function(data){
-				var msg = $.parseJSON(data);
-				if(msg.length==0){
+			success: function(data){						
+				if(data.length==0){
 					$("#reservationOrderSelect").empty().append("<option value='0'>&nbsp;&nbsp;&nbsp;&nbsp;No reservation orders</option>");
 					if(!resNewReservation){
 						resNewReservation = false;
 						$("#noReservationPromptDialog").modal('show');
 					}
 				}else{
+					var msg = $.parseJSON(data);
 					$("#reservationOrderSelect").empty();
 					for (var j=0; j<msg.length; j++ ){
 						var temp = msg[j];
-						$("#reservationOrderSelect").append("<option value='"+temp.id+"'>&nbsp;&nbsp;&nbsp;&nbsp;"+temp.strOrderDate+" --- "+temp.number+" people </option>");
+						var statusString = "Pending";
+						if (temp.status == 3) {
+							statusString = "Accepted";
+						}
+						$("#reservationOrderSelect").append("<option value='"+temp.id+"'>&nbsp;&nbsp;&nbsp;&nbsp;"+temp.strOrderDate+" - "+temp.number+" people (" + statusString + ")</option>");
 					}
 					var currentReservationOrderId = $.cookie("currentReservationOrderId");
 					$("#reservationOrderSelect").find("option[value='"+currentReservationOrderId+"']").attr("selected",true); 

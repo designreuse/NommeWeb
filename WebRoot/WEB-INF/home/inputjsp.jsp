@@ -49,7 +49,7 @@
 				</div>
 				<button class="btn btn-default btn-block" type="button" id="gotoCreateModal"
 					style="height:45px; border:#6C9C46 2px solid; color:#6C9C46;">Create Account</button>
-				<div style="margin-top:15px;width:100px;height:35px;margin-left: 370px;">
+				<div class="thirdPartyLogin" style="margin-top:15px;width:100px;height:35px;margin-left: 370px;">
 					<div class="facebook-logo" name="facebook">
 					</div>
 					<div class="twitter-logo" name="twitter">

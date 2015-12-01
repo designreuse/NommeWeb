@@ -451,7 +451,7 @@
 									<div class="row">
 										<div class="col-md-12" align="center">
 											<div class="controls">
-												<select id="reservationOrderSelect" style="height:36px;width:290px;margin-bottom:2px;border-radius:4px;text-align: center;">
+												<select id="reservationOrderSelect" style="height:36px;width:320px;margin-bottom:2px;border-radius:4px;text-align: center;">
 													
 												</select>
 											</div>
@@ -732,12 +732,12 @@
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						<h4 id="myModalLabel3" align="center">No Reservation </h4>
+						<h4 id="myModalLabel3" align="center">No Reservation</h4>
 					</div>
 					<div class="modal-body">
 						<h4>
 							<div class="controls" name="isOrderDishTip" style="width:428; margin-left: 15px;margin-bottom: 20px;">
-								Please make a reservation now!
+								Please make a reservation now.
 							</div>
 						</h4>
 						<div style=" padding:0 15px 15px;">

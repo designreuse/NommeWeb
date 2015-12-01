@@ -3,6 +3,7 @@
  */
 package com.camut.service;
 
+import java.util.Date;
 import java.util.List;
 import com.camut.model.Restaurants;
 import com.camut.model.api.RestaurantsApiModel;
@@ -138,4 +139,12 @@ public interface RestaurantsService {
 	 */
 	public RestaurantsMoreApiModel getRestaurantMoreById(String restaurantUuid);
 	
+	/**
+	 * @Title: getCurrentLocalTimeFromRestaurantsUuid
+	 * @Description: get the local time from restaurant's uuid
+	 * @param restaurantUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeFromRestaurantsUuid(String restaurantUuid);
+
 }

@@ -70,7 +70,7 @@ public interface CartHeaderDao {
 	 * @param dishId
 	 * @return
 	 */
-	public int deleteCartDish(long cartId,int dishId);
+	public int deleteCartDish(int cartItemId);
 	
 	/**
 	 * @Title: getCartHeaderById；

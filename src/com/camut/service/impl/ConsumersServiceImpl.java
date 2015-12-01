@@ -3,6 +3,7 @@ package com.camut.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.camut.dao.ClassificationDao;
 import com.camut.dao.ConsumersDao;
@@ -286,6 +287,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 	 * @return: List<ViewConsumerClassifitionApiModel>
 	 */
 	@Override
+	//@Cacheable(value="myCache",key="#consumerUuid+'menu'")
 	public List<ViewConsumerClassifitionApiModel> getShortcutMenu(String consumerUuid,Integer type) {
 		List<ViewConsumerClassification> list =null;
 		if(StringUtil.isNotEmpty(consumerUuid)){
@@ -294,9 +296,9 @@ public class ConsumersServiceImpl implements ConsumersService {
 		List<ViewConsumerClassifitionApiModel> apiModels = new ArrayList<ViewConsumerClassifitionApiModel>();
 		
 		if (list!=null&&list.size()>0) {
-			int num = list.size()>3?4:list.size();
+			int num = 4;//list.size()>3?4:list.size();
 			if(type!=null && type==3){//当是网站调用的时候需要显示5个
-				num = list.size()>4?5:list.size();
+				num = 5;//list.size()>4?5:list.size();
 			}
 			if(list.size()>=num){//够展示的4个
 				for(int i=0;i<num;i++){
@@ -372,7 +374,10 @@ public class ConsumersServiceImpl implements ConsumersService {
 		else{
 			List<Classification> list1 = classificationDao.getAllClassification();
 			if(list1!=null && list1.size()>0){
-				int num = list1.size()>0?1:list1.size();
+				int num = list1.size()>3?4:list1.size();
+				if(type!=null && type==3){
+					num = list1.size()>4?5:list1.size();
+				}
 				for(int i=0;i<num;i++){
 					ViewConsumerClassifitionApiModel apiModel = new ViewConsumerClassifitionApiModel();
 					apiModel.setClassification(list1.get(i).getClassificationName());
