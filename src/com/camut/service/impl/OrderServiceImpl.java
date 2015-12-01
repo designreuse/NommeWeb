@@ -184,14 +184,20 @@ public class OrderServiceImpl implements OrderService {
 			Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
 					restaurants.getRestaurantLng());
 			orderHeader.setCreatedate(currentLocalTime);
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(orderHeader.getOrderDate());
-			int orderDay = calendar.get(Calendar.DATE);
-			calendar.setTime(new Date());
-			int nowDay = calendar.get(Calendar.DATE);
-			if (orderDay > nowDay) {
-				orderHeader.setStatus(3);
+			
+			Date nowDay = null ;
+			Date orderDay = null; 
+			try {
+				nowDay = new SimpleDateFormat("yyyy-MM-dd").parse(currentLocalTime.toString());
+				orderDay = new SimpleDateFormat("yyyy-MM-dd").parse(orderHeader.getOrderDate().toString());
+				if (orderDay.after(nowDay)) {
+					orderHeader.setStatus(3);
+				}
+			} catch (ParseException e) {
+				Log4jUtil.error(e);
+				Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
 			}
+			
 			// orderHeader.setStatus(1);//未付款
 			// 添加dinein 类型的订单到原有的reservation订单中
 			if (orderHeader.getOrderType() == 3 && orderHeader.getOrderItems() != null
@@ -614,34 +620,7 @@ public class OrderServiceImpl implements OrderService {
 			e.printStackTrace();
 		}
 		oh.setOrderDate(orderDate);
-		/*
-		Calendar todayEnd = Calendar.getInstance(); //获取当前时间 
-        todayEnd.set(Calendar.HOUR_OF_DAY, 23);  
-        todayEnd.set(Calendar.MINUTE, 59);  
-        todayEnd.set(Calendar.SECOND, 59);*/  
-        long orderDateMillis = orderDate.getTime();
-        
-        Date nowTime = new Date();
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String nowDate = format1.format(nowTime);
-        nowDate = nowDate+" 23:59:59";
-        Date endNowDate = null;
-		try {
-			endNowDate = format2.parse(nowDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		long currentDateMillis = endNowDate.getTime()+1000;
-        
-		// 订单状态  0：订单取消状态     1:未付款    2：已付款   3：已接单    4:拒绝接单  6：已退款  7：完成的订单  8：line up  9：现金付款   10:待审核
-        if(orderDateMillis > currentDateMillis){//订单不是当日的
-        	oh.setStatus(3);
-        }else{//当日的订单，状态设为待审核
-        	oh.setStatus(10);
-        }
-		
+
 		Consumers consumers = new Consumers();
 		consumers.setUuid(map.get("consumerUuid").toString());
 		oh.setConsumers(consumers);
@@ -659,6 +638,26 @@ public class OrderServiceImpl implements OrderService {
 		oh.setOrderNo(CreateOrderNumber.createUnique());
 		oh.setPeopleName(map.get("firstName").toString()+" "+map.get("lastName").toString());
 		oh.setPhoneNumber(map.get("phoneNumber").toString());
+		
+		Restaurants restaurants = restaurantsDao.getRestaurantsByUuid(oh.getRestaurantUuid());
+		Date currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(restaurants.getRestaurantLat(),
+				restaurants.getRestaurantLng());
+
+		
+		Date nowDay = null ;
+		Date orderDay = null; 
+		oh.setStatus(10);
+		try {
+			nowDay = new SimpleDateFormat("yyyy-MM-dd").parse(currentLocalTime.toString());
+			orderDay = new SimpleDateFormat("yyyy-MM-dd").parse(oh.getOrderDate().toString());
+			if (orderDay.after(nowDay)) {
+				oh.setStatus(3);
+			}
+		} catch (ParseException e) {
+			Log4jUtil.error(e);
+			Log4jUtil.info("Something went wrong when trying to convert DateTime to Date in function addOrder()");
+		}
+		
 		temp = (int)(orderDao.addOrder(oh));
 		if(temp>0){
 			Log4jUtil.info("新增订单==> 订单类型:"+oh.getOrderType() +"-->id:"+temp);

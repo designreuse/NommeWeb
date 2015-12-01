@@ -10,6 +10,9 @@ import javapns.back.SSLConnectionHelper;
 import javapns.data.Device;
 import javapns.data.PayLoad;
 
+import com.camut.framework.constant.StripeApiKey;
+import com.camut.utils.StripeUtil.IS_PRODUCTION;
+import com.google.common.base.Objects;
 import com.tencent.xinge.XingeApp;
 
 /**
@@ -20,6 +23,13 @@ import com.tencent.xinge.XingeApp;
 public class PushUtil {
 	private static long padAppId=2100152290;
 	private static String padSecretKey="9fc22f85d95adab2af1d7c65dae33a98";
+	public static enum IS_PRODUCTION{
+		YES,
+		NO
+	}
+
+	// environment variable names
+	public static String IS_PRODUCTION_VAR = "IS_PRODUCTION";
 	
 	public static void push(HttpSession session,String title,String content,String token,int type){
 		Log4jUtil.info("发送推送==>"+"token：="+token+"| 类型："+type);
@@ -91,7 +101,9 @@ public class PushUtil {
 	           int port = 2195;          
 	           
 	           //String certificatePath = path+"/p12/aps_production_Server.p12"; //刚才在mac系统下导出的证书
-	           String certificatePath = path+"/p12/aps_Service_developer.p12"; //刚才在mac系统下导出的证书
+	           //String certificatePath = path+"/p12/aps_Service_developer.p12"; //刚才在mac系统下导出的证书
+	           
+	           String certificatePath = path + getIosCertificatePath();
 	           
 	           String certificatePassword= "1";
 	           
@@ -111,7 +123,42 @@ public class PushUtil {
 	          System.out.println("push succeed!");
 	}
 	
-	
+	public static String getIosCertificatePath()
+	{	
+		String path=null;
+		String variable = IS_PRODUCTION_VAR;
+		String is_production = System.getenv(variable);
+		
+		//check environment variable
+		if (is_production == null)
+		{
+			//// Check Java system properties
+			is_production = System.getProperty(variable);
+		}
+		
+		//second check
+		if (is_production == null){
+			System.out.println("ERROR: The environment variable " + variable + " not found");
+			return null;
+		}
+		
+		if (Objects.equal(is_production.toLowerCase(), IS_PRODUCTION.NO.toString().toLowerCase()))
+		{
+			path = "/p12/aps_Service_developer.p12";
+		}
+		else if (Objects.equal(is_production.toLowerCase(), IS_PRODUCTION.YES.toString().toLowerCase()))
+		{
+			path = "/p12/aps_production_Server.p12";
+		}
+		else{
+			System.out.println("ERROR: Environment variable=" +IS_PRODUCTION_VAR + " has invalid value="+ is_production +". "
+					+ "Exptecting value=" + IS_PRODUCTION.YES.toString() + "/" + IS_PRODUCTION.NO.toString() );
+			return null;
+		}
+		
+				
+		return path;
+	}
 	
 	
 	public static void main(String[] args) {
