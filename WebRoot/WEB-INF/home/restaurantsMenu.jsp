@@ -451,7 +451,7 @@
 									<div class="row">
 										<div class="col-md-12" align="center">
 											<div class="controls">
-												<select id="reservationOrderSelect" style="height:36px;width:290px;margin-bottom:2px;border-radius:4px;text-align: center;">
+												<select id="reservationOrderSelect" style="height:36px;width:320px;margin-bottom:2px;border-radius:4px;text-align: center;">
 													
 												</select>
 											</div>

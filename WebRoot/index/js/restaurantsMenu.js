@@ -316,7 +316,11 @@ $(function(){
 					$("#reservationOrderSelect").empty();
 					for (var j=0; j<msg.length; j++ ){
 						var temp = msg[j];
-						$("#reservationOrderSelect").append("<option value='"+temp.id+"'>&nbsp;&nbsp;&nbsp;&nbsp;"+temp.strOrderDate+" --- "+temp.number+" people </option>");
+						var statusString = "Pending";
+						if (temp.status == 3) {
+							statusString = "Accepted";
+						}
+						$("#reservationOrderSelect").append("<option value='"+temp.id+"'>&nbsp;&nbsp;&nbsp;&nbsp;"+temp.strOrderDate+" - "+temp.number+" people (" + statusString + ")</option>");
 					}
 					var currentReservationOrderId = $.cookie("currentReservationOrderId");
 					$("#reservationOrderSelect").find("option[value='"+currentReservationOrderId+"']").attr("selected",true); 
