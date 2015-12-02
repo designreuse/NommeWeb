@@ -43,13 +43,13 @@ Please contact the restaurant IMMEDIATELY and restaurant will do their best to h
 <br><br>
 <strong>How can we sign up as one of the restaurant in Nomme.ca?</strong>
 <br><br>
-Please email us and let us know by service@nomme.ca. Our restaurant admin. will contact you at their earliest convenience.
+Please email us and let us know by service@metauniverse.ca. Our restaurant admin. will contact you at their earliest convenience.
 <br><br>
 <strong>Career in Nomme:</strong>
 <br><br>
 Please email your resume to us by career@metauniverse.ca. Our recruiting specialist will contact you at their earliest convenience.
 <br><br>
-If we haven't answered your question reach out to us through our <a href="mailto:service@nomme.ca?subject=Contant Us">service@nomme.ca</a> 
+If we haven't answered your question reach out to us through our <a href="mailto:service@metauniverse.ca?subject=Contant Us">service@metauniverse.ca</a> 
 
 		
 			
