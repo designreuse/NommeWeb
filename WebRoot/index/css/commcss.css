@@ -409,8 +409,18 @@ html,body{
 .read-border{
  	background-color: #993333;
 }
+
 /* Hide until third-party login complete. */
 .thirdPartyLogin .facebook-logo,
 .thirdPartyLogin .twitter-logo {
 	display: none;
+}
+
+/* Hide create account buttons until we're ready to let users create accounts. */
+#loginModalButtons > #gotoCreateModal,
+#loginModalButtons > div {
+	display: none;
+}
+#loginSignIn1 {
+	margin-bottom: 20px;
 }
