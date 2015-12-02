@@ -60,12 +60,71 @@ public class GlobalConstant {
 	
 	public static final int GOOGLEMAP_MAX_DISTANCE = 15000000;//搜索页面地图方式下用户所在位置指定范围内商家显示出来
 	
-	// 0: cancelled, 1: unpaid, 2: paid, 3: has orders, 4: refuse, 6: refunded, 7: completed, 8: line-up, 9: pay cash, 10: pending 
 	public static final int CANCELED_ORDER = 0;//取消订单状态
 	public static final int UNPAID_ORDER = 1;
 	public static final int PAID_ORDER = 2;
 	public static final int REJECTED_ORDER = 4;//拒绝接单状态
 	
+	public static enum ORDER_STATUS {
+		// 0: cancelled, 1: unpaid, 2: paid, 3: has orders, 4: refuse, 6: refunded, 7: completed, 8: line-up, 9: pay cash, 10: pending 
+		CANCELED(0), 
+		UNPAID(1), 
+		PAID(2),
+		ACCEPTED(3),
+		REJECTED(4),
+		REFUNDED(6),
+		COMPLETED(7),
+		LINE_UP(8),
+		PAY_CASH(9),
+		PENDING(10);
+		
+	    private final int value;
+
+	    private ORDER_STATUS(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
+	
+	public static enum ORDER_TYPE {
+		//1:delivery 2:pick up 3：dine-in/reservation
+		DELIVERY(1), 
+		PICK_UP(2), 
+		DINE_IN_AND_RESERVATION(3);
+		
+	    private final int value;
+
+	    private ORDER_TYPE(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
+
+	
+	public static enum RESTAURANT_STATUS {
+		//-1 is invalid , 0 is active , 1 pending (new businesses registered state 1), 2 frozen ( not approval ), 3 hidden (not show up in the search list)
+		INVALID(-1), 
+		ACTIVE(0), 
+		PENDING(1),
+		NOT_APPROVAL(2),
+		HIDDEN(3);
+		
+	    private final int value;
+
+	    private RESTAURANT_STATUS(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
 	
 	public static final String DOMAIN_NAME = "http://www.metaorder.ca";//服务器域名
 }
