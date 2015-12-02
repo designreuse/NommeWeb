@@ -346,10 +346,12 @@ public class IndexController {
 				session.setAttribute("verificationCode", verificationCode);
 				session.setAttribute("resetPasswordEmail", email.trim());
 				//session.setAttribute("loginname",admin.getLoginname());
-				String title = "Verification code by Nomme";
-				String content = "To reset you Nomme account "+email+" password, please enter the verification code - <span style='color:#064977'>" 
-						+ verificationCode + "</span> - to the retrieve password input box, and then click the button to reset the password."
-						+ "<br> Note: please use the verification code within 30 minutes.";
+				String title = "Verification code from Nomme";
+				String content = "To reset the password of your Nomme account " + email + ", please enter the verification code "
+						+ "<span style='color:#064977'>" + verificationCode + "</span> "
+						+ "in the input box to retrieve your password, and then click the button to reset the password."
+						+ "<br>"
+						+ "Please use the verification code within 30 minutes.";
 				MailUtil.sendMail(title, content, email.trim());
 				//String user = ((Admin)session.getAttribute("adminUser")).getLoginname();
 				Log4jUtil.info("Consumer", "测试发送邮件");
