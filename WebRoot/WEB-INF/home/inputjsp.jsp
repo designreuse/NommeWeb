@@ -40,7 +40,7 @@
 					</span>
 				</div>
 			</div>
-			<div style=" padding:10px 15px 0px 15px;">
+			<div id="loginModalButtons" style=" padding:10px 15px 0px 15px;">
 				<button id="loginSignIn1" class="btn btn-large btn-block btn-primary" type="button"
 					style="height:45px; background:#88878C; border:#88878C" 
 					>Sign In</button>
