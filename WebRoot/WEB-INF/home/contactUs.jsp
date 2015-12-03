@@ -13,7 +13,7 @@
 			<div class="modal-body">			
 			
 Please contact us via 
-<a href="mailto:service@nomme.ca?subject=Contant Us">service@nomme.ca</a> 
+<a href="mailto:service@metauniverse.ca?subject=Contant Us">service@metauniverse.ca</a> 
  and we'll be happy to help! We'll get back in touch with you via the phone and email you enter. 
 <br><br>
 Our Customer Service Reps and Catering Specialists are available to assist you.
