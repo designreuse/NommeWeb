@@ -15,7 +15,7 @@ Nomme
 <br><br>
 It is not just for me; it is for everyone.
 <br>
-Nomme is a newly developed mobile app by Meta-universe Technology Inc.
+Nomme is a newly developed mobile app by Meta Universe.
 <br> 
 If you are our users, Nomme will order your favourite dishes served in our long list of popular restaurants; have food delivered according to your requirements;
 <br>  

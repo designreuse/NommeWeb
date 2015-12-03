@@ -12,7 +12,7 @@ import com.camut.utils.mail.SimpleMailSender;
  */
 public class MailUtil {
 
-	private static String userName = "service@metauniverse.ca";
+	private static String userName = "service@nomme.ca";
 	private static String password = "Mu20150101";
 	private static String serverHost = "smtpout.secureserver.net";
 	private static String serverport = "25";
