@@ -143,9 +143,6 @@
 						</div>
 						<div class="row">
 							<c:forEach items="${str.pageDishList}" var="str2" begin="0"  step="1" varStatus="status2">
-								<c:if test="${(status2.index+1)%3==1||status2.first}">
-									<div class="row" id="ttt" style="padding-left: 50px; padding-right: 50px;"><!-- D -->
-								</c:if>
 								<div class="col-md-4">
 									<div class="row">
 										<div type="button"  class="aDishButton" name="aDish" title="${str.restaurantId}-${str.id}-${str2.id}">
@@ -171,9 +168,6 @@
 										</div>
 									</div>
 								</div>
-								<c:if test="${(status2.index+1)%3==0 || status2.last}">
-									</div><!-- D -->
-								</c:if>
 							</c:forEach>
 						</div>
 					</div>
