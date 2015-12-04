@@ -174,8 +174,8 @@ public class PaymentController {
 							}
 						}
 					}
-				
-				
+				orderHeader.setStatus(GlobalConstant.ORDER_STATUS.PAYMENT_FAILED.getValue());
+				orderService.updateOrder(orderHeader);
 			}
 		}
 		pm.setErrorMsg(MessageConstant.PAY_FAIL);

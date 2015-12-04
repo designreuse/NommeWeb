@@ -398,9 +398,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			DateTime orderDateTime = new DateTime(orderDate);
 			int week = orderDateTime.getDayOfWeek();
 			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
-			if (list.size() > 0) {
-				OpenTime openTime = list.get(0);
-				
+			for (OpenTime openTime : list) {
 				// If the request's date matches the restaurant's local date, use the restaurant's local time as the start time.
 				// Otherwise, use the restaurant's start time as the start time.
 				String startTime = openTime.getStarttime();

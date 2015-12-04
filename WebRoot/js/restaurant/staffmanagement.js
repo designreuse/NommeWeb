@@ -89,6 +89,7 @@ $(function(){
 										data : {
 											'code' : $("input[name='code']").val(),
 											'id' : $("input[name='id']").val(),
+											'uuid' : $("input[name='uuid']").val(),
 											'type' : $("select").val()
 										},
 										success : function(msg) {
@@ -238,6 +239,7 @@ $(function(){
 								data : {
 									'code' : $("input[name='code']").val(),
 									'id' : $("input[name='id']").val(),
+									'uuid' : $("input[name='uuid']").val(),
 									'type' : $("select").val()
 								},
 								success : function(msg) {
@@ -354,7 +356,7 @@ $(function(){
 
 		$("button[name='update']").click(function() {
 			$("#fm input[type='checkbox']").iCheck('enable');
-			$("#myModal h4").text("Modify emplyee");
+			$("#myModal h4").text("Modify employee");
 			$("#fm input").val('');//重置表单
 			$("#fm input[type='checkbox']").iCheck('uncheck');
 			$("input").popover('destroy');//去除错误提示
