@@ -27,7 +27,7 @@
 				</select>
 			</div>
 			<div class="col-md-3">
-				
+				<button id = "expandAllMenuSections">Expand All</button>
 			</div>
 			<!-- <div class="col-md-7">
 				<div class="input-group">
