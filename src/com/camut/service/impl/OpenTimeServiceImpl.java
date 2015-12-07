@@ -445,12 +445,15 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				}
 				Date start = new SimpleDateFormat("HH:mm").parse(startStr);
 				DateTime startDateTime = new DateTime(start);
-
-				System.out.println(startDateTime.toString());
 				
 				while (!(getDateFromDateTime(startDateTime).after(new SimpleDateFormat("HH:mm").parse(endTime)))) {
 					buffer.append(new SimpleDateFormat("HH:mm").format(getDateFromDateTime(startDateTime)) + ",");
 					startDateTime = startDateTime.plusMinutes(15);
+				}
+				
+				// Add a case for 24:00, since it gets parsed to be 00:00.
+				if (endTime.equals("24:00")) {
+					buffer.append("24:00,");
 				}
 			}
 			String[] strs = buffer.toString().split(",");
