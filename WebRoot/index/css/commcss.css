@@ -424,3 +424,8 @@ html,body{
 #loginSignIn1 {
 	margin-bottom: 20px;
 }
+
+/* Fix a padding issue in the dish menu. */
+#menu .col-md-4 > .row {
+    padding-bottom: 10px;
+}

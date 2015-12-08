@@ -1,5 +1,6 @@
 package com.camut.dao.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import com.camut.dao.RestaurantTableDao;
+import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.RestaurantTable;
 import com.camut.model.Restaurants;
 import com.camut.model.api.TableEntity;
@@ -102,55 +105,72 @@ public class RestaurantTableDaoImpl extends BaseDao<RestaurantTable> implements
 		}
 		return 1;
 	}
-
+	
+	/**
+	 * @Title: getNumberOfRestaurantReservationOverlaps
+	 * @Description: Gets the number of overlapping reservations for each table type.
+	 * @param restaurantUuid
+	 * @param reservationRequestDateString
+	 * @return: List<TableEntity>
+	 */
 	@Override
-	public List<TableEntity> getRestaurantTableNumberByOrderTypeAndOrderDate(String restaurantUuid, int orderType, String orderDate) {
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
-		Date dt = null;
+	public List<TableEntity> getNumberOfRestaurantReservationOverlaps(String restaurantUuid, String reservationRequestDateString) {
+		// Convert the request date.
+		DateFormat requestDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date reservationRequestDate = null;
 		try {
-			dt = fmt.parse(orderDate);
+			reservationRequestDate = requestDateFormat.parse(reservationRequestDateString);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		Calendar calendar = Calendar.getInstance();
-		Date dt16=new Date(dt.getYear(), dt.getMonth(),dt.getDate(), 16, 0);
-		Date dt8=new Date(dt.getYear(), dt.getMonth(),dt.getDate(), 8, 0);
-		//System.out.println(dt);
-		//System.out.println(dt8);
-		//System.out.println(dt16);
-		/*if(dt8.before(dt)&&dt.before(dt16)){
-			System.out.println("上午");
-		}else {
-			System.out.println("xiawu");
-		}*/
-		String sql="";
-		if(dt8.before(dt)&&dt.before(dt16)){
-			sql = "select  consumer_uuid as consumerUuid,restaurant_uuid as restaurantUuid,number,count(1) as count from  dat_order_header " +
-					"WHERE  DATE_FORMAT(:dt,'%Y-%m-%d')=DATE_FORMAT(order_date,'%Y-%m-%d') " +
-					"and  HOUR(order_date)-HOUR(:dt8)>0 and HOUR(:dt16)-HOUR(order_date)>0 " +
-					"and order_type=:type and `status`=3 and restaurant_uuid=:restaurantUuid " +
-					"GROUP BY consumer_uuid,restaurant_uuid,number";
-		}else{
-			sql="select consumer_uuid as consumerUuid,restaurant_uuid as restaurantUuid,number,count(1) as count  from  dat_order_header  " +
-					"WHERE  DATE_FORMAT(:dt,'%Y-%m-%d')=DATE_FORMAT(order_date,'%Y-%m-%d') " +
-					"and (HOUR(order_date)-HOUR(:dt8)<0 or HOUR(:dt16)-HOUR(order_date)<0) " +
-					"and order_type=:type and `status`=3 and restaurant_uuid=:restaurantUuid " +
-					"GROUP BY consumer_uuid,restaurant_uuid,number ";
-		}		
+		// Get the time frame boundaries for possible overlap.
+		// TODO: Get the reservation meal length.
+		long mealLength = 1000*60*60;
+		Date earliestOverlappingReservationTime = new Date(reservationRequestDate.getTime() - mealLength);
+		Date latestOverlappingReservationTime = new Date(reservationRequestDate.getTime() + mealLength);
+		
+		// Check if the meal length causes the bounds to go into other days.  If so, don't use them in the query.
+		DateTime e0 = new DateTime(reservationRequestDate);
+		DateTime e1 = new DateTime(earliestOverlappingReservationTime);
+		DateTime e2 = new DateTime(latestOverlappingReservationTime);
+		boolean useEarliest = true;
+		boolean useLatest = true;
+		if (e0.getDayOfYear() != e1.getDayOfYear()) {
+			useEarliest = false;
+		}
+		if (e0.getDayOfYear() != e2.getDayOfYear()) {
+			useLatest = false;
+		}
+		
+		// Format the time boundaries.
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+		String queryReservationRequestDate = dateFormat.format(reservationRequestDate);
+		String queryEarliestOverlappingReservationTime = timeFormat.format(earliestOverlappingReservationTime);
+		String queryLatestOverlappingReservationTime = timeFormat.format(latestOverlappingReservationTime);
+		
+		// Get the number of overlapping reservations within this time frame.
+		String sql = "SELECT COUNT(oh.id) as count, ";	// Number of reservations for this table type.
+		sql += "oh.number as number ";	// Table type.
+		sql += "FROM nomme.dat_order_header as oh ";
+		sql += "WHERE oh.order_type =:orderType ";
+		sql += "AND oh.status = 3 ";
+		sql += "AND oh.restaurant_uuid =:restaurantUuid ";
+		sql += "AND DATE_FORMAT(oh.order_date, '%Y-%m-%d') = '" + queryReservationRequestDate + "' ";	// Must be for same day.
+		if (useEarliest) {
+			sql += "AND DATE_FORMAT(oh.order_date, '%H:%i') > '" + queryEarliestOverlappingReservationTime + "'";	// Lower bound.
+		}
+		if (useLatest) {
+			sql += "AND DATE_FORMAT(oh.order_date, '%H:%i') < '" + queryLatestOverlappingReservationTime + "'";	// Upper bound.
+		}
+		sql += "GROUP BY oh.number ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		query.setParameter("dt", dt);
-		query.setParameter("dt8", dt8);
-		query.setParameter("dt16", dt16);
-		query.setParameter("type", orderType);
+		query.setParameter("orderType", GlobalConstant.TYPE_RESERVATION);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setResultTransformer(Transformers.aliasToBean(TableEntity.class));
-		query.addScalar("consumerUuid",new org.hibernate.type.StringType());
-		query.addScalar("restaurantUuid",new org.hibernate.type.StringType());
-		query.addScalar("number",new org.hibernate.type.IntegerType());
 		query.addScalar("count",new org.hibernate.type.IntegerType());
+		query.addScalar("number",new org.hibernate.type.IntegerType());
 		return query.list();
 	}
 }
