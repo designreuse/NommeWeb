@@ -161,7 +161,8 @@ public class PaymentController {
 								
 								chargeEntity.setCustomerId(consumers.getStripeCustomerId());
 								//保存卡的详细信息
-								String cardId = CommonUtil.customerAddCardByToken(chargeEntity);
+								ApiResponse stripeAddCardResponse = CommonUtil.customerAddCardByToken(chargeEntity);
+								String cardId = stripeAddCardResponse.getResponseString();
 								if (StringUtil.isNotEmpty(cardId)) {//添加卡成功
 									chargeEntity.setCardId(cardId);
 									ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity, String.valueOf(orderid));
@@ -171,6 +172,8 @@ public class PaymentController {
 									} else {
 										errorMessage = stripeResponse.getMessage();
 									}
+								} else {
+									errorMessage = stripeAddCardResponse.getMessage();
 								}
 							}
 						}

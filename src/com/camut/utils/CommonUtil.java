@@ -77,7 +77,7 @@ public class CommonUtil {
 					return new ApiResponse(1, charge.getId(), null);
 				}
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-				e.printStackTrace();
+				Log4jUtil.info(e.getMessage() + " - Request-id: " + e.getRequestId());
 				return new ApiResponse(0, null, e.getMessage());
 			}
 		}
@@ -249,9 +249,9 @@ public class CommonUtil {
 	 * @Title: customerAddCard
 	 * @Description:在一个已经存在的customer上增加卡
 	 * @param: CardEntity String
-	 * @return: String 返回 返回 card的id null失败
+	 * @return: ApiResponse 返回 返回 card的id null失败
 	 */
-	public static String customerAddCardByToken(ChargeEntity chargeEntity) {
+	public static ApiResponse customerAddCardByToken(ChargeEntity chargeEntity) {
 		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -259,14 +259,13 @@ public class CommonUtil {
 			try {
 				Customer cu = Customer.retrieve(chargeEntity.getCustomerId());
 				Card card = cu.createCard(params);
-				return card.getId();
+				return new ApiResponse(1, card.getId(), null);
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-				e.printStackTrace();
-				return null;
+				Log4jUtil.info(e.getMessage() + " - Request-id: " + e.getRequestId());
+				return new ApiResponse(0, null, e.getMessage());
 			}
-
 		}
-		return null;
+		return new ApiResponse(0, null, null);
 	}
 
 	/**
@@ -328,7 +327,7 @@ public class CommonUtil {
 					return new ApiResponse(1, charge.getId(), null);
 				}
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-				e.printStackTrace();
+				Log4jUtil.info(e.getMessage() + " - Request-id: " + e.getRequestId());
 				return new ApiResponse(0, null, e.getMessage());
 			}
 		}
