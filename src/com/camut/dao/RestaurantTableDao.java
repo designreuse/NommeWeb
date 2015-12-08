@@ -55,12 +55,12 @@ public interface RestaurantTableDao {
 	 */
 	public int deleteRestaurantTable(RestaurantTable restaurantTable);
 	
+	
 	/**
-	 * @Title: getNumberOfRestaurantReservationOverlaps
-	 * @Description: Gets the number of overlapping reservations for each table type.
-	 * @param restaurantUuid
-	 * @param reservationRequestDateString
-	 * @return: List<TableEntity>
+	 * 根据订单类型和订单时间获取改天预定桌位信息。
+	 * @param orderType
+	 * @param orderDate
+	 * @return
 	 */
-	public List<TableEntity> getNumberOfRestaurantReservationOverlaps(String restaurantUuid,String reservationRequestDateString);
+	public List<TableEntity> getRestaurantTableNumberByOrderTypeAndOrderDate(String restaurantUuid,int orderType,String orderDate);
 }

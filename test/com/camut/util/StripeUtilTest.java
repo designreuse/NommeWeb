@@ -22,15 +22,4 @@ public class StripeUtilTest {
 		//IS_PRODUCTION = YES
 		//assertEquals(StripeApiKey.LIVEAPIKEY, key);
 	}
-	
-	@Test
-	public void testGetStripePublishableKey() {
-		String actualKey = StripeUtil.getPublishableKey();
-		
-		//IS_PRODUCTION = NO
-		assertEquals(StripeApiKey.TESTPUBLISHKEY, actualKey);
-		
-		//IS_PRODUCTION = YES
-		//assertEquals(StripeApiKey.LIVEPUBLISHKEY, actualKey);
-	}
 }

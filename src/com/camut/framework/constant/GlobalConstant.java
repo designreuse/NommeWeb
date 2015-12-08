@@ -76,8 +76,7 @@ public class GlobalConstant {
 		COMPLETED(7),
 		LINE_UP(8),
 		PAY_CASH(9),
-		PENDING(10),
-		PAYMENT_FAILED(11);
+		PENDING(10);
 		
 	    private final int value;
 

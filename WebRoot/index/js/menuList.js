@@ -28,9 +28,6 @@ $(function(){
 		$('html,body').animate({scrollTop:$("div[name='"+menuName+"']").offset().top}, 800);
 	})
 	
-	// Expand all the menu sections.
-	$("#expandAllMenuSections").click(function(){
-		$("#accordion [data-parent=#accordion]").removeClass("collapsed");
-		$("#accordion .panel-collapse").removeClass("collapsed").addClass("in").css("height","auto");
-	});
+	
+	
 })

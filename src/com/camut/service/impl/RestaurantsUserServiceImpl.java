@@ -111,10 +111,10 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 	@Override
 	public int checkLoginNameUnique(RestaurantsUser restaurantsUser) {
 		if (restaurantsUser != null && restaurantsUser.getCode() != null && restaurantsUser.getCode().length() > 0) {
-			if (restaurantsUser.getUuid() != null) {// 修改资料
+			if (restaurantsUser.getId() != null) {// 修改资料
 				RestaurantsUser restaurantsUser2 = restaurantsUserDao.getRestaurantsUseByLoginNameForCheck(restaurantsUser.getCode());
 				if (restaurantsUser2 != null) {// 存在用户名
-					if (restaurantsUser.getUuid().equals(restaurantsUser2.getUuid())) {// 没修改，不判断
+					if (restaurantsUser.getId() == restaurantsUser2.getId()) {// 没修改，不判断
 						return 1;
 					}
 				} else {// 不存在用户名

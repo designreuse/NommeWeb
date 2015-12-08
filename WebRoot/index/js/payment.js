@@ -257,17 +257,10 @@ $(function(){
 		
 	});
 	
-	// Determine which Stripe key to use from the backend.
-	$.ajax({
-		type: 'POST',
-		url: appPath+'/payment/getStripePublishableKey',
-		async: false,
-		success: function(data){
-			var publishableKey = data;
-			publishableKey = publishableKey.replace(/"/g, "");	// Remove the quotes that bound it.
-			Stripe.setPublishableKey(publishableKey);
-		}
-	});
+		
+	//设置publishkey
+  Stripe.setPublishableKey('pk_test_iwMqezkfoq23l6fiDxdvhg1A');
+	
 	
   $("button[name='placeOrder']").click(function(){
   	if($("#cardDetail").css('display')=='block'){//输入卡的详细信息付款

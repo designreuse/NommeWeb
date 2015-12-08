@@ -78,7 +78,7 @@ public class OpenTimeDaoImpl extends BaseDao<OpenTime> implements OpenTimeDao {
 	 */
 	@Override
 	public List<OpenTime> getOpenTime(String restaurantUuid, int type, int week) {
-		String hql = "from OpenTime o where o.restaurants.uuid=:restaurantUuid and o.type=:type and o.week=:week ORDER BY starttime ";
+		String hql = "from OpenTime o where o.restaurants.uuid=:restaurantUuid and o.type=:type and o.week=:week";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("restaurantUuid", restaurantUuid);
 		map.put("type", type);

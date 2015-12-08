@@ -28,7 +28,6 @@ import com.camut.utils.CommonUtil;
 import com.camut.utils.GoogleTimezoneAPIUtil;
 import com.camut.utils.Log4jUtil;
 import com.camut.utils.StringUtil;
-import com.camut.utils.StripeUtil;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Charge;
@@ -58,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public void pay() {
 
-		Stripe.apiKey = StripeUtil.getApiKey();
+		Stripe.apiKey = "sk_test_NVRs5KVDu82Llwe3YQ4fnGoj";
 
 		Map<String, Object> chargeParams = new HashMap<String, Object>();
 		chargeParams.put("amount", 2000);
@@ -114,7 +113,7 @@ public class PaymentServiceImpl implements PaymentService {
 	 */
 	@Override
 	public void getCard(String token) {
-		Stripe.apiKey = StripeUtil.getApiKey();
+		Stripe.apiKey = "sk_test_NVRs5KVDu82Llwe3YQ4fnGoj";
 		
 		try {
 			
@@ -143,7 +142,7 @@ public class PaymentServiceImpl implements PaymentService {
 	 */
 	@Override
 	public void getCustomer(String token) {
-		Stripe.apiKey = StripeUtil.getApiKey();
+		Stripe.apiKey = "sk_test_NVRs5KVDu82Llwe3YQ4fnGoj";
 		Map<String, Object> customerParams = new HashMap<String, Object>();
 		customerParams.put("source", token); 
 		try {

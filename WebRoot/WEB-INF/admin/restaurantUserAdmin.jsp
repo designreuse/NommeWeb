@@ -839,7 +839,7 @@
 				$("button[name='update']").click(function() {
 					$("#sub2").popover('destroy');
 					$("#fm input[type='checkbox']").iCheck('enable');
-					$("#myModal h4").text("Modify employee");
+					$("#myModal h4").text("Modify emplyee");
 					$("#fm input").val('');//重置表单
 					$("#fm input[type='checkbox']").iCheck('uncheck');
 					$("input").popover('destroy');//去除错误提示

@@ -60,9 +60,8 @@ public class CommonUtil {
 	 * @Description:通过token收款
 	 * @param: String
 	 * @return: String 返回 charge的id null失败
-	 * @throws Exception
 	 */
-	public static String chargeByToken(ChargeEntity chargeEntity) throws Exception {
+	public static String chargeByToken(ChargeEntity chargeEntity) {
 		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
@@ -78,9 +77,7 @@ public class CommonUtil {
 				}
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
 				e.printStackTrace();
-				
-				// Throw exception so caller can get Stripe's error message.
-				throw e;
+				return null;
 			}
 		}
 		return null;

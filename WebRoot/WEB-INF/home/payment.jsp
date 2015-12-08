@@ -66,7 +66,7 @@
 			<div id="charityNum" style="margin: 0px auto;width: 400px;margin-top: 50px;font-size: medium;color: #666666;">
 				Order placed. You can view your order information at My Nomme.
 				<br>
-				Please choose where Nomme should donate to:
+				Please select an optional charity to donate to.
 			</div>
 			<div style="width: 150px;margin-top: 50px;margin-left: 160px;" class="row" >
 				<div class="col-md-4">

@@ -96,13 +96,7 @@ public class PageDishGarnish implements Comparable<PageDishGarnish>{
 	 */
 	@Override
 	public int compareTo(PageDishGarnish o) {
-		// Sort by isMust first.  This must be sorted in descending order to make required dishes appear first.
-		int comparison = -(int)(this.getIsMust().compareTo(o.getIsMust()));
-		if (comparison == 0) {
-			// Sort by ID second.
-			comparison = (int)(this.id-o.id);
-		}
-		return comparison;
+		return (int)(this.id-o.id);
 	}
 	
 	

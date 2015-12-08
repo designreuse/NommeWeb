@@ -120,43 +120,27 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
 	 */
 	@Override
 	public List<RestaurantTableApiModel> getRestaurantTableList(Restaurants restaurants,String orderDate) {
-		// Get the number of tables of each type the restaurant has.
 		List<RestaurantTable> rtList = restaurantTableDao.getRestaurantTable(restaurants);
-		
-		// Get the number of overlapping reservations for each table type.
-		List<TableEntity> overlappingReservations = restaurantTableDao.getNumberOfRestaurantReservationOverlaps(restaurants.getUuid(), orderDate);
-		
-		// Find the table types that match up in both lists.
+		//根据订单类型和订单时间获取桌位信息。
+		List<TableEntity> tables=restaurantTableDao.getRestaurantTableNumberByOrderTypeAndOrderDate(restaurants.getUuid(),GlobalConstant.TYPE_RESERVATION, orderDate);
 		List<RestaurantTableApiModel> rtamList = new ArrayList<RestaurantTableApiModel>();
-		if (rtList != null && overlappingReservations != null) {
-			for (RestaurantTable restaurantTable : rtList) {
-				
-				// Check for a matching table type in the overlapping reservations.
-				boolean matchingTableFound = false;
-				for (TableEntity tableEntity : overlappingReservations) {
-					if (restaurantTable.getAcceptanceNum() == tableEntity.getNumber()) {
-						matchingTableFound = true;
-						
-						// If this table type currently has less overlapping reservations than the total number available, then a reservation can be made.
-						if (tableEntity.getCount() < restaurantTable.getTableNum()) {
-							RestaurantTableApiModel rtam = new RestaurantTableApiModel();
-							rtam.setAcceptanceNum(restaurantTable.getAcceptanceNum());
-							rtam.setTableNum(restaurantTable.getTableNum() - tableEntity.getCount());
-							rtamList.add(rtam);
+		if(rtList != null){
+			for (RestaurantTable restaurantTable : rtList) {//循环所有座位
+				RestaurantTableApiModel rtam = new RestaurantTableApiModel();
+				rtam.setAcceptanceNum(restaurantTable.getAcceptanceNum());
+				rtam.setTableNum(restaurantTable.getTableNum());
+				if(tables!=null){
+					for (TableEntity item : tables) {
+						if(restaurantTable.getAcceptanceNum()==item.getNumber()){
+							rtam.setTableNum(rtam.getTableNum()-item.getCount());
 						}
 					}
 				}
-				
-				// If no overlapping reservations found for this table type, then a reservation can be made.
-				if (matchingTableFound == false) {
-					RestaurantTableApiModel rtam = new RestaurantTableApiModel();
-					rtam.setAcceptanceNum(restaurantTable.getAcceptanceNum());
-					rtam.setTableNum(restaurantTable.getTableNum());
+				if(rtam.getTableNum()>0){
 					rtamList.add(rtam);
 				}
 			}
 		}
-		
 		return rtamList;
 	}
 
