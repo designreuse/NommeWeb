@@ -5,6 +5,7 @@ package com.camut.service;
 
 import java.util.List;
 
+import com.camut.model.ApiResponse;
 import com.camut.model.CardEntity;
 import com.camut.model.ChargeEntity;
 
@@ -44,9 +45,9 @@ public interface PaymentService {
 	 * @Title: chargeByCard
 	 * @Description:指定的卡收款
 	 * @param:    CardEntity cardEntity,ChargeEntity chargeEntity
-	 * @return: int 1成功 其他失败
+	 * @return: ApiResponse 1成功 其他失败
 	 */
-	public int chargeByCard(ChargeEntity chargeEntity,String orderId);
+	public ApiResponse chargeByCard(ChargeEntity chargeEntity,String orderId);
 	
 	/**
 	 * @Title: refundByOrder
