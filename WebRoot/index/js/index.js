@@ -124,11 +124,6 @@ $(function(){
 			$("#search-restaurants-form").submit();
 		}
 	});
-	
-	//页面中下部登录按钮
-	$("#index-singin").click(function(){
-		$("#myModal").modal('show');
-	});
 
 	//Contact Us
 	$("#index-contactus").click(function(){

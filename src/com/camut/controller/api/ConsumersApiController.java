@@ -21,6 +21,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.framework.constant.LoginTypeConstant;
 import com.camut.framework.constant.MessageConstant;
+import com.camut.model.ApiResponse;
 import com.camut.model.CardEntity;
 import com.camut.model.CartHeader;
 import com.camut.model.CartItem;
@@ -1138,6 +1139,7 @@ public class ConsumersApiController extends BaseAPiModel {
 			//设置付款
 			if(orderHeader.getPayment()==1){//信用卡付款
 				Consumers consumers = consumersService.getConsumersByUuid(orderHeader.getConsumers().getUuid());
+				String errorMessage = null;
 				if(consumers!=null && StringUtil.isNotEmpty(consumers.getStripeCustomerId())){
 					ChargeEntity chargeEntity = new ChargeEntity();
 					chargeEntity.setCustomerId(consumers.getStripeCustomerId());
@@ -1147,7 +1149,8 @@ public class ConsumersApiController extends BaseAPiModel {
 						chargeEntity.setAmount((int)orderHeader.getAmount()*100);
 						chargeEntity.setCardId(map.get("cardId").toString());
 						chargeEntity.setApplicatonFee((int)(orderHeader.getTotal()*10+orderHeader.getAmount()*2.9+30));
-						int flag1 = paymentService.chargeByCard(chargeEntity,String.valueOf(flag));
+						ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity,String.valueOf(flag));
+						int flag1 = stripeResponse.getStatusEnum();
 						if(flag1==1){//付款成功
 							ram.setFlag(1);
 							Map<String,Object> mapBody = new HashMap<String,Object>();
@@ -1155,6 +1158,8 @@ public class ConsumersApiController extends BaseAPiModel {
 							ram.setBody(mapBody);
 							ram.setResultMessage("");
 							return ram;
+						} else {
+							errorMessage = stripeResponse.getMessage();
 						}
 					}
 				}
@@ -1162,7 +1167,11 @@ public class ConsumersApiController extends BaseAPiModel {
 				Map<String,Object> mapBody = new HashMap<String,Object>();
 				mapBody.put("orderId", flag);
 				ram.setBody(mapBody);
-				ram.setResultMessage(MessageConstant.PAY_FAIL);
+				if (StringUtil.isNotEmpty(errorMessage)) {
+					ram.setResultMessage(errorMessage);
+				} else {
+					ram.setResultMessage(MessageConstant.PAY_FAIL);
+				}
 				return ram;
 			}
 			else if(orderHeader.getPayment()==0){
@@ -1573,6 +1582,7 @@ public class ConsumersApiController extends BaseAPiModel {
 	@RequestMapping(value="/stripe/chargeByCardId",method=RequestMethod.POST)
 	@ResponseBody
 	public ResultApiModel chargeByCardId(ChargeEntity chargeEntity,String consumerUuid,String restaurantUuid,String orderId){
+		String errorMessage = null;
 		Log4jUtil.info("根据指定的卡号付款接口==>"+chargeEntity.toString()+"consumerUuid="+consumerUuid+"restaurantUuid="+restaurantUuid+"orderId="+orderId);
 		ResultApiModel ram = new ResultApiModel();
 		Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerUuid));
@@ -1581,14 +1591,21 @@ public class ConsumersApiController extends BaseAPiModel {
 			Restaurants restaurants = restaurantsService.getRestaurantsByUuid(restaurantUuid);
 			if (restaurants!=null && StringUtil.isNotEmpty(restaurants.getStripeAccount())) {
 				chargeEntity.setAccountId(restaurants.getStripeAccount());
-				int flag = paymentService.chargeByCard(chargeEntity,orderId);
+				ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity,orderId);
+				int flag = stripeResponse.getStatusEnum();
 				if(flag==1){//付款成功
 					ram.setFlag(1);
 					return ram;
+				} else {
+					errorMessage = stripeResponse.getMessage();
 				}
 			}
 		}
-		ram.setResultMessage(MessageConstant.PAY_FAIL);
+		if (StringUtil.isNotEmpty(errorMessage)) {
+			ram.setResultMessage(errorMessage);
+		} else {
+			ram.setResultMessage(MessageConstant.PAY_FAIL);
+		}
 		return ram;
 	}
 	
@@ -1681,6 +1698,7 @@ public class ConsumersApiController extends BaseAPiModel {
 	@RequestMapping(value="/stripe/chargeByCardId/repeat",method=RequestMethod.POST)
 	@ResponseBody
 	public ResultApiModel chargeByCardId(String cardId, String orderId){
+		String errorMessage = null;
 		Log4jUtil.info("重复付款接口==>cardId="+cardId+",orderId="+orderId);
 		ResultApiModel ram = new ResultApiModel();
 		//判断订单id与信用卡的id非空
@@ -1695,15 +1713,22 @@ public class ConsumersApiController extends BaseAPiModel {
 					chargeEntity.setCustomerId(consumer.getStripeCustomerId());
 					chargeEntity.setAccountId(restaurant.getStripeAccount());
 					chargeEntity.setCardId(cardId);
-					int flag = paymentService.chargeByCard(chargeEntity,orderId);
+					ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity,orderId);
+					int flag = stripeResponse.getStatusEnum();
 					if(flag==1){//付款成功
 						ram.setFlag(1);
 						return ram;
+					} else {
+						errorMessage = stripeResponse.getMessage();
 					}
 				}
 			}
 		}
-		ram.setResultMessage(MessageConstant.PAY_FAIL);
+		if (StringUtil.isNotEmpty(errorMessage)) {
+			ram.setResultMessage(errorMessage);
+		} else {
+			ram.setResultMessage(MessageConstant.PAY_FAIL);
+		}
 		return ram;
 	}
 	

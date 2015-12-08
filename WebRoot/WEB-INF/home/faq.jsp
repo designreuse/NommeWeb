@@ -14,6 +14,8 @@
 			
 <strong>How it works?</strong>
 <br><br>
+Nomme promises to donate 5% per each order to a non-profit organization that picked by you. No extra fee will be included for your donation. Nomme will use our own revenue to donate by your willingness. Just pick one non-profit organization in the list when you finish the order, and let Nomme send your best wishes to people who are in need.
+<br>
 1, Press the search key and your address will automatically show up.
 <br>
 2, Choose your favorite restaurant and select type of purchase (pickup, delivery, reservation & preorder)>dishes from our menu.

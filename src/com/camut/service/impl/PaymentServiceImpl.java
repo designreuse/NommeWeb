@@ -18,6 +18,7 @@ import com.camut.dao.ConsumersDao;
 import com.camut.dao.OrderDao;
 import com.camut.dao.RestaurantsDao;
 import com.camut.framework.constant.GlobalConstant;
+import com.camut.model.ApiResponse;
 import com.camut.model.CardEntity;
 import com.camut.model.ChargeEntity;
 import com.camut.model.Consumers;
@@ -209,10 +210,10 @@ public class PaymentServiceImpl implements PaymentService {
 	 * @Title: chargeByCard
 	 * @Description:指定的卡收款
 	 * @param:    CardEntity cardEntity,ChargeEntity chargeEntity
-	 * @return: int 1成功 其他失败
+	 * @return: ApiResponse 1成功 其他失败
 	 */
 	@Override
-	public int chargeByCard(ChargeEntity chargeEntity,String orderId) {
+	public ApiResponse chargeByCard(ChargeEntity chargeEntity,String orderId) {
 		if (chargeEntity!=null && StringUtil.isNotEmpty(orderId)) {
 			OrderHeader order = orderDao.getOrderById(Long.parseLong(orderId));
 			Log4jUtil.info("付款==>"+"total="+order.getTotal()+"tax="+order.getTax()+"amount="+order.getAmount());
@@ -220,7 +221,8 @@ public class PaymentServiceImpl implements PaymentService {
 			Log4jUtil.info("用指定卡付款时的Amount==>"+chargeEntity.getAmount());
 			int collectedFee = (int) Math.round(((order.getTotal()+order.getTax())*0.1+order.getAmount()*0.029)*100+30);
 			chargeEntity.setApplicatonFee(collectedFee);
-			String chargeId = CommonUtil.chargeByCardId(chargeEntity);
+			ApiResponse stripeResponse = CommonUtil.chargeByCardId(chargeEntity);
+			String chargeId = stripeResponse.getResponseString();
 			Log4jUtil.info("付款==>"+"collectedFee="+collectedFee);
 			if (StringUtil.isNotEmpty(chargeId)) {
 				if(StringUtil.isNotEmpty(orderId)){
@@ -231,10 +233,13 @@ public class PaymentServiceImpl implements PaymentService {
 						orderDao.updateOrderHeader(order);
 					}
 				}
-				return 1;
+				stripeResponse.setStatusEnum(1);
+				return stripeResponse;
 			}
+			stripeResponse.setStatusEnum(0);
+			return stripeResponse;
 		}
-		return 0;
+		return new ApiResponse(0, null, null);
 	}
 
 	/**

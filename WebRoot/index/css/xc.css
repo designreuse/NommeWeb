@@ -1,5 +1,6 @@
 /* CSS Document */
-body { font-family:Arial, Helvetica, sans-serif; background:url(../images/xc-login_bg.jpg) top center;}
+body { font-family:Arial, Helvetica, sans-serif; background:linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ),url(../images/xc-login_bg-2.jpg) top center;
+background-size:100%;}
 ul,li { margin:0px; padding:0px; list-style:none;}
 .zuikuan { max-width:1000px; margin: 0px auto; padding:0px 0px;}
 a:link {
@@ -19,16 +20,21 @@ a:active {
 	 
 }
 .xc-top {margin:40px auto;}
+.xc-top > .row > div:nth-child(1) {float:left;}
+.xc-top > .row > div:nth-child(2) {float:right;}
+.xc-top > .row > div:nth-child(3) {float:right;}
 .xc-top-logo { float:left;}
-.xc-top-login { float:right; color:#FFFFFF; margin-top:10px; padding:5px 10px;}
-.xc-top-login  li{ color:#FFFFFF; DISPLAY: block; }
-.xc-top-login  li a:link {DISPLAY: block; color:#FFFFFF; FONT-WEIGHT: 900;    COLOR: #fff;  padding:5px 10px; }
-.xc-top-login  li a:visited { DISPLAY: block; color:#FFFFFF;  FONT-WEIGHT: 900;  padding:5px 10px; }
-.xc-top-login  li a:hover {BACKGROUND: #7fbf2e; color:#FFFFFF;  padding:5px 10px; font-weight:900; DISPLAY: block; -webkit-border-radius: 4px 4px 4px 4px;
--moz-border-radius: 4px 4px 4px 4px;
-border-radius: 4px 4px 4px 4px;}
-.xc-top-login-in {float:right; color:#FFFFFF; margin-top:10px; padding:5px 10px;}
+.xc-top-login { float:right; color:#999999; margin-top:5px; padding:5px 10px;}
+.xc-top-login li{ font-size:17pt; color:#999999; DISPLAY: block; border:1px solid white;}
+.xc-top-login li a {color:#999999; padding:5px 10px; DISPLAY: block;}
+.xc-top-login li a:hover {BACKGROUND: #7fbf2e; color:#FFFFFF;  padding:5px 10px; DISPLAY: block;}
+.xc-top-login-in {float:right; color:#999999; margin-top:10px; padding:5px 10px;}
 .xc-top-login-in button { border:1px solid #fff; color:#fff; background:none;}
+.xc-header-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:17pt; text-align:right;}
+.xc-header-menu p span { color:#FFFFFF;}
+.xc-top-login-in {font-size:17pt; margin-top:5px;}
+.xc-top-login-in button {padding:5px 10px; color:#999999;}
+
 .clear { clear:both;}
 
 .xc-modal {
@@ -54,16 +60,10 @@ background-clip: padding-box;
 }
 
 
-.xc-js { margin:50px auto 0;  max-width:1000px;}
-.xc-js h1{ font-size:28px; color:#7fbf2e;}
-
-.xc-js p { font-size:24px; color:#FFFFFF; line-height:30px; margin:40px auto;}
-.xc-signin { margin:50px auto;}
-.xc-signin p{ color:#FFFFFF; font-size:16px; font-weight:900;  }
-.xc-signin p span { color:#8DD039; }
+.xc-js { max-width:1000px; position: relative; top: 50%; transform: translateY(40%);}
+.xc-js h1{ font-size:36pt; font-weight:bold; text-transform:uppercase; color:#FFFFFF;}
+.xc-js p { font-size:14pt; text-transform:uppercase; color:#FFFFFF; line-height:30px; margin:40px auto; letter-spacing:2pt;}
 .xc-zhifu { margin:80px; font-size:16px; color:#D6D6D6;}
-.xc-bottom p{ color:#FFFFFF; margin:50px auto 0; font-size:18px;}
-.xc-bottom p span { color:#77FF69;}
 
 .xc-add-on{
  
@@ -83,6 +83,20 @@ text-shadow: 0 1px 0 #fff;
 background:url(../images/xc-touming-bg.png);
 color:#FFFFFF; 
  }
+#search_bar input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #CCCCCC;
+}
+#search_bar input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color: #CCCCCC;
+   opacity: 1;
+}
+#search_bar input::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color: #CCCCCC;
+   opacity: 1;
+}
+#search_bar input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color: #CCCCCC;
+}
 #xc-biaodan-qian{
 width:15%; 
 height:40px;
