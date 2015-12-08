@@ -398,9 +398,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			DateTime orderDateTime = new DateTime(orderDate);
 			int week = orderDateTime.getDayOfWeek();
 			List<OpenTime> list = openTimeDao.getOpenTime(restaurantUuid, type, week);
-			if (list.size() > 0) {
-				OpenTime openTime = list.get(0);
-				
+			for (OpenTime openTime : list) {
 				// If the request's date matches the restaurant's local date, use the restaurant's local time as the start time.
 				// Otherwise, use the restaurant's start time as the start time.
 				String startTime = openTime.getStarttime();
@@ -447,12 +445,15 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				}
 				Date start = new SimpleDateFormat("HH:mm").parse(startStr);
 				DateTime startDateTime = new DateTime(start);
-
-				System.out.println(startDateTime.toString());
 				
 				while (!(getDateFromDateTime(startDateTime).after(new SimpleDateFormat("HH:mm").parse(endTime)))) {
 					buffer.append(new SimpleDateFormat("HH:mm").format(getDateFromDateTime(startDateTime)) + ",");
 					startDateTime = startDateTime.plusMinutes(15);
+				}
+				
+				// Add a case for 24:00, since it gets parsed to be 00:00.
+				if (endTime.equals("24:00")) {
+					buffer.append("24:00,");
 				}
 			}
 			String[] strs = buffer.toString().split(",");
