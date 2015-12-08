@@ -42,6 +42,7 @@ import com.camut.service.RestaurantsUserService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.PushUtil;
 import com.camut.utils.StringUtil;
+import com.camut.utils.StripeUtil;
 
 /**
  * @ClassName PaymentController.java
@@ -65,6 +66,17 @@ public class PaymentController {
 	@Autowired private OrderCharityService orderCharityService;
 	@Autowired private RestaurantsUserService restaurantsUserService;
 
+	
+	/**
+	 * @Title: getStripePublishableKey
+	 * @Description: Gets the publishable key for Stripe.
+	 * @return: String
+	 */
+	@RequestMapping(value = "getStripePublishableKey", method = RequestMethod.POST)
+	@ResponseBody
+	public String getStripePublishableKey() {
+		return StripeUtil.getPublishableKey();
+	}
 	
 	/**
 	 * @Title: getTestPay
@@ -96,6 +108,7 @@ public class PaymentController {
 	@ResponseBody
 	public PageMessage pay(ChargeEntity chargeEntity,String consumerUuid,String orderId) {
 		PageMessage pm = new PageMessage();
+		String errorMessage = null;
 		if (chargeEntity != null && StringUtil.isNotEmpty(consumerUuid)) {
 			int orderid = 0;
 			if (StringUtil.isEmpty(orderId)) {
@@ -162,7 +175,12 @@ public class PaymentController {
 							//int collectedFee = (int) Math.round(((order.getTotal()+order.getTax())*0.1+order.getAmount()*0.029)*100+30);
 							//chargeEntity.setApplicatonFee((int) ((orderHeader.getTotal()*0.1+orderHeader.getAmount()*0.029)*100+30));
 							chargeEntity.setApplicatonFee((int) Math.round(((orderHeader.getTotal()+orderHeader.getTax())*0.1+orderHeader.getAmount()*0.029)*100+30));
-							String chargeId = CommonUtil.chargeByToken(chargeEntity);
+							String chargeId = null;
+							try {
+								chargeId = CommonUtil.chargeByToken(chargeEntity);
+							} catch (Exception e) {
+								errorMessage = e.getMessage();
+							}
 							if (StringUtil.isNotEmpty(chargeId)) {//付款成功
 								//将charge的id保存到订单中
 								if (orderHeader!=null) {
@@ -178,7 +196,11 @@ public class PaymentController {
 				
 			}
 		}
-		pm.setErrorMsg(MessageConstant.PAY_FAIL);
+		if (errorMessage != null && errorMessage != "") {
+			pm.setErrorMsg(errorMessage);
+		} else {
+			pm.setErrorMsg(MessageConstant.PAY_FAIL);
+		}
 		pm.setSuccess(false);
 		return pm;
 	}
