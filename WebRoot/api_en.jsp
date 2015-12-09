@@ -26,7 +26,7 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	Sign Up (create your account)
    	<form action="${ctx }/api/consumer/register" method="post">
-   		Fristname：<input type="text" name="firstName">
+   		Firstname：<input type="text" name="firstName">
    		Lastname：<input type="text" name="lastName">
    		email：<input type="text" name="email">
    		password：<input type="password" name="password">
@@ -35,7 +35,7 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	modify account information
    	<form action="${ctx }/api/consumer/update" method="post">
-   		Fristname：<input type="text" name="firstName">
+   		Firstname：<input type="text" name="firstName">
    		Lastname：<input type="text" name="lastName">
    		email：<input type="text" name="email">
    		password：<input type="password" name="password">

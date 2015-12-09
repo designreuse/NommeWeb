@@ -28,7 +28,7 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户注册
    	<form action="${ctx }/api/consumer/register" method="post">
-   		Fristname：<input type="text" name="firstName" value="z">
+   		Firstname：<input type="text" name="firstName" value="z">
    		Lastname：<input type="text" name="lastName" value="f">
    		邮箱地址：<input type="text" name="email" value="asd@qq.com">
    		密码：<input type="password" name="password" value="123123">
@@ -37,7 +37,7 @@
    	---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    	用户信息修改
    	<form action="${ctx }/api/consumer/update" method="post">
-   		Fristname：<input type="text" name="firstName" value="You">
+   		Firstname：<input type="text" name="firstName" value="You">
    		Lastname：<input type="text" name="lastName" value="Ki">
    		邮箱地址：<input type="text" name="email" value="892981821@qq.com">
    		Phone：<input type="text" name="phone" value="1234">
