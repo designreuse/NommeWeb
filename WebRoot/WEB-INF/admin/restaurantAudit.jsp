@@ -92,10 +92,6 @@
 		<button type="button" id="audit" class="btn btn-default mybt" title="Verify">
 			<i class="fa fa-check "></i> Verify
 		</button>
-		
-		<button type="button" id="delete" class="btn btn-default mybt"  data-method="refresh" title="delete">
-       		<i class="fa fa-minus"></i> Delete
-		</button>
   			<button type="button" id="refresh" class="btn btn-default mybt"  data-method="refresh" title="refresh">
        		<i class="fa fa-refresh"></i> Refresh
   			</button>
