@@ -287,6 +287,15 @@ $(function(){
   		    }
   		    else if(param=='cvc'){
   		    	$("#cvv").parent().css('border-color','red');
+  		    } else {
+  		    	// Show the Stripe error message.
+	  			$("button[name='placeOrder']").popover({
+	  		    	content: response.error.message
+		  		});
+				$("button[name='placeOrder']").popover('show');
+				setTimeout(function(){
+					$("button[name='placeOrder']").popover('destroy');
+				},5000)
   		    }
   		    $("button[name='placeOrder']").prop('disabled', false);
   		  } else {
