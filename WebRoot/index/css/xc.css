@@ -30,8 +30,9 @@ a:active {
 .xc-top-login li a:hover {BACKGROUND: #7fbf2e; color:#FFFFFF;  padding:5px 10px; DISPLAY: block;}
 .xc-top-login-in {float:right; color:#999999; margin-top:10px; padding:5px 10px;}
 .xc-top-login-in button { border:1px solid #fff; color:#fff; background:none;}
-.xc-header-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:17pt; text-align:right;}
-.xc-header-menu p span { color:#FFFFFF;}
+.xc-footer-menu {padding-top:370px;}
+.xc-footer-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:14pt; text-align:center;}
+.xc-footer-menu p span { color:#FFFFFF;}
 .xc-top-login-in {font-size:17pt; margin-top:5px;}
 .xc-top-login-in button {padding:5px 10px; color:#999999;}
 
@@ -60,7 +61,7 @@ background-clip: padding-box;
 }
 
 
-.xc-js { max-width:1000px; position: relative; top: 50%; transform: translateY(40%);}
+.xc-js { max-width:1000px; padding-top:100px;}
 .xc-js h1{ font-size:36pt; font-weight:bold; text-transform:uppercase; color:#FFFFFF;}
 .xc-js p { font-size:14pt; text-transform:uppercase; color:#FFFFFF; line-height:30px; margin:40px auto; letter-spacing:2pt;}
 .xc-zhifu { margin:80px; font-size:16px; color:#D6D6D6;}
