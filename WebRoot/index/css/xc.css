@@ -119,55 +119,46 @@ line-height:32px;
 width:35%; 
 height:40px;
 margin-right: -4px;
--webkit-border-radius: 4px 0 0 4px;
--moz-border-radius: 4px 0 0 4px;
-border-radius: 4px 0 0 4px;
 display: inline-block;
-border-radius: 0px 0 0 0px;
 font-size: 16px;
 font-weight: 100;
 text-align: left;
 background:url(../images/xc-touming-bg.png);
 color:#FFFFFF;
 border:0;
-padding:4px;
+padding:4px 10px 4px 10px;
 line-height:32px;
  }
 
 #xc-biaodan { 
 width:18%; 
 height:40px;
- margin-right: -4px;
--webkit-border-radius: 0px 0 0 0px;
--moz-border-radius: 0px 0 0 0px;
+margin-right: -4px;
+border-radius: 10px 0 0 10px;
+-webkit-border-radius: 10px 0 0 10px;
+-moz-border-radius: 10px 0 0 10px;
 display: inline-block;
-border-radius: 0px 0 0 0px;
 font-size: 16px;
 font-weight: 100;
 text-align: left;
 background:url(../images/xc-touming-bg.png);
 color:#FFFFFF;
 border:0;
-padding:4px;
+padding:4px 10px 4px 10px;
 line-height:32px;
 
 }
 .xc-btn-success {
+background:url(../images/xc-touming-bg.png);
+border-left:1px solid white;
 width:10%;
 height:40px;
 color: #fff;
 margin-top:-3px;
-border-radius: 0 4px 4px 0;
+border-radius: 0 10px 10px 0;
+-webkit-border-radius: 0 10px 10px 0;
+-moz-border-radius: 0 10px 10px 0;
 text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-background-color: #8DD039;
-background-image: -moz-linear-gradient(top,#7fbf2e,#69A81A);
-background-image: -webkit-gradient(linear,0 0,0 100%,from(#7fbf2e),to(#69A81A));
-background-image: -webkit-linear-gradient(top,#7fbf2e,#69A81A);
-background-image: -o-linear-gradient(top,#7fbf2e,#69A81A);
-background-image: linear-gradient(to bottom,#7fbf2e,#69A81A);
-background-repeat: repeat-x;
-border-color: #51a351 #51a351 #387038;
-border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462',endColorstr='#ff51a351',GradientType=0);
 filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
