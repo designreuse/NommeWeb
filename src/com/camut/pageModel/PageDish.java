@@ -30,6 +30,7 @@ public class PageDish implements Comparable<PageDish>{
 	private Integer isPickup;// 外带或者自取或者就餐
 	private String photoUrl;//图片地址
 	private Integer status;//上架或者下架
+	private Integer isPopular;
 	
 	private List<PageDishGarnish> garnishList;//菜品对应的配菜集合
 	public long getId() {
@@ -122,6 +123,12 @@ public class PageDish implements Comparable<PageDish>{
 	}
 	public void setGarnishList(List<PageDishGarnish> garnishList) {
 		this.garnishList = garnishList;
+	}
+	public Integer getIsPopular() {
+		return isPopular;
+	}
+	public void setIsPopular(Integer isPopular) {
+		this.isPopular = isPopular;
 	}
 	/* @Title: compareTo
 	 * @Description: 

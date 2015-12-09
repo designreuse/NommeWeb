@@ -489,6 +489,8 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 		List<RestaurantsMenu> restaurantsMenuList = restaurantsMenuDao.getRestaurantsMenuByRestaurantsUuid(restaurantUuid);
 		if(restaurantsMenuList.size()>0){
 			//菜单分类列表用于遍历
+			long restaurantId = restaurantsMenuList.get(0).getRestaurants().getId();
+			List<PageDish> popularDishList = new ArrayList<PageDish>();
 			List<PageRestaurantsMenu> pageRestaurantsMenuList = new ArrayList<PageRestaurantsMenu>();
 			for (RestaurantsMenu restaurantsMenu : restaurantsMenuList) {
 				//菜单类里面放多个菜品
@@ -509,6 +511,17 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 						pd.setPrice(dish.getPrice());//菜品价格
 						pd.setPhotoUrl(dish.getPhotoUrl());//菜品图片链接
 						pageDishList.add(pd);
+						
+						// If this dish is popular, add it to the list of popular dishes.
+						if (dish.getIsPopular() == 1) {
+							PageDish popularPageDish = new PageDish();
+							popularPageDish.setId(dish.getId());
+							popularPageDish.setChName(dish.getChName());
+							popularPageDish.setEnName(dish.getEnName());
+							popularPageDish.setPrice(dish.getPrice());
+							popularPageDish.setPhotoUrl(dish.getPhotoUrl());
+							popularDishList.add(popularPageDish);
+						}
 					}
 				}
 				Collections.sort(pageDishList);
@@ -519,6 +532,16 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 					//再将菜单加入到结果集中，如果当前菜单下没有菜品就不显示该菜单分类
 					pageRestaurantsMenuList.add(prm);
 				}
+			}
+			// Create a category for popular dishes.
+			if (popularDishList.size() > 0) {
+				PageRestaurantsMenu popularDishMenu = new PageRestaurantsMenu();
+				popularDishMenu.setId(0);
+				popularDishMenu.setMenuName("Popular Dishes");
+				popularDishMenu.setRestaurantId(restaurantId);
+				popularDishMenu.setDescribe("Our most popular dishes.");
+				popularDishMenu.setPageDishList(popularDishList);
+				pageRestaurantsMenuList.add(popularDishMenu);
 			}
 			Collections.sort(pageRestaurantsMenuList);
 			return pageRestaurantsMenuList;
