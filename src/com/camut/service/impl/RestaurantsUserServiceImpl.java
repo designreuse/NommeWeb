@@ -247,7 +247,11 @@ public class RestaurantsUserServiceImpl implements RestaurantsUserService {
 				RestaurantsUser restaurantsUser1 = restaurantsUserDao.getEmployee(restaurantsUser.getCode(), restaurants);
 				//RestaurantsUser restaurantsUser1 = restaurantsUserDao.getRestaurantsUseByLoginName(restaurantsUser.getCode());
 				if (restaurantsUser1 != null) {// 用户名存在
-					return -1;
+					if (StringUtil.equals(restaurantsUser.getUuid(), restaurantsUser1.getUuid())) {
+						return 1;
+					} else {
+						return -1;
+					}
 				} else {// 用户名不存在
 					return 1;
 				}
