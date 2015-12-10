@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.framework.constant.MessageConstant;
+import com.camut.model.ApiResponse;
 import com.camut.model.CardEntity;
 import com.camut.model.CartHeader;
 import com.camut.model.ChargeEntity;
@@ -160,13 +161,19 @@ public class PaymentController {
 								
 								chargeEntity.setCustomerId(consumers.getStripeCustomerId());
 								//保存卡的详细信息
-								String cardId = CommonUtil.customerAddCardByToken(chargeEntity);
+								ApiResponse stripeAddCardResponse = CommonUtil.customerAddCardByToken(chargeEntity);
+								String cardId = stripeAddCardResponse.getResponseString();
 								if (StringUtil.isNotEmpty(cardId)) {//添加卡成功
 									chargeEntity.setCardId(cardId);
-									int flag = paymentService.chargeByCard(chargeEntity, String.valueOf(orderid));
+									ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity, String.valueOf(orderid));
+									int flag = stripeResponse.getStatusEnum();
 									if(flag==1){//付款成功
 										return pm;
+									} else {
+										errorMessage = stripeResponse.getMessage();
 									}
+								} else {
+									errorMessage = stripeAddCardResponse.getMessage();
 								}
 							}
 						}
@@ -175,12 +182,8 @@ public class PaymentController {
 							//int collectedFee = (int) Math.round(((order.getTotal()+order.getTax())*0.1+order.getAmount()*0.029)*100+30);
 							//chargeEntity.setApplicatonFee((int) ((orderHeader.getTotal()*0.1+orderHeader.getAmount()*0.029)*100+30));
 							chargeEntity.setApplicatonFee((int) Math.round(((orderHeader.getTotal()+orderHeader.getTax())*0.1+orderHeader.getAmount()*0.029)*100+30));
-							String chargeId = null;
-							try {
-								chargeId = CommonUtil.chargeByToken(chargeEntity);
-							} catch (Exception e) {
-								errorMessage = e.getMessage();
-							}
+							ApiResponse stripeResponse = CommonUtil.chargeByToken(chargeEntity);
+							String chargeId = stripeResponse.getResponseString();
 							if (StringUtil.isNotEmpty(chargeId)) {//付款成功
 								//将charge的id保存到订单中
 								if (orderHeader!=null) {
@@ -189,6 +192,8 @@ public class PaymentController {
 									orderService.updateOrder(orderHeader);
 								}
 								return pm;
+							} else {
+								errorMessage = stripeResponse.getMessage();
 							}
 						}
 					}
@@ -196,7 +201,7 @@ public class PaymentController {
 				orderService.updateOrder(orderHeader);
 			}
 		}
-		if (errorMessage != null && errorMessage != "") {
+		if (StringUtil.isNotEmpty(errorMessage)) {
 			pm.setErrorMsg(errorMessage);
 		} else {
 			pm.setErrorMsg(MessageConstant.PAY_FAIL);
@@ -217,6 +222,7 @@ public class PaymentController {
 	@RequestMapping(value="/payByCardId",method=RequestMethod.POST)
 	@ResponseBody
 	public PageMessage chargeByCardId(ChargeEntity chargeEntity,String consumerUuid,String orderId){
+		String errorMessage = null;
 		PageMessage pm = new PageMessage();
 		//Consumers consumers = consumersService.getConsumersById(Long.parseLong(consumerId));
 		if(chargeEntity!=null && StringUtil.isNotEmpty(consumerUuid)){
@@ -263,9 +269,12 @@ public class PaymentController {
 						Restaurants restaurants = restaurantsService.getRestaurantsByUuid(orderHeader.getRestaurantUuid());
 						if (restaurants!=null && StringUtil.isNotEmpty(restaurants.getStripeAccount())) {
 							chargeEntity.setAccountId(restaurants.getStripeAccount());
-							int flag = paymentService.chargeByCard(chargeEntity,String.valueOf(orderid));
+							ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity,String.valueOf(orderid));
+							int flag = stripeResponse.getStatusEnum();
 							if(flag==1){//付款成功
 								return pm;
+							} else {
+								errorMessage = stripeResponse.getMessage();
 							}
 						}
 					}
@@ -273,7 +282,11 @@ public class PaymentController {
 			}
 			
 			}
-		pm.setErrorMsg(MessageConstant.PAY_FAIL);
+		if (StringUtil.isNotEmpty(errorMessage)) {
+			pm.setErrorMsg(errorMessage);
+		} else {
+			pm.setErrorMsg(MessageConstant.PAY_FAIL);
+		}
 		pm.setSuccess(false);
 		return pm;
 	}

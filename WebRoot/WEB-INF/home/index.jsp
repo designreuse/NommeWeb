@@ -31,13 +31,12 @@
 <div id="fb-root"></div>
 	<div class="container xc-top">
 		<div class="row">
-			<div class="col-md-4">
+			<div>
 				<a name="logo" href="javascript:void(0)">
 					<img src="images/xc-logo.png">
 				</a>
 			</div>
-			<div class="col-md-4"></div>
-			<div class="col-md-4">
+			<div>
 			
 				<div class="xc-top-login" style="display: ${empty sessionScope.consumer?'block':'none'}">
 					<li><a href="#myModal" data-toggle="modal" data-target="#myModal" id="signIn0">Sign in</a></li>
@@ -66,40 +65,51 @@
 				<!-- 插入用户帐号相关功能模态框 -->
 				<jsp:include page="./inputjsp.jsp"></jsp:include>
 			</div>
-
 		</div>
 	</div>
 
 	<div class="xc-js container" align="center">
 
-		<h1>Order from your favorite local restaurants</h1>
-		<p>
-			No need to pick up the phone. <br> Quick and accurate<br>
-			ordering is here!
-		</p>
-	</div>
-
-	<div align="center" class="container zuikuan">
-		<div class="row">
-
-			<div class="input-prepend input-append">
-				<span style="">
-					<input id="xc-biaodan" type="text" placeholder=" Lunch, Pizza (Optional)">
-				</span>
-				<span style="">
-					<input id="autocomplete" type="text" placeholder="Enter your address">
-				</span>
-				<span style="">
-					<button class="btn xc-btn-success " name="searchBtn" type="button">
-						<img src="images/xc-fdj.png">
-					</button>
-				</span>
-				
-				<!-- xc-biaodan-qian -->
-				<!-- id="autocomplete" placeholder="Enter your address"
-             onFocus="geolocate()" -->
+		<h1>Not for me, it’s for everyone.</h1>
+		<p>We promise: 5% per order’s donation to any our listed non-profit organization by your choice.</p>
+		
+		<div align="center" class="container zuikuan">
+			<div class="row">
+	
+				<div id = "search_bar" class="input-prepend input-append">
+					<span style="">
+						<input id="xc-biaodan" type="text" placeholder="Lunch, Pizza (Optional)">
+					</span>
+					<span style="">
+						<input id="autocomplete" type="text" placeholder="Enter your address">
+					</span>
+					<span style="">
+						<button class="btn xc-btn-success " name="searchBtn" type="button">
+							<img src="images/xc-fdj.png">
+						</button>
+					</span>
+					
+					<!-- xc-biaodan-qian -->
+					<!-- id="autocomplete" placeholder="Enter your address"
+	             onFocus="geolocate()" -->
+				</div>
 			</div>
 		</div>
+	</div>
+	
+	<div class="xc-footer-menu container" align="center">
+		<p>
+			<a href="#" id = "index-contactus"><span>Contact Us</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
+		</p>
+		<jsp:include page="./contactUs.jsp"></jsp:include>
+		<jsp:include page="./about.jsp"></jsp:include>
+		<jsp:include page="./faq.jsp"></jsp:include>
+		<jsp:include page="./termOfUse.jsp"></jsp:include>
+		<jsp:include page="./privacyPolicy.jsp"></jsp:include>
 	</div>
 
 	<div class="xc-fenlei">
@@ -122,34 +132,6 @@
 		--%>
 		<div class="clear"></div>
 
-	</div>
-
-
-
-	<div class="xc-signin" align="center" style="height:55px;">
-		<div id = "page-login" style="display: ${empty sessionScope.consumer?'block':'none'}">
-		<p>Already a Nomme member?</p>
-		<p>
-			<a href="#" id = "index-singin"><span>Sign In</span></a>
-		</p>
-		</div>
-	</div>
-	<div align="center" class="xc-zhifu">It's Back! You can use
-		stripe to pay for your orders again. Finally, right?</div>
-
-	<div class="xc-bottom" align="center">
-		<p>
-			<a href="#" id = "index-contactus"><span>Contact Us</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
-			&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
-		</p>
-		<jsp:include page="./contactUs.jsp"></jsp:include>
-		<jsp:include page="./about.jsp"></jsp:include>
-		<jsp:include page="./faq.jsp"></jsp:include>
-		<jsp:include page="./termOfUse.jsp"></jsp:include>
-		<jsp:include page="./privacyPolicy.jsp"></jsp:include>
 	</div>
 
 	<form id="search-restaurants-form" action="${ctx}/index/searchlist" method="post">

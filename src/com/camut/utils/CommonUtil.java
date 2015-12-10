@@ -9,6 +9,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.camut.framework.constant.Currency;
 import com.camut.framework.constant.MessageConstant;
 import com.camut.utils.StripeUtil;
+import com.camut.model.ApiResponse;
 import com.camut.model.CardEntity;
 import com.camut.model.ChargeEntity;
 import com.camut.pageModel.PageMessage;
@@ -59,10 +60,9 @@ public class CommonUtil {
 	 * @Title: chargeByToken
 	 * @Description:通过token收款
 	 * @param: String
-	 * @return: String 返回 charge的id null失败
-	 * @throws Exception
+	 * @return: ApiResponse 返回 charge的id null失败
 	 */
-	public static String chargeByToken(ChargeEntity chargeEntity) throws Exception {
+	public static ApiResponse chargeByToken(ChargeEntity chargeEntity) {
 		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
@@ -74,16 +74,14 @@ public class CommonUtil {
 			try {
 				Charge charge = Charge.create(chargeParams);
 				if (charge.getStatus().equals("succeeded")) {// 扣款成功
-					return charge.getId();
+					return new ApiResponse(1, charge.getId(), null);
 				}
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-				e.printStackTrace();
-				
-				// Throw exception so caller can get Stripe's error message.
-				throw e;
+				Log4jUtil.info(e.getMessage() + " - Request-id: " + e.getRequestId());
+				return new ApiResponse(0, null, e.getMessage());
 			}
 		}
-		return null;
+		return new ApiResponse(0, null, MessageConstant.PAY_FAIL);
 	}
 
 	/**
@@ -251,9 +249,9 @@ public class CommonUtil {
 	 * @Title: customerAddCard
 	 * @Description:在一个已经存在的customer上增加卡
 	 * @param: CardEntity String
-	 * @return: String 返回 返回 card的id null失败
+	 * @return: ApiResponse 返回 返回 card的id null失败
 	 */
-	public static String customerAddCardByToken(ChargeEntity chargeEntity) {
+	public static ApiResponse customerAddCardByToken(ChargeEntity chargeEntity) {
 		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -261,14 +259,13 @@ public class CommonUtil {
 			try {
 				Customer cu = Customer.retrieve(chargeEntity.getCustomerId());
 				Card card = cu.createCard(params);
-				return card.getId();
+				return new ApiResponse(1, card.getId(), null);
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-				e.printStackTrace();
-				return null;
+				Log4jUtil.info(e.getMessage() + " - Request-id: " + e.getRequestId());
+				return new ApiResponse(0, null, e.getMessage());
 			}
-
 		}
-		return null;
+		return new ApiResponse(0, null, null);
 	}
 
 	/**
@@ -312,9 +309,9 @@ public class CommonUtil {
 	 * @Title: chargeByCardId
 	 * @Description:根据指定的卡号付款
 	 * @param: String String ChargeEntity
-	 * @return: String 返回 charge的id null失败
+	 * @return: ApiResponse 返回 charge的id null失败
 	 */
-	public static String chargeByCardId(ChargeEntity chargeEntity) {
+	public static ApiResponse chargeByCardId(ChargeEntity chargeEntity) {
 		Stripe.apiKey = StripeUtil.getApiKey();
 		if (chargeEntity != null) {
 			Map<String, Object> chargeParams = new HashMap<String, Object>();
@@ -327,16 +324,14 @@ public class CommonUtil {
 			try {
 				Charge charge = Charge.create(chargeParams);
 				if (charge.getStatus().equals("succeeded")) {// 扣款成功
-					return charge.getId();
+					return new ApiResponse(1, charge.getId(), null);
 				}
 			} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-				e.printStackTrace();
-				Log4jUtil.info("请求Stripe异常==>"+"During API request to Stripe (https://api.stripe.com): " +
-						"Connection timed out: connect Please check your internet connection and try again. If this problem persists,you should check Stripe's service status at https://twitter.com/stripestatus, or let us know at support@stripe.com.");
-				return null;
+				Log4jUtil.info(e.getMessage() + " - Request-id: " + e.getRequestId());
+				return new ApiResponse(0, null, e.getMessage());
 			}
 		}
-		return null;
+		return new ApiResponse(0, null, MessageConstant.PAY_FAIL);
 	}
 
 	/**

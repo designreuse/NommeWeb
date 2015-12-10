@@ -58,7 +58,7 @@
 					<legend>administrator information </legend>
 
 					<div class="form-group" style="float: left;margin-bottom: 0px;margin-top: 0px;">
-						<input type="text" name="firstName" class="form-control" placeholder="Frist name" data-placement="right" />
+						<input type="text" name="firstName" class="form-control" placeholder="First name" data-placement="right" />
 					</div>
 					<div class="form-group" style="float: right;margin-bottom: 0px;margin-top: 0px;">
 						<input type="text" name="lastName" class="form-control" placeholder="Last name" data-placement="right" />
