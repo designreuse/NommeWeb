@@ -92,15 +92,15 @@ button[name="refresh"] {
 								<div class="col-md-3" style="margin-top: 15px;">
 								</div>
 								<div class="col-md-9">
-									<span style="color: red;">This dish is also used in the coupon/discount. Do you still want to make this item inactive?
+									<span style="color: red;">This item is used as a free dish in the coupon/discount. Please delete or edit the coupon/discount before making this item inactive.
 									</span>
 								</div>
 							</div>
 						</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" name="no" class="btn btn-default" style="margin-left: 180px;width: 60px;"  data-dismiss="modal">Cancel</button>
-					<button type="button" name="ok" class="btn btn-primary" style="margin-left: 20px;width: 50px;">OK</button>
+					<button type="button" name="no" class="btn btn-default" style="margin-left: 180px;width: 70px;"  data-dismiss="modal">Cancel</button>
+					<button type="button" name="ok" class="btn btn-primary" style="margin-left: 20px;width: 70px;">Save</button>
 				</div>
 			</div>
 		</div>

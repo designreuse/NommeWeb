@@ -86,6 +86,7 @@
 		$("button[name='delete']").click(function(){
 			dish = $('table').bootstrapTable('getSelections')[0];
 			if(dish){
+				$("button[name='ok']").attr('disabled', false);
 				$("#myModal1").modal('show');
 				$("#status").val(dish.status);
 			}
@@ -96,6 +97,7 @@
 		})
 		
 		$("#status").change(function(){
+			$("button[name='ok']").attr('disabled', false);
 			if($(this).val()==1){//调整为下架状态，判断
 				if(dish.status==0){//判断菜品原来是否是上架状态
 					$.ajax({
@@ -107,6 +109,7 @@
 						success : function(msg) {
 							if(msg==1){
 								$("#display").css('display','block');
+								$("button[name='ok']").attr('disabled', true);
 							}
 							else{
 								$("#display").css('display','none');

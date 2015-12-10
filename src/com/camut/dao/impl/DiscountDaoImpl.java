@@ -30,7 +30,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public List<Discount> getDiscountByRestaurantUuid(String restaurantUuid, int orderType, double consumePrice) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.From("Discount").Where("restaurants.uuid=:restaurantUuid")
+		command.SelectFrom("Discount").Where("restaurants.uuid=:restaurantUuid")
 				.And("orderType=:orderType")
 				.And("consumePrice<=:consumePrice")
 				.GetNonDeletedRecordsOnly();
@@ -39,7 +39,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 		command.AddParameters("orderType", orderType);
 		command.AddParameters("consumePrice", consumePrice);
 		
-		List<Discount> dList = this.findByUDSqlCommand(command);
+		List<Discount> dList = this.find(command);
 		System.out.println("get discount=" + dList.size());
 		return dList;
 	}
@@ -53,10 +53,10 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public List<Discount> getAllDiscounts(Restaurants restaurants) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.From("Discount").Where("restaurants=:restaurants").GetNonDeletedRecordsOnly().OrderBy("type").WithAscOrder();
+		command.SelectFrom("Discount").Where("restaurants=:restaurants").GetNonDeletedRecordsOnly().OrderBy("type").WithAscOrder();
 		command.AddParameters("restaurants", restaurants);
 		
-		List<Discount> list = this.findByUDSqlCommand(command);
+		List<Discount> list = this.find(command);
 		System.out.println("getAllDiscounts=" + list.size());
 		
 		return list;
@@ -71,6 +71,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public int addDiscount(Discount discount) {
 		try {
+			discount.setDeleteStatus(DELETE_STATUS.NOT_DELETED.getValue());
 			this.save(discount);
 		} catch (Exception e) {
 			return -1;
@@ -87,6 +88,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public int updateDiscount(Discount discount) {
 		try {
+			discount.setDeleteStatus(DELETE_STATUS.NOT_DELETED.getValue());
 			this.update(discount);
 		} catch (Exception e) {
 			return -1;
@@ -103,8 +105,10 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public int deleteDiscount(Discount discount) {
 		try {
-			discount.setDeleteStatus(DELETE_STATUS.DELETED.getValue());
-			this.update(discount);
+			System.out.println("deleting a discount");
+			Discount toDelete = getDiscount(discount.getId());
+			toDelete.setDeleteStatus(DELETE_STATUS.DELETED.getValue());
+			this.update(toDelete);
 		} catch (Exception e) {
 			return -1;
 		}
@@ -120,10 +124,16 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	 */
 	@Override
 	public int getDiscountByDishId(int dishId) {
-		String hql = "select count(*) from Discount d where d.dishId=:dishId";
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("dishId", dishId);
-		return this.count(hql, map).intValue();
+//		String hql = "select count(*) from Discount d where d.dishId=:dishId";
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("dishId", dishId);
+//		return this.count(hql, map).intValue();
+		
+		UDSqlCommand command = new UDSqlCommand();
+		command.CountFrom("Discount").Where("dishId=:dishId").GetNonDeletedRecordsOnly();
+		command.AddParameters("dishId", dishId);
+		System.out.println("getDiscountByDishId=" + this.count(command).intValue());
+		return this.count(command).intValue();
 	}
 	
 	
@@ -154,7 +164,17 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 
 	@Override
 	public Discount getDiscount(long discountId) {
-		return this.get("from Discount d where d.id ="+discountId);
+		UDSqlCommand command = new UDSqlCommand();
+		command.SelectFrom("Discount").Where("id=:discountId")
+				.GetNonDeletedRecordsOnly();
+		
+		command.AddParameters("discountId", discountId);
+		
+		Discount discount = this.get(command);
+		System.out.println("getDiscount by id, content=" + discount.getContent());
+		return discount;
+		
+		//return this.get("from Discount d where d.id ="+discountId);
 	}
 	
 }

@@ -201,7 +201,15 @@ public class BaseDao<T>  {
 	}
 
 	
-	public List<T> findByUDSqlCommand(UDSqlCommand command) {
+	public List<T> find(UDSqlCommand command) {
 		return find(command.GetQueryString(), command.GetParameters());
+	}
+	
+	public T get(UDSqlCommand command) {
+		return get(command.GetQueryString(), command.GetParameters());
+	}
+	
+	public Long count(UDSqlCommand command) {
+		return count(command.GetQueryString(), command.GetParameters());
 	}
 }

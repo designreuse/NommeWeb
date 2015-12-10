@@ -16,8 +16,13 @@ public class UDSqlCommand {
 		parameters  = new HashMap<String, Object>();
 	}
 	
-	public UDSqlCommand From(String tableName){
+	public UDSqlCommand SelectFrom(String tableName){
 		queryString = " FROM " + tableName;
+		return this;
+	}
+	
+	public UDSqlCommand CountFrom(String tableName){
+		queryString = "SELECT count(*) FROM " + tableName;
 		return this;
 	}
 	
