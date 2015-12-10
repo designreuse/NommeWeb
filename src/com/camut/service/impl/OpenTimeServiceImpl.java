@@ -446,8 +446,17 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				Date start = new SimpleDateFormat("HH:mm").parse(startStr);
 				DateTime startDateTime = new DateTime(start);
 				
+				// Add a case for 00:00.
+				if (startTime.equals("00:00")) {
+					buffer.append("00:00,");
+				}
+				
+				// Loop through all possible times of the day, ignoring midnight.
 				while (!(getDateFromDateTime(startDateTime).after(new SimpleDateFormat("HH:mm").parse(endTime)))) {
-					buffer.append(new SimpleDateFormat("HH:mm").format(getDateFromDateTime(startDateTime)) + ",");
+					String openTimeToAppend = new SimpleDateFormat("HH:mm").format(getDateFromDateTime(startDateTime));
+					if (!openTimeToAppend.equals("00:00")) {
+						buffer.append(openTimeToAppend + ",");
+					}
 					startDateTime = startDateTime.plusMinutes(15);
 				}
 				
