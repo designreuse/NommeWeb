@@ -127,5 +127,21 @@ public class GlobalConstant {
 	    }
 	}
 	
+	public static enum DELETE_STATUS {
+		//0: not deleted, 1: deleted
+		NOT_DELETED(0), 
+		DELETED(1);
+		
+	    private final int value;
+
+	    private DELETE_STATUS(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
+	
 	public static final String DOMAIN_NAME = "http://www.metaorder.ca";//服务器域名
 }

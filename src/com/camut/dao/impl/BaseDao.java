@@ -10,6 +10,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.camut.utils.UDSqlCommand;
+
 public class BaseDao<T>  {
 
 	@Autowired
@@ -198,4 +200,8 @@ public class BaseDao<T>  {
 		return (BigInteger) q.uniqueResult();
 	}
 
+	
+	public List<T> findByUDSqlCommand(UDSqlCommand command) {
+		return find(command.GetQueryString(), command.GetParameters());
+	}
 }

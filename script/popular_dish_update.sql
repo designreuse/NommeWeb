@@ -1,0 +1,1 @@
+CALL addFieldIfNotExists ('dat_dish', 'is_popular', 'INT DEFAULT 0');

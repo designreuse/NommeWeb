@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 import com.camut.dao.DiscountDao;
+import com.camut.framework.constant.GlobalConstant.DELETE_STATUS;
 import com.camut.model.Discount;
 import com.camut.model.Restaurants;
+import com.camut.utils.UDSqlCommand;
 
 /**
  * @dao DiscountDaoImpl.java
@@ -27,11 +29,18 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	 */
 	@Override
 	public List<Discount> getDiscountByRestaurantUuid(String restaurantUuid, int orderType, double consumePrice) {
-		String hql = "from Discount d where d.restaurants.uuid=:restaurantUuid and d.orderType=:orderType and d.consumePrice<="+consumePrice;
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurantUuid", restaurantUuid);
-		map.put("orderType", orderType);
-		List<Discount> dList = this.find(hql, map);
+		UDSqlCommand command = new UDSqlCommand();
+		command.From("Discount").Where("restaurants.uuid=:restaurantUuid")
+				.And("orderType=:orderType")
+				.And("consumePrice<=:consumePrice")
+				.GetNonDeletedRecordsOnly();
+		
+		command.AddParameters("restaurantUuid", restaurantUuid);
+		command.AddParameters("orderType", orderType);
+		command.AddParameters("consumePrice", consumePrice);
+		
+		List<Discount> dList = this.findByUDSqlCommand(command);
+		System.out.println("get discount=" + dList.size());
 		return dList;
 	}
 
@@ -43,10 +52,13 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	 */
 	@Override
 	public List<Discount> getAllDiscounts(Restaurants restaurants) {
-		String hql = "from Discount d where d.restaurants=:restaurants order by d.type";
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("restaurants", restaurants);
-		List<Discount> list = this.find(hql,map);
+		UDSqlCommand command = new UDSqlCommand();
+		command.From("Discount").Where("restaurants=:restaurants").GetNonDeletedRecordsOnly().OrderBy("type").WithAscOrder();
+		command.AddParameters("restaurants", restaurants);
+		
+		List<Discount> list = this.findByUDSqlCommand(command);
+		System.out.println("getAllDiscounts=" + list.size());
+		
 		return list;
 	}
 
@@ -91,7 +103,8 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public int deleteDiscount(Discount discount) {
 		try {
-			this.delete(discount);
+			discount.setDeleteStatus(DELETE_STATUS.DELETED.getValue());
+			this.update(discount);
 		} catch (Exception e) {
 			return -1;
 		}
