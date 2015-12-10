@@ -1,1 +1,1 @@
-CALL addFieldIfNotExists ('dat_dish', 'is_popular', 'INT DEFAULT 0');
+CALL addFieldIfNotExists ('tbl_restaurant_table', 'is_popular', 'INT DEFAULT 2');

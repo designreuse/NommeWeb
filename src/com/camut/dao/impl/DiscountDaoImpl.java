@@ -40,7 +40,6 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 		command.AddParameters("consumePrice", consumePrice);
 		
 		List<Discount> dList = this.find(command);
-		System.out.println("get discount=" + dList.size());
 		return dList;
 	}
 
@@ -57,8 +56,6 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 		command.AddParameters("restaurants", restaurants);
 		
 		List<Discount> list = this.find(command);
-		System.out.println("getAllDiscounts=" + list.size());
-		
 		return list;
 	}
 
@@ -105,7 +102,6 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	@Override
 	public int deleteDiscount(Discount discount) {
 		try {
-			System.out.println("deleting a discount");
 			Discount toDelete = getDiscount(discount.getId());
 			toDelete.setDeleteStatus(DELETE_STATUS.DELETED.getValue());
 			this.update(toDelete);
@@ -123,12 +119,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	 * @return: int -1没用到  1用到
 	 */
 	@Override
-	public int getDiscountByDishId(int dishId) {
-//		String hql = "select count(*) from Discount d where d.dishId=:dishId";
-//		Map<String,Object> map = new HashMap<String, Object>();
-//		map.put("dishId", dishId);
-//		return this.count(hql, map).intValue();
-		
+	public int getDiscountByDishId(int dishId) {		
 		UDSqlCommand command = new UDSqlCommand();
 		command.CountFrom("Discount").Where("dishId=:dishId").GetNonDeletedRecordsOnly();
 		command.AddParameters("dishId", dishId);
@@ -138,7 +129,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	
 	
 	/**
-	 * @Title: chooseDistance
+	 * @Title: chooseDiscount
 	 * @Description: 用户选择使用优惠券时，查找出原先使用的和将要使用的优惠券信息 只会一条或者两条信息
 	 * @param: @param idMap
 	 * @return List<PageDiscount>  
@@ -147,6 +138,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 		long oldId = 0;
 		long newId = 0;
 		String hql = null;
+		UDSqlCommand command = new UDSqlCommand();
 		if(idMap.get("oldId")!=null){
 			oldId = Long.parseLong(idMap.get("oldId").toString());
 		}
@@ -154,9 +146,11 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 			newId = Long.parseLong(idMap.get("newId").toString());
 		}
 		if(oldId>0){
-			hql = "from Discount d where d.id in ( "+oldId+" , "+newId+" )";
+			command.SelectFrom("Discount").WhereIn("id", oldId, oldId);
+			//hql = "from Discount d where d.id in ( "+oldId+" , "+newId+" )";
 		}else{
-			hql = "from Discount d where d.id in ( "+newId+" )";
+			command.SelectFrom("Discount").WhereIn("id", newId);
+			//hql = "from Discount d where d.id in ( "+newId+" )";
 		}
 		List<Discount> discountList = this.find(hql);
 		return discountList;
@@ -173,8 +167,6 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 		Discount discount = this.get(command);
 		System.out.println("getDiscount by id, content=" + discount.getContent());
 		return discount;
-		
-		//return this.get("from Discount d where d.id ="+discountId);
 	}
 	
 }
