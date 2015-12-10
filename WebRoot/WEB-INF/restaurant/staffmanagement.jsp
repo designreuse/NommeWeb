@@ -124,7 +124,7 @@ label {
 										name</label>
 								</div>
 								<div class="col-md-9">
-									<input type="text" name="firstName" class="form-control" placeholder="Frist name" data-placement="right" />
+									<input type="text" name="firstName" class="form-control" placeholder="First name" data-placement="right" />
 								</div>
 							</div>
 						</div>

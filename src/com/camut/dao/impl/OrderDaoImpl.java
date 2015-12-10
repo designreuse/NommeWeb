@@ -549,7 +549,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					+ "and (a.status=0 or a.status=4 or a.status=6 or a.status=7) "
 					//+ "and date_format(a.order_date,'%Y-%m-%d')<'"+ today +"' "
 					+ "and date_format(a.order_date,'%Y-%m-%d')>='"+ todayBeforeSevenDay +"' "
-					+ "order by a.createdate desc limit :beginIndex, :rows";
+					+ "order by a.order_date desc limit :beginIndex, :rows";
 			String hql = "from OrderHeader oh where oh.consumers.id=:consumerId and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
 		}
 		int page = pf.getOffset();//当前页码
@@ -577,9 +577,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String hql = "";
 		if(statusType == 1){
-			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(1,2,3,8,9,10) "; 
+			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(1,2,3,8,9,10) "
+					+ "and date_format(oh.orderDate,'%Y-%m-%d %h:%i %p')>='"+ today +"' ";
 		}else{
-			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) "; 
+			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) "
+					+ "and date_format(oh.orderDate,'%Y-%m-%d')>='"+ todayBeforeSevenDay +"' ";
 		}
 		
 		map.put("consumerUuid", consumerUuid);

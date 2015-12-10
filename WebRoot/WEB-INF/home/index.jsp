@@ -65,23 +65,6 @@
 				<!-- 插入用户帐号相关功能模态框 -->
 				<jsp:include page="./inputjsp.jsp"></jsp:include>
 			</div>
-			<div>
-				<div class="xc-header-menu" align="center">
-					<p>
-						<a href="#" id = "index-contactus"><span>Contact Us</span></a>
-						&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
-						&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
-						&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
-						&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
-						&nbsp;&nbsp;&#47;&nbsp;&nbsp;
-					</p>
-					<jsp:include page="./contactUs.jsp"></jsp:include>
-					<jsp:include page="./about.jsp"></jsp:include>
-					<jsp:include page="./faq.jsp"></jsp:include>
-					<jsp:include page="./termOfUse.jsp"></jsp:include>
-					<jsp:include page="./privacyPolicy.jsp"></jsp:include>
-				</div>
-			</div>
 		</div>
 	</div>
 
@@ -112,6 +95,21 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	
+	<div class="xc-footer-menu container" align="center">
+		<p>
+			<a href="#" id = "index-contactus"><span>Contact Us</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
+		</p>
+		<jsp:include page="./contactUs.jsp"></jsp:include>
+		<jsp:include page="./about.jsp"></jsp:include>
+		<jsp:include page="./faq.jsp"></jsp:include>
+		<jsp:include page="./termOfUse.jsp"></jsp:include>
+		<jsp:include page="./privacyPolicy.jsp"></jsp:include>
 	</div>
 
 	<div class="xc-fenlei">
