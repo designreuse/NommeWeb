@@ -51,6 +51,7 @@ public class Dish extends IdEntity implements java.io.Serializable,Comparable<Di
 	private Date modon;// 操作时间
 	private String modby;// 操作人
 	private String photoUrl;// 图片地址
+	private Integer isPopular;
 	// 1 dish has many DishGarnish; 1-to-many;
 	// DishGarnish is the relationship between dish and GarnishItem(ingredients)
 	private Set<DishGarnish> dishGarnishsSet = new HashSet<DishGarnish>();// 与菜品配菜关系表一对多
@@ -185,7 +186,7 @@ public class Dish extends IdEntity implements java.io.Serializable,Comparable<Di
 	public void setModby(String modby) {
 		this.modby = modby;
 	}
-
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "dish")
 	public Set<DishGarnish> getDishGarnishsSet() {
 		return dishGarnishsSet;
@@ -202,6 +203,15 @@ public class Dish extends IdEntity implements java.io.Serializable,Comparable<Di
 
 	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;
+	}
+	
+	@Column(name = "is_popular")
+	public Integer getIsPopular() {
+		return this.isPopular;
+	}
+	
+	public void setIsPopular(Integer isPopular) {
+		this.isPopular = isPopular;
 	}
 
 	/**@Title: compareTo
