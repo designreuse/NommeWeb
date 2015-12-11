@@ -377,15 +377,13 @@ $(function(){
 	
 	/*类型按钮 Delivery*/
 	$("#deliveryButton").click(function(){
-		if($("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
-			$("input[name='orderType']").val(1);
-			$("#orderType").val(1);
-			loadOrderDate(1,"orderTime-day","orderTime-hourAndMinutes");
-			initSelectedDeliveryAndPickUpOrderDate();
-			newOrderType = 1;
-			updateCartOrderType(newOrderType)
-			refreshCart();
-		}
+		$("input[name='orderType']").val(1);
+		$("#orderType").val(1);
+		loadOrderDate(1,"orderTime-day","orderTime-hourAndMinutes");
+		initSelectedDeliveryAndPickUpOrderDate();
+		newOrderType = 1;
+		updateCartOrderType(newOrderType)
+		refreshCart();
 		$("#biaodan").attr("class","tab-pane active");
 		$("#tianxie").attr("class","tab-pane");
 		$("#dishDialogContent #cart-orderId").val("0");
@@ -395,27 +393,22 @@ $(function(){
 		$("#biaodan").attr("class","tab-pane active");
 		$("#tianxie").attr("class","tab-pane");
 		reservationOrderId = 0;
-		if($("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
-			$("input[name='orderType']").val(2);
-			$("#orderType").val(2);
-			newOrderType = 2;
-			updateCartOrderType(newOrderType)
-			refreshCart();
-			loadOrderDate(2,"orderTime-day","orderTime-hourAndMinutes");
-			initSelectedDeliveryAndPickUpOrderDate();
-		}
-		
+		$("input[name='orderType']").val(2);
+		$("#orderType").val(2);
+		newOrderType = 2;
+		updateCartOrderType(newOrderType)
+		refreshCart();
+		loadOrderDate(2,"orderTime-day","orderTime-hourAndMinutes");
+		initSelectedDeliveryAndPickUpOrderDate();
 	})
 	/*类型按钮 Dine in*/
 	$("#dineInButton").click(function(){
-		if($("#currentConsumerUuid").val()){//判断是否已经登录，如果没有登录弹出登录框
-			$("input[name='orderType']").val(3);
-			$("#orderType").val(3);
-			newOrderType = 3;
-			updateCartOrderType(newOrderType)
-			refreshCart();
-			showReservationOrders ();
-		}
+		$("input[name='orderType']").val(3);
+		$("#orderType").val(3);
+		newOrderType = 3;
+		updateCartOrderType(newOrderType)
+		refreshCart();
+		showReservationOrders ();
 	})
 	
 	//初始化之前选择的日期

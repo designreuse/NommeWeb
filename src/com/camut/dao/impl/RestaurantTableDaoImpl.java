@@ -126,7 +126,7 @@ public class RestaurantTableDaoImpl extends BaseDao<RestaurantTable> implements
 		
 		// Get the time frame boundaries for possible overlap.
 		// TODO: Get the reservation meal length.
-		long mealLength = 1000*60*60;
+		long mealLength = 1000*60*60*2;
 		Date earliestOverlappingReservationTime = new Date(reservationRequestDate.getTime() - mealLength);
 		Date latestOverlappingReservationTime = new Date(reservationRequestDate.getTime() + mealLength);
 		

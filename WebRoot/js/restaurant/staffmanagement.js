@@ -114,6 +114,7 @@ $(function(){
 									data : {
 										'code' : $("input[name='code']").val(),
 										'id' : $("input[name='id']").val(),
+										'uuid' : $("input[name='uuid']").val(),
 										'type' : $("select").val()
 									},
 									success : function(msg) {
@@ -268,6 +269,7 @@ $(function(){
 								data : {
 									'code' : $("input[name='code']").val(),
 									'id' : $("input[name='id']").val(),
+									'uuid' : $("input[name='uuid']").val(),
 									'type' : $("input[name='type']").val()
 								},
 								success : function(msg) {

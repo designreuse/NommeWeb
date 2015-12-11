@@ -528,9 +528,9 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		String today = smp.format(localTime);//当天日期
 		
 		Calendar calendar=Calendar.getInstance(); 
-		calendar.add(Calendar.DAY_OF_MONTH, -7);
-		Date dateBeforeSevenDay =calendar.getTime();
-		String todayBeforeSevenDay = smp.format(dateBeforeSevenDay);//七天前的日期
+		calendar.add(Calendar.DAY_OF_MONTH, -30);
+		Date dateBefore =calendar.getTime();
+		String todayBefore = smp.format(dateBefore);//七天前的日期
 		
 		String sql = "";
 		if(statusType == 1){//1：当前订单 CurrentOrders
@@ -548,7 +548,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					+ "from dat_order_header a left join dat_restaurants b on a.restaurant_uuid=b.uuid where a.consumer_uuid=:consumerUuid " 
 					+ "and (a.status=0 or a.status=4 or a.status=6 or a.status=7) "
 					//+ "and date_format(a.order_date,'%Y-%m-%d')<'"+ today +"' "
-					+ "and date_format(a.order_date,'%Y-%m-%d')>='"+ todayBeforeSevenDay +"' "
+					+ "and date_format(a.order_date,'%Y-%m-%d')>='"+ todayBefore +"' "
 					+ "order by a.order_date desc limit :beginIndex, :rows";
 			String hql = "from OrderHeader oh where oh.consumers.id=:consumerId and oh.status in(0,4,6,7) and date_format(oh.orderDate,'%Y-%m-%d')<=:dt order by oh.orderDate desc";
 		}
@@ -581,7 +581,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 					+ "and date_format(oh.orderDate,'%Y-%m-%d %h:%i %p')>='"+ today +"' ";
 		}else{
 			hql = "select count(*) from OrderHeader oh where oh.consumers.uuid=:consumerUuid and oh.status in(0,4,6,7) "
-					+ "and date_format(oh.orderDate,'%Y-%m-%d')>='"+ todayBeforeSevenDay +"' ";
+					+ "and date_format(oh.orderDate,'%Y-%m-%d')>='"+ todayBefore +"' ";
 		}
 		
 		map.put("consumerUuid", consumerUuid);
