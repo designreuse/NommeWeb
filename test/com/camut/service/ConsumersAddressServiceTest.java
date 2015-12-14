@@ -27,6 +27,24 @@ import com.camut.utils.GoogleTimezoneAPIUtil;
 public class ConsumersAddressServiceTest {
 
 	@Autowired private ConsumersAddressService consumersAddressService;
+	
+	@Test
+	public void getCurrentLocalTimeForConsumerTest() {
+		String consumerUuid = "80894a4cc08444c197462c7f7edebdea"; //this user have the default address in Calgary
+		Date consumerLocalTime = consumersAddressService.getCurrentLocalTimeForConsumer(consumerUuid);		
+		
+		Date calgaryTime = GoogleTimezoneAPIUtil.getLocalDateTime(51.078180, -114.131500);
+
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calgaryTime),
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(consumerLocalTime));
+		
+		
+		consumerUuid = "XXXXXXXXXXXXXXXXXXXXX"; //this user is not exist
+		consumerLocalTime = consumersAddressService.getCurrentLocalTimeForConsumer(consumerUuid);
+		Date machineDate = new Date();
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(machineDate),
+				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(consumerLocalTime));
+	}
 		
 	@Test
 	public void getCurrentLocalTimeFromConsumersDefaultAddressTest() {
@@ -40,10 +58,26 @@ public class ConsumersAddressServiceTest {
 		
 		
 		consumerUuid = "XXXXXXXXXXXXXXXXXXXXX"; //this user is not exist
-		consumerLocalTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);		
-		Date machineDate = new Date();
-		assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(machineDate),
+		consumerLocalTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		Date noAddressesDate = null;
+		assertEquals(noAddressesDate, consumerLocalTime);
+		
+	}
+	
+	@Test
+	public void getCurrentLocalTimeFromConsumersOrderHistoryTest() {
+		String consumerUuid = "80894a4cc08444c197462c7f7edebdea"; //this user have the default address in Calgary
+		Date consumerLocalTime = consumersAddressService.getCurrentLocalTimeFromConsumersOrderHistory(consumerUuid);		
+		
+		Date calgaryTime = GoogleTimezoneAPIUtil.getLocalDateTime(51.078180, -114.131500);
+
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calgaryTime),
 				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(consumerLocalTime));
 		
+		
+		consumerUuid = "XXXXXXXXXXXXXXXXXXXXX"; //this user is not exist
+		consumerLocalTime = consumersAddressService.getCurrentLocalTimeFromConsumersOrderHistory(consumerUuid);
+		Date noAddressesDate = null;
+		assertEquals(noAddressesDate, consumerLocalTime);
 	}
 }
