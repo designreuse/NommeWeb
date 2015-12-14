@@ -144,6 +144,21 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	}
 	
 	/**
+	 * @Title: getConsumersMostRecentOrdersRestaurant
+	 * @Description: Gets the consumer's most recent order.
+	 * @param: consumerUuid
+	 * @return: OrderHeader
+	 */
+	@Override
+	public OrderHeader getConsumersMostRecentOrder(String consumerUuid) {
+		// TODO: Limit to 1 result in query.
+		String hql = "from OrderHeader oh where oh.consumers.uuid=:consumerUuid order by oh.orderDate desc";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("consumerUuid", consumerUuid);
+		return this.get(hql, map);
+	}
+	
+	/**
 	 * @Title: getOrdersByRestaurantId
 	 * @Description: 获取商家所有订单加载到表格
 	 * @param: @param restaurantId

@@ -129,13 +129,28 @@ public interface ConsumersAddressService {
 	 */
 	public ConsumersAddressDefaultApiModel getConsumersAddressDefaultByConsumerUuid(String consumerUuid);
 	
+	/**
+	 * @Title: getCurrentLocalTimeForConsumer
+	 * @Description: Gets the local time for the customer.  Returns machine time if date cannot be determined.
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeForConsumer(String consumerUuid);
 	
 	/**
 	 * @Title: getCurrentLocalTimeFromConsumersAddressDefaultByConsumerUuid
-	 * @Description: get the local time from customer default address
+	 * @Description: Get the local time from customer default address.  Returns null if date cannot be determined.
 	 * @param: consumerUuid
 	 * @return: Date
 	 */
 	public Date getCurrentLocalTimeFromConsumersDefaultAddress(String consumerUuid);
+	
+	/**
+	 * @Title: getCurrentLocalTimeFromConsumersOrderHistory
+	 * @Description: Gets the current local time using the consumer's order history.  Returns null if date cannot be determined.
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeFromConsumersOrderHistory(String consumerUuid);
 
 }

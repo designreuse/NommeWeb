@@ -215,6 +215,33 @@ public class ConsumersAddressDaoImpl extends BaseDao<ConsumersAddress> implement
 		map.put("consumerUuid", consumerUuid);
 		return this.get(hql, map);
 	}
+	
+	/**
+	 * @Title: getConsumersAddressByOrderHistory
+	 * @Description: Get the consumer's address from their order history.
+	 * @param: consumerUuid
+	 * @return: List<ConsumersAddress>
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ConsumersAddress> getConsumersAddressesFromOrderHistory(String consumerUuid) {
+		// Query for all accepted reservations with no items in order.
+		String sql = "SELECT DISTINCT(oh.address) as fullAddress, street as street, floor as floor, city as city, province as province ";
+		sql += "FROM nomme.dat_order_header oh ";
+		sql += "WHERE oh.consumer_uuid=:consumerUuid ";
+		sql += "AND oh.address IS NOT NULL ";
+		sql += "ORDER BY oh.order_date DESC ";
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		query.setParameter("consumerUuid", consumerUuid);
+		query.setResultTransformer(Transformers.aliasToBean(ConsumersAddress.class));
+		query.addScalar("fullAddress",new org.hibernate.type.StringType());
+		query.addScalar("street",new org.hibernate.type.StringType());
+		query.addScalar("floor",new org.hibernate.type.StringType());
+		query.addScalar("city",new org.hibernate.type.StringType());
+		query.addScalar("province",new org.hibernate.type.StringType());
+		List<ConsumersAddress> list = query.list();
+		return list;
+	}
 
 
 
