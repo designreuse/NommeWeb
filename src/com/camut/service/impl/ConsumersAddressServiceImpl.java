@@ -10,15 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.camut.dao.ConsumersAddressDao;
-import com.camut.dao.ConsumersDao;
+import com.camut.dao.OrderDao;
 import com.camut.dao.RestaurantsDao;
 import com.camut.model.Consumers;
 import com.camut.model.ConsumersAddress;
+import com.camut.model.OrderHeader;
 import com.camut.model.Restaurants;
 import com.camut.model.api.ConsumersAddressApiModel;
 import com.camut.model.api.ConsumersAddressDefaultApiModel;
 import com.camut.pageModel.PageConsumersAddress;
 import com.camut.service.ConsumersAddressService;
+import com.camut.service.RestaurantsService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.GetLatLngByAddress;
 import com.camut.utils.GoogleTimezoneAPIUtil;
@@ -36,8 +38,9 @@ import com.camut.utils.StringUtil;
 public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 
 	@Autowired private ConsumersAddressDao consumersAddressDao;// 自动注入consumersAddressDao
-	@Autowired private ConsumersDao consumersDao;
+	@Autowired private OrderDao orderDao;
 	@Autowired private RestaurantsDao restaurantsDao;
+	@Autowired private RestaurantsService restaurantsService;
 
 	/**
 	 * @Title: getConsumersAddressById
@@ -368,17 +371,37 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 		}
 		return null;
 	}
+	
+	/**
+	 * @Title: getCurrentLocalTimeForConsumer
+	 * @Description: Gets the local time for the customer.  Returns machine time if date cannot be determined.
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeForConsumer(String consumerUuid) {
+		// Try to use the customer's default address.
+		Date localTime = this.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		if (localTime == null) {
+			// Try to use an address from the customer's order history.
+			localTime = this.getCurrentLocalTimeFromConsumersOrderHistory(consumerUuid);
+		}
+		if (localTime == null) {
+			// Use the machine time.
+			localTime = new Date();
+		}
+		return localTime;
+	}
 
 	/**
 	 * @Title: getCurrentLocalTimeFromConsumersAddressDefaultByConsumerUuid
-	 * @Description: get the local time from customer default address
+	 * @Description: Get the local time from customer default address.  Returns null if date cannot be determined.
 	 * @param: consumerUuid
 	 * @return: Date
 	 */
 	@Override
 	public Date getCurrentLocalTimeFromConsumersDefaultAddress(String consumerUuid) {
 		ConsumersAddress consumersDefautAddress = consumersAddressDao.getConsumersAddressDefaultByUuid(consumerUuid);
-		Date currentLocalTime = new Date();
+		Date currentLocalTime = null;
 		if (consumersDefautAddress != null) {
 			currentLocalTime = GoogleTimezoneAPIUtil.getLocalDateTime(consumersDefautAddress.getLat(),
 					consumersDefautAddress.getLng());
@@ -392,6 +415,45 @@ public class ConsumersAddressServiceImpl implements ConsumersAddressService {
 			}
 		}
 		return currentLocalTime;
+	}
+	
+	/**
+	 * @Title: getCurrentLocalTimeFromConsumersOrderHistory
+	 * @Description: Gets the current local time using the consumer's order history.  Returns null if date cannot be determined.
+	 * @param: consumerUuid
+	 * @return: Date
+	 */
+	public Date getCurrentLocalTimeFromConsumersOrderHistory(String consumerUuid) {
+		// Check for a customer address from the consumer's order history.
+		Date localTime = null;
+		List<ConsumersAddress> orderHistoryAddresses = consumersAddressDao.getConsumersAddressesFromOrderHistory(consumerUuid);
+		for(ConsumersAddress orderHistoryAddress : orderHistoryAddresses) {
+			// Get the coordinates for the consumer's address.
+			Map<String, Object> map = GetLatLngByAddress.getCoordinate(orderHistoryAddress.getFullAddress(), false);//地址,是否使用代理，默认不使用
+			if(map.get("status").toString().equals("OK")){//能获取到经纬度
+				Object o=  map.get("result");
+				@SuppressWarnings("unchecked")
+				List<Map<String,Object>> list = (List<Map<String,Object>>) o;
+				Map<String, Object> map2 = list.get(0);
+				String lat = map2.get("lat").toString();
+				String lng = map2.get("lng").toString();
+				orderHistoryAddress.setLat(Double.parseDouble(lat));
+				orderHistoryAddress.setLng(Double.parseDouble(lng));
+			}
+			
+			// Get the local time using this address.
+			localTime = GoogleTimezoneAPIUtil.getLocalDateTime(orderHistoryAddress.getLat(), orderHistoryAddress.getLng());
+		}
+		
+		// If local time is still not set, use the most recent order's restaurant's local time.
+		if (localTime == null) {
+			OrderHeader mostRecentOrder = orderDao.getConsumersMostRecentOrder(consumerUuid);
+			if (mostRecentOrder != null) {
+				localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(mostRecentOrder.getRestaurantUuid());
+			}
+		}
+		
+		return localTime;
 	}
 
 

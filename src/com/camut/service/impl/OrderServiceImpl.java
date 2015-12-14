@@ -137,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<OrderListApiModel> selectPastOrder(String consumerUuid) {
-		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		Date localTime = consumersAddressService.getCurrentLocalTimeForConsumer(consumerUuid);
 		List<OrderHeader> ohList = orderDao.selectPastOrder(consumerUuid, localTime);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
@@ -455,7 +455,7 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Override
 	public List<OrderListApiModel> selectCurrentOrder(String consumerUuid) {
-		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		Date localTime = consumersAddressService.getCurrentLocalTimeForConsumer(consumerUuid);
 		List<OrderHeader> ohList = orderDao.selectCurrentOrder(consumerUuid, localTime);
 		List<OrderListApiModel> odamList = new ArrayList<OrderListApiModel>();
 		for (OrderHeader orderHeader : ohList) {
@@ -1238,7 +1238,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @return List<PagePastOrderInfo>  
 	 */
 	public PageMessage getPastOrderInfoByConsumerUuid(String consumerUuid, int orderType, PageFilter pf) {
-		Date localTime = consumersAddressService.getCurrentLocalTimeFromConsumersDefaultAddress(consumerUuid);
+		Date localTime = consumersAddressService.getCurrentLocalTimeForConsumer(consumerUuid);
 		PageMessage pm = orderDao.getPastOrderInfoByConsumerUuid(consumerUuid, orderType, localTime, pf);
 		return pm;
 	}

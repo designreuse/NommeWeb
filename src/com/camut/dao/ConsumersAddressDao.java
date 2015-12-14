@@ -89,4 +89,12 @@ public interface ConsumersAddressDao {
 	 */
 	public ConsumersAddress getConsumersAddressDefaultByUuid(String consumerUuid);
 	
+	/**
+	 * @Title: getConsumersAddressByOrderHistory
+	 * @Description: Get the consumer's address from their order history.
+	 * @param: consumerUuid
+	 * @return: List<ConsumersAddress>
+	 */
+	public List<ConsumersAddress> getConsumersAddressesFromOrderHistory(String consumerUuid);
+	
 }

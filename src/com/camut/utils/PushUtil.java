@@ -56,9 +56,14 @@ public class PushUtil {
 		System.out.println(XingeApp.pushTokenAndroid(padAppId, padSecretKey, title, content, token));
 	}
 	
-	
+	/*com.nestree.nomme
 	private static long androidAppId=2100152356;
 	private static String androidSecretKey="73648c45d18b839031cefeb5c63582cb";
+	*/
+	
+	//com.canada.nomme
+	private static long androidAppId=2100168291;
+	private static String androidSecretKey="99b2a994438c5224f058dd16f259f234";
 	
 	/** 
 	 * 推送android手机
