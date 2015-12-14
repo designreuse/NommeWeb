@@ -471,5 +471,30 @@ $(function(){
 	});
 	/**各页面公用的登录、注册、找回密码功能 结束*/
 	
+	//Contact Us
+	$("#index-contactus").click(function(){
+		$("#myContactUs").modal('show');
+	});
+	
+	//About 
+	$("#index-about").click(function(){
+		$("#myAbout").modal('show');
+	});
+	
+	//FAQ 
+	$("#index-faq").click(function(){
+		$("#myFaq").modal('show');
+	});	
+
+	//TERMS OF USE 
+	$("#index-termofuse").click(function(){
+		$("#myTermOfUse").modal('show');
+	});		
+	
+	//Privacy Policy
+	$("#index-privacypolicy").click(function(){
+		$("#myPrivacyPolicy").modal('show');
+	});
+	
 		
 });

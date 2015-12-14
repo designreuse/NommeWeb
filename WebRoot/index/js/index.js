@@ -124,31 +124,6 @@ $(function(){
 			$("#search-restaurants-form").submit();
 		}
 	});
-
-	//Contact Us
-	$("#index-contactus").click(function(){
-		$("#myContactUs").modal('show');
-	});
-	
-	//About 
-	$("#index-about").click(function(){
-		$("#myAbout").modal('show');
-	});
-	
-	//FAQ 
-	$("#index-faq").click(function(){
-		$("#myFaq").modal('show');
-	});	
-
-	//TERMS OF USE 
-	$("#index-termofuse").click(function(){
-		$("#myTermOfUse").modal('show');
-	});		
-	
-	//Privacy Policy
-	$("#index-privacypolicy").click(function(){
-		$("#myPrivacyPolicy").modal('show');
-	});
 		
 	
 	function checkLatLng(){
