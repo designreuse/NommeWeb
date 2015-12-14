@@ -63,7 +63,14 @@ public interface OrderDao {
 	 */
 	public OrderHeader getOrder(int type, String restaurantUuid, long menuId);
 	
-
+	/**
+	 * @Title: getConsumersMostRecentOrdersRestaurant
+	 * @Description: Gets the consumer's most recent order.
+	 * @param: consumerUuid
+	 * @return: OrderHeader
+	 */
+	public OrderHeader getConsumersMostRecentOrder(String consumerUuid);
+	
 	/**
 	 * @Title: getOrdersByRestaurantId
 	 * @Description: 获取商家所有订单加载到表格
