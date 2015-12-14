@@ -21,6 +21,12 @@ $(function(){
 		});
 	})
 	
+	// Expand the coupons menu on page load.
+	$(document).ready(function() {
+		$(".panel-default a[href=#collapseOne]").removeClass("collapsed");
+		$("#collapseOne").removeClass("collapsed").addClass("in").css("height","auto");
+	});
+	
 	$("#dishMenuSelect").change(function(){
 		var menuName = $(this).val();
 		console.log($("div[name='"+menuName+"']"));
