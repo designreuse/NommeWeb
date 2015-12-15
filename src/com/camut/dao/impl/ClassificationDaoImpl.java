@@ -19,7 +19,7 @@ public class ClassificationDaoImpl extends BaseDao<Classification> implements Cl
 	 */
 	@Override
 	public List<Classification> getAllClassification() {
-		String hql = "from Classification c";
+		String hql = "from Classification c ORDER BY c.classificationName ASC";
 		List<Classification> classificationList = this.find(hql);
 		return classificationList;
 	}
