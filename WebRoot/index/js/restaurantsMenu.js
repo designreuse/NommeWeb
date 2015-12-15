@@ -233,7 +233,7 @@ $(function(){
 						timeOptions += "<option value='"+openTimeArray[int]+"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+openTimeArray[int]+"</option>";
 					}
 				}else{
-					timeOptions = "<option value='0'>No time today</option>";
+					timeOptions = "<option value='0'>Closed Today</option>";
 				}
 				$("#"+hourElementId).append(timeOptions);
 			}
