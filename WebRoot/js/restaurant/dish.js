@@ -97,7 +97,7 @@
 		})
 		
 		$("#status").change(function(){
-			$("button[name='ok']").attr('disabled', false);
+			$("button[name='ok']").attr('disabled', true);
 			if($(this).val()==1){//调整为下架状态，判断
 				if(dish.status==0){//判断菜品原来是否是上架状态
 					$.ajax({
@@ -120,6 +120,7 @@
 			}
 			else{
 				$("#display").css('display','none');
+				$("button[name='ok']").attr('disabled', false);
 			}
 		});
 		

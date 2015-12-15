@@ -1,6 +1,5 @@
 package com.camut.dao.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
@@ -24,21 +23,19 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	/**
 	 * @Title: getDiscountByRestaurantId
 	 * @Description: 店铺优惠信息
-	 * @param:  restaurantId
+	 * @param: restaurantId
 	 * @return: List<Discount>
 	 */
 	@Override
 	public List<Discount> getDiscountByRestaurantUuid(String restaurantUuid, int orderType, double consumePrice) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.SelectFrom("Discount").Where("restaurants.uuid=:restaurantUuid")
-				.And("orderType=:orderType")
-				.And("consumePrice<=:consumePrice")
-				.GetNonDeletedRecordsOnly();
-		
+		command.SelectFrom("Discount").Where("restaurants.uuid=:restaurantUuid").And("orderType=:orderType")
+				.And("consumePrice<=:consumePrice").GetNonDeletedRecordsOnly();
+
 		command.AddParameters("restaurantUuid", restaurantUuid);
 		command.AddParameters("orderType", orderType);
 		command.AddParameters("consumePrice", consumePrice);
-		
+
 		List<Discount> dList = this.find(command);
 		return dList;
 	}
@@ -46,15 +43,16 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	/**
 	 * @Title: getAllDiscounts
 	 * @Description: 获取商家的所有优惠信息
-	 * @param:    Restaurants
+	 * @param: Restaurants
 	 * @return: List<PageDiscount>
 	 */
 	@Override
 	public List<Discount> getAllDiscounts(Restaurants restaurants) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.SelectFrom("Discount").Where("restaurants=:restaurants").GetNonDeletedRecordsOnly().OrderBy("type").WithAscOrder();
+		command.SelectFrom("Discount").Where("restaurants=:restaurants").GetNonDeletedRecordsOnly().OrderBy("type")
+				.WithAscOrder();
 		command.AddParameters("restaurants", restaurants);
-		
+
 		List<Discount> list = this.find(command);
 		return list;
 	}
@@ -62,7 +60,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	/**
 	 * @Title: addDiscount
 	 * @Description: 增加优惠信息
-	 * @param:    Discount
+	 * @param: Discount
 	 * @return: int
 	 */
 	@Override
@@ -79,7 +77,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	/**
 	 * @Title: updateDiscount
 	 * @Description: 修改优惠信息
-	 * @param:   Discount 
+	 * @param: Discount
 	 * @return: int
 	 */
 	@Override
@@ -96,7 +94,7 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 	/**
 	 * @Title: deleteDiscount
 	 * @Description: 删除优惠信息
-	 * @param:    Discount
+	 * @param: Discount
 	 * @return: int
 	 */
 	@Override
@@ -111,62 +109,69 @@ public class DiscountDaoImpl extends BaseDao<Discount> implements DiscountDao {
 		return 1;
 	}
 
-
 	/**
 	 * @Title: getDiscountByDishId
 	 * @Description: 根据菜品id查询优惠信息中有没有用到此菜品
-	 * @param:   String 
-	 * @return: int -1没用到  1用到
+	 * @param: String
+	 * @return: int -1没用到 1用到
 	 */
 	@Override
-	public int getDiscountByDishId(int dishId) {		
+	public int getDiscountByDishId(int dishId) {
 		UDSqlCommand command = new UDSqlCommand();
 		command.CountFrom("Discount").Where("dishId=:dishId").GetNonDeletedRecordsOnly();
 		command.AddParameters("dishId", dishId);
-		System.out.println("getDiscountByDishId=" + this.count(command).intValue());
 		return this.count(command).intValue();
 	}
-	
-	
+
 	/**
 	 * @Title: chooseDiscount
 	 * @Description: 用户选择使用优惠券时，查找出原先使用的和将要使用的优惠券信息 只会一条或者两条信息
-	 * @param: @param idMap
-	 * @return List<PageDiscount>  
+	 * @param: @param
+	 *             idMap
+	 * @return List<PageDiscount>
 	 */
-	public List<Discount> chooseDiscount(Map<String, Object> idMap){
+	public List<Discount> chooseDiscount(Map<String, Object> idMap) {
 		long oldId = 0;
 		long newId = 0;
-		String hql = null;
 		UDSqlCommand command = new UDSqlCommand();
-		if(idMap.get("oldId")!=null){
+		if (idMap.get("oldId") != null) {
 			oldId = Long.parseLong(idMap.get("oldId").toString());
 		}
-		if(idMap.get("newId")!=null){
+		if (idMap.get("newId") != null) {
 			newId = Long.parseLong(idMap.get("newId").toString());
 		}
-		if(oldId>0){
-			command.SelectFrom("Discount").WhereIn("id", oldId, oldId);
-			//hql = "from Discount d where d.id in ( "+oldId+" , "+newId+" )";
-		}else{
-			command.SelectFrom("Discount").WhereIn("id", newId);
-			//hql = "from Discount d where d.id in ( "+newId+" )";
+		if (oldId > 0) {
+			command.SelectFrom("Discount").Where("id In (:oldId, :newId)").GetNonDeletedRecordsOnly();
+			command.AddParameters("oldId", oldId);
+			command.AddParameters("newId", newId);
+
+		} else {
+			command.SelectFrom("Discount").Where("id=:discountId").GetNonDeletedRecordsOnly();
+			command.AddParameters("discountId", newId);
 		}
-		List<Discount> discountList = this.find(hql);
+
+		List<Discount> discountList = this.find(command);
 		return discountList;
 	}
 
 	@Override
 	public Discount getDiscount(long discountId) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.SelectFrom("Discount").Where("id=:discountId")
-				.GetNonDeletedRecordsOnly();
-		
+		command.SelectFrom("Discount").Where("id=:discountId").GetNonDeletedRecordsOnly();
+
 		command.AddParameters("discountId", discountId);
-		
+
 		Discount discount = this.get(command);
-		System.out.println("getDiscount by id, content=" + discount.getContent());
 		return discount;
 	}
-	
+
+	@Override
+	public int hardDeleteDiscount(Discount discount) {
+		try {
+			this.delete(discount);
+		} catch (Exception e) {
+			return -1;
+		}
+		return 1;
+	}
 }

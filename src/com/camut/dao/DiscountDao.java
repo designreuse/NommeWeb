@@ -41,7 +41,7 @@ public interface DiscountDao {
 	
 	/**
 	 * @Title: updateDiscount
-	 * @Description: 修改优惠信息
+	 * @Description: set is_delete to 1
 	 * @param:   Discount 
 	 * @return: int
 	 */
@@ -76,7 +76,13 @@ public interface DiscountDao {
 	 * @param discountId
 	 * @return
 	 */
-	public Discount  getDiscount(long discountId);
+	public Discount getDiscount(long discountId);
 	
-	
+	/**
+	 * @Title: hardDeleteDiscount
+	 * @Description: WARINING: removing the record from the table cannot be undone
+	 * @param:    Discount
+	 * @return: int
+	 */
+	public int hardDeleteDiscount(Discount discount);
 }

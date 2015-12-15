@@ -100,7 +100,7 @@ button[name="refresh"] {
 				</div>
 				<div class="modal-footer">
 					<button type="button" name="no" class="btn btn-default" style="margin-left: 180px;width: 70px;"  data-dismiss="modal">Cancel</button>
-					<button type="button" name="ok" class="btn btn-primary" style="margin-left: 20px;width: 70px;">Save</button>
+					<button type="button" name="ok" class="btn btn-primary" style="margin-left: 20px;width: 70px;" disabled="true">Save</button>
 				</div>
 			</div>
 		</div>

@@ -106,6 +106,23 @@ public class GlobalConstant {
 	        return value;
 	    }
 	}
+	
+	public static enum DISCOUNT_TYPE {
+		//1:cash coupon, 2:% coupon, 3:free dish
+		CASH_COUPON(1), 
+		PERCENTAGE_COUPON(2), 
+		FREE_DISH(3);
+		
+	    private final int value;
+
+	    private DISCOUNT_TYPE(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
 
 	
 	public static enum RESTAURANT_STATUS {
