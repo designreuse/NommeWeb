@@ -217,7 +217,6 @@ $(function(){
 	});
 	
 	function getOrderDayTime(orderDay,orderType,hourElementId){
-		var orderType = $.trim($("#orderType").val());
 		$("#"+hourElementId).empty();
 		$.ajax({
 			type:'post',
@@ -271,7 +270,7 @@ $(function(){
 	}
 	
 	if($("#orderType").val()==1 || $("#orderType").val()==2){
-		loadOrderDate(orderType,"orderTime-day","orderTime-hourAndMinutes");//加载订单小时：分钟
+		loadOrderDate($("#orderType").val(),"orderTime-day","orderTime-hourAndMinutes");//加载订单小时：分钟
 		initSelectedDeliveryAndPickUpOrderDate();//选择之前选择的时间
 	}
 	
@@ -654,7 +653,7 @@ $(function(){
 			$("#res-lastName").val($("#consumer-lastName").val());
 			$("#res-phone").val($("#consumer-phone").val());
 			$("#res-email").val($("#consumer-email").val());
-			loadOrderDate(orderType,"res-orderDay","res-orderHourAndMinutes");
+			loadOrderDate(3,"res-orderDay","res-orderHourAndMinutes");
 			loadReserationPeopleNumber();
 			$("#reservationModal").modal('show');
 		}

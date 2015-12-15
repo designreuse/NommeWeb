@@ -29,6 +29,13 @@ public interface CharityService {
 	public CharityAllApiModel getCharity(String orderId);
 	
 	/**
+	 * @Title: getAllCharityFirstCharacters
+	 * @Description: Gets the list of unique first characters for all charities.
+	 * @return: List<String>
+	 */
+	public List<String> getAllCharityFirstCharacters();
+	
+	/**
 	 * @Title: getCharity
 	 * @Description: 显示所有慈善机构
 	 * @param:    

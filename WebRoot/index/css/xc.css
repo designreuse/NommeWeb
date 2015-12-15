@@ -37,7 +37,7 @@ a:active {
 .xc-top-login-in {float:right; color:#999999; margin-top:10px; padding:5px 10px;}
 .xc-top-login-in li:hover {color:#FFFFFF !important;BACKGROUND: #7fbf2e;}
 .xc-top-login-in button { color:inherit !important;border:1px solid #fff; background:none;}
-.xc-footer-menu {padding-top:370px;}
+.xc-footer-menu {position:absolute; text-align:center; bottom:20px; width:100%;}
 .xc-footer-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:14pt; text-align:center;}
 .xc-footer-menu p span { color:#FFFFFF;}
 .xc-top-login-in {font-size:17pt; margin-top:5px;}

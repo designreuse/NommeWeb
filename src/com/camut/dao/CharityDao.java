@@ -27,6 +27,13 @@ public interface CharityDao {
 	public List<Charity> getCharity();
 	
 	/**
+	 * @Title: getAllCharityFirstCharacters
+	 * @Description: Gets the list of unique first characters for all charities.
+	 * @return: List<String>
+	 */
+	public List<String> getAllCharityFirstCharacters();
+	
+	/**
 	 * @Title: getAllPageCharity
 	 * @Description: 后台管理，获取分页的慈善机构列表
 	 * @param: @param pf

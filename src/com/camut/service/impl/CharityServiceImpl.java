@@ -67,6 +67,15 @@ public class CharityServiceImpl implements CharityService {
 		
 		return charityAllApiModel;
 	}
+	
+	/**
+	 * @Title: getAllCharityFirstCharacters
+	 * @Description: Gets the list of unique first characters for all charities.
+	 * @return: List<String>
+	 */
+	public List<String> getAllCharityFirstCharacters() {
+		return charityDao.getAllCharityFirstCharacters();
+	}
 
 	/**
 	 * @Title: getCharity
