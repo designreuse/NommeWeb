@@ -1,0 +1,1 @@
+CALL addFieldIfNotExists ('tbl_restaurant_table', 'is_popular', 'INT DEFAULT 2');

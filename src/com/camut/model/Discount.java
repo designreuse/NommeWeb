@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.camut.framework.constant.GlobalConstant.DELETE_STATUS;
+
 /**
  * @entity Discount .
  * @author 王频
@@ -37,7 +39,8 @@ public class Discount extends IdEntity implements java.io.Serializable{
 	private String endTime;// 优惠结束时间
 	private Integer orderType;// 外卖，自取或者预定
 	private Integer dishId;// 赠送菜品的菜品id
-
+	private Integer deleteStatus;
+	
 	// Property accessors
 
 	@Column(name = "content", nullable = false)
@@ -131,4 +134,12 @@ public class Discount extends IdEntity implements java.io.Serializable{
 		this.dishId = dishId;
 	}
 
+	@Column(name = "delete_status")
+	public Integer getDeleteStatus() {
+		return this.deleteStatus;
+	}
+
+	public void setDeleteStatus(Integer status) {
+		this.deleteStatus = status;
+	}
 }
