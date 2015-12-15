@@ -1,7 +1,7 @@
 /* CSS Document */
 body { 
 	font-family:Arial, Helvetica, sans-serif;
-	background: url(../images/xc-login_bg-2.jpg) no-repeat center center fixed; 
+	background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ),url(../images/xc-login_bg-2.jpg) no-repeat center center fixed; 
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -33,9 +33,10 @@ a:active {
 .xc-top-login { float:right; color:#999999; margin-top:5px; padding:5px 10px;}
 .xc-top-login li{ font-size:17pt; color:#999999; DISPLAY: block; border:1px solid white;}
 .xc-top-login li a {color:#999999; padding:5px 10px; DISPLAY: block;}
-.xc-top-login li a:hover {BACKGROUND: #7fbf2e; color:#FFFFFF;  padding:5px 10px; DISPLAY: block;}
+.xc-top-login li a:hover {BACKGROUND: #7fbf2e; color:#FFFFFF;  }
 .xc-top-login-in {float:right; color:#999999; margin-top:10px; padding:5px 10px;}
-.xc-top-login-in button { border:1px solid #fff; color:#fff; background:none;}
+.xc-top-login-in li:hover {color:#FFFFFF !important;BACKGROUND: #7fbf2e;}
+.xc-top-login-in button { color:inherit !important;border:1px solid #fff; background:none;}
 .xc-footer-menu {padding-top:370px;}
 .xc-footer-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:14pt; text-align:center;}
 .xc-footer-menu p span { color:#FFFFFF;}

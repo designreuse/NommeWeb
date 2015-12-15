@@ -793,9 +793,18 @@
 	
 	
 	<div class="search-bottom" align="center">
-		<p>
-			<a href="#"><span>Contact Us</span></a>　　About　　FAQ　　Terms of Use　　Privacy Policy
-		</p>
+		<a href="#" id = "index-contactus"><span>Contact Us</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
+			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
+	</div>
+	<div>
+		<jsp:include page="./contactUs.jsp"></jsp:include>
+		<jsp:include page="./about.jsp"></jsp:include>
+		<jsp:include page="./faq.jsp"></jsp:include>
+		<jsp:include page="./termOfUse.jsp"></jsp:include>
+		<jsp:include page="./privacyPolicy.jsp"></jsp:include>
 	</div>
 
 	<!-- center jieshu-->
