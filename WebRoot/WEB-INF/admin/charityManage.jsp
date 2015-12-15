@@ -100,7 +100,7 @@
 							<div class="row" id= "formElements">
 								<div class="col-md-3"><label class="modalField">Charity Name:</label></div>
 								<div class="col-md-9">
-									<input type="text" name="charityName" id="charityName" maxlength="30">
+									<input type="text" name="charityName" id="charityName" maxlength="255">
 								</div>
 								<div class="col-md-3"><label class="modalField">Phone:</label></div>
 								<div class="col-md-9">
