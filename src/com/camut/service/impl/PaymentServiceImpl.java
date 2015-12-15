@@ -252,6 +252,12 @@ public class PaymentServiceImpl implements PaymentService {
 	public int refundByOrder(long orderId) {
 		OrderHeader orderHeader = orderDao.getOrderById(orderId);
 				if (orderHeader!=null) {
+					
+					// Don't allow cancellations if the order status is completed.
+					if (orderHeader.getStatus() == 7) {
+						return -1;
+					}
+					
 					String refundId = null;
 					if(StringUtil.isNotEmpty(orderHeader.getChargeId())){//信用卡付款的订单
 						refundId = CommonUtil.refundAll(orderHeader.getChargeId());
