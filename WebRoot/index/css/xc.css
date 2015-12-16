@@ -30,13 +30,13 @@ a:active {
 .xc-top > .row > div:nth-child(2) {float:right;}
 .xc-top > .row > div:nth-child(3) {float:right;}
 .xc-top-logo { float:left;}
-.xc-top-login { float:right; color:#999999; margin-top:5px; padding:5px 10px;}
-.xc-top-login li{ font-size:17pt; color:#999999; DISPLAY: block; border:1px solid white;}
-.xc-top-login li a {color:#999999; padding:5px 10px; DISPLAY: block;}
-.xc-top-login li a:hover {BACKGROUND: #7fbf2e; color:#FFFFFF;  }
-.xc-top-login-in {float:right; color:#999999; margin-top:10px; padding:5px 10px;}
-.xc-top-login-in li:hover {color:#FFFFFF !important;BACKGROUND: #7fbf2e;}
-.xc-top-login-in button { color:inherit !important;border:1px solid #fff; background:none;}
+.xc-top-login { float:right; margin-top:5px; padding:5px 10px;}
+.xc-top-login li{ font-size:17pt; DISPLAY: block; border:1px solid white;}
+.xc-top-login li a {color:#FFFFFF; padding:5px 10px; DISPLAY: block;}
+.xc-top-login li a:hover {background:#7fbf2e;}
+.xc-top-login-in {float:right; margin-top:10px; padding:5px 10px;}
+.xc-top-login-in li:hover {background:#7fbf2e;}
+.xc-top-login-in button {color:#FFFFFF !important; border:1px solid #fff; background:none;}
 .xc-footer-menu {position:absolute; text-align:center; bottom:20px; width:100%;}
 .xc-footer-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:14pt; text-align:center;}
 .xc-footer-menu p span { color:#FFFFFF;}
