@@ -737,15 +737,17 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * @Title: completeOrder
-	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @Title: getCompletedOrders
+	 * @Description: Gets the completed orders for a restaurant.
+	 * @param: restaurantId   
+	 * @param: orderType
+	 * @param: createDate
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<CancelOrderApiModel> completeOrder(String restaurantUuid, String status) {
+	public List<CancelOrderApiModel> getCompletedOrders(String restaurantUuid, String orderType, String createDate) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, status);
+			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, createDate, orderType);
 			List<CancelOrderApiModel> coamList = new ArrayList<CancelOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				CancelOrderApiModel coam = new CancelOrderApiModel();
@@ -1584,12 +1586,14 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: completeOrderAll
 	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @param: restaurantUuid
+	 * @param: orderType
+	 * @param: createDate
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(String restaurantUuid, String status) {
-		return orderDao.completeOrderAll(restaurantUuid, status);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String orderType, String createDate) {
+		return orderDao.completeOrderAll(restaurantUuid, createDate, orderType);
 	}
 	
 	/**

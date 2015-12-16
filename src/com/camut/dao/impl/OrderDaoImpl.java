@@ -461,22 +461,21 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: completeOrderAll
 	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: createDate
+	 * @param: orderType
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(String restaurantUuid, String status) {
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String createDate, String orderType) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Date date = new Date();
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-		String strDate = fmt.format(date);
 		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
-		if(StringUtil.isNotEmpty(status)){
-			int type = Integer.parseInt(status);
+		if(StringUtil.isNotEmpty(orderType)){
+			int type = Integer.parseInt(orderType);
 			hql += " and oh.orderType=:type";
 			map.put("type", type);
 		}
-		map.put("dt", strDate);
+		map.put("dt", createDate);
 		map.put("restaurantUuid", restaurantUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;
