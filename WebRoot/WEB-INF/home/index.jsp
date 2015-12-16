@@ -70,15 +70,15 @@
 
 	<div class="xc-js container" align="center">
 
-		<h1>Not for me, it’s for everyone.</h1>
-		<p>We promise: 5% per order’s donation to any our listed non-profit organization by your choice.</p>
+		<h1>Not for me, it’s for everyone</h1>
+		<p>For every order you make, we donate 5% to your choice of one of our listed non-profit organizations</p>
 		
 		<div align="center" class="container zuikuan">
 			<div class="row">
 	
 				<div id = "search_bar" class="input-prepend input-append">
 					<span style="">
-						<input id="xc-biaodan" type="text" placeholder="Lunch, Pizza (Optional)">
+						<input id="xc-biaodan" type="text" placeholder="Cuisine (Optional)">
 					</span>
 					<span style="">
 						<input id="autocomplete" type="text" placeholder="Enter your address">
