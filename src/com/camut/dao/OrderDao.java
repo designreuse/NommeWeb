@@ -133,10 +133,12 @@ public interface OrderDao {
 	/**
 	 * @Title: completeOrderAll
 	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: createDate
+	 * @param: orderType   
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> completeOrderAll(String restaurantUuid,String status);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String createDate, String orderType);
 	
 	/**
 	 * @Title: liveOrder
