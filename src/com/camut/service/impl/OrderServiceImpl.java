@@ -1,9 +1,9 @@
 package com.camut.service.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -741,13 +740,17 @@ public class OrderServiceImpl implements OrderService {
 	 * @Description: Gets the completed orders for a restaurant.
 	 * @param: restaurantId   
 	 * @param: orderType
-	 * @param: createDate
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<CancelOrderApiModel> getCompletedOrders(String restaurantUuid, String orderType, String createDate) {
+	public List<CancelOrderApiModel> getCompletedOrders(String restaurantUuid, String orderType) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, createDate, orderType);
+			// Get the current local date for the restaurant.
+			Date currentLocalTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			String currentLocalDateString = df.format(currentLocalTime);
+			
+			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, currentLocalDateString, orderType);
 			List<CancelOrderApiModel> coamList = new ArrayList<CancelOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				CancelOrderApiModel coam = new CancelOrderApiModel();
@@ -1588,12 +1591,16 @@ public class OrderServiceImpl implements OrderService {
 	 * @Description: 已完成的订单列表
 	 * @param: restaurantUuid
 	 * @param: orderType
-	 * @param: createDate
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(String restaurantUuid, String orderType, String createDate) {
-		return orderDao.completeOrderAll(restaurantUuid, createDate, orderType);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String orderType) {
+		// Get the current local date for the restaurant.
+		Date currentLocalTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String currentLocalDateString = df.format(currentLocalTime);
+		
+		return orderDao.completeOrderAll(restaurantUuid, currentLocalDateString, orderType);
 	}
 	
 	/**
