@@ -446,8 +446,9 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				Date start = new SimpleDateFormat("HH:mm").parse(startStr);
 				DateTime startDateTime = new DateTime(start);
 				
-				// Add a case for 00:00.
-				if (startTime.equals("00:00")) {
+				
+				// Add a case for 00:00 when order date is later than current day
+				if (startTime.equals("00:00") && orderDate.after(originalAdjustedDate) ) {
 					buffer.append("00:00,");
 				}
 				
