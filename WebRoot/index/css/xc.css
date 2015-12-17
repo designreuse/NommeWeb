@@ -189,4 +189,12 @@ background-color: #69A81A;
 border-radius: 4px 4px 4px 4px;}
 
 
-
+/* Login Modal */
+.login-modal .modal-header {border-bottom:0; padding-bottom:0;}
+.login-modal .modal-header h4 {text-transform:uppercase; text-align:left; margin:10px 10px 10px 10px;}
+.login-modal .modal-body {padding-top:0; color:#000000;}
+.login-modal .modal-body .controls {padding:5px;}
+.login-modal .modal-body .controls input {background:#EEEEEE; color:#999999; border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal .modal-body .forgotPassword {color:inherit;}
+.login-modal #loginSignIn1 {width:25%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
