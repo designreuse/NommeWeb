@@ -58,5 +58,28 @@ public class MessageConstant {
 	public static final String CHARITY_CAN_NOT_DELETE="The charity is used in order, you are unable to delete! You can set the status disabled to restriction use";//慈善机构已在订单中被使用，无法删除
 	public static final String CHARITY_DELETE_FAILED="Delete charity filed!";//删除慈善机构失败
 
+	public static enum PASSWORD_VALIDATION {
+		// 1: success, 2: password is too short, 3: password contains special
+		VALID(1, "Success"), 
+		PASSWORD_TOO_SHORT(2, "Password must be at least 6 characters long"), 
+		PASSWORD_HAS_SPECIAL_CHARACTERS(3, "Password must contain only digits and letters");
+
+		private final int _value;
+		private final String _message;
+
+		private PASSWORD_VALIDATION(int value, String message) {
+			_value = value;
+			_message = message;
+		}
+
+
+		public final int getValue() {
+			return _value;
+		}
+
+		public final String getMessage() {
+			return _message;
+		}
+	}
 }
 
