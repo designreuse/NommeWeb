@@ -1,4 +1,6 @@
 /* CSS Document */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
 body { 
 	font-family:Arial, Helvetica, sans-serif;
 	background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ),url(../images/xc-login_bg-3.jpg) no-repeat center center fixed; 
@@ -7,6 +9,7 @@ body {
 	-o-background-size: cover;
 	background-size: cover;
 }
+body * {font-family: 'Open Sans', sans-serif;}
 ul,li { margin:0px; padding:0px; list-style:none;}
 .zuikuan { max-width:1000px; margin: 0px auto; padding:0px 0px;}
 a:link {
@@ -188,5 +191,12 @@ background-color: #69A81A;
 -moz-border-radius: 4px 4px 4px 4px;
 border-radius: 4px 4px 4px 4px;}
 
-
-
+/* Login Modal */
+.login-modal .modal-header {border-bottom:0; padding-bottom:0;}
+.login-modal .modal-header h4 {text-transform:uppercase; text-align:left; margin:10px 10px 10px 10px;}
+.login-modal .modal-body {padding-top:0; color:#000000;}
+.login-modal .modal-body .controls {padding:5px;}
+.login-modal .modal-body .controls input {background:#EEEEEE; color:#999999; border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal .modal-body .forgotPassword {color:inherit;}
+.login-modal #loginSignIn1 {width:25%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}

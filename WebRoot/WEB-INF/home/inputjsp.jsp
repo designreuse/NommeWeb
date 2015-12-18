@@ -3,47 +3,41 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <!-- 登录模态框 Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+<div class="login-modal modal fade" id="myModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="width:500px;">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header" style="border-bottom:0;">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 id="myModalLabel" align="center">Sign in</h4>
+				<h4 id="myModalLabel">Please Sign In</h4>
 			</div>
 			<div class="modal-body">
-				<p>Email</p>
 				<div class="controls">
 					<input type="email" class="form-control"
-						id="loginInputEmail1" placeholder="Enter email"
+						id="loginInputEmail1" placeholder="Email Address"
 						style="height:45px;">
-				</div>
-				<div align="left" style="margin:10px 0;">
-					password <span style="float:right; color:#6D9940;">
-					<a href="javascript:void(0)" name="forgotPassword" class="forgotPassword" >Forgot password?</a></span>
 				</div>
 				<div class="controls">
 					<input type="password" class="form-control"
 						id="loginInputPassword1" placeholder="Password" maxlength="20"
 						style="height:45px;">
 				</div>
-				<div align="left" style="margin:10px 0;">
-					<span style="float:right; color:#6D9940;width: 150px;">
-						<span style="display:block;float:right">&nbsp;&nbsp;keep me stay in</span>
-						<span style="float: right;">
-							<input type="checkbox" id = "autoLogin">
-						</span>
-						
+				<div align="left" style="margin:10px 5px;">
+					<span style="float:left;text-align:left;">
+						<input type="checkbox" id = "autoLogin">
+						<span>Remember Me</span>
+					</span>
+					<span style="float:right;">
+						<a href="javascript:void(0)" name="forgotPassword" class="forgotPassword" >Forgot your password</a>
 					</span>
 				</div>
 			</div>
-			<div id="loginModalButtons" style=" padding:10px 15px 0px 15px;">
+			<div id="loginModalButtons" style=" padding:15px 25px 0px 25px;">
 				<button id="loginSignIn1" class="btn btn-large btn-block btn-primary" type="button"
-					style="height:45px; background:#88878C; border:#88878C" 
-					>Sign In</button>
+					>Login</button>
 				<div align="center" style="margin:10px 0;">
 					<strong>OR</strong>
 				</div>
