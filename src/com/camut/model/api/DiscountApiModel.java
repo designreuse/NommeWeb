@@ -2,6 +2,8 @@ package com.camut.model.api;
 
 import java.io.Serializable;
 
+import com.camut.framework.constant.GlobalConstant.DELETE_STATUS;
+
 /**
  * @entity DiscountApiModel . 
  * @author zyf	
@@ -24,6 +26,7 @@ public class DiscountApiModel implements Serializable {
 	private Integer type;// 类型,1、现金抵用券 2、打折券 3、赠送菜品
 	private Integer dishId=0;
 	private String dishName="";
+	private Integer deleteStatus;
 	
 	public long getDiscountId() {
 		return discountId;
@@ -67,6 +70,7 @@ public class DiscountApiModel implements Serializable {
 	public void setDishId(Integer dishId) {
 		this.dishId = dishId;
 	}
+	
 	public String getDishName() {
 		return dishName;
 	}
@@ -74,5 +78,10 @@ public class DiscountApiModel implements Serializable {
 		this.dishName = dishName;
 	}
 	
-	
+	public Integer getDeleteStatus() {
+		return this.deleteStatus;
+	}
+	public void setDeleteStatus(Integer status) {
+		this.deleteStatus = status;
+	}
 }

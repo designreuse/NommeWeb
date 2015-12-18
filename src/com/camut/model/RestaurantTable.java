@@ -32,6 +32,7 @@ public class RestaurantTable extends IdEntity implements java.io.Serializable {
 	private Restaurants restaurants;//与商家多对一
     private Integer acceptanceNum;//桌位容纳人数
     private Integer tableNum;//桌位数量
+    private Integer mealDurationInMinutes;	// The expected duration of a meal.
 
 
     // Property accessors
@@ -65,6 +66,15 @@ public class RestaurantTable extends IdEntity implements java.io.Serializable {
 
 	public void setRestaurants(Restaurants restaurants) {
 		this.restaurants = restaurants;
+	}
+	
+	@Column(name="meal_duration_in_minutes", nullable=false)
+	public Integer getMealDurationInMinutes() {
+		return this.mealDurationInMinutes;
+	}
+	
+	public void setMealDurationInMinutes(Integer mealDurationInMinutes) {
+		this.mealDurationInMinutes = mealDurationInMinutes;
 	}
    
 
