@@ -479,12 +479,15 @@ public class RestaurantApiController  extends BaseAPiModel {
 	@RequestMapping(value = "/completeorder", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultApiModel completeOrder(String restaurantUuid, String status){
-		Log4jUtil.info("已取完成订单列表接口==>"+"restaurantUuid="+restaurantUuid+"status="+status);
+		// TODO: Rename status to orderType in calling function from nommepad.
+		String orderType = status;
+		
+		Log4jUtil.info("RestaurantApiController/completeorder==>"+"restaurantUuid=" + restaurantUuid + ", orderType=" + orderType);
 		ResultApiModel ram = new ResultApiModel();
 		try {
 			ram.setFlag(1);
-			ram.setBody(orderServicr.completeOrder(restaurantUuid, status));
-			List<CancelOrderApiModel> coamList = orderServicr.completeOrder(restaurantUuid, status);
+			ram.setBody(orderServicr.getCompletedOrders(restaurantUuid, orderType));
+			List<CancelOrderApiModel> coamList = orderServicr.getCompletedOrders(restaurantUuid, orderType);
 			double total = 0;
 			double subtotal = 0;
 			double delivery = 0;
@@ -497,7 +500,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 			double totalscore = b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();//保留小数后一位
 			ram.setTotal(totalscore);
 			
-			List<OrderHeader> ohList = orderServicr.completeOrderAll(restaurantUuid, status);
+			List<OrderHeader> ohList = orderServicr.completeOrderAll(restaurantUuid, orderType);
 			if(ohList.size() > 0){
 				for (OrderHeader orderHeader : ohList) {
 					subtotal += orderHeader.getTotal();

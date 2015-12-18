@@ -51,8 +51,23 @@ public class CharityDaoImpl extends BaseDao<Charity> implements CharityDao {
 	 */
 	@Override
 	public List<Charity> getCharity() {
-		String hql = "from Charity";
+		String hql = "from Charity c ORDER BY c.charityName ASC";
 		return this.find(hql);
+	}
+	
+	/**
+	 * @Title: getAllCharityFirstCharacters
+	 * @Description: Gets the list of unique first characters for all charities.
+	 * @return: List<String>
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAllCharityFirstCharacters() {
+		String sql = "SELECT DISTINCT(LEFT(charity_name,1)) as charityName ";
+		sql += "FROM tbl_charity ";
+		sql += "ORDER BY charityName ASC ";
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		return query.list();
 	}
 	
 	/**

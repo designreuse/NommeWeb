@@ -413,15 +413,7 @@ public class PaymentController {
 	@RequestMapping(value = "getAllCharityFirstLetters")
 	@ResponseBody
 	public List<String> getAllCharityFirstLetters() {
-		List<Charity> charityList = charityService.getAllCharity();
-		List<String> charityFirstLetters = new ArrayList<String>();
-		for (Charity charity : charityList) {
-			String currentFirstLetter = Character.toString(charity.getCharityName().charAt(0));
-			if (charityFirstLetters.contains(currentFirstLetter) == false) {
-				charityFirstLetters.add(currentFirstLetter);
-			}
-		}
-		return charityFirstLetters;
+		return charityService.getAllCharityFirstCharacters();
 	}
 	
 	/**
@@ -433,7 +425,6 @@ public class PaymentController {
 	@RequestMapping(value = "getAllCharity")
 	@ResponseBody
 	public List<Charity> getAllCharity(String letter) {
-		//return charityService.getAllCharity();
 		List<Charity> list = charityService.getAllCharity();
 		List<Charity> charities = new ArrayList<Charity>(); 
 		for (Charity charity : list) {

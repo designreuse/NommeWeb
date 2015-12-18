@@ -145,12 +145,13 @@ public interface OrderService {
 	public List<CancelOrderApiModel> cancelOrder(String restaurantUuid); 
 	
 	/**
-	 * @Title: completeOrder
-	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @Title: getCompletedOrders
+	 * @Description: Gets the completed orders for a restaurant.
+	 * @param: restaurantId   
+	 * @param: orderType
 	 * @return: List<CancelOrderApiModel>
 	 */
-	public List<CancelOrderApiModel> completeOrder(String restaurantUuid, String status);
+	public List<CancelOrderApiModel> getCompletedOrders(String restaurantUuid, String orderType);
 	
 	/**
 	 * @Title: liveOrder
@@ -312,10 +313,11 @@ public interface OrderService {
 	/**
 	 * @Title: completeOrderAll
 	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @param: restaurantUuid
+	 * @param: orderType
 	 * @return: List<OrderHeader>
 	 */
-	public List<OrderHeader> completeOrderAll(String restaurantUuid ,String status);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String orderType);
 	
 	/**
 	 * @Title: getStatementAllOrders

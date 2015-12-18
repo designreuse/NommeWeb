@@ -333,7 +333,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) ";
+		// Use current date until upcoming orders are no longer automatically accepted.
+		//sql += "and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') ";
+		sql += "and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
@@ -458,22 +461,21 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	/**
 	 * @Title: completeOrderAll
 	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @param: restaurantId
+	 * @param: createDate
+	 * @param: orderType
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(String restaurantUuid, String status) {
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String createDate, String orderType) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		Date date = new Date();
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-		String strDate = fmt.format(date);
 		String hql = "from OrderHeader oh where oh.restaurantUuid=:restaurantUuid and oh.status in(6,7) and date_format(oh.orderDate,'%Y-%m-%d')=:dt";
-		if(StringUtil.isNotEmpty(status)){
-			int type = Integer.parseInt(status);
+		if(StringUtil.isNotEmpty(orderType)){
+			int type = Integer.parseInt(orderType);
 			hql += " and oh.orderType=:type";
 			map.put("type", type);
 		}
-		map.put("dt", strDate);
+		map.put("dt", createDate);
 		map.put("restaurantUuid", restaurantUuid);
 		List<OrderHeader> ohList = this.find(hql, map);
 		return ohList;

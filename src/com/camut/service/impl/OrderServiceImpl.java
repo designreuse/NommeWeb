@@ -1,9 +1,9 @@
 package com.camut.service.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -737,15 +736,21 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * @Title: completeOrder
-	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @Title: getCompletedOrders
+	 * @Description: Gets the completed orders for a restaurant.
+	 * @param: restaurantId   
+	 * @param: orderType
 	 * @return: List<CancelOrderApiModel>
 	 */
 	@Override
-	public List<CancelOrderApiModel> completeOrder(String restaurantUuid, String status) {
+	public List<CancelOrderApiModel> getCompletedOrders(String restaurantUuid, String orderType) {
 		if(StringUtil.isNotEmpty(restaurantUuid)){
-			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, status);
+			// Get the current local date for the restaurant.
+			Date currentLocalTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			String currentLocalDateString = df.format(currentLocalTime);
+			
+			List<OrderHeader> ohList = orderDao.completeOrderAll(restaurantUuid, currentLocalDateString, orderType);
 			List<CancelOrderApiModel> coamList = new ArrayList<CancelOrderApiModel>();
 			for (OrderHeader orderHeader : ohList) {
 				CancelOrderApiModel coam = new CancelOrderApiModel();
@@ -1584,12 +1589,18 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * @Title: completeOrderAll
 	 * @Description: 已完成的订单列表
-	 * @param:  restaurantId   
+	 * @param: restaurantUuid
+	 * @param: orderType
 	 * @return: List<OrderHeader>
 	 */
 	@Override
-	public List<OrderHeader> completeOrderAll(String restaurantUuid, String status) {
-		return orderDao.completeOrderAll(restaurantUuid, status);
+	public List<OrderHeader> completeOrderAll(String restaurantUuid, String orderType) {
+		// Get the current local date for the restaurant.
+		Date currentLocalTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String currentLocalDateString = df.format(currentLocalTime);
+		
+		return orderDao.completeOrderAll(restaurantUuid, currentLocalDateString, orderType);
 	}
 	
 	/**
