@@ -447,7 +447,7 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				DateTime startDateTime = new DateTime(start);
 				
 				// Add a case for 00:00.
-				if (startTime.equals("00:00")) {
+				if (startTime.equals("00:00") && orderDate.after(originalAdjustedDate)) {
 					buffer.append("00:00,");
 				}
 				
