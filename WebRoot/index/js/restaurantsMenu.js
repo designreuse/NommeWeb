@@ -242,7 +242,7 @@ $(function(){
 	
 	/**加载时间下拉框*/
 	function loadOrderDate(orderType,dayElementId,hourElementId){
-		var n = 10;//设置日期为向后延续十天    	
+		var n = 365; //Allow order dates for up to 1 year in the future.
 		var dateSelect = $("#"+dayElementId);//获取页面select元素
 		var orderDay ;
 		dateSelect.empty();
