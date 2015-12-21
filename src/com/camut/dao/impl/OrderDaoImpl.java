@@ -390,7 +390,7 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
 				+ "left join tbl_consumers c on c.uuid = o.consumer_uuid "
-				+ "where o.restaurant_uuid=:restaurantUuid and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
+				+ "where o.restaurant_uuid=:restaurantUuid and o.status IN (2,3) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
