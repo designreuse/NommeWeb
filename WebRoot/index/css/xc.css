@@ -165,7 +165,7 @@ border-left:1px solid white;
 width:5%;
 height:40px;
 color: #fff;
-margin-top:-3px;
+vertical-align:top;
 border-radius: 0 10px 10px 0;
 -webkit-border-radius: 0 10px 10px 0;
 -moz-border-radius: 0 10px 10px 0;
