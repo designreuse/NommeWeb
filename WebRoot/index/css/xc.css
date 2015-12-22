@@ -196,7 +196,18 @@ border-radius: 4px 4px 4px 4px;}
 .login-modal .modal-header h4 {text-transform:uppercase; text-align:left; margin:10px 10px 10px 10px;}
 .login-modal .modal-body {padding-top:0; color:#000000;}
 .login-modal .modal-body .controls {padding:5px;}
-.login-modal .modal-body .controls input {background:#EEEEEE; color:#999999; border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal .modal-body .controls input {background:#EEEEEE; color:#666666; border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
 .login-modal .modal-body .forgotPassword {color:inherit;}
 .login-modal #loginSignIn1 {width:25%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
 border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal #gotoCreateModal {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal #createAccount {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; margin: 0px 5px 0px 5px;}
+.login-modal #sendEmail {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; }
+.login-modal #setNewPassword {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; }
+.login-modal p {
+    padding: 0px 5px 0px 5px;
+}
