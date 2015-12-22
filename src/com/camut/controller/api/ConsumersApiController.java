@@ -21,6 +21,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.framework.constant.LoginTypeConstant;
 import com.camut.framework.constant.MessageConstant;
+import com.camut.framework.constant.MessageConstant.PASSWORD_VALIDATION;
 import com.camut.model.ApiResponse;
 import com.camut.model.CardEntity;
 import com.camut.model.CartHeader;
@@ -73,6 +74,7 @@ import com.camut.utils.MD5Util;
 import com.camut.utils.MailUtil;
 import com.camut.utils.PushUtil;
 import com.camut.utils.StringUtil;
+import com.camut.utils.ValidationUtil;
 
 /**
  * @entity ConsumersApiController .
@@ -130,7 +132,13 @@ public class ConsumersApiController extends BaseAPiModel {
 			consumers.setMobileToken(StringUtil.replace(consumers.getMobileToken(), ">", ""));
 			consumers.setMobileToken(StringUtil.replace(consumers.getMobileToken(), " ", ""));
 		}
-		if (LoginTypeConstant.NOMME == consumers.getLoginType()) {// 平台登录			
+		if (LoginTypeConstant.NOMME == consumers.getLoginType()) {// 平台登录	
+			PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumers.getPassword());
+			if(validationResult != PASSWORD_VALIDATION.VALID){
+				ram.setFlag(GlobalConstant.PASSWORD_ERROR);
+				ram.setResultMessage(validationResult.getMessage());
+				return ram;
+			}
 			int falg = consumersService.consumersLogin(consumers);
 			if (falg == -1) { // 用户名不存在
 				ram.setFlag(GlobalConstant.LOGINNAME_ERROR);
@@ -266,6 +274,12 @@ public class ConsumersApiController extends BaseAPiModel {
 		Log4jUtil.info("用户信息修改接口==>"+consumersApiModel.toString());
 		ResultApiModel ram = new ResultApiModel();
 		if(StringUtil.isNotEmpty(consumersApiModel.getPhone())&&CommonUtil.isNumeric(consumersApiModel.getPhone())){
+			PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumersApiModel.getPassword());
+			if(validationResult != PASSWORD_VALIDATION.VALID){
+				ram.setFlag(-1);
+				ram.setResultMessage(validationResult.getMessage());
+				return ram;
+			}
 			int flag = consumersService.updateConsumers(consumersApiModel);
 			if(flag == -1){//修改失败
 				ram.setResultMessage(MessageConstant.PASSWORD_ERROR);//update failed
@@ -349,6 +363,14 @@ public class ConsumersApiController extends BaseAPiModel {
 	public ResultApiModel forgetNewPassword(ConsumersApiModel consumersApiModel){
 		Log4jUtil.info("根据Email修改密码接口==>"+consumersApiModel.toString());
 		ResultApiModel ram = new ResultApiModel();
+		
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumersApiModel.getPassword());
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			ram.setFlag(-1);
+			ram.setResultMessage(validationResult.getMessage());
+			return ram;
+		}
+		
 		int flag = consumersService.updateConsumersPassword(consumersApiModel);
 		if(flag == -1){//修改失败
 			ram.setResultMessage(MessageConstant.PASSWORD_ERROR);

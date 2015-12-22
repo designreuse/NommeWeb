@@ -19,6 +19,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.framework.constant.MessageConstant;
+import com.camut.framework.constant.MessageConstant.PASSWORD_VALIDATION;
 import com.camut.model.CardEntity;
 import com.camut.model.CartHeader;
 import com.camut.model.Consumers;
@@ -57,6 +58,7 @@ import com.camut.utils.CommonUtil;
 import com.camut.utils.GetLatLngByAddress;
 import com.camut.utils.MD5Util;
 import com.camut.utils.StringUtil;
+import com.camut.utils.ValidationUtil;
 
 @Controller("ConsumersController")
 @RequestMapping("/consumers")
@@ -794,6 +796,15 @@ public class ConsumersController {
 				if(map.get("phone")!=null && map.get("phone").toString().length()>0){
 					consumers.setPhone(map.get("phone").toString());
 				}
+				
+				PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword( map.get("password").toString());
+				if(validationResult != PASSWORD_VALIDATION.VALID){
+					pm.setSuccess(false);
+					pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+					pm.setErrorMsg(validationResult.getMessage());
+					return pm;
+				}
+				
 				int temp = consumersService.updateConsumersForNomme(consumers);
 				if(temp>0){
 					Consumers consumers2 = consumersService.getConsumersByUuid(consumerUuid);
@@ -1130,6 +1141,12 @@ public class ConsumersController {
 	public PageMessage verifyPassword(String password, HttpSession session){
 		PageMessage pm = new PageMessage();
 		pm.setSuccess(false);
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(password);
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+			pm.setErrorMsg(validationResult.getMessage());
+			return pm;
+		}
 		int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
 		Consumers consumers = consumersService.getConsumersById(consumerId);
 		if(consumers!=null && StringUtil.isNotEmpty(password)){

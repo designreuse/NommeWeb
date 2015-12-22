@@ -25,6 +25,7 @@ import com.camut.model.CartHeader;
 import com.camut.model.ViewRestaurant;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.framework.constant.MessageConstant;
+import com.camut.framework.constant.MessageConstant.PASSWORD_VALIDATION;
 import com.camut.model.Consumers;
 import com.camut.model.Restaurants;
 import com.camut.model.api.ConsumersAddressApiModel;
@@ -48,6 +49,7 @@ import com.camut.utils.Log4jUtil;
 import com.camut.utils.MD5Util;
 import com.camut.utils.MailUtil;
 import com.camut.utils.StringUtil;
+import com.camut.utils.ValidationUtil;
 
 
 @Controller("IndexController")
@@ -246,6 +248,14 @@ public class IndexController {
 	public PageMessage login(Consumers consumers,String autoLogin,HttpSession session,HttpServletResponse response){
 		PageMessage pm = new PageMessage();
 		
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumers.getPassword());
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			pm.setSuccess(false);
+			pm.setFlag(GlobalConstant.PASSWORD_ERROR);//0
+			pm.setErrorMsg(validationResult.getMessage());
+			return pm;
+		}
+		
 		int temp = consumersService.consumersLogin(consumers);
 		//-1表示用户名不存在，0表示密码错误，1代表登录成功 
 		if (temp>0){
@@ -311,6 +321,16 @@ public class IndexController {
 	@ResponseBody
 	public PageMessage createAccount(PageCreateConsumerAccount pageConsumerAccount){
 		PageMessage pm = new PageMessage();
+		
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(pageConsumerAccount.getPassword1());
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			pm.setSuccess(false);
+			pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+			pm.setErrorMsg(validationResult.getMessage());
+			System.out.println("error:"+ validationResult.getMessage());
+			return pm;
+		}
+		
 		Consumers consumers = new Consumers();
 		consumers.setFirstName(pageConsumerAccount.getFirstName());
 		consumers.setLastName(pageConsumerAccount.getLastName());
@@ -320,6 +340,7 @@ public class IndexController {
 		consumers.setRegDate(new Date());
 		consumers.setPassword(MD5Util.md5(pageConsumerAccount.getPassword1()));
 		consumers.setUuid(StringUtil.getUUID());
+				
 		int temp  = consumersService.addConsumerForNomme(consumers);
 		//-1增加失败，1增加成功
 		if(temp>0){
@@ -391,6 +412,15 @@ public class IndexController {
 	@ResponseBody
 	public PageMessage resetPassword (String newPassword, HttpSession session){
 		PageMessage pm = new PageMessage();
+		
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(newPassword);
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			pm.setSuccess(false);
+			pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+			pm.setErrorMsg(validationResult.getMessage());
+			return pm;
+		}
+		
 		if(StringUtil.isNotEmpty(newPassword)){
 			if(session.getAttribute("resetPasswordEmail")!=null){
 				String email = (String)session.getAttribute("resetPasswordEmail");

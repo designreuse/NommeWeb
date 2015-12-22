@@ -140,6 +140,7 @@ $(function(){
 	
 	//验证密码格式
 	function passwordValidate(elementId,x,y){
+		return true;
 		var flag = false;
 		var passwordRegExp = /^[A-Za-z0-9]+$/;
 		var password = $.trim($("#"+elementId).val())
@@ -148,13 +149,13 @@ $(function(){
 			showtips(elementId,'Required',x,y);
 		}else if(password.length<6){
 			flag=false;
-			showtips(elementId,'The minimum password length is 6',x,y);
+			showtips(elementId,'Password must be at least 6 characters long',x,y);
 		}else if(passwordRegExp.test(password)){
 			flag = true;
 			hidetips(elementId);
 		}else{
 			flag=false;
-			showtips(elementId,'Password contains only digits and letters',x,y);
+			showtips(elementId,'Password must contain only digits and letters',x,y);
 		}
 		return flag;
 	}
@@ -354,7 +355,7 @@ $(function(){
 						$("#loginInputEmail1").val(val3);
 						$("#myModal").modal('show');
 					}else{
-						showtips("createAccount",msg.errorMsg,x,y);
+						showtips("createAccount",msg.errorMsg,110,45);
 					}
 				}
 			})
