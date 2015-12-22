@@ -5,7 +5,10 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Nomme</title>
+<meta charset="utf-8">
+<title>Nomme - Online Restaurant Ordering</title>
+<meta name="description" content="Order food online from your favourite local restaurants.">
+<meta name="keywords" content="Fast,online,order,food,local,restaurant,Calgary,convenient,mobile,app">
 
 <link href="${ctx }/css/datatables/bootstrap-table.css" rel="stylesheet" type="text/css"/>
 

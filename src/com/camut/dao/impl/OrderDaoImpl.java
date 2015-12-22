@@ -312,7 +312,9 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(localTime);
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d')";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) "
+				+ "and ( (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') and DATE_FORMAT(order_date,'%H:%i') <> '00:00') "
+				+ "OR (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_ADD(DATE_FORMAT(:orderDate,'%Y-%m-%d'), INTERVAL 1 DAY) and DATE_FORMAT(order_date,'%H:%i') = '00:00') )";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
@@ -332,11 +334,11 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 	public List<OrderHeaderId> upcomingOrder(String restaurantUuid, Date localTime) {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String strDate = fmt.format(localTime);
+		// Using current date until upcoming orders are no longer automatically accepted.
 		String sql = "select o.id as orderId from dat_order_header o "
-				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) ";
-		// Use current date until upcoming orders are no longer automatically accepted.
-		//sql += "and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') ";
-		sql += "and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') ";
+				+ "where o.restaurant_uuid=:restaurantUuid and (o.status =2 or o.status=9 or o.status=10) and not (o.payment = 1 and o.charge_id is NULL) "
+				+ "and ( (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') and DATE_FORMAT(order_date,'%H:%i') <> '00:00') "
+				+ "OR (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_ADD(DATE_FORMAT(:orderDate,'%Y-%m-%d'), INTERVAL 1 DAY) and DATE_FORMAT(order_date,'%H:%i') = '00:00') )";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
@@ -360,7 +362,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
 				+ "left join tbl_consumers c on c.uuid = o.consumer_uuid "
-				+ "where o.restaurant_uuid=:restaurantUuid and o.status =3 and DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
+				+ "where o.restaurant_uuid=:restaurantUuid and o.status =3 "
+				+ "and ( (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_FORMAT(:orderDate,'%Y-%m-%d') and DATE_FORMAT(order_date,'%H:%i') <> '00:00') "
+				+ "OR (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_ADD(DATE_FORMAT(:orderDate,'%Y-%m-%d'), INTERVAL 1 DAY) and DATE_FORMAT(order_date,'%H:%i') = '00:00') )"
+				+ "order by o.order_date ASC ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
@@ -390,7 +395,10 @@ public class OrderDaoImpl extends BaseDao<OrderHeader> implements OrderDao {
 				+ "c.firstname as firstName, c.lastname as lastName "
 				+ "from dat_order_header o "
 				+ "left join tbl_consumers c on c.uuid = o.consumer_uuid "
-				+ "where o.restaurant_uuid=:restaurantUuid and o.status IN (2,3) and DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_FORMAT(:orderDate,'%Y-%m-%d') order by o.order_date ASC";
+				+ "where o.restaurant_uuid=:restaurantUuid and o.status IN (2,3) "
+				+ "and ( DATE_FORMAT(order_date,'%Y-%m-%d')>DATE_ADD(DATE_FORMAT(:orderDate, '%Y-%m-%d'), INTERVAL 1 DAY) "
+				+ "OR (DATE_FORMAT(order_date,'%Y-%m-%d')=DATE_ADD(DATE_FORMAT(:orderDate, '%Y-%m-%d'), INTERVAL 1 DAY) AND DATE_FORMAT(order_date,'%H:%i') <> '00:00') ) "
+				+ "order by o.order_date ASC ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("restaurantUuid", restaurantUuid);
 		query.setParameter("orderDate", strDate);
