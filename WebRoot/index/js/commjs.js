@@ -157,7 +157,7 @@ $(function(){
 			flag=false;
 			showtips(elementId,'Password must contain only digits and letters',x,y);
 		}
-		//return flag;
+		return flag;
 	}
 	
 	//验证第二次输入的密码是否和第一次的相等
@@ -355,7 +355,7 @@ $(function(){
 						$("#loginInputEmail1").val(val3);
 						$("#myModal").modal('show');
 					}else{
-						showtips("createAccount",msg.errorMsg,x,y);
+						showtips("createAccount",msg.errorMsg,110,45);
 					}
 				}
 			})
