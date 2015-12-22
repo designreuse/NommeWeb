@@ -419,10 +419,13 @@ html,body{
 /* Hide create account buttons until we're ready to let users create accounts. */
 #loginModalButtons > #gotoCreateModal,
 #loginModalButtons > div {
-	display: none;
+	display: block;
 }
 #loginSignIn1 {
 	margin-bottom: 20px;
+}
+#gotoCreateModal {
+	margin-top: 20px;
 }
 
 /* Fix a padding issue in the dish menu. */

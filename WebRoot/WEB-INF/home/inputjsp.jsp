@@ -38,11 +38,15 @@
 			<div id="loginModalButtons" style=" padding:15px 25px 0px 25px;">
 				<button id="loginSignIn1" class="btn btn-large btn-block btn-primary" type="button"
 					>Login</button>
-				<div align="center" style="margin:10px 0;">
-					<strong>OR</strong>
+				<div style="margin:10px 0;border-top:1px solid #eeeeee;padding-top: 15px">
+					<strong>OR ARE YOU A NEW USER?</strong>
 				</div>
-				<button class="btn btn-default btn-block" type="button" id="gotoCreateModal"
-					style="height:45px; border:#6C9C46 2px solid; color:#6C9C46;">Create Account</button>
+				<div>
+					<span>Create an account to save your location, favorite dishes, restaurants and much more...</span>
+				</div>
+				<div>
+					<button class="btn btn-large btn-block btn-primary" type="button" id="gotoCreateModal">Create Account</button>
+				</div>
 				<div class="thirdPartyLogin" style="margin-top:15px;width:100px;height:35px;margin-left: 370px;">
 					<div class="facebook-logo" name="facebook">
 					</div>
@@ -67,7 +71,7 @@
 				
 
 <!-- 新建账号的模态框 -->
-<div class="modal fade" id="createAccountModal" tabindex="-2" role="dialog"
+<div class="login-modal modal fade" id="createAccountModal" tabindex="-2" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="width:500px;">
 		<div class="modal-content">
@@ -115,7 +119,7 @@
 				</div>
 			</form>
 			</div>
-			<div style=" padding:0 15px 15px;">
+			<div style=" padding:0px 20px 15px 20px;">
 				<!-- <button class="btn btn-large btn-block btn-primary"
 					type="button"
 					style="height:45px; background:#88878C; border:#88878C">Sign
@@ -123,8 +127,7 @@
 				<div align="center" style="margin:10px 0;">
 					<strong>OR</strong>
 				</div> -->
-				<button class="btn btn-default btn-block" type="button" id = "createAccount"
-					style="height:45px; border:#6C9C46 2px solid; color:#6C9C46;">Create
+				<button class="btn btn-large btn-block btn-primary" type="button" id = "createAccount">Create
 					Account</button>
 			</div>
 			</br>
@@ -133,7 +136,7 @@
 </div>
 
 <!-- 忘记密码获 取新密码模态框 -->
-<div class="modal fade" id="forgotPasswordModal" tabindex="-3" role="dialog"
+<div class="login-modal modal fade" id="forgotPasswordModal" tabindex="-3" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="width:500px;">
 		<div class="modal-content">
@@ -151,9 +154,8 @@
 					<input type="email" class="form-control" id="forgetPasswordEmail" placeholder="Get verification code by email"
 						style="height:45px;margin-bottom:10px;">
 				</div>
-				<div style=" padding:10px 15px 15px 0px;">
+				<div style=" padding:5px;">
 					<button id="sendEmail" class="btn btn-large btn-block btn-primary" type="button"
-						style="height:45px; width:458px; background:#88878C; border:#88878C" 
 						>Send Email</button>
 				</div>
 				<div id = "showCodeInput" style="display:none;">
