@@ -92,12 +92,15 @@
 					<!-- xc-biaodan-qian -->
 					<!-- id="autocomplete" placeholder="Enter your address"
 	             onFocus="geolocate()" -->
-				</div>
+				</div>	
 			</div>
 		</div>
 	</div>
 	
+	
+	
 	<div class="xc-footer-menu container" align="center">
+		
 		<p>
 			<a href="#" id = "index-contactus"><span>Contact Us</span></a>
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
@@ -105,6 +108,10 @@
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
 		</p>
+		<div style="padding-top:15px">
+			<a href="https://play.google.com/store/apps/details?id=com.canada.nomme&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1"><img alt="Get it on Google Play" style="height: 40px;" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" /></a>
+				&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://itunes.apple.com/ca/app/nomme/id1044166421"><img alt="Download on the App Store" style="height: 40px;" src="images/apple_app_store_badge.png"/></a>
+		</div>
 		<jsp:include page="./contactUs.jsp"></jsp:include>
 		<jsp:include page="./about.jsp"></jsp:include>
 		<jsp:include page="./faq.jsp"></jsp:include>
