@@ -321,6 +321,16 @@ public class IndexController {
 	@ResponseBody
 	public PageMessage createAccount(PageCreateConsumerAccount pageConsumerAccount){
 		PageMessage pm = new PageMessage();
+		
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(pageConsumerAccount.getPassword1());
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			pm.setSuccess(false);
+			pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+			pm.setErrorMsg(validationResult.getMessage());
+			System.out.println("error:"+ validationResult.getMessage());
+			return pm;
+		}
+		
 		Consumers consumers = new Consumers();
 		consumers.setFirstName(pageConsumerAccount.getFirstName());
 		consumers.setLastName(pageConsumerAccount.getLastName());
@@ -330,15 +340,7 @@ public class IndexController {
 		consumers.setRegDate(new Date());
 		consumers.setPassword(MD5Util.md5(pageConsumerAccount.getPassword1()));
 		consumers.setUuid(StringUtil.getUUID());
-		
-		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumers.getPassword());
-		if(validationResult != PASSWORD_VALIDATION.VALID){
-			pm.setSuccess(false);
-			pm.setFlag(GlobalConstant.PASSWORD_ERROR);
-			pm.setErrorMsg(validationResult.getMessage());
-			return pm;
-		}
-		
+				
 		int temp  = consumersService.addConsumerForNomme(consumers);
 		//-1增加失败，1增加成功
 		if(temp>0){

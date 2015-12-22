@@ -1141,6 +1141,12 @@ public class ConsumersController {
 	public PageMessage verifyPassword(String password, HttpSession session){
 		PageMessage pm = new PageMessage();
 		pm.setSuccess(false);
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(password);
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+			pm.setErrorMsg(validationResult.getMessage());
+			return pm;
+		}
 		int consumerId =((Consumers)session.getAttribute("consumer")).getId().intValue();
 		Consumers consumers = consumersService.getConsumersById(consumerId);
 		if(consumers!=null && StringUtil.isNotEmpty(password)){

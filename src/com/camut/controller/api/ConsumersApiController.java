@@ -135,7 +135,7 @@ public class ConsumersApiController extends BaseAPiModel {
 		if (LoginTypeConstant.NOMME == consumers.getLoginType()) {// 平台登录	
 			PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumers.getPassword());
 			if(validationResult != PASSWORD_VALIDATION.VALID){
-				ram.setFlag(-1);
+				ram.setFlag(GlobalConstant.PASSWORD_ERROR);
 				ram.setResultMessage(validationResult.getMessage());
 				return ram;
 			}
@@ -363,6 +363,14 @@ public class ConsumersApiController extends BaseAPiModel {
 	public ResultApiModel forgetNewPassword(ConsumersApiModel consumersApiModel){
 		Log4jUtil.info("根据Email修改密码接口==>"+consumersApiModel.toString());
 		ResultApiModel ram = new ResultApiModel();
+		
+		PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword(consumersApiModel.getPassword());
+		if(validationResult != PASSWORD_VALIDATION.VALID){
+			ram.setFlag(-1);
+			ram.setResultMessage(validationResult.getMessage());
+			return ram;
+		}
+		
 		int flag = consumersService.updateConsumersPassword(consumersApiModel);
 		if(flag == -1){//修改失败
 			ram.setResultMessage(MessageConstant.PASSWORD_ERROR);
