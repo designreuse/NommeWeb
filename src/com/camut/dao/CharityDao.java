@@ -131,6 +131,17 @@ public interface CharityDao {
 	 */
 	public List<Map<String, Object>> getOneCharityDonation(String searchMonth, String charityId, PageFilter pf);
 	
+	/**
+	 * @Title: getConsumerCharityDonations
+	 * @Description: Gets all donations a consumer has made to a charity over a given time period.
+	 * @param consumerUuid
+	 * @param charityId
+	 * @param startDate
+	 * @param endDate
+	 * @return double
+	 */
+	public double getConsumerCharityDonations(String consumerUuid, String charityId, String startDate, String endDate);
+	
 	
 	
 }

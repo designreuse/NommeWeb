@@ -340,4 +340,36 @@ public class CharityDaoImpl extends BaseDao<Charity> implements CharityDao {
 		return query.list();
 	}
 	
+	/**
+	 * @Title: getConsumerCharityDonations
+	 * @Description: Gets all donations a consumer has made to a charity over a given time period.
+	 * @param consumerUuid
+	 * @param charityId
+	 * @param startDate
+	 * @param endDate
+	 * @return double
+	 */
+	@Override
+	public double getConsumerCharityDonations(String consumerUuid, String charityId, String startDate, String endDate){
+		String sql = "SELECT SUM(oc.money) as totalDonated "
+				+ "FROM nomme.tbl_order_charity oc "
+				+ "INNER JOIN nomme.dat_order_header oh "
+				+ "ON oc.order_id = oh.id "
+				+ "WHERE oh.consumer_uuid = :consumerUuid "
+				+ "AND oc.charity_id = :charityId "
+				+ "AND DATE_FORMAT(oh.createdate, '%Y-%m-%d') >= :startDate "
+				+ "AND DATE_FORMAT(oh.createdate, '%Y-%m-%d') <= :endDate ";
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		query.setParameter("consumerUuid", consumerUuid);
+		query.setParameter("charityId", charityId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<Double> queryList = query.list();
+		if (queryList.size() > 0 && queryList.get(0) != null) {
+			return queryList.get(0);
+		} else {
+			return 0;
+		}
+	}
+	
 }
