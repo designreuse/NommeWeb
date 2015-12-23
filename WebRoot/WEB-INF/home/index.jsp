@@ -98,6 +98,8 @@
 				</div>	
 			</div>
 		</div>
+		
+		<p>Enjoy extra discounts with Nomme</p>
 	</div>
 	
 	

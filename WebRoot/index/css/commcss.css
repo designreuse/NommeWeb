@@ -432,3 +432,9 @@ html,body{
 #menu .col-md-4 > .row {
     padding-bottom: 10px;
 }
+
+/* Style the discount list. */
+#discountList h5 {
+	color:red;
+	font-size:18px;
+}
