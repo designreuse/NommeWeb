@@ -158,7 +158,7 @@
 					<button id="sendEmail" class="btn btn-large btn-block btn-primary" type="button"
 						>Send Email</button>
 				</div>
-				<div id = "showCodeInput" style="display:none;">
+				<div id = "showCodeInput" style="display:none; padding-top: 15px;">
 				<p>Verification code</p>
 				<div class="controls">
 					<input type="email" class="form-control" maxlength="6"
@@ -181,10 +181,8 @@
 						style="height:45px;margin-bottom:10px;">
 				</div>
 				
-				<div style=" padding:10px 15px 15px 0px;">
-					<button class="btn btn-default btn-block" type="button" 
-							id="setNewPassword"
-						style="height:45px; width:458px; border:#6C9C46 2px solid; color:#6C9C46;">Set New Password</button>
+				<div style=" padding:10px 15px 15px 5px;">
+					<button class="btn btn-large btn-block btn-primary" type="button" id="setNewPassword">Set New Password</button>
 				</div>
 				</div>
 			</div>
