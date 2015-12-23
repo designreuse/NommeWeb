@@ -100,7 +100,7 @@
 		</div>
 		
 		<p>Enjoy extra discounts up to 15% with Nomme</p>
-		<p>Officially launched January 1, 2016</p>
+		<p>Officially launched January 10, 2016</p>
 	</div>
 	
 	
