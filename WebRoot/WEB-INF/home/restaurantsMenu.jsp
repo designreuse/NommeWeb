@@ -202,7 +202,7 @@
 				</div>
 				<!-- 优惠券展开内容 -->
 				<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-					<div class="panel-body">
+					<div id="discountList" class="panel-body">
 						<div style="position:relative;">
 							<div align="right" style=" font-size:18px; padding-top:5px; position:absolute;background-color: #EBECED; right:0px; height:30px; top:-50px; z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
