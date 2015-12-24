@@ -229,7 +229,7 @@ $(function(){
 	$("#pageContent").on("click","#email-save",function(){
 		var orginalEmail = $.trim($("#orginal-email").text());
 		var newEmail = $.trim($("#input-email").val());
-		var emailRegExp = /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/;
+		var emailRegExp = /^[a-zA-Z\d]+(\.[a-zA-Z\d]+)*@([\da-zA-Z](-[\da-zA-Z])?)+(\.{1,2}[a-zA-Z]+)+$/;
 		if(newEmail.length==0){
 			showtips("input-email","Required",20,38);
 		}else if(orginalEmail==newEmail){

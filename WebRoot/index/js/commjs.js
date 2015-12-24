@@ -93,7 +93,7 @@ $(function(){
 	//验证邮箱格式
 	function loginEmailValidate(elementId,x,y){
 		var flag = false;
-		var emailRegExp = /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/;
+		var emailRegExp = /^[a-zA-Z\d]+(\.[a-zA-Z\d]+)*@([\da-zA-Z](-[\da-zA-Z])?)+(\.{1,2}[a-zA-Z]+)+$/;
 		// /^[a-z]([a-z0-9]*[-_]?[a-z0-9]+)*@([a-z0-9]*[-_]?[a-z0-9]+)+[\.][a-z]{2,3}([\.][a-z]{2})?$/i; 
 		// /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/;
 		var email = $.trim($("#"+elementId).val())

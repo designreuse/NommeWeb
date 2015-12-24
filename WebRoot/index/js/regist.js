@@ -590,7 +590,7 @@ $(function(){
 	//验证邮箱格式
 	function loginEmailValidate(elementId,x,y){
 		var flag = false;
-		var emailRegExp = /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/;
+		var emailRegExp = /^[a-zA-Z\d]+(\.[a-zA-Z\d]+)*@([\da-zA-Z](-[\da-zA-Z])?)+(\.{1,2}[a-zA-Z]+)+$/;
 		var email = $.trim($("#"+elementId).val())
 		if(email==""){
 			flag=false;
