@@ -154,7 +154,7 @@
 					<input type="email" class="form-control" id="forgetPasswordEmail" placeholder="Get verification code by email"
 						style="height:45px;margin-bottom:10px;">
 				</div>
-				<div style=" padding:5px;">
+				<div style=" padding:5px 5px 15px 5px;">
 					<button id="sendEmail" class="btn btn-large btn-block btn-primary" type="button"
 						>Send Email</button>
 				</div>
