@@ -6,9 +6,9 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Nomme - Online Restaurant Ordering</title>
+<title>Nomme - Order Takeout and Delivery from your favourite resturants online</title>
 <meta name="description" content="Order food online from your favourite local restaurants.">
-<meta name="keywords" content="Fast,online,order,food,local,restaurant,Calgary,convenient,mobile,app">
+<meta name="keywords" content="Fast,online,order,food,delivery,takeout,local,restaurant,Calgary,convenient,mobile,app">
 
 <link href="${ctx }/css/datatables/bootstrap-table.css" rel="stylesheet" type="text/css"/>
 
