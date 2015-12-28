@@ -36,7 +36,7 @@
 		<div class="row">
 			<div>
 				<a name="logo" href="javascript:void(0)">
-					<img src="images/xc-logo.png">
+					<img src="images/xc-logo.png" alt="Online Food Ordering" />
 				</a>
 			</div>
 			<div>
@@ -88,7 +88,7 @@
 					</span>
 					<span style="">
 						<button class="btn xc-btn-success " name="searchBtn" type="button">
-							<img src="images/xc-fdj.png">
+							<img src="images/xc-fdj.png" alt="restaurant food" />
 						</button>
 					</span>
 					
