@@ -8,7 +8,7 @@
 <meta charset="utf-8">
 <title>Nearby Restaurants - Nomme</title>
 <meta name="description" content="Restaurants near your location.">
-<meta name="keywords" content="Calgary,Asian,Canadian,Chinese,Coffee,Dinner">
+<meta name="keywords" content="Calgary,Asian,Canadian,Chinese,Coffee,Dinner,Thai,Japanese,Bubbletea">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ceshi</title>
 <link rel="stylesheet" href="${ctx}/index/css/bootstrap.min.css">
