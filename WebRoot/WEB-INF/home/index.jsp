@@ -9,6 +9,7 @@
 <title>Nomme - Order Takeout and Delivery from your favourite restaurants online</title>
 <meta name="description" content="Order food online from your favourite local restaurants.">
 <meta name="keywords" content="Fast,online,order,food,local,restaurant,Calgary,convenient,mobile,app">
+<meta name="robots" content="follow">
 <meta name="msvalidate.01" content="1B70D3EFDD4AD611F6224EF9E9C8DF70" />
 
 <link href="${ctx }/css/datatables/bootstrap-table.css" rel="stylesheet" type="text/css"/>
