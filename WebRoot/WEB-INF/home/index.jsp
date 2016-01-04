@@ -129,7 +129,7 @@
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
 		</p>
 		<div style="padding-top:15px">
-			<span class="col-sm-3"></span>
+			<span class="col-sm-3">&nbsp;</span>
 			<span class="col-sm-6 app_links" align="center">
 				<a href="https://play.google.com/store/apps/details?id=com.canada.nomme">
 					<img alt="Get it on Google Play" style="height: 40px;" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" />
@@ -139,7 +139,7 @@
 					<img alt="Download on the App Store" style="height: 40px;" src="images/apple_app_store_badge.png"/>
 				</a>
 			</span>
-			<span class="col-sm-3"></span>
+			<span class="col-sm-3">&nbsp;</span>
 		</div>
 		<jsp:include page="./contactUs.jsp"></jsp:include>
 		<jsp:include page="./about.jsp"></jsp:include>
