@@ -35,18 +35,30 @@
 <div id="fb-root"></div>
 	<div class="container xc-top">
 		<div class="row">
-			<div>
+			<span class="col-sm-6">
 				<a name="logo" href="javascript:void(0)">
 					<img src="images/xc-logo.png" alt="Online Food Ordering" />
 				</a>
-			</div>
-			<div>
+			</span>
+			<span class="col-sm-6" align="right">
 			
-				<div class="xc-top-login" style="display: ${empty sessionScope.consumer?'block':'none'}">
+				<span class="social_media_links">
+					<a href="https://www.facebook.com/Nomme-1645977468983563/">
+						<img alt="Visit Nomme on Facebook" src="images/facebook_logo.png" />
+					</a>
+					<a href="https://twitter.com/Nomme_app">
+						<img alt="Follow Us on Twitter @Nomme_app" src="images/twitter_logo.png" />
+					</a>
+					<a href="https://www.instagram.com/nomme_nomme/">
+						<img alt="Visit Nomme on Instagram" src="images/instagram_logo.png" />
+					</a>
+				</span>
+			
+				<span class="xc-top-login" style="display: ${empty sessionScope.consumer?'inline-block':'none'}">
 					<li><a href="#myModal" data-toggle="modal" data-target="#myModal" id="signIn0">Sign in</a></li>
-				</div>
+				</span>
 				<!--登陆后显示-->
-				<div class="xc-top-login-in" style="display: ${empty sessionScope.consumer?'none':'block'}">
+				<span class="xc-top-login-in" style="display: ${empty sessionScope.consumer?'none':'inline-block'}">
 					<li>
 						<div class="dropdown">
 							<button class="dropdown-toggle" type="button" id="dropdownMenu1"
@@ -65,10 +77,11 @@
 							</ul>
 						</div>
 					</li>
-				</div>
+				</span>
+				
 				<!-- 插入用户帐号相关功能模态框 -->
 				<jsp:include page="./inputjsp.jsp"></jsp:include>
-			</div>
+			</span>
 		</div>
 	</div>
 
@@ -116,17 +129,7 @@
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
 		</p>
 		<div style="padding-top:15px">
-			<span class="col-sm-3 social_media_links">
-				<a href="https://www.facebook.com/Nomme-1645977468983563/">
-					<img alt="Visit Nomme on Facebook" src="images/facebook_logo.png" />
-				</a>
-				<a href="https://twitter.com/Nomme_app">
-					<img alt="Follow Us on Twitter @Nomme_app" src="images/twitter_logo.png" />
-				</a>
-				<a href="https://www.instagram.com/nomme_nomme/">
-					<img alt="Visit Nomme on Instagram" src="images/instagram_logo.png" />
-				</a>
-			</span>
+			<span class="col-sm-3">&nbsp;</span>
 			<span class="col-sm-6 app_links" align="center">
 				<a href="https://play.google.com/store/apps/details?id=com.canada.nomme">
 					<img alt="Get it on Google Play" style="height: 40px;" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" />
@@ -136,7 +139,7 @@
 					<img alt="Download on the App Store" style="height: 40px;" src="images/apple_app_store_badge.png"/>
 				</a>
 			</span>
-			<span class="col-sm-3"></span>
+			<span class="col-sm-3">&nbsp;</span>
 		</div>
 		<jsp:include page="./contactUs.jsp"></jsp:include>
 		<jsp:include page="./about.jsp"></jsp:include>
