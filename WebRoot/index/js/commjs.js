@@ -471,6 +471,11 @@ $(function(){
 	});
 	/**各页面公用的登录、注册、找回密码功能 结束*/
 	
+	//Contact Us
+	$("#index-contactus").click(function(){
+		$("#myContactUs").modal('show');
+	});
+	
 	//About 
 	$("#index-about").click(function(){
 		$("#myAbout").modal('show');

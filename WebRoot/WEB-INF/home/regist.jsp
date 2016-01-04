@@ -227,13 +227,14 @@
 	<input type="hidden" id = "currentConsumerUuid" value="${sessionScope.consumer.uuid}">
 	<input type="hidden" id = "checkOutOrderType" value="${sessionScope.checkOutOrderType}"><!-- 订购单类型 -->
 	<div class="search-bottom" align="center">
-		<a href="./contactus" id = "index-contactus"><span>Contact Us</span></a>
+		<a href="#" id = "index-contactus"><span>Contact Us</span></a>
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-about"><span>About</span></a>
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-faq"><span>FAQ</span></a>
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-termofuse"><span>Terms of Use</span></a>
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
 	</div>
 	<div>
+		<jsp:include page="./contactUs.jsp"></jsp:include>
 		<jsp:include page="./about.jsp"></jsp:include>
 		<jsp:include page="./faq.jsp"></jsp:include>
 		<jsp:include page="./termOfUse.jsp"></jsp:include>

@@ -84,15 +84,6 @@ public class IndexController {
 	}
 	
 	/**
-	 * @Description: Go to contact us page.
-	 * @return String url
-	 */
-	@RequestMapping(value = "/contactus")
-	public String contactUsPage(){
-		return "home/contactUs";
-	}
-	
-	/**
 	 * @Description: 打开支付页面; go to payment page
 	 * @param    
 	 * @return String  url
