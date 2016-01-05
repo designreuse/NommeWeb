@@ -658,7 +658,39 @@
 			</div>
 		</div>
 		
-		
+		<!-- changedRestaurantModal -->
+		<div class="modal fade" id="modalChangedRestaurant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width:500px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 id="myModalLabel" align="center" name="headerChangeRestaurantModal">Restaurant Changed</h4>
+					</div>
+					<div class="modal-body">
+						<h4>
+							<div class="controls" name="divChangeRestaurantTip" style="width:428; margin-left: 15px;margin-bottom: 20px;">
+								
+							</div>
+						</h4>
+						<div style="padding: 0 15px 15px;">
+							<button id="btnClearCart"
+								class="btn btn-large btn-block btn-primary" type="button"
+								style="height: 45px; background: #88878C; border: #88878C">Clear Cart</button>
+							<div align="center" style="margin: 10px 0;">
+								<strong>OR</strong>
+							</div>
+							<button class="btn btn-default btn-block" type="button"
+								id="btnGoBackPreviousRestaurant"
+								style="height: 45px; border: #6C9C46 2px solid; color: #6C9C46;">Go
+								Back</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<!-- reservation 如果是当天的订单，等待商家确认订桌的模态框 -->
 		<div class="modal fade" id="waitAffirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
