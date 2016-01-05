@@ -637,4 +637,21 @@ public class CommonUtil {
 		}
 		return true;
 	}
+	
+	/**
+	 * @Title: isPhone
+	 * @Description: Checks to see if given string is a valid phone number.
+	 * @param str
+	 * @return: boolean
+	 */
+	public static boolean isPhone(String str) {
+		String phoneExpReg = "^([0-9]{3})?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
+		if(StringUtil.isEmpty(str)) {
+			return false;
+		} else if(str.matches(phoneExpReg)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
