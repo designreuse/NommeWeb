@@ -158,6 +158,12 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				else if(startH-12==0){
 					pageOpenTime.setStarttime(ot.getStarttime()+"PM");
 				}
+				else if(startH-12 > 0 && startH-12 < 10) {
+					pageOpenTime.setStarttime("0"+(startH-12)+":"+startM+"PM");
+				}
+				else if(startH==24){
+					pageOpenTime.setStarttime(startH-12+":"+startM+"AM");
+				}
 				else{
 					pageOpenTime.setStarttime(startH-12+":"+startM+"PM");
 				}
@@ -169,6 +175,12 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				}
 				else if(endH-12==0){
 					pageOpenTime.setEndtime(ot.getEndtime()+"PM");
+				}
+				else if(endH-12 > 0 && endH-12 < 10) {
+					pageOpenTime.setEndtime("0"+(endH-12)+":"+endM+"PM");
+				}
+				else if(endH==24){
+					pageOpenTime.setEndtime(endH-12+":"+endM+"AM");
 				}
 				else{
 					pageOpenTime.setEndtime(endH-12+":"+endM+"PM");

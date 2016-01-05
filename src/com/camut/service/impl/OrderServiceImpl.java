@@ -431,6 +431,9 @@ public class OrderServiceImpl implements OrderService {
 				else if(h-12==0){
 					coam.setOrderDateStr(tablename1+"PM");
 				}
+				else if(h==24){
+					coam.setOrderDateStr(tablename1+"AM");
+				}
 				else{
 					coam.setOrderDateStr(tablename1+"PM");
 				}
@@ -719,6 +722,9 @@ public class OrderServiceImpl implements OrderService {
 				else if(h-12==0){
 					coam.setOrderDateStr(tablename1+"PM");
 				}
+				else if(h==24){
+					coam.setOrderDateStr(tablename1+"AM");
+				}
 				else{
 					coam.setOrderDateStr(tablename1+"PM");
 				}
@@ -775,6 +781,9 @@ public class OrderServiceImpl implements OrderService {
 				}
 				else if(h-12==0){
 					coam.setOrderDateStr(tablename1+"PM");
+				}
+				else if(h==24){
+					coam.setOrderDateStr(tablename1+"AM");
 				}
 				else{
 					coam.setOrderDateStr(tablename1+"PM");
@@ -855,6 +864,9 @@ public class OrderServiceImpl implements OrderService {
 				else if(h-12==0){
 					a.setOrderDateStr(tablename1+"PM");
 				}
+				else if(h==24){
+					a.setOrderDateStr(tablename1+"AM");
+				}
 				else{
 					a.setOrderDateStr(tablename1+"PM");
 				}
@@ -895,6 +907,9 @@ public class OrderServiceImpl implements OrderService {
 				}
 				else if(h-12==0){
 					a.setOrderDateStr(tablename1+"PM");
+				}
+				else if(h==24){
+					a.setOrderDateStr(tablename1+"AM");
 				}
 				else{
 					a.setOrderDateStr(tablename1+"PM");

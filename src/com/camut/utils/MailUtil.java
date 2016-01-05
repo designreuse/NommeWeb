@@ -19,7 +19,7 @@ public class MailUtil {
 
 	public static void sendRegistrationEmail(String firstName, String address)
 	{
-		MailUtil.sendMail("Nomme.ca: New account", "<p>Hi " +  firstName + ",</p><p>Thank you for creating a Nomme account! Your login is " + address + ".</p><p>Have a great day!<br>The Nomme team</p>", address); 
+		MailUtil.sendMail("Nomme.ca: New account", "<p>Hi " +  firstName + ",</p><p>Thank you for creating a Nomme account! Ordering food will never be the same with our simple, user-friendly system. With Nomme, you save time by making reservations on the go. No more lines! Making payments is as easy as clicking a button. For a limited time, we offer up to 15% off your order. With every order, we make an optional donation to a good cause! Start ordering now!</p><p>Your login is " + address + ".</p><p>Have a great day!<br>The Nomme team</p>", address); 
 	}
 	
 	/**

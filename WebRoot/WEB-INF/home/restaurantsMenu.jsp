@@ -6,7 +6,8 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Nomme</title>
+<title>${restaurant.restaurantName} - Nomme</title>
+<meta name="description" content="${restaurant.features}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ceshi</title>
 <link rel="stylesheet" href="${ctx}/index/css/bootstrap.min.css">
@@ -22,6 +23,17 @@
 <script src="${ctx}/framework/plugins/datatimepicker/bootstrap-datetimepicker.js" type="text/javascript"></script> 
 <script src="${ctx}/framework/plugins/paginator/bootstrap-paginator.js"></script>
 <script src="${ctx}/index/js/commjs.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71565761-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </head>
 <body>
@@ -201,7 +213,7 @@
 				</div>
 				<!-- 优惠券展开内容 -->
 				<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-					<div class="panel-body">
+					<div id="discountList" class="panel-body">
 						<div style="position:relative;">
 							<div align="right" style=" font-size:18px; padding-top:5px; position:absolute;background-color: #EBECED; right:0px; height:30px; top:-50px; z-index:1025;">
 								<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -830,4 +842,7 @@
 	<script src="${ctx}/index/js/restaurantsMenu.js"></script>
 	<script type="text/javascript" src="${ctx}/index/js/cart.js"></script>
 </body>
+
+
+
 </html>

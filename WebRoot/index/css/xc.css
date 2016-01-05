@@ -29,18 +29,14 @@ a:active {
 	 
 }
 .xc-top {margin:40px auto;}
-.xc-top > .row > div:nth-child(1) {float:left;}
-.xc-top > .row > div:nth-child(2) {float:right;}
-.xc-top > .row > div:nth-child(3) {float:right;}
-.xc-top-logo { float:left;}
-.xc-top-login { float:right; margin-top:5px; padding:5px 10px;}
+.xc-top-login { margin-top:5px; padding:5px 10px;}
 .xc-top-login li{ font-size:17pt; DISPLAY: block; border:1px solid white;}
 .xc-top-login li a {color:#FFFFFF; padding:5px 10px; DISPLAY: block;}
 .xc-top-login li a:hover {background:#7fbf2e;}
-.xc-top-login-in {float:right; margin-top:10px; padding:5px 10px;}
+.xc-top-login-in {margin-top:10px; padding:5px 10px;}
 .xc-top-login-in li:hover {background:#7fbf2e;}
 .xc-top-login-in button {color:#FFFFFF !important; border:1px solid #fff; background:none;}
-.xc-footer-menu {position:absolute; text-align:center; bottom:20px; width:100%;}
+.xc-footer-menu {margin-top:150px;}
 .xc-footer-menu p{ color:#FFFFFF; margin:15px auto 0; font-size:14pt; text-align:center;}
 .xc-footer-menu p span { color:#FFFFFF;}
 .xc-top-login-in {font-size:17pt; margin-top:5px;}
@@ -196,7 +192,22 @@ border-radius: 4px 4px 4px 4px;}
 .login-modal .modal-header h4 {text-transform:uppercase; text-align:left; margin:10px 10px 10px 10px;}
 .login-modal .modal-body {padding-top:0; color:#000000;}
 .login-modal .modal-body .controls {padding:5px;}
-.login-modal .modal-body .controls input {background:#EEEEEE; color:#999999; border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal .modal-body .controls input {background:#EEEEEE; color:#666666; border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
 .login-modal .modal-body .forgotPassword {color:inherit;}
 .login-modal #loginSignIn1 {width:25%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
 border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal #gotoCreateModal {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0;}
+.login-modal #createAccount {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; margin: 0px 5px 0px 5px;}
+.login-modal #sendEmail {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; }
+.login-modal #setNewPassword {width:40%; height:45px; text-transform:uppercase; font-weight:bold; background:#222222;
+border:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; }
+.login-modal p {
+    padding: 0px 5px 0px 5px;
+}
+
+/* Social Media Links */
+.social_media_links {margin-right:40px;}
+.social_media_links img {margin:0 10px 0 10px; max-width:40px; max-height:40px;}
