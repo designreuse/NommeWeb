@@ -265,7 +265,7 @@ public class ConsumersApiController extends BaseAPiModel {
 	public ResultApiModel updateConsumers(ConsumersApiModel consumersApiModel){	
 		Log4jUtil.info("用户信息修改接口==>"+consumersApiModel.toString());
 		ResultApiModel ram = new ResultApiModel();
-		if(StringUtil.isNotEmpty(consumersApiModel.getPhone())&&CommonUtil.isNumeric(consumersApiModel.getPhone())){
+		if(StringUtil.isNotEmpty(consumersApiModel.getPhone())&&CommonUtil.isPhone(consumersApiModel.getPhone())){
 			int flag = consumersService.updateConsumers(consumersApiModel);
 			if(flag == -1){//修改失败
 				ram.setResultMessage(MessageConstant.PASSWORD_ERROR);//update failed
