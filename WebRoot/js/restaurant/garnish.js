@@ -7,7 +7,7 @@
 			return value == 0 ? 'radio' : 'checkbox';
 		}
 		function mustForMatter(value, row, index) {
-			return value == 0 ? 'yes' : 'no';
+			return value == 1 ? 'yes' : 'no';
 		}
 		
 		//var appPath = "";
