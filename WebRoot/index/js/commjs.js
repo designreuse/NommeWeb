@@ -140,9 +140,7 @@ $(function(){
 	
 	//验证密码格式
 	function passwordValidate(elementId,x,y){
-		return true;
 		var flag = false;
-		var passwordRegExp = /^[A-Za-z0-9]+$/;
 		var password = $.trim($("#"+elementId).val())
 		if(password==""){
 			flag=false;
@@ -150,12 +148,9 @@ $(function(){
 		}else if(password.length<6){
 			flag=false;
 			showtips(elementId,'Password must be at least 6 characters long',x,y);
-		}else if(passwordRegExp.test(password)){
+		}else{
 			flag = true;
 			hidetips(elementId);
-		}else{
-			flag=false;
-			showtips(elementId,'Password must contain only digits and letters',x,y);
 		}
 		return flag;
 	}

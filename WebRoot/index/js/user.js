@@ -13,6 +13,7 @@ $(function(){
 	var currentAddressId; //当前维护的地址的Id
 	var currentCardId; //当前的信用卡Id
 	var refundOrderSuccess = false;//退单退款成功标记
+	var updateReturnedMsg = ""; // stores the return msg from the AJAX call
 	
 	$("a[name='logo']").click(function(){
 		window.location = appPath+"/index/index";
@@ -125,6 +126,9 @@ $(function(){
 			success: function(data){
 				var msg = $.parseJSON(data);
 				updatesuccess = msg.success;
+				if(!msg.success){
+					updateReturnedMsg = msg.errorMsg;
+				}
 			}
 		})
 	}
@@ -349,7 +353,7 @@ $(function(){
 				$("#password-edit").css("display","block");
 				$("div[name='password-edit-div']").css("display","none");
 			}else{
-				showtips("password-save","Edit password error",20,38);
+				showtips("password-save", updateReturnedMsg, 20, 38);
 			}
 		}
 	});

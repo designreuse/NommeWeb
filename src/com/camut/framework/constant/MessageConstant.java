@@ -72,7 +72,6 @@ public class MessageConstant {
 			_message = message;
 		}
 
-
 		public final int getValue() {
 			return _value;
 		}
