@@ -19,6 +19,7 @@ $(function(){
 	var resNewReservation = false;//reservation仅订桌按钮
 	var newOrderType = 2;//
 	var reservationOrderId = 0;
+	var shouldGoBack = false;
 
 //------------------------------------打开页面根据商家拥有的订餐权限 初始化 pickup Delivery Dinein 按钮 和加载菜品----------------------------
 	/*(function(){
@@ -109,42 +110,62 @@ $(function(){
 	var consumerLng = $.cookie("map-Lng");//? $.cookie("map-Lng") : $.cookie("browser-Lng");
 	var consumerLat = $.cookie("map-Lat");//? $.cookie("map-Lat") : $.cookie("browser-Lat");
 	/*刷新购物车方法*/
-	function refreshCart (){
+	function refreshCart() {
 		var consumerUuid = $("#currentConsumerUuid").val();
-		$("#bg").css("display", "block");//显示等待遮罩层
+		$("#bg").css("display", "block");// 显示等待遮罩层
 		$("#show").css("display", "block");
 		$.ajax({
-    		type: 'post',
-    		url: appPath+'/consumers/showCart',
-    		data: {"consumerLng":consumerLng,"consumerLat":consumerLat,"consumerUuid":consumerUuid,"orderType":newOrderType},
-    		success: function(data){
-    			$("#bg").css("display", "none");
-    			$("#show").css("display", "none");
-    			$("#cartContent").html(data);
-    			var cartRestaurantUuid = $("#cartContent input[name='cartRestaurantUuid']").val();
-    			
-    			//以下初始化购物车按钮 10月10日改
-    			cartOrderType = $("input[name='orderType']").val();
-    			if(cartOrderType=="1"){//delivery
-    				$("li[name='type-delivery']").attr("class","active");
-    				$("li[name='type-dinein']").removeAttr("class");
-    				$("li[name='type-pickup']").removeAttr("class");
-    				$("#biaodan").attr("class","tab-pane active");
-    				$("#tianxie").attr("class","tab-pane");
-    			}else if(cartOrderType=="3"){//dine in
-    				$("li[name='type-pickup']").removeAttr("class");
-    				$("li[name='type-delivery']").removeAttr("class");
-    				$("li[name='type-dinein']").attr("class","active");
-    				$("#tianxie").attr("class","tab-pane active");
-    				$("#biaodan").attr("class","tab-pane");
-    				showReservationOrders ();
-    			}
-    		}
-    	})
+			type : 'post', url : appPath + '/consumers/showCart', data : {
+				"consumerLng" : consumerLng, "consumerLat" : consumerLat, "consumerUuid" : consumerUuid, "orderType" : newOrderType
+			}, success : function(data) {
+				$("#bg").css("display", "none");
+				$("#show").css("display", "none");
+				$("#cartContent").html(data);
+				var cartRestaurantUuid = $("#cartContent input[name='cartRestaurantUuid']").val();
+				var currentRestaurantUuid = $("#restaurantUuid").val();
+				if (!cartRestaurantUuid) {
+					cartRestaurantUuid = 0;
+				}
+				//alert(currentRestaurantUuid + "---" + cartRestaurantUuid);
+
+				if (cartRestaurantUuid != currentRestaurantUuid && cartRestaurantUuid != 0) {
+					var changeRestaurantTip = "You’ve changed your restaurant. Please clear your current order before switching to a different restaurant";
+					$("div[name='divChangeRestaurantTip']").text(changeRestaurantTip);
+					$("h4[name='headerChangeRestaurantModal']").text("Restaurant Changed");
+					$("#btnGoBackPreviousRestaurant").text("Back To Previous Restaurant");
+					$("#btnClearCart").text("Clear Current Order");
+					$("#modalChangedRestaurant").modal('show');
+					$("#isEmptyCartModal").modal('hide');
+					$("#myModal1").modal('hide');
+					shouldGoBack = true;
+				}
+				else{
+					// 以下初始化购物车按钮 10月10日改
+					cartOrderType = $("input[name='orderType']").val();
+					if (cartOrderType == "1") {// delivery
+						$("li[name='type-delivery']").attr("class", "active");
+						$("li[name='type-dinein']").removeAttr("class");
+						$("li[name='type-pickup']").removeAttr("class");
+						$("#biaodan").attr("class", "tab-pane active");
+						$("#tianxie").attr("class", "tab-pane");
+					} else if (cartOrderType == "3") {// dine in
+						$("li[name='type-pickup']").removeAttr("class");
+						$("li[name='type-delivery']").removeAttr("class");
+						$("li[name='type-dinein']").attr("class", "active");
+						$("#tianxie").attr("class", "tab-pane active");
+						$("#biaodan").attr("class", "tab-pane");
+						showReservationOrders();
+					}
+					shouldGoBack = false;
+				}
+			}
+		})
+		
+		
 	}
 	refreshCart ();
 	
-	//左上角返回键
+	// 左上角返回键
 	$("button[name='back-searchlist']").click(function(){
 		history.back();
 	})
@@ -366,6 +387,7 @@ $(function(){
 		})
 		$("#isEmptyCartModal").modal('hide');
 	}
+	
 	$("#stayOrginalCart").click(function(){
 		var cartRestaurantUuid = $("input[name='cartRestaurantUuid']").val();
 		if(cartRestaurantUuid){
@@ -373,6 +395,25 @@ $(function(){
 		}
 	})
 	
+	$("#btnGoBackPreviousRestaurant").click(function(){
+		var cartRestaurantUuid = $("input[name='cartRestaurantUuid']").val();
+		if(cartRestaurantUuid){
+			window.location = appPath+"/index/restaurantmenu?restaurantUuid="+cartRestaurantUuid;
+		}
+	})
+	
+	$("#btnClearCart").click(function(){
+		clearCart();
+		shouldGoBack = false;
+		$("#modalChangedRestaurant").modal('hide');
+	})
+	
+	$("#modalChangedRestaurant").on("hidden.bs.modal", function (){
+		var cartRestaurantUuid = $("input[name='cartRestaurantUuid']").val();
+		if(cartRestaurantUuid && shouldGoBack){
+			window.location = appPath+"/index/restaurantmenu?restaurantUuid="+cartRestaurantUuid;
+		}
+	})
 	
 	/*类型按钮 Delivery*/
 	$("#deliveryButton").click(function(){
