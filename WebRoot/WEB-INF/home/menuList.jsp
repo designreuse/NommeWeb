@@ -78,13 +78,13 @@
 							<c:forEach items="${str.pageDishList}" var="str2" begin="0"  step="1" varStatus="status2">
 								<div class="col-md-4">
 									<div class="row" style="padding-bottom: 10px;">
-										<div type="button" class="aDishButton" name="aDish" title="${str2.enName}-${str.id}-${str2.id}" >
+										<div type="button" class="aDishButton" name="aDish" title="${str.restaurantId}-${str.id}-${str2.id}" >
 											<div class="col-md-5">
 												<%-- <c:if test="${empty str2.photoUrl}">
 													<img src="${ctx}/index/images/default-dish.jpg"  alt="..." class="img-thumbnail">
 												</c:if>
 												<c:if test="${!empty str2.photoUrl}"> --%>
-													<img src="${str2.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="str.enName" class="img-thumbnail">
+													<img src="${str2.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="..." class="img-thumbnail">
 												<%-- </c:if> --%>
 											</div>
 											<div class="col-md-7">
@@ -145,13 +145,13 @@
 							<c:forEach items="${str.pageDishList}" var="str2" begin="0"  step="1" varStatus="status2">
 								<div class="col-md-4">
 									<div class="row">
-										<div type="button"  class="aDishButton" name="aDish" title="${str2.enName}">
+										<div type="button"  class="aDishButton" name="aDish" title="${str.restaurantId}-${str.id}-${str2.id}">
 											<div class="col-md-5">
 												<%-- <c:if test="${empty str2.photoUrl}">
 													<img src="${ctx}/index/images/default-dish.jpg" alt="..." class="img-thumbnail">
 												</c:if>
 												<c:if test="${!empty str2.photoUrl}"> --%>
-													<img src="${str2.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="${str2.enName}" class="img-thumbnail">
+													<img src="${str2.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="..." class="img-thumbnail">
 												<%-- </c:if> --%>
 											</div>
 											<div class="col-md-7 dish-title">

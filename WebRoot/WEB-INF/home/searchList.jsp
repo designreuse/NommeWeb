@@ -56,7 +56,7 @@
 				<div class="col-md-5">
 					<h4>
 						<a name="logo" href="#">
-							<img src="${ctx}/index/images/xc-logo.png" alt="nom logo" />
+							<img src="${ctx}/index/images/xc-logo.png">
 						</a>
 					</h4>
 				</div>

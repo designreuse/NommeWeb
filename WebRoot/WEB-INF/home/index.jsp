@@ -48,7 +48,7 @@
 		<div class="row">
 			<span class="col-sm-6">
 				<a name="logo" href="javascript:void(0)">
-					<img src="images/xc-logo.png" alt="Online Food Ordering" />
+					<img src="images/xc-logo.png">
 				</a>
 			</span>
 			<span class="col-sm-6" align="right">
@@ -113,7 +113,7 @@
 					</span>
 					<span style="">
 						<button class="btn xc-btn-success " name="searchBtn" type="button">
-							<img src="images/xc-fdj.png" alt="restaurant food" />
+							<img src="images/xc-fdj.png">
 						</button>
 					</span>
 					
@@ -162,7 +162,7 @@
 	<div class="xc-fenlei">
 		<%-- <ul name="foods">
 			<li><a href="#" name="fastfood"><p><img src="${ctx}/index/images/xc-tb01.png"></p>Fast food</a></li>
-			<li><a href="#" name="hamburger"><p><img src="${ctx}/index/images/xc-tb02.png"></p>Hamburg</a></li>
+			<li><a href="#" name="hamburg"><p><img src="${ctx}/index/images/xc-tb02.png"></p>Hamburg</a></li>
 			<li><a href="#" name="pizza"><p><img src="${ctx}/index/images/xc-tb03.png"></p>Pizza</a></li>
 			<li><a href="#" name="drinks"><p><img src="${ctx}/index/images/xc-tb04.png"></p>Drinks</a></li>
 			<li><a href="#" name="hotdog"><p><img src="${ctx}/index/images/xc-tb05.png"></p>Hot Dog</a></li>
