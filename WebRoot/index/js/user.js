@@ -973,11 +973,11 @@ $(function(){
 		}
 	}
 	
-	$("span[name='star'").mouseover(function(){//鼠标移入五角星
+	$("span[name='star']").mouseover(function(){//鼠标移入五角星
 		var s = $(this).attr("alt");
 		editStar(s);
 	});
-	$("span[name='star'").mouseout(function(){//鼠标移出五角星
+	$("span[name='star']").mouseout(function(){//鼠标移出五角星
 		editStar(stars);
 	});
 	$("span[name='star']").click(function(){//五角星评分的点击事件
