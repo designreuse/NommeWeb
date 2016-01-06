@@ -764,9 +764,23 @@ $(function(){
 			})*/
 		}else if(operatorType=="2"){
 			var currentDate = new Date().getTime();
+			var minOffset = new Date().getTimezoneOffset();
+			var hourOffset = (-1) * (minOffset / 60);
+			var temp = Math.abs(hourOffset);
+			var stringOffset = temp;
+			if (temp < 10) {
+				stringOffset = '0' + stringOffset;
+			}
+			if (hourOffset < 0) {
+				stringOffset = '-' + stringOffset;
+			} else {
+				stringOffset = '+' + stringOffset;
+			}
 			var orderDateStr = $("#orderDetail-orderDate").val();
-			orderDateStr = orderDateStr.replace(/-/g,"/");
+			orderDateStr = orderDateStr.replace(/\s+/g, 'T').concat(stringOffset + ':00');
+			alert("orderDateStr=" + orderDateStr);
 			var orderDate = new Date(orderDateStr).getTime();
+			alert("orderDate=" + orderDate);
 			if((orderDate - currentDate) >= 1000*60*30){
 				$("button[name='confirmModal-confirm']").attr("disabled",true);
 				$.ajax({
