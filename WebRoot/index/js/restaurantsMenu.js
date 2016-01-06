@@ -129,7 +129,7 @@ $(function(){
 				//alert(currentRestaurantUuid + "---" + cartRestaurantUuid);
 
 				if (cartRestaurantUuid != currentRestaurantUuid && cartRestaurantUuid != 0) {
-					var changeRestaurantTip = "You’ve changed your restaurant. Please clear your current order before switching to a different restaurant";
+					var changeRestaurantTip = "Please complete your current order before switching to a different restaurant.";
 					$("div[name='divChangeRestaurantTip']").text(changeRestaurantTip);
 					$("h4[name='headerChangeRestaurantModal']").text("Restaurant Changed");
 					$("#btnGoBackPreviousRestaurant").text("Back To Previous Restaurant");

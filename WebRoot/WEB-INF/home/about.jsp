@@ -8,7 +8,7 @@
 		style="width: 70%; vertical-align: middle; text-align: left;">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 id="myModalLabel" align="center">About Me</h4>
+				<h4 id="myModalLabel" align="center">About Us</h4>
 			</div>
 
 			<div class="modal-body">
