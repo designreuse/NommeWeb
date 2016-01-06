@@ -778,9 +778,7 @@ $(function(){
 			}
 			var orderDateStr = $("#orderDetail-orderDate").val();
 			orderDateStr = orderDateStr.replace(/\s+/g, 'T').concat(stringOffset + ':00');
-			alert("orderDateStr=" + orderDateStr);
 			var orderDate = new Date(orderDateStr).getTime();
-			alert("orderDate=" + orderDate);
 			if((orderDate - currentDate) >= 1000*60*30){
 				$("button[name='confirmModal-confirm']").attr("disabled",true);
 				$.ajax({
