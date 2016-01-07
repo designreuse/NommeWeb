@@ -389,6 +389,7 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 		pr.setIsdelivery(restaurant.getIsdelivery());//是否外送
 		pr.setIspickup(restaurant.getIspickup());//是否自取
 		pr.setIsreservation(restaurant.getIsreservation());//是否堂食
+		pr.setKeywords(restaurant.getKeywords());
 		if(restaurant.getChainid()!=null){//连锁店名称
 			long chainId = restaurant.getChainid();
 			Chain chain = chainDao.getById(chainId);

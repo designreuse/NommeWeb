@@ -45,6 +45,7 @@ public class PageRestaurant {
 	private List<PageEvaluate> pageEvaluateList;//商家评论
 	private List<PageDiscount> pageDiscountList;//优惠券信息
 	private String restaurantUuid;
+	private String keywords;
 	
 	public String getRestaurantName() {
 		return restaurantName;
@@ -245,5 +246,12 @@ public class PageRestaurant {
 		this.restaurantUuid = restaurantUuid;
 	}
 	
+	public String getKeywords() {
+		return keywords;
+	}
+	
+	public void setKeywords(String keywords){
+		this.keywords = keywords;
+	}
 	
 }
