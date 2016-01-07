@@ -265,7 +265,7 @@ public class ConsumersApiController extends BaseAPiModel {
 	public ResultApiModel updateConsumers(ConsumersApiModel consumersApiModel){	
 		Log4jUtil.info("用户信息修改接口==>"+consumersApiModel.toString());
 		ResultApiModel ram = new ResultApiModel();
-		if(StringUtil.isNotEmpty(consumersApiModel.getPhone())&&CommonUtil.isNumeric(consumersApiModel.getPhone())){
+		if(StringUtil.isNotEmpty(consumersApiModel.getPhone())&&CommonUtil.isPhone(consumersApiModel.getPhone())){
 			int flag = consumersService.updateConsumers(consumersApiModel);
 			if(flag == -1){//修改失败
 				ram.setResultMessage(MessageConstant.PASSWORD_ERROR);//update failed
@@ -1122,9 +1122,8 @@ public class ConsumersApiController extends BaseAPiModel {
 			return ram;
 		} else if (flag > 0){//添加成功
 			
-			//删除购物车
-			//判断是否有cartHeaderId
-			if(map.get("cartHeaderId") != null){//排除Reservation的情况
+			// Delete the shopping cart if not paying by credit card.
+			if(map.get("cartHeaderId") != null && orderHeader.getStatus() == GlobalConstant.ORDER_STATUS.PAY_CASH.getValue()){
 				cartService.deleteCartByConsumerUuid(orderHeader.getConsumers().getUuid());
 			}
 			
@@ -1151,7 +1150,15 @@ public class ConsumersApiController extends BaseAPiModel {
 						chargeEntity.setApplicatonFee((int)(orderHeader.getTotal()*10+orderHeader.getAmount()*2.9+30));
 						ApiResponse stripeResponse = paymentService.chargeByCard(chargeEntity,String.valueOf(flag));
 						int flag1 = stripeResponse.getStatusEnum();
-						if(flag1==1){//付款成功
+						
+						// If credit card payment is successful.
+						if(flag1==1){
+							
+							// Delete the shopping cart.
+							if(map.get("cartHeaderId") != null){
+								cartService.deleteCartByConsumerUuid(orderHeader.getConsumers().getUuid());
+							}
+							
 							ram.setFlag(1);
 							Map<String,Object> mapBody = new HashMap<String,Object>();
 							mapBody.put("orderId", flag);

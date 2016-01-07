@@ -26,6 +26,17 @@
 <script src="${ctx}/index/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&sensor=true&libraries=places"></script>
 <script src="${ctx}/index/js/commjs.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71565761-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </head>
 
 <body onload="initialize()" style="overflow: hidden;">
@@ -36,18 +47,30 @@
 <div id="fb-root"></div>
 	<div class="container xc-top">
 		<div class="row">
-			<div>
+			<span class="col-sm-6">
 				<a name="logo" href="javascript:void(0)">
 					<img src="images/xc-logo.png" alt="Online Food Ordering" />
 				</a>
-			</div>
-			<div>
+			</span>
+			<span class="col-sm-6" align="right">
 			
-				<div class="xc-top-login" style="display: ${empty sessionScope.consumer?'block':'none'}">
+				<span class="social_media_links">
+					<a href="https://www.facebook.com/Nomme-1645977468983563/">
+						<img alt="Visit Nomme on Facebook" src="images/facebook_logo.png" />
+					</a>
+					<a href="https://twitter.com/Nomme_app">
+						<img alt="Follow Us on Twitter @Nomme_app" src="images/twitter_logo.png" />
+					</a>
+					<a href="https://www.instagram.com/nomme_nomme/">
+						<img alt="Visit Nomme on Instagram" src="images/instagram_logo.png" />
+					</a>
+				</span>
+			
+				<span class="xc-top-login" style="display: ${empty sessionScope.consumer?'inline-block':'none'}">
 					<li><a href="#myModal" data-toggle="modal" data-target="#myModal" id="signIn0">Sign in</a></li>
-				</div>
+				</span>
 				<!--登陆后显示-->
-				<div class="xc-top-login-in" style="display: ${empty sessionScope.consumer?'none':'block'}">
+				<span class="xc-top-login-in" style="display: ${empty sessionScope.consumer?'none':'inline-block'}">
 					<li>
 						<div class="dropdown">
 							<button class="dropdown-toggle" type="button" id="dropdownMenu1"
@@ -66,10 +89,11 @@
 							</ul>
 						</div>
 					</li>
-				</div>
+				</span>
+				
 				<!-- 插入用户帐号相关功能模态框 -->
 				<jsp:include page="./inputjsp.jsp"></jsp:include>
-			</div>
+			</span>
 		</div>
 	</div>
 
@@ -117,17 +141,7 @@
 			&nbsp;&nbsp;&#47;&nbsp;&nbsp;<a href="#" id = "index-privacypolicy"><span>Privacy Policy </span></a>
 		</p>
 		<div style="padding-top:15px">
-			<span class="col-sm-3 social_media_links">
-				<a href="https://www.facebook.com/Nomme-1645977468983563/">
-					<img alt="Visit Nomme on Facebook" src="images/facebook_logo.png" />
-				</a>
-				<a href="https://twitter.com/Nomme_app">
-					<img alt="Follow Us on Twitter @Nomme_app" src="images/twitter_logo.png" />
-				</a>
-				<a href="https://www.instagram.com/nomme_nomme/">
-					<img alt="Visit Nomme on Instagram" src="images/instagram_logo.png" />
-				</a>
-			</span>
+			<span class="col-sm-3">&nbsp;</span>
 			<span class="col-sm-6 app_links" align="center">
 				<a href="https://play.google.com/store/apps/details?id=com.canada.nomme">
 					<img alt="Get it on Google Play" style="height: 40px;" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" />
@@ -137,7 +151,7 @@
 					<img alt="Download on the App Store" style="height: 40px;" src="images/apple_app_store_badge.png"/>
 				</a>
 			</span>
-			<span class="col-sm-3"></span>
+			<span class="col-sm-3">&nbsp;</span>
 		</div>
 		<jsp:include page="./contactUs.jsp"></jsp:include>
 		<jsp:include page="./about.jsp"></jsp:include>
@@ -149,7 +163,7 @@
 	<div class="xc-fenlei">
 		<%-- <ul name="foods">
 			<li><a href="#" name="fastfood"><p><img src="${ctx}/index/images/xc-tb01.png"></p>Fast food</a></li>
-			<li><a href="#" name="hamburg"><p><img src="${ctx}/index/images/xc-tb02.png"></p>Hamburg</a></li>
+			<li><a href="#" name="hamburger"><p><img src="${ctx}/index/images/xc-tb02.png"></p>Hamburg</a></li>
 			<li><a href="#" name="pizza"><p><img src="${ctx}/index/images/xc-tb03.png"></p>Pizza</a></li>
 			<li><a href="#" name="drinks"><p><img src="${ctx}/index/images/xc-tb04.png"></p>Drinks</a></li>
 			<li><a href="#" name="hotdog"><p><img src="${ctx}/index/images/xc-tb05.png"></p>Hot Dog</a></li>
@@ -176,4 +190,7 @@
 
 	<script src="${ctx}/index/js/index.js"></script>
 </body>
+
+
+
 </html>

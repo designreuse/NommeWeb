@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <title>${restaurant.restaurantName} - Nomme</title>
-<meta name="description" content="${restaurant.features}">
+<meta name="description" content="${restaurant.features}" contenteditable="false">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ceshi</title>
 <link rel="stylesheet" href="${ctx}/index/css/bootstrap.min.css">
@@ -23,6 +23,17 @@
 <script src="${ctx}/framework/plugins/datatimepicker/bootstrap-datetimepicker.js" type="text/javascript"></script> 
 <script src="${ctx}/framework/plugins/paginator/bootstrap-paginator.js"></script>
 <script src="${ctx}/index/js/commjs.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71565761-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </head>
 <body>
@@ -647,7 +658,39 @@
 			</div>
 		</div>
 		
-		
+		<!-- changedRestaurantModal -->
+		<div class="modal fade" id="modalChangedRestaurant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width:500px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 id="myModalLabel" align="center" name="headerChangeRestaurantModal">Restaurant Changed</h4>
+					</div>
+					<div class="modal-body">
+						<h4>
+							<div class="controls" name="divChangeRestaurantTip" style="width:428; margin-left: 15px;margin-bottom: 20px;">
+								
+							</div>
+						</h4>
+						<div style="padding: 0 15px 15px;">
+							<button id="btnClearCart"
+								class="btn btn-large btn-block btn-primary" type="button"
+								style="height: 45px; background: #88878C; border: #88878C">Clear Cart</button>
+							<div align="center" style="margin: 10px 0;">
+								<strong>OR</strong>
+							</div>
+							<button class="btn btn-default btn-block" type="button"
+								id="btnGoBackPreviousRestaurant"
+								style="height: 45px; border: #6C9C46 2px solid; color: #6C9C46;">Go
+								Back</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<!-- reservation 如果是当天的订单，等待商家确认订桌的模态框 -->
 		<div class="modal fade" id="waitAffirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -831,4 +874,7 @@
 	<script src="${ctx}/index/js/restaurantsMenu.js"></script>
 	<script type="text/javascript" src="${ctx}/index/js/cart.js"></script>
 </body>
+
+
+
 </html>
