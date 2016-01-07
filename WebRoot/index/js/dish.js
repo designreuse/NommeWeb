@@ -265,9 +265,9 @@ $(function(){
 			//alert(currentRestaurantId +"---"+cartRestaurantId);
 			var cartChangeTip = "You’ve changed your order. Do you wish to cancel your previous order?";
 			$("div[name='clearCartTip']").text(cartChangeTip);
-			$("h4[name='confirmClearCart']").text("Change the order");
-			$("#clearCart").text("Cancel previous order");
-			$("#stayOrginalCart").text("Back to previous order");
+			$("h4[name='confirmClearCart']").text("Change The Order");
+			$("#clearCart").text("Cancel Previous Order");
+			$("#stayOrginalCart").text("Back To Previous Order");
 			$("#isEmptyCartModal").modal('show');
 			$("#myModal1").modal('hide');
 			

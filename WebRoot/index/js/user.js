@@ -764,8 +764,20 @@ $(function(){
 			})*/
 		}else if(operatorType=="2"){
 			var currentDate = new Date().getTime();
+			var minOffset = new Date().getTimezoneOffset();
+			var hourOffset = (-1) * (minOffset / 60);
+			var temp = Math.abs(hourOffset);
+			var stringOffset = temp;
+			if (temp < 10) {
+				stringOffset = '0' + stringOffset;
+			}
+			if (hourOffset < 0) {
+				stringOffset = '-' + stringOffset;
+			} else {
+				stringOffset = '+' + stringOffset;
+			}
 			var orderDateStr = $("#orderDetail-orderDate").val();
-			orderDateStr = orderDateStr.replace(/-/g,"/");
+			orderDateStr = orderDateStr.replace(/\s+/g, 'T').concat(stringOffset + ':00');
 			var orderDate = new Date(orderDateStr).getTime();
 			if((orderDate - currentDate) >= 1000*60*30){
 				$("button[name='confirmModal-confirm']").attr("disabled",true);
@@ -973,11 +985,11 @@ $(function(){
 		}
 	}
 	
-	$("span[name='star'").mouseover(function(){//鼠标移入五角星
+	$("span[name='star']").mouseover(function(){//鼠标移入五角星
 		var s = $(this).attr("alt");
 		editStar(s);
 	});
-	$("span[name='star'").mouseout(function(){//鼠标移出五角星
+	$("span[name='star']").mouseout(function(){//鼠标移出五角星
 		editStar(stars);
 	});
 	$("span[name='star']").click(function(){//五角星评分的点击事件
