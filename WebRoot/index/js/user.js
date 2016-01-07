@@ -342,7 +342,7 @@ $(function(){
 			return;
 		}
 		if(password1 != password2){
-			showtips("input-password2","The two password don't match",20,38);
+			showtips("input-password2","Password does not match",20,38);
 			return;
 		}
 		if(editPasswordFlag){

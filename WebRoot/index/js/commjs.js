@@ -164,7 +164,7 @@ $(function(){
 			flag = true;
 		}else{
 			flag = false;
-			showtips(password2,"Please enter the same new password",110,38)
+			showtips(password2,"Password does not match",110,38)
 		}
 		return flag;
 	}
