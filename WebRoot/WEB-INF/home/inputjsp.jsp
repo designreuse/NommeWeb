@@ -171,13 +171,13 @@
 				<p>Password</p>
 				<div class="controls">
 					<input type="password" class="form-control"
-						id="newPassword1" placeholder="new-Password"
+						id="newPassword1" placeholder="New Password"
 						style="height:45px;margin-bottom:10px;">
 				</div>
 				<p>Confirm Password</p>
 				<div class="controls">
 					<input type="password" class="form-control"
-						id="newPassword2" placeholder="Confirm-new-Password"
+						id="newPassword2" placeholder="Confirm New Password"
 						style="height:45px;margin-bottom:10px;">
 				</div>
 				
