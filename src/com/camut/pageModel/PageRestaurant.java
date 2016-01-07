@@ -244,6 +244,4 @@ public class PageRestaurant {
 	public void setRestaurantUuid(String restaurantUuid) {
 		this.restaurantUuid = restaurantUuid;
 	}
-	
-	
 }

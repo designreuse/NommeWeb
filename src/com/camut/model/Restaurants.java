@@ -74,7 +74,6 @@ public class Restaurants implements java.io.Serializable {
 	private Set<DistancePrice> distancePricesSet = new HashSet<DistancePrice>();// 与配送费一对多
 	private String stripeAccount;// 餐厅的托管账号
 	private String uuid;//通用唯一识别码
-
 	// Property accessors
 	
 	
@@ -375,7 +374,4 @@ public class Restaurants implements java.io.Serializable {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	
-	
-	
 }

@@ -10,14 +10,14 @@
 </script>
 <c:forEach items="${viewRestaurants.rows}" var="vr">
 	<div class="row lcx-m-sx lcx-bian-bottom lcx-p-b" name="parent" style="cursor: pointer;" align="left">
-		<input type="hidden" id="restaurantUuid" value="${vr.restaurantUuid}"/>
+		<input type="hidden" id="restaurantUuid" title="${vr.restaurantName}" value="${vr.restaurantUuid}"/>
 		<div class="col-md-2 lcx-p-0">
 			<c:choose>
 				<c:when test="${empty vr.logourl}">
-					<img src="${ctx}/images/no-picture.jpg" style="max-width:100%;border-radius: 3px;">
+					<img src="${ctx}/images/no-picture.jpg" alt="${vr.restaurantName}" style="max-width:100%;border-radius: 3px;">
 				</c:when>
 				<c:otherwise>
-					<img src="${vr.logourl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" style="max-width:100%;border-radius: 3px;">
+					<img src="${vr.logourl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="${vr.restaurantName}" style="max-width:100%;border-radius: 3px;">
 				</c:otherwise>
 			</c:choose>
 		</div>
