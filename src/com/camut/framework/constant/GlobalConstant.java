@@ -106,6 +106,23 @@ public class GlobalConstant {
 	        return value;
 	    }
 	}
+	
+	public static enum DISCOUNT_TYPE {
+		//1:cash coupon, 2:% coupon, 3:free dish
+		CASH_COUPON(1), 
+		PERCENTAGE_COUPON(2), 
+		FREE_DISH(3);
+		
+	    private final int value;
+
+	    private DISCOUNT_TYPE(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
 
 	
 	public static enum RESTAURANT_STATUS {
@@ -119,6 +136,22 @@ public class GlobalConstant {
 	    private final int value;
 
 	    private RESTAURANT_STATUS(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
+	
+	public static enum DELETE_STATUS {
+		//0: not deleted, 1: deleted
+		NOT_DELETED(0), 
+		DELETED(1);
+		
+	    private final int value;
+
+	    private DELETE_STATUS(int value) {
 	        this.value = value;
 	    }
 

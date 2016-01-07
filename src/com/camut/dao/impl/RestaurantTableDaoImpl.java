@@ -115,55 +115,17 @@ public class RestaurantTableDaoImpl extends BaseDao<RestaurantTable> implements
 	 */
 	@Override
 	public List<TableEntity> getNumberOfRestaurantReservationOverlaps(String restaurantUuid, String reservationRequestDateString) {
-		// Convert the request date.
-		DateFormat requestDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date reservationRequestDate = null;
-		try {
-			reservationRequestDate = requestDateFormat.parse(reservationRequestDateString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		// Get the time frame boundaries for possible overlap.
-		// TODO: Get the reservation meal length.
-		long mealLength = 1000*60*60*2;
-		Date earliestOverlappingReservationTime = new Date(reservationRequestDate.getTime() - mealLength);
-		Date latestOverlappingReservationTime = new Date(reservationRequestDate.getTime() + mealLength);
-		
-		// Check if the meal length causes the bounds to go into other days.  If so, don't use them in the query.
-		DateTime e0 = new DateTime(reservationRequestDate);
-		DateTime e1 = new DateTime(earliestOverlappingReservationTime);
-		DateTime e2 = new DateTime(latestOverlappingReservationTime);
-		boolean useEarliest = true;
-		boolean useLatest = true;
-		if (e0.getDayOfYear() != e1.getDayOfYear()) {
-			useEarliest = false;
-		}
-		if (e0.getDayOfYear() != e2.getDayOfYear()) {
-			useLatest = false;
-		}
-		
-		// Format the time boundaries.
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		String queryReservationRequestDate = dateFormat.format(reservationRequestDate);
-		String queryEarliestOverlappingReservationTime = timeFormat.format(earliestOverlappingReservationTime);
-		String queryLatestOverlappingReservationTime = timeFormat.format(latestOverlappingReservationTime);
-		
-		// Get the number of overlapping reservations within this time frame.
+		// Get the number of overlapping reservations by checking for other reservations whose time and duration overlap with the requested time.
 		String sql = "SELECT COUNT(oh.id) as count, ";	// Number of reservations for this table type.
 		sql += "oh.number as number ";	// Table type.
 		sql += "FROM nomme.dat_order_header as oh ";
+		sql += "INNER JOIN nomme.tbl_restaurant_table as tbl ";
+		sql += "ON oh.restaurant_uuid = tbl.restaurant_uuid AND oh.number = tbl.acceptance_num ";
 		sql += "WHERE oh.order_type =:orderType ";
 		sql += "AND oh.status = 3 ";
 		sql += "AND oh.restaurant_uuid =:restaurantUuid ";
-		sql += "AND DATE_FORMAT(oh.order_date, '%Y-%m-%d') = '" + queryReservationRequestDate + "' ";	// Must be for same day.
-		if (useEarliest) {
-			sql += "AND DATE_FORMAT(oh.order_date, '%H:%i') > '" + queryEarliestOverlappingReservationTime + "'";	// Lower bound.
-		}
-		if (useLatest) {
-			sql += "AND DATE_FORMAT(oh.order_date, '%H:%i') < '" + queryLatestOverlappingReservationTime + "'";	// Upper bound.
-		}
+		sql += "AND TIME_TO_SEC(TIMEDIFF('" + reservationRequestDateString + "', oh.order_date)) < tbl.meal_duration_in_minutes * 60 ";
+		sql += "AND TIME_TO_SEC(TIMEDIFF('" + reservationRequestDateString + "', oh.order_date)) > -tbl.meal_duration_in_minutes * 60 ";
 		sql += "GROUP BY oh.number ";
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		query.setParameter("orderType", GlobalConstant.TYPE_RESERVATION);
