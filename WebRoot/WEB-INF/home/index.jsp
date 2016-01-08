@@ -39,7 +39,7 @@
 </script>
 </head>
 
-<body onload="initialize()">
+<body onload="initialize()" style="overflow: hidden;">
 <!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 </fb:login-button>
 <div id="status">
