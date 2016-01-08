@@ -8,6 +8,7 @@ body {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+	overflow:visible;
 }
 body * {font-family: 'Open Sans', sans-serif;}
 ul,li { margin:0px; padding:0px; list-style:none;}
