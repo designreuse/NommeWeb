@@ -768,7 +768,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 		sb.append("<th colspan='6' align='left'>"+item.getRestaurantName()+" at "+tmp+" </th>");
 		sb.append("</tr>");
 		sb.append("<tr>");
-		sb.append("<th colspan='6' align='left'>repeipt: </th>");
+		sb.append("<th colspan='6' align='left'>receipt: </th>");
 		sb.append("</tr>");
 		if(item.getItem()!=null&&item.getItem().size()>0){
 			sb.append("<tr>");
