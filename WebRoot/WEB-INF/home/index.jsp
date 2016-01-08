@@ -54,13 +54,13 @@
 			<span class="col-sm-6" align="right">
 			
 				<span class="social_media_links">
-					<a href="https://www.facebook.com/Nomme-1645977468983563/">
+					<a href="https://www.facebook.com/Nomme-1645977468983563/" target="_blank">
 						<img alt="Visit Nomme on Facebook" src="images/facebook_logo.png" />
 					</a>
-					<a href="https://twitter.com/Nomme_app">
+					<a href="https://twitter.com/Nomme_app" target="_blank">
 						<img alt="Follow Us on Twitter @Nomme_app" src="images/twitter_logo.png" />
 					</a>
-					<a href="https://www.instagram.com/nomme_nomme/">
+					<a href="https://www.instagram.com/nomme_nomme/" target="_blank">
 						<img alt="Visit Nomme on Instagram" src="images/instagram_logo.png" />
 					</a>
 				</span>
