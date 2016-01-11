@@ -11,27 +11,22 @@
   </head>
   
   <body>
-    <div id="toolbar">
+	<div id="toolbar">
 		<button type="button" id="addCharity" class="btn btn-default mybt"
 			data-toggle="modal" data-target="#charityModal" title="New Chain">
 			<i class="fa fa-plus "></i> Add
 		</button>
-		<button type="button" id="editCharity" class="btn btn-default mybt"
-			>
+		<button type="button" id="editCharity" class="btn btn-default mybt">
 			<i class="fa fa-pencil "></i> Edit
 		</button>
-		<button type="button" id="deleteCharity" class="btn btn-default mybt"
-			>
-			<i class="fa fa-minus"></i> Delete
+		<button type="button" id="refresh" class="btn btn-default mybt"
+			data-method="refresh" title="refresh">
+			<i class="fa fa-refresh"></i> Refresh
 		</button>
-		<button type="button" id="refresh" class="btn btn-default mybt"  data-method="refresh"
-			title="refresh">
-        	<i class="fa fa-refresh"></i> Refresh
-   		</button>
 	</div>
-	
-	
-    <div>
+
+
+	<div>
      	<table id="charityTable" data-toggle="table" 
      		data-url="${ctx}/admin/getCharityList"
      		data-click-to-select="true"

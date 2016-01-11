@@ -7,17 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import com.camut.dao.CharityDao;
+import com.camut.framework.constant.GlobalConstant.CHARITY_STATUS;
 import com.camut.model.Charity;
+import com.camut.model.Discount;
 import com.camut.model.api.CharityApiModel;
 import com.camut.pageModel.PageCharity;
 import com.camut.pageModel.PageFilter;
 import com.camut.pageModel.PageStatementCharitys;
 import com.camut.utils.StringUtil;
+import com.camut.utils.UDSqlCommand;
 
 /**
  * @ClassName CharityDaoImpl.java
@@ -63,11 +67,14 @@ public class CharityDaoImpl extends BaseDao<Charity> implements CharityDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getAllCharityFirstCharacters() {
-		String sql = "SELECT DISTINCT(LEFT(charity_name,1)) as charityName ";
-		sql += "FROM tbl_charity ";
-		sql += "ORDER BY charityName ASC ";
-		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		UDSqlCommand command = new UDSqlCommand();
+		command.CustomQuery("SELECT DISTINCT(LEFT(charity_name,1)) as charityName").SelectFrom("tbl_charity")
+				.Where("tbl_charity.status='" + CHARITY_STATUS.ACTIVE.getValue() + "'").GetNonDeletedRecordsOnly()
+				.OrderBy("charityName").WithAscOrder();
+
+		SQLQuery query = this.getCurrentSession().createSQLQuery(command.GetQueryString());
 		return query.list();
+		
 	}
 	
 	/**

@@ -161,4 +161,19 @@ public class GlobalConstant {
 	}
 	
 	public static final String DOMAIN_NAME = "http://www.metaorder.ca";//服务器域名
+	
+	public static enum CHARITY_STATUS {
+		ACTIVE(1), 
+		DISABLE(0);
+		
+	    private final int value;
+
+	    private CHARITY_STATUS(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
 }
