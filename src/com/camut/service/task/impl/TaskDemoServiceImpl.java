@@ -145,7 +145,7 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 		sb.append("<th colspan='6' align='left'>"+"The order is more than 15 minutes and untreated, the system automatically cancel the order."+"</th>");
 		sb.append("</tr>");
 		sb.append("<tr>");
-		sb.append("<th colspan='6' align='left'>repeipt: </th>");
+		sb.append("<th colspan='6' align='left'>receipt: </th>");
 		sb.append("</tr>");
 		OrderDetailsApiModel odam = orderItemService.selectHistoryOrder(orderHeader.getId());
 		if(odam.getItem()!=null&&odam.getItem().size()>0){

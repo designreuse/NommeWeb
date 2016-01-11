@@ -11,12 +11,17 @@ public class UDSqlCommand {
 	private Map<String, Object> parameters;
 
 	public UDSqlCommand() {
-		queryString = null;
+		queryString = "";
 		parameters = new HashMap<String, Object>();
 	}
 
+	public UDSqlCommand CustomQuery(String query) {
+		queryString = query;
+		return this;
+	}
+
 	public UDSqlCommand SelectFrom(String tableName) {
-		queryString = " FROM " + tableName;
+		queryString += " FROM " + tableName;
 		return this;
 	}
 
@@ -56,7 +61,7 @@ public class UDSqlCommand {
 	}
 
 	public UDSqlCommand OrderBy(String condition) {
-		queryString += " order by " + condition;
+		queryString += " ORDER BY " + condition;
 		return this;
 	}
 
