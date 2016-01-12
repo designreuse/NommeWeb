@@ -27,6 +27,9 @@
 			<c:if test="${!empty vr.deliverTime}">
 				<h6 style="color: #999999;">${vr.deliverTime}minutes</h6>
 			</c:if>
+			<c:if test="${!empty vr.maxDiscountInt && vr.maxDiscountInt>0}">
+				<h6 style="color: #999999;">Save up to ${vr.maxDiscountInt}%</h6>
+			</c:if>
 		</div>
 		<div class="col-md-1"><br/>
 				<c:if test="${!empty vr.avgPrice}">
