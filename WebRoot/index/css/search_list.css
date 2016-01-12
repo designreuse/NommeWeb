@@ -60,6 +60,7 @@ background-clip: padding-box;
 .bgsearch_list03 { background:#898989; height:32px; color:#FFFFFF; font-size:16px; font-weight:900; padding:0px 10px 0px 20px;   line-height:32px;}
 .bgsearch_list04 { background:#898989; height:32px; color:#FFFFFF; font-size:16px; font-weight:900; padding:0px 10px 0px 20px;   line-height:32px;}
 .bgsearch_list05 { background:#898989; height:32px; color:#FFFFFF; font-size:16px; font-weight:900;   line-height:32px;  }
+.bgsearch_list05 span, .bgsearch_list05 a {color:#FFFFFF;}
 .bgsearch_list06 { background:#EBECED; height:36px; padding-left:20px; color:#515253; font-size:16px; font-weight:900;   line-height:36px;  }
 .bgsearch_list07 { background:#898989; height:54px; padding-left:20px; color:#FFFFFF; font-size:16px; font-weight:900;   line-height:54px;  }
 .bgsearch_list08 { background:#EBECED; height:36px; padding-left:20px; color:#515253; font-size:16px; font-weight:900;   line-height:36px;  }
