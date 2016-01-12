@@ -172,35 +172,28 @@
 
 					<!-- Nav tabs -->
 					<ul class="nav_search bgsearch_list05" role="tablist">
-						<li role="presentation" style="padding-left:10px;padding-right:10px;">
-
-							<div class="dropdown">
-								<div id="dropdownMenu1" data-toggle="dropdown">
-									<span name="sort-method">Distance</span>
-									<img src="${ctx}/index/images/search_list-01.png">
-								</div>
-								<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-									<li role="presentation" style="width:100%"><a
-										role="menuitem" tabindex="-1" href="#" id="orderbydistance">Distance</a></li>
-									<li role="presentation" style="width:100%"><a
-										role="menuitem" tabindex="-1" href="#" id="orderbya">A-Z</a></li>
-									<li role="presentation" style="width:100%"><a
-										role="menuitem" tabindex="-1" href="#" id="orderbyprice">Price</a></li>
-									<li role="presentation" style="width:100%"><a
-										role="menuitem" tabindex="-1" href="#" id="orderbyrating">Rating</a></li>
-								</ul>
-							</div>
-
-						</li>
+						
+						<li role="presentation"><a
+							role="menuitem" tabindex="-1" href="#" id="orderbydistance">Distance</a></li>
+						<li role="presentation"><a
+							role="menuitem" tabindex="-1" href="#" id="orderbya">A-Z</a></li>
+						<li role="presentation"><a
+							role="menuitem" tabindex="-1" href="#" id="orderbyprice">Price</a></li>
+						<li role="presentation"><a
+							role="menuitem" tabindex="-1" href="#" id="orderbyrating">Rating</a></li>
+							
 						<li role="presentation"><a class="showType" href="#showBanner"
 							aria-controls="showBanner" role="tab" data-toggle="tab"><img
 								src="${ctx}/index/images/search_list-02.png"></a></li>
 						<li role="presentation"><a class="showType" href="#showSudoku" 
 							aria-controls="showSudoku" role="tab" data-toggle="tab"><img
 								src="${ctx}/index/images/search_list-03.png"></a></li>
-						<li role="presentation"><a class="showType" href="#map"
-							aria-controls="map" role="tab" data-toggle="tab"><img
-								src="${ctx}/index/images/search_list-04.png"></a></li>
+						<li role="presentation">
+							<a class="showType" href="#map" aria-controls="map" role="tab" data-toggle="tab">
+								<span>Map View</span>
+								<img src="${ctx}/index/images/search_list-04.png">
+							</a>
+						</li>
 					</ul>
 					
 
