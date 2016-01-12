@@ -53,6 +53,9 @@ public class ViewRestaurantServiceImpl implements ViewRestaurantService {
 		for (ViewRestaurant viewRestaurant1 : list) {
 			PageViewRestaurant pageViewRestaurant = new PageViewRestaurant();
 			BeanUtils.copyProperties(viewRestaurant1, pageViewRestaurant);
+			if(viewRestaurant1.getMaxDiscount()!= null){
+				pageViewRestaurant.setMaxDiscountInt((int)Math.round(viewRestaurant1.getMaxDiscount()));
+			}
 			//截取分类名称
 			if(pageViewRestaurant.getClassificationName()!=null && pageViewRestaurant.getClassificationName().length()>20){
 				pageViewRestaurant.setClassificationName(pageViewRestaurant.getClassificationName().substring(0, 20)+"...");

@@ -3,6 +3,8 @@
  */
 package com.camut.pageModel;
 
+import javax.persistence.Column;
+
 /**
  * @ClassName PageViewRestaurant.java
  * @author wangpin
@@ -32,6 +34,7 @@ public class PageViewRestaurant {
 	private Double avgPrice;// 平均价格
 	private Long scoreCount;// 评分人数
 	private String restaurantUuid;
+	private int maxDiscountInt;
 
 	public Long getId() {
 		return id;
@@ -148,9 +151,10 @@ public class PageViewRestaurant {
 		this.restaurantUuid = restaurantUuid;
 	}
 	
-	
-	
-	
-	
-	
+	public int getMaxDiscountInt() {
+		return maxDiscountInt;
+	}
+	public void setMaxDiscountInt(int maxDiscount) {
+		maxDiscountInt=maxDiscount;
+	}
 }

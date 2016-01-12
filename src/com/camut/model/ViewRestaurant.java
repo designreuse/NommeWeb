@@ -52,6 +52,7 @@ public class ViewRestaurant implements java.io.Serializable {
 	private Long opentime;// 用来判断是否在营业时间内。
 	private Integer deliverTime;// 送餐所需时间
 	private Long scoreCount;// 评分人数
+	private Double maxDiscount;
 
 	// Constructors
 
@@ -342,6 +343,12 @@ public class ViewRestaurant implements java.io.Serializable {
 		this.deliverPrice = deliverPrice;
 	}
 	
-	
-	
+	@Column(name="max_discount")
+	public Double getMaxDiscount() {
+		return maxDiscount;
+	}
+
+	public void setMaxDiscount(Double maxDiscount) {
+		this.maxDiscount = 	maxDiscount;
+	}
 }
