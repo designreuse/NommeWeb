@@ -25,10 +25,10 @@
 				<div class="row">
 					<div class="col-md-4">
 						<%-- <c:if test="${empty dish.photoUrl}">
-							<img class="aDishButton" src="${ctx}/index/images/restaurst13.jpg" class="img-rounded" style="height:200px;width:200px;">
+							<img class="aDishButton" src="${ctx}/index/images/restaurst13.jpg" class="img-rounded">
 						</c:if>
 						<c:if test="${!empty dish.photoUrl}"> --%>
-							<img class="aDishButton" src="${dish.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="" class="img-rounded" style="height:200px;width:200px;">
+							<img class="aDishButton" src="${dish.photoUrl}" onerror="javascript:this.src='${ctx}/images/no-picture.jpg'" alt="" class="img-rounded">
 						<%-- </c:if> --%>
 					</div>
 					<div class="col-md-8">
