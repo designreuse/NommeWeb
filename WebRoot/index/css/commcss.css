@@ -184,6 +184,11 @@
 	cursor: pointer;
 }
 
+#dishDialogContent .aDishButton {
+	max-width: 200px;
+	max-height: 200px;
+}
+
 .radio-checkbox-button{
 	/* height: 30px;
 	width:30px; */
