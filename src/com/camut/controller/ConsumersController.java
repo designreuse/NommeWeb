@@ -703,7 +703,7 @@ public class ConsumersController {
 						consumers.setUuid(consumerUuid);
 						address.setConsumers(consumers);
 						//if(StringUtil.isNotEmpty(map.get("isSaveAddress").toString())){
-						address.setPhone(cartHeader.getPhone());
+						address.setPhone(StringUtil.removeNonNumberCharacters(cartHeader.getPhone()));
 						address.setConsignee(cartHeader.getPeopleName());
 						address.setFloor(cartHeader.getFloor());
 						address.setFullAddress(cartHeader.getAddress());
@@ -794,17 +794,17 @@ public class ConsumersController {
 					consumers.setMemo(map.get("specislRequest").toString());
 				}
 				if(map.get("phone")!=null && map.get("phone").toString().length()>0){
-					consumers.setPhone(map.get("phone").toString());
+					consumers.setPhone(StringUtil.removeNonNumberCharacters(map.get("phone").toString()));
 				}
-				
-				PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword( map.get("password").toString());
-				if(validationResult != PASSWORD_VALIDATION.VALID){
-					pm.setSuccess(false);
-					pm.setFlag(GlobalConstant.PASSWORD_ERROR);
-					pm.setErrorMsg(validationResult.getMessage());
-					return pm;
+				if( map.get("password")!=null){
+					PASSWORD_VALIDATION validationResult = ValidationUtil.validatePassword( map.get("password").toString());
+					if(validationResult != PASSWORD_VALIDATION.VALID){
+						pm.setSuccess(false);
+						pm.setFlag(GlobalConstant.PASSWORD_ERROR);
+						pm.setErrorMsg(validationResult.getMessage());
+						return pm;
+					}
 				}
-				
 				int temp = consumersService.updateConsumersForNomme(consumers);
 				if(temp>0){
 					Consumers consumers2 = consumersService.getConsumersByUuid(consumerUuid);
@@ -1290,7 +1290,7 @@ public class ConsumersController {
 					ca.setStreet(street);
 					ca.setCity(city);
 					ca.setProvince(province);
-					ca.setPhone(phone);
+					ca.setPhone(StringUtil.removeNonNumberCharacters(phone));
 					ca.setLat(Double.parseDouble(lat));
 					ca.setLng(Double.parseDouble(lng));
 					ca.setConsignee(name);
@@ -1315,7 +1315,7 @@ public class ConsumersController {
 				ca.setStreet(street);
 				ca.setCity(city);
 				ca.setProvince(province);
-				ca.setPhone(phone);
+				ca.setPhone(StringUtil.removeNonNumberCharacters(phone));
 				ca.setConsignee(name);
 				ca.setLat(Double.parseDouble(lat));
 				ca.setLng(Double.parseDouble(lng));
