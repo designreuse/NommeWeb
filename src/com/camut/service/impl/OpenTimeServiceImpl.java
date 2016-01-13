@@ -492,6 +492,67 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			return null;
 		}
 	}
+	
+	/**
+	 * @Title: reservationFitsInsideOpenHours
+	 * @Description: Checks to see if an order for the given restaurant fits inside open hours.
+	 * @param restaurantUuid
+	 * @param orderDate
+	 * @param orderType
+	 * @return: boolean
+	 */
+	@Override
+	public boolean reservationFitsInsideOpenHours(String restaurantUuid, Date orderDate, int orderType) {
+		// Check to see if the restaurant is open at the requested time.
+		int o = orderDateAtOpenTime(orderDate, restaurantUuid, orderType);
+		if (o <= 0) {
+			System.out.println("Returning false because o was " + o);
+			return false;
+		}
+		
+		// Determine the order type's meal duration in minutes.
+		// TODO: Get the meal durations from the DAO.
+		int mealLength = 0;
+		switch (orderType) {
+			case 2:	// Pickup
+				mealLength = 0;
+				break;
+			case 1:	// Delivery
+				mealLength = 0;
+				break;
+			case 3:	// Reservation
+				mealLength = 60*2;
+				break;
+			default:
+				mealLength = 0;
+				break;
+		}
+		
+		// If there is no meal length, then we don't need to check further.
+		// Otherwise, we need to determine if the restaurant will remain open until the end of the meal.
+		if (mealLength == 0) {
+			System.out.println("Meal length was 0.  Returning true.");
+			return true;
+		}
+		
+		// Determine when the meal will be over.
+		DateTime orderDateTime = new DateTime(orderDate);
+		Date mealEndDate = orderDateTime.plusMinutes(mealLength).toDate();
+		
+		// Get the hours for the restaurant.  If any end times occur between the meal's start and
+		// end time, then the meal overlaps with closed hours.
+		List<PageOpenTime> listPageOpenTime = getAllOpenTime(restaurantUuid);
+		for(PageOpenTime pageOpenTime : listPageOpenTime) {
+			Date currentEndTime = new DateTime(pageOpenTime.getEndtime()).toDate();
+			if (currentEndTime.after(orderDate) && currentEndTime.before(mealEndDate)) {
+				System.out.println("End time found during meal.  Returning false!");
+				return false;
+			}
+		}
+		
+		System.out.println("Defaulting to true.");
+		return true;
+	}
 		
 	private Date getDateFromDateTime(DateTime dateTime)
 	{

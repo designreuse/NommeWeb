@@ -3,20 +3,27 @@
  */
 package com.camut.service.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.camut.dao.RestaurantTableDao;
+import com.camut.dao.RestaurantsDao;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.RestaurantTable;
 import com.camut.model.Restaurants;
 import com.camut.model.api.RestaurantTableApiModel;
 import com.camut.model.api.TableEntity;
 import com.camut.pageModel.PageTable;
+import com.camut.service.OpenTimeService;
 import com.camut.service.RestaurantTableService;
 
 /**
@@ -29,6 +36,9 @@ import com.camut.service.RestaurantTableService;
  */
 @Service
 public class RestaurantTableServiceImpl implements RestaurantTableService {
+	
+	@Autowired
+	private OpenTimeService openTimeService;
 
 	@Autowired
 	private RestaurantTableDao restaurantTableDao;
@@ -120,6 +130,25 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
 	 */
 	@Override
 	public List<RestaurantTableApiModel> getRestaurantTableList(Restaurants restaurants,String orderDate) {
+		System.out.println("Inside getRestaurantTableList...");
+		System.out.println(orderDate);
+		
+		// Only allow reservations if the restaurant is open during the dining period.
+		List<RestaurantTableApiModel> rtamList = new ArrayList<RestaurantTableApiModel>();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date convertedOrderDate = null;
+		try {
+			convertedOrderDate = format.parse(orderDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		boolean reservationFitsInsideOpenHours = openTimeService.reservationFitsInsideOpenHours(restaurants.getUuid(), convertedOrderDate, GlobalConstant.TYPE_RESERVATION);
+		if (reservationFitsInsideOpenHours == false) {
+			System.out.println("reservationFitsInsideOpenHours is false!");
+			return rtamList;
+		}
+		
 		// Get the number of tables of each type the restaurant has.
 		List<RestaurantTable> rtList = restaurantTableDao.getRestaurantTable(restaurants);
 		
@@ -127,7 +156,6 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
 		List<TableEntity> overlappingReservations = restaurantTableDao.getNumberOfRestaurantReservationOverlaps(restaurants.getUuid(), orderDate);
 		
 		// Find the table types that match up in both lists.
-		List<RestaurantTableApiModel> rtamList = new ArrayList<RestaurantTableApiModel>();
 		if (rtList != null && overlappingReservations != null) {
 			for (RestaurantTable restaurantTable : rtList) {
 				
