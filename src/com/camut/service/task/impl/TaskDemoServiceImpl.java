@@ -110,7 +110,9 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 						//Restaurants r = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
 						//如果用户信息中有设备号，则推送自动取消的信息给用户
 						if(StringUtil.isNotEmpty(c.getMobileToken())){
-							PushUtil.push(null,"Nomme", "The order is more than 15 minutes and untreated, the system automatically cancel the order.", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
+							PushUtil.push(null,"Nomme", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
+									+ "Please try another great restaurant around you. We apologzie for any inconvience. "
+									+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
 						}
 					}else{
 						timerTaskOrder();
@@ -142,7 +144,9 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 		sb.append("<table align='center'  style='width: 800px;margin-bottom: 20px;background-color: transparent;border-collapse: collapse;border-spacing: 0;border-color: gray;'>  	 ");
 		sb.append("<thead>");
 		sb.append("<tr>");
-		sb.append("<th colspan='6' align='left'>"+"The order is more than 15 minutes and untreated, the system automatically cancel the order."+"</th>");
+		sb.append("<th colspan='6' align='left'>"+"Thank you for ordering from Nomme. Unfortunately, the restaurant is too busy to accept this order. "
+				+ "Please try another great restaurant near you through Nomme. We apologize for any inconvenience."
+				+ "Should you have any questions, please call our toll-free number at 1800-708-4965."+"</th>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<th colspan='6' align='left'>receipt: </th>");
