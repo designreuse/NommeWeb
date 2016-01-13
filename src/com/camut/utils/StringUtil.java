@@ -1997,4 +1997,17 @@ public class StringUtil {
         return uuid;    
     }    
     
+	public static String removeNonNumberCharacters(String str) {
+		if (str == null) {
+			return "";
+		}
+		return str.replaceAll("[^0-9]", "");
+	}
+
+	public static String formatPhoneNumber(String str) {
+		if (str.length() == 10) {
+			return "(" + str.substring(0, 3) + ") " + str.substring(3, 3) + "-" + str.substring(6);
+		}
+		return str;
+	}
 }

@@ -335,7 +335,7 @@ public class IndexController {
 		consumers.setFirstName(pageConsumerAccount.getFirstName());
 		consumers.setLastName(pageConsumerAccount.getLastName());
 		consumers.setEmail(pageConsumerAccount.getEmail());
-		consumers.setPhone(pageConsumerAccount.getPhone());
+		consumers.setPhone(StringUtil.removeNonNumberCharacters(pageConsumerAccount.getPhone()));
 		consumers.setStatus(0);
 		consumers.setRegDate(new Date());
 		consumers.setPassword(MD5Util.md5(pageConsumerAccount.getPassword1()));

@@ -127,7 +127,7 @@ public class ConsumersServiceImpl implements ConsumersService {
 				consumers2.setFirstName(consumersApiModel.getFirstName());
 				consumers2.setLastName(consumersApiModel.getLastName());
 				consumers2.setEmail(consumersApiModel.getEmail());
-				consumers2.setPhone(consumersApiModel.getPhone());
+				consumers2.setPhone(StringUtil.removeNonNumberCharacters(consumersApiModel.getPhone()));
 				if(StringUtil.isNotEmpty(consumersApiModel.getPassword()) &&
 				   StringUtil.isNotEmpty(consumersApiModel.getNewpassword())){
 					//判断用户输入的旧密码是否正确
