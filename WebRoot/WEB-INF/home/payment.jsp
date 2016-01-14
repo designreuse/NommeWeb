@@ -64,7 +64,8 @@
 		</div>
 		<div id="charityDisplay">
 			<div id="charityNum" style="margin: 0px auto;width: 400px;margin-top: 50px;font-size: medium;color: #666666;">
-				Order placed. You can view your order information at My Nomme.
+				Your order has been received. We will send you another email/notification if your order 
+				has been accepted by the restaurant. Please check your email for additional details/changes to confirm your order. 
 				<br>
 				Please choose where Nomme should donate to:
 			</div>
