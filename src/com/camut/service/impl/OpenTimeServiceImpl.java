@@ -503,13 +503,6 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 	 */
 	@Override
 	public boolean reservationFitsInsideOpenHours(String restaurantUuid, Date orderDate, int orderType) {
-		// Check to see if the restaurant is open at the requested time.
-		int o = orderDateAtOpenTime(orderDate, restaurantUuid, orderType);
-		if (o <= 0) {
-			System.out.println("Returning false because o was " + o);
-			return false;
-		}
-		
 		// Determine the order type's meal duration in minutes.
 		// TODO: Get the meal durations from the DAO.
 		int mealLength = 0;
@@ -528,30 +521,43 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 				break;
 		}
 		
-		// If there is no meal length, then we don't need to check further.
-		// Otherwise, we need to determine if the restaurant will remain open until the end of the meal.
-		if (mealLength == 0) {
-			System.out.println("Meal length was 0.  Returning true.");
-			return true;
+		// Determine when the meal will be over.  Adjust the date to epoch for later.
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+		DateTime convertedOrderDateTime = null;
+		try {
+			convertedOrderDateTime = new DateTime(format.parse(format.format(orderDate)));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
 		}
+		int orderDayOfWeek = new DateTime(orderDate).getDayOfWeek();
+		Date convertedOrderDate = convertedOrderDateTime.toDate();
+		Date mealEndDate = convertedOrderDateTime.plusMinutes(mealLength).toDate();
 		
-		// Determine when the meal will be over.
-		DateTime orderDateTime = new DateTime(orderDate);
-		Date mealEndDate = orderDateTime.plusMinutes(mealLength).toDate();
-		
-		// Get the hours for the restaurant.  If any end times occur between the meal's start and
-		// end time, then the meal overlaps with closed hours.
-		List<PageOpenTime> listPageOpenTime = getAllOpenTime(restaurantUuid);
-		for(PageOpenTime pageOpenTime : listPageOpenTime) {
-			Date currentEndTime = new DateTime(pageOpenTime.getEndtime()).toDate();
-			if (currentEndTime.after(orderDate) && currentEndTime.before(mealEndDate)) {
-				System.out.println("End time found during meal.  Returning false!");
+		// Get the hours for the restaurant.  If the meal falls inside of an open time slot, then the
+		// meal can be accommodated for.
+		List<OpenTime> openTimeList = openTimeDao.getOpenTime(restaurantUuid, orderType, orderDayOfWeek);
+		boolean mealDuringOpenTime = false;
+		for(OpenTime openTime : openTimeList) {
+			// Convert the dates.  We only care about hours, so set the date to epoch.
+			Date currentStartTime = null;
+			Date currentEndTime = null;
+			try {
+				currentStartTime = format.parse(openTime.getStarttime());
+				currentEndTime = format.parse(openTime.getEndtime());
+			} catch (ParseException e) {
+				e.printStackTrace();
 				return false;
 			}
+			
+			if ((currentStartTime.before(convertedOrderDate) || currentStartTime.equals(convertedOrderDate)) &&
+					(currentEndTime.after(mealEndDate) || currentEndTime.equals(mealEndDate))) {
+				mealDuringOpenTime = true;
+				break;
+			}
 		}
-		
-		System.out.println("Defaulting to true.");
-		return true;
+		return mealDuringOpenTime;
 	}
 		
 	private Date getDateFromDateTime(DateTime dateTime)

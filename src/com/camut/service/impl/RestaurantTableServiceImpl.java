@@ -130,9 +130,6 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
 	 */
 	@Override
 	public List<RestaurantTableApiModel> getRestaurantTableList(Restaurants restaurants,String orderDate) {
-		System.out.println("Inside getRestaurantTableList...");
-		System.out.println(orderDate);
-		
 		// Only allow reservations if the restaurant is open during the dining period.
 		List<RestaurantTableApiModel> rtamList = new ArrayList<RestaurantTableApiModel>();
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -140,12 +137,11 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
 		try {
 			convertedOrderDate = format.parse(orderDate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return rtamList;
 		}
 		boolean reservationFitsInsideOpenHours = openTimeService.reservationFitsInsideOpenHours(restaurants.getUuid(), convertedOrderDate, GlobalConstant.TYPE_RESERVATION);
 		if (reservationFitsInsideOpenHours == false) {
-			System.out.println("reservationFitsInsideOpenHours is false!");
 			return rtamList;
 		}
 		
