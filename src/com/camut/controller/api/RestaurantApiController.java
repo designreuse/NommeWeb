@@ -237,8 +237,14 @@ public class RestaurantApiController  extends BaseAPiModel {
 				}
 			}else if (orderItemApiModel.getStatus() == 4) {//拒单
 				if(StringUtil.isNotEmpty(oh.getEmail())){
-					MailUtil.sendMail("Reject Order", "We apologize, but your order was rejected by "+restaurant+" due to the following reason: "+rejection+". Your payment has been fully refunded. Please try another great restaurant around you through Nomme. "
-							+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", oh.getEmail());//1:android 2:ios
+					if (oh.getRejection().equals("Too Busy")) {
+						MailUtil.sendMail("Order Expired", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
+								+ "Please try another great restaurant around you. We apologzie for any inconvience. "
+								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", oh.getEmail());
+					} else {
+						MailUtil.sendMail("Reject Order", "We apologize, but your order was rejected by "+restaurant+" due to the following reason: "+rejection+". Your payment has been fully refunded. Please try another great restaurant around you through Nomme. "
+								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", oh.getEmail());//1:android 2:ios
+					}
 				}
 				if(StringUtil.isNotEmpty(c.getMobileToken())){
 					PushUtil.push(session,"Nomme", "We apologize, but your order was rejected by "+restaurant+" due to the following reason: "+rejection+". Your payment has been fully refunded. Please try another great restaurant around you through Nomme. "
@@ -253,13 +259,13 @@ public class RestaurantApiController  extends BaseAPiModel {
 				}
 			}else if (orderItemApiModel.getStatus() == 8) {//Line up
 				if(StringUtil.isNotEmpty(oh.getEmail())){
-					MailUtil.sendMail("Line Up Order", restaurant+" received your reservation order and you will be placed in line. 1. Select Current Orders on your Nomme account 2. Select Order Details 3. Click Confirm for your updated reservation time."
-							+ "Should you have any questions, please call our toll-free number at 1800-708-4965. "
+					MailUtil.sendMail("Line Up Order", restaurant+" received your reservation order and you will be placed in line.\n\n1. Select Current Orders on your Nomme account\n2. Select Order Details\n3. Click Confirm for your updated reservation time.\n\n"
+							+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\n"
 							+ "Nomme.ca", oh.getEmail());//1:android 2:ios
 				}
 				if(StringUtil.isNotEmpty(c.getMobileToken())){
-					PushUtil.push(session,"Nomme", restaurant+" received your reservation order and you will be placed in line. 1. Select Current Orders on your Nomme account 2. Select Order Details 3. Click Confirm for your updated reservation time. "
-							+ "Should you have any questions, please call our toll-free number at 1800-708-4965."
+					PushUtil.push(session,"Nomme", restaurant+" received your reservation order and you will be placed in line.\n\n1. Select Current Orders on your Nomme account\n2. Select Order Details\n3. Click Confirm for your updated reservation time.\n\n"
+							+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\n"
 							+ "Nomme.ca ", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
 					/*try {
 						SNSMobilePush.push(c.getMobileToken(),restaurant+"got your reservation order. "+rejection,Integer.parseInt(c.getMobileType()));//1:android 2:ios 
