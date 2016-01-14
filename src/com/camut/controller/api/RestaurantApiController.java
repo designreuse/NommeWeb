@@ -255,12 +255,12 @@ public class RestaurantApiController  extends BaseAPiModel {
 				if(StringUtil.isNotEmpty(oh.getEmail())){
 					MailUtil.sendMail("Line Up Order", restaurant+" received your reservation order and you will be placed in line. 1. Select Current Orders on your Nomme account 2. Select Order Details 3. Click Confirm for your updated reservation time."
 							+ "Should you have any questions, please call our toll-free number at 1800-708-4965. "
-							+ "Nomme.ca"+rejection, oh.getEmail());//1:android 2:ios
+							+ "Nomme.ca", oh.getEmail());//1:android 2:ios
 				}
 				if(StringUtil.isNotEmpty(c.getMobileToken())){
 					PushUtil.push(session,"Nomme", restaurant+" received your reservation order and you will be placed in line. 1. Select Current Orders on your Nomme account 2. Select Order Details 3. Click Confirm for your updated reservation time. "
 							+ "Should you have any questions, please call our toll-free number at 1800-708-4965."
-							+ "Nomme.ca "+rejection, c.getMobileToken(), Integer.valueOf(c.getMobileType()));
+							+ "Nomme.ca ", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
 					/*try {
 						SNSMobilePush.push(c.getMobileToken(),restaurant+"got your reservation order. "+rejection,Integer.parseInt(c.getMobileType()));//1:android 2:ios 
 					} catch (IOException e) {
@@ -760,11 +760,13 @@ public class RestaurantApiController  extends BaseAPiModel {
 	
 	private String convertHtml1(OrderDetailsApiModel item){
 		StringBuffer sb=new StringBuffer();
+		
 		sb.append("<!DOCTYPE html>");
 		sb.append("<html>");
 		sb.append("<head>");
 		sb.append("</head>");
 		sb.append("<body style=\"font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.428571429;	color: #333;background-color: #fff;\">");
+		sb.append("<th colspan='6' align='left'>"+item.getRestaurantName()+" has accepted your order. Thank you for ordering with Nomme!  </th>");
 		sb.append("<table align='center'  style='width: 800px;margin-bottom: 20px;background-color: transparent;border-collapse: collapse;border-spacing: 0;border-color: gray;'>  	 ");
 		sb.append("<thead>");
 		sb.append("<tr>");
@@ -772,7 +774,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 		if(item.getOrderDate().contains("\n")){
 			tmp=item.getOrderDate().substring(0, item.getOrderDate().indexOf("\n"));
 		}
-		sb.append("<th colspan='6' align='left'>"+item.getRestaurantName()+" has accepted your order. Thank you for ordering with Nomme!  </th>");
+	
 		sb.append("<th colspan='6' align='left'>"+item.getRestaurantName()+" at "+tmp+" </th>");
 		sb.append("</tr>");
 		sb.append("<tr>");
