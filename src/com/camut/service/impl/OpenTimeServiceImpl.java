@@ -492,6 +492,73 @@ public class OpenTimeServiceImpl implements OpenTimeService {
 			return null;
 		}
 	}
+	
+	/**
+	 * @Title: reservationFitsInsideOpenHours
+	 * @Description: Checks to see if an order for the given restaurant fits inside open hours.
+	 * @param restaurantUuid
+	 * @param orderDate
+	 * @param orderType
+	 * @return: boolean
+	 */
+	@Override
+	public boolean reservationFitsInsideOpenHours(String restaurantUuid, Date orderDate, int orderType) {
+		// Determine the order type's meal duration in minutes.
+		// TODO: Get the meal durations from the DAO.
+		int mealLength = 0;
+		switch (orderType) {
+			case 2:	// Pickup
+				mealLength = 0;
+				break;
+			case 1:	// Delivery
+				mealLength = 0;
+				break;
+			case 3:	// Reservation
+				mealLength = 60*2;
+				break;
+			default:
+				mealLength = 0;
+				break;
+		}
+		
+		// Determine when the meal will be over.  Adjust the date to epoch for later.
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+		DateTime convertedOrderDateTime = null;
+		try {
+			convertedOrderDateTime = new DateTime(format.parse(format.format(orderDate)));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+		int orderDayOfWeek = new DateTime(orderDate).getDayOfWeek();
+		Date convertedOrderDate = convertedOrderDateTime.toDate();
+		Date mealEndDate = convertedOrderDateTime.plusMinutes(mealLength).toDate();
+		
+		// Get the hours for the restaurant.  If the meal falls inside of an open time slot, then the
+		// meal can be accommodated for.
+		List<OpenTime> openTimeList = openTimeDao.getOpenTime(restaurantUuid, orderType, orderDayOfWeek);
+		boolean mealDuringOpenTime = false;
+		for(OpenTime openTime : openTimeList) {
+			// Convert the dates.  We only care about hours, so set the date to epoch.
+			Date currentStartTime = null;
+			Date currentEndTime = null;
+			try {
+				currentStartTime = format.parse(openTime.getStarttime());
+				currentEndTime = format.parse(openTime.getEndtime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+			if ((currentStartTime.before(convertedOrderDate) || currentStartTime.equals(convertedOrderDate)) &&
+					(currentEndTime.after(mealEndDate) || currentEndTime.equals(mealEndDate))) {
+				mealDuringOpenTime = true;
+				break;
+			}
+		}
+		return mealDuringOpenTime;
+	}
 		
 	private Date getDateFromDateTime(DateTime dateTime)
 	{
