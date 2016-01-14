@@ -240,10 +240,10 @@ public class RestaurantApiController  extends BaseAPiModel {
 					if (oh.getRejection().equals("Too Busy")) {
 						MailUtil.sendMail("Order Expired", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
 								+ "Please try another great restaurant around you. We apologzie for any inconvience. "
-								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", oh.getEmail());
+								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\nnomme.ca", oh.getEmail());
 					} else {
 						MailUtil.sendMail("Reject Order", "We apologize, but your order was rejected by "+restaurant+" due to the following reason: "+rejection+". Your payment has been fully refunded. Please try another great restaurant around you through Nomme. "
-								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", oh.getEmail());//1:android 2:ios
+								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\nnomme.ca", oh.getEmail());//1:android 2:ios
 					}
 				}
 				if(StringUtil.isNotEmpty(c.getMobileToken())){

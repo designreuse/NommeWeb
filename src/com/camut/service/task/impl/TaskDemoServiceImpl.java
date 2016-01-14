@@ -103,6 +103,11 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 						orderIdList.remove(0);
 						Log4jUtil.info("订单id："+orderHeader.getId()+" 下单超过"+GlobalConstant.TIME_CANCEL_ORDER/60000+"分钟，商家未处理，系统自动取消 ");
 						//向用户发送订单自动取消的邮件
+						if(StringUtil.isNotEmpty(orderHeader.getEmail())){
+							MailUtil.sendMail("Order Expired", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
+									+ "Please try another great restaurant around you. We apologzie for any inconvience. "
+									+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\nnomme.ca", orderHeader.getEmail());
+						}
 						Consumers c = consumersService.getConsumersByUuid(orderHeader.getConsumers().getUuid());
 						//Restaurants r = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
 						//如果用户信息中有设备号，则推送自动取消的信息给用户
