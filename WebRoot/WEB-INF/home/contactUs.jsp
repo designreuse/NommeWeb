@@ -13,8 +13,8 @@
 			<div class="modal-body">			
 			
 Please contact us via 
-<a href="mailto:service@nomme.ca?subject=Contant Us">service@nomme.ca</a> 
- and we'll be happy to help! We'll get back in touch with you via the phone and email you enter. 
+<a href="mailto:service@nomme.ca?subject=Contant Us">service@nomme.ca</a> or call our toll-free at 1800-708-4965
+ and we'll be happy to assist you with any issues you may encounter! We'll get back in touch with you via the phone and email you enter. 
 <br><br>
 Our Customer Service Reps and Catering Specialists are available to assist you.
 <br><br>
