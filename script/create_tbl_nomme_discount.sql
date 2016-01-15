@@ -8,8 +8,6 @@ CREATE TABLE `tbl_nomme_discount` (
   `consume_price` decimal(18,2) DEFAULT NULL,
   `discount` decimal(5,2) DEFAULT NULL,
   `type` int(11) NOT NULL COMMENT '1:cash 2:percentage 3:free items',
-  `order_uuid` varchar(32) DEFAULT NULL,
-  `consumer_uuid` varchar(32) DEFAULT NULL,
   `start_time` varchar(50) DEFAULT NULL,
   `end_time` varchar(50) DEFAULT NULL,
   `order_type` int(11) DEFAULT NULL COMMENT 'apply coupon to: 1:delivery 2:pick up 3：dine-in/reservation 4:apply to all',

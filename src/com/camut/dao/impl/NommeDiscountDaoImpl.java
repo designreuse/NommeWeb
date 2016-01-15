@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.camut.dao.NommeDiscountDao;
 import com.camut.framework.constant.GlobalConstant.DELETE_STATUS;
 import com.camut.model.Discount;
+import com.camut.model.NommeDiscount;
 import com.camut.model.Restaurants;
 import com.camut.utils.UDSqlCommand;
 
@@ -17,36 +18,34 @@ import com.camut.utils.UDSqlCommand;
  * @memo
  */
 @Repository
-public class NommeDiscountDaoImpl extends BaseDao<Discount> implements NommeDiscountDao {
+public class NommeDiscountDaoImpl extends BaseDao<NommeDiscount> implements NommeDiscountDao {
 
 	/**
 	 * @Title: getAllDiscounts
-	 * @Description: 获取商家的所有优惠信息
-	 * @param: Restaurants
-	 * @return: List<PageDiscount>
+	 * @Description: get all nomme discounts
+	 * @param:
+	 * @return: List<NommeDiscount>
 	 */
 	@Override
-	public List<Discount> getAllDiscounts(Restaurants restaurants) {
+	public List<NommeDiscount> getAllNommeDiscounts() {
 		UDSqlCommand command = new UDSqlCommand();
-		command.SelectFrom("Discount").Where("restaurants=:restaurants").GetNonDeletedRecordsOnly().OrderBy("type")
-				.WithAscOrder();
-		command.AddParameters("restaurants", restaurants);
-
-		List<Discount> list = this.find(command);
+		command.SelectFrom("NommeDiscount").Where("").GetNonDeletedRecordsOnly();
+		
+		List<NommeDiscount> list = this.find(command);
 		return list;
 	}
 
 	/**
-	 * @Title: addDiscount
-	 * @Description: 增加优惠信息
-	 * @param: Discount
+	 * @Title: addNommeDiscount
+	 * @Description:
+	 * @param: NommeDiscount
 	 * @return: int
 	 */
 	@Override
-	public int addDiscount(Discount discount) {
+	public int addNommeDiscount(NommeDiscount nommeDiscount) {
 		try {
-			discount.setDeleteStatus(DELETE_STATUS.NOT_DELETED.getValue());
-			this.save(discount);
+			nommeDiscount.setDeleteStatus(DELETE_STATUS.NOT_DELETED.getValue());
+			this.save(nommeDiscount);
 		} catch (Exception e) {
 			return -1;
 		}
@@ -54,16 +53,16 @@ public class NommeDiscountDaoImpl extends BaseDao<Discount> implements NommeDisc
 	}
 
 	/**
-	 * @Title: updateDiscount
-	 * @Description: 修改优惠信息
-	 * @param: Discount
+	 * @Title: updateNommeDiscount
+	 * @Description:
+	 * @param: NommeDiscount
 	 * @return: int
 	 */
 	@Override
-	public int updateDiscount(Discount discount) {
+	public int updateNommeDiscount(NommeDiscount nommeDiscount) {
 		try {
-			discount.setDeleteStatus(DELETE_STATUS.NOT_DELETED.getValue());
-			this.update(discount);
+			nommeDiscount.setDeleteStatus(DELETE_STATUS.NOT_DELETED.getValue());
+			this.update(nommeDiscount);
 		} catch (Exception e) {
 			return -1;
 		}
@@ -71,15 +70,15 @@ public class NommeDiscountDaoImpl extends BaseDao<Discount> implements NommeDisc
 	}
 
 	/**
-	 * @Title: deleteDiscount
-	 * @Description: 删除优惠信息
-	 * @param: Discount
+	 * @Title: deleteNommeDiscount
+	 * @Description: soft delete
+	 * @param: NommeDiscount
 	 * @return: int
 	 */
 	@Override
-	public int deleteDiscount(Discount discount) {
+	public int deleteNommeDiscount(NommeDiscount nommeDiscount) {
 		try {
-			Discount toDelete = getDiscount(discount.getId());
+			NommeDiscount toDelete = getNommeDiscountByUuid(nommeDiscount.getUuid());
 			toDelete.setDeleteStatus(DELETE_STATUS.DELETED.getValue());
 			this.update(toDelete);
 		} catch (Exception e) {
@@ -89,34 +88,48 @@ public class NommeDiscountDaoImpl extends BaseDao<Discount> implements NommeDisc
 	}
 
 	/**
-	 * @Title: getDiscountByDishId
-	 * @Description: 根据菜品id查询优惠信息中有没有用到此菜品
+	 * @Title: getNommeDiscountByDishId
+	 * @Description: get discount by free item's id
 	 * @param: String
-	 * @return: int -1没用到 1用到
+	 * @return: NommeDiscount
 	 */
 	@Override
-	public int getDiscountByDishId(int dishId) {
+	public NommeDiscount getNommeDiscountByDishId(int dishId) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.CountFrom("Discount").Where("dishId=:dishId").GetNonDeletedRecordsOnly();
-		command.AddParameters("dishId", dishId);
-		return this.count(command).intValue();
+		command.CountFrom("NommeDiscount").Where("dishId=:dishId").GetNonDeletedRecordsOnly();
+
+		NommeDiscount nommeDiscount = this.get(command);
+		return nommeDiscount;
 	}
 
+	/**
+	 * @Title: getNommeDiscountByUuid
+	 * @Description: get nomme discount by uuid
+	 * @param uuid
+	 * @return NommeDiscount
+	 */
 	@Override
-	public Discount getDiscount(long discountId) {
+	public NommeDiscount getNommeDiscountByUuid(String uuid) {
 		UDSqlCommand command = new UDSqlCommand();
-		command.SelectFrom("Discount").Where("id=:discountId").GetNonDeletedRecordsOnly();
+		command.SelectFrom("NommeDiscount").Where("uuid=:uuid").GetNonDeletedRecordsOnly();
 
-		command.AddParameters("discountId", discountId);
+		command.AddParameters("uuid", uuid);
 
-		Discount discount = this.get(command);
-		return discount;
+		NommeDiscount nommeDiscount = this.get(command);
+		return nommeDiscount;
 	}
 
+	/**
+	 * @Title: hardDeleteNommeDiscount
+	 * @Description: WARINING: removing the record from the table cannot be
+	 *               undone
+	 * @param: NommeDiscount
+	 * @return: int
+	 */
 	@Override
-	public int hardDeleteDiscount(Discount discount) {
+	public int hardDeleteNommeDiscount(NommeDiscount nommeDiscount) {
 		try {
-			this.delete(discount);
+			this.delete(nommeDiscount);
 		} catch (Exception e) {
 			return -1;
 		}

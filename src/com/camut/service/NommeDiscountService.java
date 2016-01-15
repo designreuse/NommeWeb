@@ -1,58 +1,61 @@
-package com.camut.dao;
+package com.camut.service;
+
 
 import java.util.List;
+
 import com.camut.model.NommeDiscount;
+import com.camut.pageModel.PageDiscount;
 
 /**
- * @dao NommeDiscountDao.java
+ * @daoimpl NommeDiscountService.java
  * @author Cuong Ich Truong
- * @createtime 6 10, 2015
+ * @createtime 2016 01 16
  * @author
  * @updateTime
  * @memo
  */
-public interface NommeDiscountDao {
+public interface NommeDiscountService {
 
 	/**
-	 * @Title: getAllDiscounts
-	 * @Description: get all nomme discounts
-	 * @param:
-	 * @return: List<NommeDiscount>
+	 * @Title: getAllNommeDiscounts
+	 * @Description: get all non-deleted nomme discounts
+	 * @param:    Restaurants
+	 * @return: List<PageDiscount>
 	 */
 	public List<NommeDiscount> getAllNommeDiscounts();
-
+	
 	/**
 	 * @Title: addNommeDiscount
 	 * @Description:
-	 * @param: Discount
+	 * @param:    Discount
 	 * @return: int
 	 */
 	public int addNommeDiscount(NommeDiscount nommeDiscount);
-
+	
 	/**
 	 * @Title: updateNommeDiscount
 	 * @Description:
-	 * @param: NommeDiscount
+	 * @param:   Discount 
 	 * @return: int
 	 */
 	public int updateNommeDiscount(NommeDiscount nommeDiscount);
-
+	
 	/**
 	 * @Title: deleteNommeDiscount
 	 * @Description: soft delete
-	 * @param: NommeDiscount
+	 * @param:    Discount
 	 * @return: int
 	 */
 	public int deleteNommeDiscount(NommeDiscount nommeDiscount);
-
+	
 	/**
-	 * @Title: getDiscountByDishId
-	 * @Description: get discount by free item's id
-	 * @param: int
+	 * @Title: getNommeDiscountByDishId
+	 * @Description:
+	 * @param:   dish id 
 	 * @return: NommeDiscount
 	 */
-	public NommeDiscount getNommeDiscountByDishId(int dishId);
-
+	public NommeDiscount getNommeDiscountByDishId(String dishId);
+		
 	/**
 	 * @Title: getNommeDiscountByUuid
 	 * @Description: get nomme discount by uuid
@@ -60,13 +63,6 @@ public interface NommeDiscountDao {
 	 * @return NommeDiscount
 	 */
 	public NommeDiscount getNommeDiscountByUuid(String uuid);
-
-	/**
-	 * @Title: hardDeleteNommeDiscount
-	 * @Description: WARINING: removing the record from the table cannot be
-	 *               undone
-	 * @param: NommeDiscount
-	 * @return: int
-	 */
-	public int hardDeleteNommeDiscount(NommeDiscount nommeDiscount);
+	
+	
 }
