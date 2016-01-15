@@ -71,4 +71,14 @@ public interface OpenTimeService {
 	 * @return: String[]
 	 */
 	public String[] getOpenTimeByOrderDate(Date orderDate,String restaurantUuid,int type);
+	
+	/**
+	 * @Title: reservationFitsInsideOpenHours
+	 * @Description: Checks to see if an order for the given restaurant fits inside open hours.
+	 * @param restaurantUuid
+	 * @param orderDate
+	 * @param orderType
+	 * @return: boolean
+	 */
+	public boolean reservationFitsInsideOpenHours(String restaurantUuid, Date orderDate, int orderType);
 }

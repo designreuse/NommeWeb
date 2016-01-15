@@ -237,11 +237,20 @@ public class RestaurantApiController  extends BaseAPiModel {
 				}
 			}else if (orderItemApiModel.getStatus() == 4) {//拒单
 				if(StringUtil.isNotEmpty(oh.getEmail())){
-					MailUtil.sendMail("Reject Order", "Your order was reject by "+restaurant+", Because of the following reason: "+rejection+".", oh.getEmail());//1:android 2:ios
+					if (oh.getRejection().equals("Too Busy")) {
+						MailUtil.sendMail("Order Expired", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
+								+ "Please try another great restaurant around you. We apologzie for any inconvience. "
+								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\nnomme.ca", oh.getEmail());
+					} else {
+						MailUtil.sendMail("Reject Order", "We apologize, but your order was rejected by "+restaurant+" due to the following reason: "+rejection+". Your payment has been fully refunded. Please try another great restaurant around you through Nomme. "
+								+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\nnomme.ca", oh.getEmail());//1:android 2:ios
+					}
 				}
 				if(StringUtil.isNotEmpty(c.getMobileToken())){
-					PushUtil.push(session,"Nomme", "Your order was rejected by "+restaurant+", Because of the following reason: "+rejection+".", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
-					Log4jUtil.info("餐厅拒绝点推送ios"+"token="+c.getMobileToken()+", content="+"Your order was rejected by "+restaurant+", Because of the following reason: "+rejection+"."+", type="+c.getMobileType());
+					PushUtil.push(session,"Nomme", "We apologize, but your order was rejected by "+restaurant+" due to the following reason: "+rejection+". Your payment has been fully refunded. Please try another great restaurant around you through Nomme. "
+							+ "Should you have any questions, please call our toll-free number at 1800-708-4965."
+							+ "Nomme.ca", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
+					Log4jUtil.info("餐厅拒绝点推送ios"+"token="+c.getMobileToken()+", content="+"Unfortunately, your order was rejected by "+restaurant+" due to the following reason: "+rejection+"."+", type="+c.getMobileType());
 					/*try {
 						SNSMobilePush.push(c.getMobileToken(),"Your order was rejected by "+restaurant+", Because of the following reason: "+rejection+".",Integer.parseInt(c.getMobileType()));//1:android 2:ios
 					} catch (IOException e) {
@@ -250,10 +259,14 @@ public class RestaurantApiController  extends BaseAPiModel {
 				}
 			}else if (orderItemApiModel.getStatus() == 8) {//Line up
 				if(StringUtil.isNotEmpty(oh.getEmail())){
-					MailUtil.sendMail("Line Up Order", restaurant+" got your reservation order. "+rejection, oh.getEmail());//1:android 2:ios
+					MailUtil.sendMail("Line Up Order", restaurant+" received your reservation order and you will be placed in line.\n\n1. Select Current Orders on your Nomme account\n2. Select Order Details\n3. Click Confirm for your updated reservation time.\n\n"
+							+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\n"
+							+ "Nomme.ca", oh.getEmail());//1:android 2:ios
 				}
 				if(StringUtil.isNotEmpty(c.getMobileToken())){
-					PushUtil.push(session,"Nomme", restaurant+" got your reservation order. "+rejection, c.getMobileToken(), Integer.valueOf(c.getMobileType()));
+					PushUtil.push(session,"Nomme", restaurant+" received your reservation order and you will be placed in line.\n\n1. Select Current Orders on your Nomme account\n2. Select Order Details\n3. Click Confirm for your updated reservation time.\n\n"
+							+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\n"
+							+ "Nomme.ca ", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
 					/*try {
 						SNSMobilePush.push(c.getMobileToken(),restaurant+"got your reservation order. "+rejection,Integer.parseInt(c.getMobileType()));//1:android 2:ios 
 					} catch (IOException e) {
@@ -753,11 +766,13 @@ public class RestaurantApiController  extends BaseAPiModel {
 	
 	private String convertHtml1(OrderDetailsApiModel item){
 		StringBuffer sb=new StringBuffer();
+		
 		sb.append("<!DOCTYPE html>");
 		sb.append("<html>");
 		sb.append("<head>");
 		sb.append("</head>");
 		sb.append("<body style=\"font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.428571429;	color: #333;background-color: #fff;\">");
+		sb.append("<th colspan='6' align='left'>"+item.getRestaurantName()+" has accepted your order. Thank you for ordering with Nomme!  </th>");
 		sb.append("<table align='center'  style='width: 800px;margin-bottom: 20px;background-color: transparent;border-collapse: collapse;border-spacing: 0;border-color: gray;'>  	 ");
 		sb.append("<thead>");
 		sb.append("<tr>");
@@ -765,6 +780,7 @@ public class RestaurantApiController  extends BaseAPiModel {
 		if(item.getOrderDate().contains("\n")){
 			tmp=item.getOrderDate().substring(0, item.getOrderDate().indexOf("\n"));
 		}
+	
 		sb.append("<th colspan='6' align='left'>"+item.getRestaurantName()+" at "+tmp+" </th>");
 		sb.append("</tr>");
 		sb.append("<tr>");

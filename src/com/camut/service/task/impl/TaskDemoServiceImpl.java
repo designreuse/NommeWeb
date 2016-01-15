@@ -104,13 +104,17 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 						Log4jUtil.info("订单id："+orderHeader.getId()+" 下单超过"+GlobalConstant.TIME_CANCEL_ORDER/60000+"分钟，商家未处理，系统自动取消 ");
 						//向用户发送订单自动取消的邮件
 						if(StringUtil.isNotEmpty(orderHeader.getEmail())){
-							MailUtil.sendMail("Order Canceled", convertHtml1(orderHeader), orderHeader.getEmail());//1:android 2:ios
+							MailUtil.sendMail("Order Expired", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
+									+ "Please try another great restaurant around you. We apologzie for any inconvience. "
+									+ "Should you have any questions, please call our toll-free number at 1800-708-4965.\nnomme.ca", orderHeader.getEmail());
 						}
 						Consumers c = consumersService.getConsumersByUuid(orderHeader.getConsumers().getUuid());
 						//Restaurants r = restaurantsService.getRestaurantsById(orderHeader.getRestaurantId());
 						//如果用户信息中有设备号，则推送自动取消的信息给用户
 						if(StringUtil.isNotEmpty(c.getMobileToken())){
-							PushUtil.push(null,"Nomme", "The order is more than 15 minutes and untreated, the system automatically cancel the order.", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
+							PushUtil.push(null,"Nomme", "Thank you for ordering for Nomme. Unfortunately, the restaurant is too busy to accept the order."
+									+ "Please try another great restaurant around you. We apologzie for any inconvience. "
+									+ "Should you have any questions, please call our toll-free number at 1800-708-4965.", c.getMobileToken(), Integer.valueOf(c.getMobileType()));
 						}
 					}else{
 						timerTaskOrder();
@@ -129,86 +133,6 @@ public class TaskDemoServiceImpl implements TaskDemoService {
 	public void pushOrderid(long currentOrderId) {
 		// TODO Auto-generated method stub
 		this.orderIdList.add(currentOrderId);
-	}
-	
-	
-	private String convertHtml1(OrderHeader orderHeader){
-		StringBuffer sb=new StringBuffer();
-		sb.append("<!DOCTYPE html>");
-		sb.append("<html>");
-		sb.append("<head>");
-		sb.append("</head>");
-		sb.append("<body style=\"font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.428571429;	color: #333;background-color: #fff;\">");
-		sb.append("<table align='center'  style='width: 800px;margin-bottom: 20px;background-color: transparent;border-collapse: collapse;border-spacing: 0;border-color: gray;'>  	 ");
-		sb.append("<thead>");
-		sb.append("<tr>");
-		sb.append("<th colspan='6' align='left'>"+"The order is more than 15 minutes and untreated, the system automatically cancel the order."+"</th>");
-		sb.append("</tr>");
-		sb.append("<tr>");
-		sb.append("<th colspan='6' align='left'>receipt: </th>");
-		sb.append("</tr>");
-		OrderDetailsApiModel odam = orderItemService.selectHistoryOrder(orderHeader.getId());
-		if(odam.getItem()!=null&&odam.getItem().size()>0){
-			sb.append("<tr>");
-			sb.append("<th width='1%'></th>");
-			sb.append("<th width='8%'>Qty</th>");
-			sb.append("<th width='20%'>Dish Name</th>");
-			sb.append("<th width='20%'>Item</th>");
-			sb.append("<th width='20%'>Special</th>");
-			sb.append("<th width='20%'>Total</th>");
-			sb.append("</tr>");
-			sb.append("</thead>");
-			sb.append("<tbody style='border-top:1px solid #CCCCCC'>");
-			//start
-			DecimalFormat df = new DecimalFormat("######0.00");   
-			for (CartItemApiModel subItem : odam.getItem()) {
-				sb.append("<tr>");
-				sb.append("<td></td>");
-				sb.append("<td>"+subItem.getNum()+"</td>");
-				sb.append("<th>"+subItem.getDishName()+"</th>");
-				String str="";
-				for (CartDishGarnishApiModel subsubitem : subItem.getSubItem()) {
-					str+="<p style = 'line-height:0.1'>"+subsubitem.getGarnishName()+"</p>";
-				}
-				sb.append("<th style='display: table-cell;vertical-align: inherit;'>"+str+"</th>");
-				if(subItem.getInstruction()!=null&&subItem.getInstruction()!=""){
-					sb.append("<th>"+subItem.getInstruction()+"</th>");	
-				}else{
-					sb.append("<th></th>");
-				}
-				sb.append("<th>"+df.format(subItem.getUnitprice())+"</th>");
-				sb.append("</tr>");
-			}
-			//end			
-			sb.append("<tr  style='border-top:1px solid #CCCCCC'>");
-			sb.append("<th align='right' colspan='6' class='text-right'>");
-			sb.append("<p style = 'line-height:0.1;margin-top:5px;margin-right: 70px;'>Subtotal:$ "+df.format(odam.getTotal())+"</p>");
-			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Delivery:$ "+df.format(odam.getDeliveryfee())+"</p>");
-			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Tax:$ "+df.format(odam.getTax())+"</p>");
-			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Tip: "+df.format(odam.getTip())+"</p>");
-			sb.append("<p style = 'line-height:0.1;margin-right: 70px;'>Total: "+df.format(odam.getAmount())+"</p>");
-			sb.append("</th>");
-			sb.append("</tr>");
-		}
-		sb.append("<tr  style='border-top:1px solid #CCCCCC'>");
-		sb.append("<th align='left' colspan='6'>");
-		sb.append("<p style = 'line-height:0.1;margin-top:5px'>Name: "+odam.getConsumersName()+"</p>");
-		sb.append("<p style = 'line-height:0.1'>Phone: "+odam.getConsumersIdPhone()+"</p>");
-		if(odam.getChargeId()!=null&&odam.getChargeId()!=""){
-			sb.append("<p style = 'line-height:0.1'>Charge No: "+odam.getChargeId()+"</p>");
-		}
-		sb.append("<p style = 'line-height:0.1'>Order Type: "+odam.getOrderTypeStr()+"</p>");
-		sb.append("<p style = 'line-height:0.1'>Service time: "+odam.getOrderDate()+"</p>");
-		if(odam.getOrderType() == 3){
-			sb.append("<p style = 'line-height:0.1'>Number of people: "+odam.getNumber()+"</p>");
-		}
-		sb.append("</th>");
-		sb.append("</tr>");
-		sb.append("</tbody>");
-		sb.append("</table>");
-		sb.append("</body>");
-		sb.append("</html>	");				
-		return sb.toString();
 	}
 
 }
