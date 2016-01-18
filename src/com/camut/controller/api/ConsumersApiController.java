@@ -800,7 +800,7 @@ public class ConsumersApiController extends BaseAPiModel {
 				if(map.get("phone")!=null){
 					Consumers consumers = consumersService.getConsumersByUuid(map.get("consumerUuid").toString());
 					if(!StringUtil.isNotEmpty(consumers.getPhone())){
-						ConsumersApiModel consumersApiModel = null;
+						ConsumersApiModel consumersApiModel = new ConsumersApiModel();
 						consumersApiModel.setConsumerUuid(consumers.getUuid());
 						consumersApiModel.setFirstName(consumers.getFirstName());
 						consumersApiModel.setLastName(consumers.getLastName());
