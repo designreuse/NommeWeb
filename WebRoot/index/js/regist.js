@@ -27,6 +27,7 @@ $(function(){
 		window.location = appPath+"/index/restaurantmenu?restaurantUuid="+restaurantUuid;
 	});
 	
+	
 	function refreshCart (){
 		if(consumerUuid){
 			$.ajax({
@@ -644,6 +645,33 @@ $(function(){
 		return flag;
 	}
 	
-	
+	$("button[name='submitPromoCode']").click(function(){
+		$("button[name='submitPromoCode']").attr("disabled", true);
+		$("#tbPromoCode").attr("disabled", true);
+		hasNommeCoupon = false;
+		if(consumerUuid){
+			var couponCode = $("#tbPromoCode").val();
+			$.ajax({
+				type: 'post',
+				async: false,
+				url: appPath+'/consumers/submitPromoCode',
+				data: {consumerUuid:consumerUuid, couponCode:couponCode},
+				success: function(data){
+					var msg = $.parseJSON(data);								
+					if(!msg.success){
+						updateReturnedMsg = msg.errorMsg;
+						$("button[name='submitPromoCode']").attr("disabled", false);
+						$("#tbPromoCode").attr("disabled", false);
+						//TODO: display error message
+						alert('fail');
+					}
+					else{
+						alert('success');
+						refreshCart();
+					}
+				}
+			})
+		}
+	});
 	
 })

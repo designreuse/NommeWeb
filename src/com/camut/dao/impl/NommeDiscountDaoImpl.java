@@ -118,6 +118,23 @@ public class NommeDiscountDaoImpl extends BaseDao<NommeDiscount> implements Nomm
 		NommeDiscount nommeDiscount = this.get(command);
 		return nommeDiscount;
 	}
+	
+	/**
+	 * @Title: getNommeDiscountByCouponCode
+	 * @Description: get nomme discount by couponCode
+	 * @param couponCode
+	 * @return List<NommeDiscount>
+	 */
+	@Override
+	public List<NommeDiscount> getNommeDiscountByCouponCode(String couponCode) {
+		UDSqlCommand command = new UDSqlCommand();
+		command.SelectFrom("NommeDiscount").Where("couponCode=:couponCode").GetNonDeletedRecordsOnly();
+
+		command.AddParameters("couponCode", couponCode);
+
+		List<NommeDiscount> list = this.find(command);
+		return list;
+	}
 
 	/**
 	 * @Title: hardDeleteNommeDiscount

@@ -107,5 +107,16 @@ public class NommeDiscountServiceImpl implements NommeDiscountService {
 		NommeDiscount nommeDiscount = nommeDiscountDao.getNommeDiscountByUuid(uuid);
 		return nommeDiscount;
 	}
+	
+	/**
+	 * @Title: getNommeDiscountByCouponCode
+	 * @Description: get nomme discount by couponCode
+	 * @param couponCode
+	 * @return List<NommeDiscount>
+	 */
+	public List<NommeDiscount> getNommeDiscountByCouponCode(String couponCode){
+		List<NommeDiscount> list = nommeDiscountDao.getNommeDiscountByCouponCode(couponCode);
+		return list;
+	}
 
 }

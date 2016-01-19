@@ -4,6 +4,7 @@ package com.camut.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -16,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tbl_nomme_discount")
-public class NommeDiscount extends IdEntity implements java.io.Serializable {
+public class NommeDiscount implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3436003873258992463L;
 
@@ -40,6 +41,7 @@ public class NommeDiscount extends IdEntity implements java.io.Serializable {
 
 	// Property accessors
 
+	@Id
 	@Column(name = "uuid")
 	public String getUuid() {
 		return this.uuid;

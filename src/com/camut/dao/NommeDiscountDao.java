@@ -60,6 +60,14 @@ public interface NommeDiscountDao {
 	 * @return NommeDiscount
 	 */
 	public NommeDiscount getNommeDiscountByUuid(String uuid);
+	
+	/**
+	 * @Title: getNommeDiscountByCouponCode
+	 * @Description: get nomme discount by couponCode
+	 * @param couponCode
+	 * @return List<NommeDiscount>
+	 */
+	public List<NommeDiscount> getNommeDiscountByCouponCode(String couponCode);
 
 	/**
 	 * @Title: hardDeleteNommeDiscount
