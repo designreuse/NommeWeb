@@ -1,17 +1,17 @@
 package com.camut.utils;
 
-import java.util.List;
-
+import com.jhlabs.image.QuantizeFilter;
 import javax.imageio.ImageIO;
 
-import com.jhlabs.image.QuantizeFilter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class ImageBucketUtil {
 	public ImageBucketUtil() {
@@ -24,9 +24,8 @@ public class ImageBucketUtil {
 	 * @return: List<String>
 	 */
 	private List<String> getBucketImageUrls() {
-		// TODO: Get the list of image URLs from the Amazon image bucket.
-		List<String> imageUrlList = new ArrayList<String>();
-		imageUrlList.add("https://nomme-img-test.s3.amazonaws.com/71/0ba235c3-4d7f-4dc2-9d19-82315865420e.png");
+		// Get the image URLs from our Amazon bucket.
+		List<String> imageUrlList = AWSUtil.getBucketImageUrlListFromS3SingleOperation();
 		return imageUrlList;
 	}
 	
@@ -37,15 +36,19 @@ public class ImageBucketUtil {
 	 * @return: BufferedImage
 	 */
 	private BufferedImage downloadImage(String imageUrl) {
-		Image image = null;
-		try {
-		    URL downloadUrl = new URL(imageUrl);
-		    image = ImageIO.read(downloadUrl);
-		} catch (IOException e) {
-			e.printStackTrace();
+		// Abort operation if arguments invalid.
+		if (StringUtil.isEmpty(imageUrl)) {
+			return null;
 		}
 		
-		return (BufferedImage)image;
+		try {
+		    URL downloadUrl = new URL(imageUrl);
+		    Image image = ImageIO.read(downloadUrl);
+		    return (BufferedImage)image;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -54,14 +57,23 @@ public class ImageBucketUtil {
 	 * @param image
 	 * @param imageUrl
 	 */
-	private void uploadImage(BufferedImage image, String imageUrl) {
-		// TODO: Upload the image.
-		// DEBUG: Write the image to a local file.
-		File outputfile = new File("image.jpg");
+	private void uploadImage(BufferedImage image, String imageUrl, boolean saveToLocal) {
+		// Abort operation if arguments invalid.
+		if (image == null || StringUtil.isEmpty(imageUrl)) {
+			return;
+		}
+		
 		try {
-			ImageIO.write(image, "jpg", outputfile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// If saving the file locally, write to file.
+			if (saveToLocal) {
+				File outputfile = new File(imageUrl);
+				ImageIO.write(image, "jpg", outputfile);
+			}
+			
+			// TODO: Upload the image.
+			//MultipartFile file = (MultipartFile) image;
+			//AWSUtil.uploadImageToNommeS3SingleOperation(file, imageUrl);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -73,24 +85,34 @@ public class ImageBucketUtil {
 	 * @return: BufferedImage
 	 */
 	private BufferedImage reduceColorDepth(BufferedImage originalImage) {
-		// Create a new image for the modifications.
-	    BufferedImage modifiedImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		// Abort operation if arguments invalid.
+		if (originalImage == null) {
+			return null;
+		}
 		
-		// Create buffers for the pixels.
-		int[] inPixels = new int[originalImage.getWidth() * originalImage.getHeight() * 3];
-		int[] outPixels = new int[originalImage.getWidth() * originalImage.getHeight() * 3];
-		
-		// Load the original image into the input buffer.
-		originalImage.getRaster().getPixels(0, 0, originalImage.getWidth(), originalImage.getHeight(), inPixels);
-		
-		// Change the color depth.
-		QuantizeFilter q = new QuantizeFilter();
-		q.quantize(inPixels, outPixels, originalImage.getWidth(), originalImage.getHeight() * 3, 32, false, false);
-		
-		// Write the output buffer to the modified image.
-		modifiedImage.getRaster().setPixels(0, 0, originalImage.getWidth(), originalImage.getHeight(), outPixels);
-		
-		return modifiedImage;
+		try {
+			// Create a new image for the modifications.
+		    BufferedImage modifiedImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+			
+			// Create buffers for the pixels.
+			int[] inPixels = new int[originalImage.getWidth() * originalImage.getHeight() * 3];
+			int[] outPixels = new int[originalImage.getWidth() * originalImage.getHeight() * 3];
+			
+			// Load the original image into the input buffer.
+			originalImage.getRaster().getPixels(0, 0, originalImage.getWidth(), originalImage.getHeight(), inPixels);
+			
+			// Change the color depth.
+			QuantizeFilter q = new QuantizeFilter();
+			q.quantize(inPixels, outPixels, originalImage.getWidth(), originalImage.getHeight() * 3, 64, false, false);
+			
+			// Write the output buffer to the modified image.
+			modifiedImage.getRaster().setPixels(0, 0, originalImage.getWidth(), originalImage.getHeight(), outPixels);
+			
+			return modifiedImage;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -109,19 +131,21 @@ public class ImageBucketUtil {
 			// Download the image.
 			System.out.println("Downloading image");
 			BufferedImage originalImage = downloadImage(imageUrl);
+			if (originalImage == null) {
+				continue;
+			}
 			
 			// Reduce the image's color depth.
 			System.out.println("Reducing color depth");
 			BufferedImage modifiedImage = originalImage;
-			try {
-				modifiedImage = reduceColorDepth(originalImage);
-			} catch (Exception e) {
-				e.printStackTrace();
+			modifiedImage = reduceColorDepth(originalImage);
+			if (modifiedImage == null) {
+				continue;
 			}
 			
 			// Upload the image.
 			System.out.println("Uploading image");
-			uploadImage(modifiedImage, imageUrl);
+			uploadImage(modifiedImage, imageUrl, true);
 		}
 		
 		System.out.println("Done");
