@@ -183,13 +183,28 @@
 				</div>
 				<div class="row" style="height:20px;">
 				</div>
+				<div class="row zhucyemian-sh-10" style="float: none; height: 50px;"  align="center">
+					<table style="width:65%">
+						<tr align="center">
+							<td style="width:50%">
+								<input type="text" class="form-control" id="tbPromoCode" style="width:100%"
+									placeholder="Use your promo code">
+							</td>
+							<td style="width:50%">
+								<button type="button" name="submitPromoCode"
+									class="btn xc-btn-success btn-lg" style="padding-top: 0px;padding-bottom: 0px;height: 32.5px">Submit</button>
+							</td>
+					</table>
+
+				</div>
 				<div class="row">
 
 					<div class="col-md-10 col-md-offset-1" align="center">
-						<button type="button" name="gotoPay" class="btn xc-btn-success btn-lg">Choose your payment method next</button>
+						<button type="button" name="gotoPay" class="btn xc-btn-success btn-lg">Proceed to payment method</button>
 					</div>
 
 				</div>
+				
 				<div class="row">
 
 					<div class="col-md-10 col-md-offset-1" align="center" style="color:red;height:20px;">
