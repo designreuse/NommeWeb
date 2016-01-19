@@ -2,15 +2,18 @@ package com.camut.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +21,55 @@ public final class AWSUtil {
 	public static String AWS_ACCESS_KEY_VAR = "AWS_ACCESS_KEY";
 	public static String AWS_SECRET_KEY_VAR = "AWS_SECRET_KEY";
 	public static String AWS_IMAGES_BUCKET_VAR = "AWS_NOMME_IMAGES_BUCKET";
+	
+	public static List<String> getBucketImageUrlListFromS3SingleOperation() throws IllegalArgumentException
+	{
+		String bucketName = getSystemVariableOrProperty(AWS_IMAGES_BUCKET_VAR);
+		if (bucketName == null)
+		{
+			throw new IllegalArgumentException("AWS S3 bucket not defined. The environment variable " + AWS_IMAGES_BUCKET_VAR + " must be set to an S3 bucket.");
+		}
+		
+		String access_key = getSystemVariableOrProperty(AWS_ACCESS_KEY_VAR);	
+		if (access_key == null)
+		{
+			throw new IllegalArgumentException("AWS IAM access key not defined. The environment variable " + AWS_ACCESS_KEY_VAR + " must be set to access AWS services.");
+		}
+		
+		String private_key = getSystemVariableOrProperty(AWS_SECRET_KEY_VAR);	
+		if (private_key == null)
+		{
+			throw new IllegalArgumentException("AWS IAM secret key not defined. The environment variable " + AWS_SECRET_KEY_VAR + " must be set to access AWS services.");
+		}
+		
+		AmazonS3Client s3client = new AmazonS3Client(new BasicAWSCredentials(access_key, private_key));
+        try {
+        	// Get the list of all photos from the bucket.
+        	ObjectListing bucketItems = s3client.listObjects(bucketName);
+        	List<S3ObjectSummary> objectSummaryList = bucketItems.getObjectSummaries();
+        	List<String> imageUrlList = new ArrayList<String>();
+        	for (S3ObjectSummary objectSummary : objectSummaryList) {
+        		// Concatenate the strings into a valid image URL.
+        		String imageUrl = "https://" + bucketName + ".s3.amazonaws.com/" + objectSummary.getKey();
+        		imageUrlList.add(imageUrl);
+        	}
+        	
+        	return imageUrlList;
+        	
+         } catch (AmazonServiceException ase) {
+        	 Log4jUtil.info("Caught an AmazonServiceException, which means your request made it to Amazon S3, but was rejected with an error response for some reason.");
+        	 Log4jUtil.info("Error Message:    " + ase.getMessage());
+        	 Log4jUtil.info("HTTP Status Code: " + ase.getStatusCode());
+        	 Log4jUtil.info("AWS Error Code:   " + ase.getErrorCode());
+        	 Log4jUtil.info("Error Type:       " + ase.getErrorType());
+        	 Log4jUtil.info("Request ID:       " + ase.getRequestId());
+        } catch (AmazonClientException ace) {
+        	Log4jUtil.info("Caught an AmazonClientException, which means the client encountered an internal error while trying to communicate with S3, such as not being able to access the network.");
+        	Log4jUtil.info("Error Message: " + ace.getMessage());
+        }
+        
+		return new ArrayList<String>();
+	}
 	
 	public static String uploadImageToNommeS3SingleOperation(MultipartFile file, String awsKeyName) throws IllegalArgumentException
 	{
