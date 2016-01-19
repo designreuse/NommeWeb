@@ -1,17 +1,14 @@
 package com.camut.utils;
 
+import com.amazonaws.sns.bulkupload.ImageMultipartFile;
 import com.jhlabs.image.QuantizeFilter;
 import javax.imageio.ImageIO;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.UUID;
 
 public class ImageBucketUtil {
 	public ImageBucketUtil() {
@@ -52,30 +49,65 @@ public class ImageBucketUtil {
 	}
 	
 	/**
+	 * @Title: writeImageToFile
+	 * @Description: Writes the image to a local file.
+	 * @param image
+	 * @param imageUrl
+	 * @return: boolean
+	 */
+	private boolean writeImageToFile(BufferedImage image, String imageUrl) {
+		// Abort operation if arguments invalid.
+		if (image == null || StringUtil.isEmpty(imageUrl)) {
+			return false;
+		}
+		
+		try {
+			// Get the filename from the URL.
+			String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+			
+			// Write the image to a local file.
+			File outputfile = new File(fileName);
+			ImageIO.write(image, "jpg", outputfile);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
 	 * @Title: uploadImage
 	 * @Description: Uploads the given image to the given image URL for our Amazon image bucket.
 	 * @param image
 	 * @param imageUrl
+	 * @return: boolean
 	 */
-	private void uploadImage(BufferedImage image, String imageUrl, boolean saveToLocal) {
+	private boolean uploadImage(BufferedImage image, String imageUrl) {
 		// Abort operation if arguments invalid.
 		if (image == null || StringUtil.isEmpty(imageUrl)) {
-			return;
+			return false;
 		}
 		
 		try {
-			// If saving the file locally, write to file.
-			if (saveToLocal) {
-				File outputfile = new File(imageUrl);
-				ImageIO.write(image, "jpg", outputfile);
+			// Change the image URL to strip off the bucket name.  We only need the restaurant ID and image UUID.
+			int indexForFileUuidSlash = imageUrl.lastIndexOf("/");
+			if (indexForFileUuidSlash == -1) {
+				return false;
 			}
+			int indexForRestaurantIdSlash = imageUrl.lastIndexOf("/", indexForFileUuidSlash - 1);
+			if (indexForRestaurantIdSlash == -1) {
+				return false;
+			}
+			String imagePath = imageUrl.substring(indexForRestaurantIdSlash + 1);
 			
-			// TODO: Upload the image.
-			//MultipartFile file = (MultipartFile) image;
-			//AWSUtil.uploadImageToNommeS3SingleOperation(file, imageUrl);
+			// Upload the image to Amazon.
+			ImageMultipartFile imageMultipartFile = new ImageMultipartFile(image, imagePath);
+			AWSUtil.uploadImageToNommeS3SingleOperation(imageMultipartFile, imagePath);
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	/**
@@ -120,32 +152,45 @@ public class ImageBucketUtil {
 	 * @Description: Reduces the color depth to be 8-bit for all the images found on the Amazon image bucket.
 	 */
 	public void reduceColorDepthOfAllAmazonImages() {
-		System.out.println("Reducing color depth of all Amazon images");
+		System.out.println("Reducing color depth of all Amazon images.");
 		
 		// Fetch the list of image URLs from the Amazon image bucket.
-		System.out.println("Getting image URLs");
+		System.out.println("Getting image URLs.");
 		List<String> imageUrlList = getBucketImageUrls();
 		for (String imageUrl : imageUrlList) {
 			System.out.println("Current image: " + imageUrl);
 			
 			// Download the image.
-			System.out.println("Downloading image");
+			System.out.println("Downloading image.");
 			BufferedImage originalImage = downloadImage(imageUrl);
 			if (originalImage == null) {
+				System.out.println("Failed to download image.");
 				continue;
 			}
 			
 			// Reduce the image's color depth.
-			System.out.println("Reducing color depth");
+			System.out.println("Reducing color depth.");
 			BufferedImage modifiedImage = originalImage;
 			modifiedImage = reduceColorDepth(originalImage);
 			if (modifiedImage == null) {
+				System.out.println("Failed to reduce color depth.");
+				continue;
+			}
+			
+			// Write the original image locally.
+			System.out.println("Writing original image to local storage.");
+			boolean imageWritten = writeImageToFile(originalImage, imageUrl);
+			if (imageWritten != true) {
+				System.out.println("Failed to write original image to local storage.");
 				continue;
 			}
 			
 			// Upload the image.
-			System.out.println("Uploading image");
-			uploadImage(modifiedImage, imageUrl, true);
+			System.out.println("Uploading modified image to Amazon S3.");
+			boolean uploadDone = uploadImage(modifiedImage, imageUrl);
+			if (uploadDone != true) {
+				System.out.println("Failed to upload modified image to Amazon S3.");
+			}
 		}
 		
 		System.out.println("Done");
