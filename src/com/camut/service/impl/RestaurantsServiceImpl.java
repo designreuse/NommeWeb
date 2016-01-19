@@ -513,14 +513,16 @@ public class RestaurantsServiceImpl implements RestaurantsService {
 						pageDishList.add(pd);
 						
 						// If this dish is popular, add it to the list of popular dishes.
-						if (dish.getIsPopular() == 1) {
-							PageDish popularPageDish = new PageDish();
-							popularPageDish.setId(dish.getId());
-							popularPageDish.setChName(dish.getChName());
-							popularPageDish.setEnName(dish.getEnName());
-							popularPageDish.setPrice(dish.getPrice());
-							popularPageDish.setPhotoUrl(dish.getPhotoUrl());
-							popularDishList.add(popularPageDish);
+						if(dish.getIsPopular() != null){
+							if (dish.getIsPopular() == 1) {
+								PageDish popularPageDish = new PageDish();
+								popularPageDish.setId(dish.getId());
+								popularPageDish.setChName(dish.getChName());
+								popularPageDish.setEnName(dish.getEnName());
+								popularPageDish.setPrice(dish.getPrice());
+								popularPageDish.setPhotoUrl(dish.getPhotoUrl());
+								popularDishList.add(popularPageDish);
+							}
 						}
 					}
 				}
