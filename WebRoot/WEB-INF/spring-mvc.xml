@@ -68,6 +68,7 @@
 						<value>/index/emailExist</value>
 						<value>/index/getDishes</value>
 						<value>/index/getOneDish</value>
+						<value>/index/testPage</value>
 						
 					</list>
 				</property>
