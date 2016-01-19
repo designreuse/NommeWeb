@@ -456,4 +456,14 @@ public class IndexController {
 		return "home/statement";
 	}
 	
+	/**
+	 * @Title: aboutUsPage
+	 * @Description: go to about us page
+	 * @param: HttpSession session
+	 * @return String  url
+	 */
+	@RequestMapping(value = "/testPage")
+	public String aboutUsPage(HttpSession session){
+		return "home/testPage";
+	}
 }

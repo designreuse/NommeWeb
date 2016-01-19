@@ -474,7 +474,8 @@ $(function(){
 	
 	//About 
 	$("#index-about").click(function(){
-		$("#myAbout").modal('show');
+		//$("#myAbout").modal('show');
+		window.location = appPath+"/index/testPage";
 	});
 	
 	//FAQ 
