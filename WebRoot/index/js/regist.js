@@ -663,7 +663,7 @@ $(function(){
 						$("button[name='submitPromoCode']").attr("disabled", false);
 						$("#tbPromoCode").attr("disabled", false);
 						//TODO: display error message
-						alert('fail');
+						alert('fail: ' + updateReturnedMsg);
 					}
 					else{
 						alert('success');
