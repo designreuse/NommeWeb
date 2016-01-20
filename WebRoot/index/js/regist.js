@@ -645,8 +645,9 @@ $(function(){
 		return flag;
 	}
 	
-	$("button[name='submitPromoCode']").click(function(){
-		$("button[name='submitPromoCode']").attr("disabled", true);
+	// Validate promo code button event handler.
+	$("button[name='validatePromoCode']").click(function(){
+		$("button[name='validatePromoCode']").attr("disabled", true);
 		$("#tbPromoCode").attr("disabled", true);
 		hasNommeCoupon = false;
 		if(consumerUuid){
@@ -654,20 +655,17 @@ $(function(){
 			$.ajax({
 				type: 'post',
 				async: false,
-				url: appPath+'/consumers/submitPromoCode',
+				url: appPath+'/consumers/validatePromoCode',
 				data: {consumerUuid:consumerUuid, couponCode:couponCode},
 				success: function(data){
 					var msg = $.parseJSON(data);								
 					if(!msg.success){
-						updateReturnedMsg = msg.errorMsg;
-						$("button[name='submitPromoCode']").attr("disabled", false);
+						$("button[name='validatePromoCode']").attr("disabled", false);
 						$("#tbPromoCode").attr("disabled", false);
-						//TODO: display error message
-						alert('fail: ' + updateReturnedMsg);
+						$("#promoCodeResponse").text(msg.errorMsg);
 					}
 					else{
-						alert('success');
-						refreshCart();
+						$("#promoCodeResponse").text(msg.errorMsg);
 					}
 				}
 			})

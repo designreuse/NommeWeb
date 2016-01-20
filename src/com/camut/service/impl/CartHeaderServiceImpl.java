@@ -7,11 +7,7 @@ import com.camut.dao.CartDishGarnishDao;
 import com.camut.dao.CartHeaderDao;
 import com.camut.dao.CartItemDao;
 import com.camut.dao.DiscountDao;
-import com.camut.dao.DishDao;
-import com.camut.dao.DishGarnishDao;
-import com.camut.dao.DistancePriceDao;
 import com.camut.dao.RestaurantsDao;
-import com.camut.dao.ViewRestaurantDao;
 import com.camut.framework.constant.GlobalConstant;
 import com.camut.model.CartDishGarnish;
 import com.camut.model.CartHeader;
@@ -28,11 +24,7 @@ import com.camut.utils.StringUtil;
 public class CartHeaderServiceImpl implements CartHeaderService {
 
 	@Autowired private CartHeaderDao cartHeaderDao;
-	@Autowired private DistancePriceDao distancePriceDao;
-	@Autowired private ViewRestaurantDao viewRestaurantDao;
-	@Autowired private DishDao dishDao;
 	@Autowired private CartDishGarnishDao cartDishGarnishDao;
-	@Autowired private DishGarnishDao dishGarnishDao;
 	@Autowired private DiscountDao discountDao;
 	@Autowired private RestaurantsDao restaurantsDao;
 	@Autowired private CartItemDao cartItemDao;

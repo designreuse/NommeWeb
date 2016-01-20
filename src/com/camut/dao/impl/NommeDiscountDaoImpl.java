@@ -4,9 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import com.camut.dao.NommeDiscountDao;
 import com.camut.framework.constant.GlobalConstant.DELETE_STATUS;
-import com.camut.model.Discount;
 import com.camut.model.NommeDiscount;
-import com.camut.model.Restaurants;
 import com.camut.utils.UDSqlCommand;
 
 /**

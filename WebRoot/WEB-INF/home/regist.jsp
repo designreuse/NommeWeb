@@ -181,9 +181,11 @@
 					</div>
 					
 				</div>
-				<div class="row" style="height:20px;">
-				</div>
-				<div class="row zhucyemian-sh-10" style="float: none; height: 50px;"  align="center">
+				<div class="zhucyemian-miaodi"></div>
+				<h3 align="center">
+					Promo Code
+				</h3>
+				<div class="row zhucyemian-sh-10" style="float: none;"  align="center">
 					<table style="width:65%">
 						<tr align="center">
 							<td style="width:50%">
@@ -191,11 +193,11 @@
 									placeholder="Use your promo code">
 							</td>
 							<td style="width:50%">
-								<button type="button" name="submitPromoCode"
-									class="btn xc-btn-success btn-lg" style="padding-top: 0px;padding-bottom: 0px;height: 32.5px">Submit</button>
+								<button type="button" name="validatePromoCode"
+									class="btn xc-btn-success btn-lg" style="padding-top: 0px;padding-bottom: 0px;height: 32.5px">Use Promo Code</button>
 							</td>
 					</table>
-
+					<div id = "promoCodeResponse" class="col-md-2 zhucyemian-p" style = "float:none; width:100%;"></div>
 				</div>
 				<div class="row">
 

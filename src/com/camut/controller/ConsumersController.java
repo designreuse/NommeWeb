@@ -1,13 +1,11 @@
 package com.camut.controller;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.camut.framework.constant.GlobalConstant;
-import com.camut.framework.constant.GlobalConstant.DISCOUNT_TYPE;
 import com.camut.framework.constant.MessageConstant;
 import com.camut.framework.constant.MessageConstant.PASSWORD_VALIDATION;
 import com.camut.model.CardEntity;
@@ -32,18 +29,14 @@ import com.camut.model.OrderHeader;
 import com.camut.model.Restaurants;
 import com.camut.model.api.CartHeaderApiModel;
 import com.camut.model.api.CartItemApiModel;
-import com.camut.model.api.ConsumersAddressApiModel;
 import com.camut.model.api.EvaluateApiModel;
 import com.camut.model.api.OrderDetailsApiModel;
 import com.camut.pageModel.PageConsumersAddress;
 import com.camut.pageModel.PageDiscount;
-import com.camut.pageModel.PageEvaluate;
 import com.camut.pageModel.PageFavourites;
 import com.camut.pageModel.PageFilter;
 import com.camut.pageModel.PageMessage;
-import com.camut.pageModel.PageOrderHeader;
 import com.camut.pageModel.PageSelectItemReservationOrder;
-import com.camut.service.CartDishGarnishService;
 import com.camut.service.CartHeaderService;
 import com.camut.service.CartItemService;
 import com.camut.service.CartService;
@@ -51,7 +44,6 @@ import com.camut.service.ConsumersAddressService;
 import com.camut.service.ConsumersFavoritesService;
 import com.camut.service.ConsumersService;
 import com.camut.service.DiscountService;
-import com.camut.service.DishService;
 import com.camut.service.DistancePriceService;
 import com.camut.service.EvaluateService;
 import com.camut.service.NommeDiscountService;
@@ -61,7 +53,6 @@ import com.camut.service.OrderService;
 import com.camut.service.RestaurantsService;
 import com.camut.utils.CommonUtil;
 import com.camut.utils.GetLatLngByAddress;
-import com.camut.utils.Log4jUtil;
 import com.camut.utils.MD5Util;
 import com.camut.utils.StringUtil;
 import com.camut.utils.ValidationUtil;
@@ -70,11 +61,9 @@ import com.camut.utils.ValidationUtil;
 @RequestMapping("/consumers")
 public class ConsumersController {
 	
-	@Autowired private DishService dishService;
 	@Autowired private CartService cartService;
 	@Autowired private CartItemService cartItemService;
 	@Autowired private CartHeaderService cartHeaderService;
-	@Autowired private CartDishGarnishService cartDishGarnishService;
 	@Autowired private OrderService orderService;
 	@Autowired private DiscountService discountService; 
 	@Autowired private ConsumersAddressService consumersAddressService;
@@ -329,7 +318,6 @@ public class ConsumersController {
 		}
 		if(orderHeaderList!=null &&orderHeaderList.size()>0){
 			List<PageSelectItemReservationOrder> orderHeaderList2 = new ArrayList<PageSelectItemReservationOrder>(); 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			//long nowTime = (new Date().getTime())+(1000*60*60);//筛选当前时间一个小时以后的订桌订单
 			Date localTime = restaurantsService.getCurrentLocalTimeFromRestaurantsUuid(restaurantUuid);
 			long nowTime = localTime.getTime();
@@ -1005,7 +993,6 @@ public class ConsumersController {
 	public String getAddressPage(Model model, HttpSession session){
 		if(session.getAttribute("consumer")!=null){
 			String consumerUuid =((Consumers)session.getAttribute("consumer")).getUuid();
-			String restaurantUuid = "0";
 			if(StringUtil.isNotEmpty(consumerUuid)){
 				List<PageConsumersAddress> addressList = consumersAddressService.getPageConsumersAddressListByConsumerUuid(consumerUuid);
 				model.addAttribute("addressList",addressList);
@@ -1386,63 +1373,32 @@ public class ConsumersController {
 	}
 	
 	/**
-	 * @Title: submitPromoCode
-	 * @Description: get promo code and check if valid 
-	 * @param: String consumerUuid
-	 * @param: String couponCode
-	 * @return PageMessage
+	 * @Title: validatePromoCode
+	 * @Description: Verifies that the given promo code is valid, and returns the resulting description of the code's discount effect.
+	 * @param consumerUuid
+	 * @param couponCode
+	 * @return
 	 */
-	@RequestMapping(value = "/submitPromoCode", method = RequestMethod.POST)
+	@RequestMapping(value="/validatePromoCode", method = RequestMethod.POST)
 	@ResponseBody
-	public PageMessage submitPromoCode(String consumerUuid, String couponCode) throws Exception {
-		// AHGPBTZU
+	public PageMessage validatePromoCode(String consumerUuid, String couponCode) {
+		// Check to see if the coupon code is valid.
 		PageMessage pm = new PageMessage();
-		pm.setErrorMsg("Cart not found.");
-		pm.setSuccess(false);
-		if (StringUtil.isNotEmpty(consumerUuid)) {
-			CartHeader cartHeader = cartHeaderService.getCartHeaderByConsumerUuid(consumerUuid);
-			if (cartHeader != null) {
-				OrderHeader orderHeader = orderService.CartHeaderToOrderHeader(cartHeader.getId());
-				if (orderHeader == null) {
-					pm.setErrorMsg("Order not found.");
-					return pm;
-				}
-				pm.setErrorMsg("Coupon code is invalid.");
-				List<NommeDiscount> nommeDiscountList = nommeDiscountService.getNommeDiscountByCouponCode(couponCode);
-				if (nommeDiscountList != null) {
-					if (nommeDiscountList.size() > 0) {
-						NommeDiscount nommeDiscount = nommeDiscountList.get(0);
-
-						// check date
-						long localTime = consumersAddressService.getCurrentLocalTimeForConsumer(consumerUuid).getTime();
-						SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy, hh:mm aaa", Locale.CANADA);
-						long startTime = sdf.parse(nommeDiscount.getStartTime()).getTime();
-						long endTime = sdf.parse(nommeDiscount.getEndTime()).getTime();
-						if (localTime < startTime || localTime > endTime) {
-							pm.setErrorMsg("Coupon code is expired.");
-							return pm;
-						}
-
-						// check number of use
-						if (nommeDiscount.getMaxUses() <= nommeDiscount.getUsedCount()) {
-							pm.setErrorMsg("Coupon code has already used.");
-							return pm;
-						}
-
-						//final check if the coupon has valid info
-						if (nommeDiscount.getType() != null && nommeDiscount.getDiscount() != null) {
-							if (nommeDiscount.getType() == DISCOUNT_TYPE.PERCENTAGE_COUPON.getValue()) {
-
-								// TODO: update CartHeader here
-
-								pm.setErrorMsg("");
-								pm.setSuccess(true);
-							}
-						} 
-					}
-				}
+		System.out.println("Checking if coupon code is valid.");
+		boolean couponCodeIsValid = nommeDiscountService.validateCouponCode(couponCode);
+		System.out.println("Checked if coupon code was valid.");
+		if (couponCodeIsValid) {
+			// Get the coupon code.
+			List<NommeDiscount> nommeDiscountList = nommeDiscountService.getNommeDiscountByCouponCode(couponCode);
+			if (nommeDiscountList != null && nommeDiscountList.size() > 0) {
+				NommeDiscount nommeDiscount = nommeDiscountList.get(0);
+				pm.setSuccess(true);
+				pm.setErrorMsg(nommeDiscount.getContent());
+				return pm;
 			}
 		}
+		pm.setSuccess(false);
+		pm.setErrorMsg("Invalid coupon.");
 		return pm;
 	}
 }

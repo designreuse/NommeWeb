@@ -4,7 +4,6 @@ package com.camut.service;
 import java.util.List;
 
 import com.camut.model.NommeDiscount;
-import com.camut.pageModel.PageDiscount;
 
 /**
  * @daoimpl NommeDiscountService.java
@@ -64,7 +63,6 @@ public interface NommeDiscountService {
 	 */
 	public NommeDiscount getNommeDiscountByUuid(String uuid);
 	
-	
 	/**
 	 * @Title: getNommeDiscountByCouponCode
 	 * @Description: get nomme discount by couponCode
@@ -72,5 +70,13 @@ public interface NommeDiscountService {
 	 * @return List<NommeDiscount>
 	 */
 	public List<NommeDiscount> getNommeDiscountByCouponCode(String couponCode);
+	
+	/**
+	 * @Title: validateCouponCode
+	 * @Description: Validates the given coupon code.
+	 * @param couponCode
+	 * @return boolean
+	 */
+	public boolean validateCouponCode(String couponCode);
 	
 }

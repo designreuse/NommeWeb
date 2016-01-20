@@ -31,6 +31,7 @@ import com.camut.model.Consumers;
 import com.camut.model.ConsumersAddress;
 import com.camut.model.Discount;
 import com.camut.model.GarnishItem;
+import com.camut.model.NommeDiscount;
 import com.camut.model.OrderDishGarnish;
 import com.camut.model.OrderHeader;
 import com.camut.model.OrderItem;
@@ -44,7 +45,6 @@ import com.camut.model.api.ConsumersApiModel;
 import com.camut.model.api.EvaluateApiModel;
 import com.camut.model.api.ResultApiModel;
 import com.camut.model.api.ViewConsumerClassifitionApiModel;
-import com.camut.service.CartDishGarnishService;
 import com.camut.service.CartHeaderService;
 import com.camut.service.CartItemService;
 import com.camut.service.CartService;
@@ -54,13 +54,8 @@ import com.camut.service.ConsumersBankaccountService;
 import com.camut.service.ConsumersFavoritesService;
 import com.camut.service.ConsumersService;
 import com.camut.service.DiscountService;
-import com.camut.service.DishGarnishService;
-import com.camut.service.DishService;
-import com.camut.service.DistancePriceService;
 import com.camut.service.EvaluateService;
-import com.camut.service.GarnishItemService;
-import com.camut.service.OpenTimeService;
-import com.camut.service.OrderCharityService;
+import com.camut.service.NommeDiscountService;
 import com.camut.service.OrderItemService;
 import com.camut.service.OrderService;
 import com.camut.service.PaymentService;
@@ -98,18 +93,12 @@ public class ConsumersApiController extends BaseAPiModel {
 	@Autowired private ClassificationService classificationService;
 	@Autowired private CartService cartService;
 	@Autowired private CartHeaderService cartHeaderService;
-	@Autowired private CartDishGarnishService cartDishGarnishService;
 	@Autowired private CartItemService cartItemService;
 	@Autowired private PaymentService paymentService;
 	@Autowired private RestaurantsService restaurantsService;
 	@Autowired private DiscountService discountService;
-	@Autowired private DistancePriceService distancePriceService;
-	@Autowired private OrderCharityService orderCharityService;
-	@Autowired private OpenTimeService openTimeService;
-	@Autowired private DishService dishService;
-	@Autowired private GarnishItemService garnishItemService;
-	@Autowired private DishGarnishService dishGarnishService;
 	@Autowired private RestaurantsUserService restaurantsUserService;
+	@Autowired private NommeDiscountService nommeDiscountService;
 	
 	private static Map<String, String> map=new HashMap<String, String>();
 	
@@ -1783,6 +1772,34 @@ public class ConsumersApiController extends BaseAPiModel {
 				ram.setBody(list.get(0));
 			}
 		}
+		return ram;
+	}
+	
+	/**
+	 * @Title: validatePromoCode
+	 * @Description: Verifies that the given promo code is valid, and returns the resulting description of the code's discount effect.
+	 * @param consumerUuid
+	 * @param couponCode
+	 * @return ResultApiModel
+	 */
+	@RequestMapping(value="/validatePromoCode", method = RequestMethod.POST)
+	public ResultApiModel validatePromoCode(String consumerUuid, String couponCode) {
+		// Check to see if the coupon code is valid.
+		ResultApiModel ram = new ResultApiModel();
+		boolean couponCodeIsValid = nommeDiscountService.validateCouponCode(couponCode);
+		if (couponCodeIsValid) {
+			// Get the coupon code.
+			List<NommeDiscount> nommeDiscountList = nommeDiscountService.getNommeDiscountByCouponCode(couponCode);
+			if (nommeDiscountList != null && nommeDiscountList.size() > 0) {
+				NommeDiscount nommeDiscount = nommeDiscountList.get(0);
+				ram.setFlag(1);
+				ram.setBody(nommeDiscount.getContent());
+				ram.setResultMessage("");
+				return ram;
+			}
+		}
+		ram.setFlag(0);
+		ram.setResultMessage("Invalid coupon.");
 		return ram;
 	}
 	
