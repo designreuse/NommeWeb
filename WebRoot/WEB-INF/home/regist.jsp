@@ -181,9 +181,9 @@
 					</div>
 					
 				</div>
-				<div class="row" style="height:20px;">
+				<div class="row" style="height:20px; display:none;">
 				</div>
-				<div class="row zhucyemian-sh-10" style="float: none; height: 50px;"  align="center">
+				<div class="row zhucyemian-sh-10" style="float: none; height: 50px; display:none;"  align="center">
 					<table style="width:65%">
 						<tr align="center">
 							<td style="width:50%">
