@@ -74,6 +74,11 @@
 				</property>
 			</bean>
 		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/consumers/*" />
+			<bean class="com.camut.framework.interceptors.LoginRequiredInterceptor">
+			</bean>
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 </beans>
