@@ -10,11 +10,16 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.camut.service.AuthenticationService;
 
-public class LoginRequiredInterceptor extends HandlerInterceptorAdapter {
+public class MobileConsumerLoginRequiredInterceptor extends HandlerInterceptorAdapter {
 	@Autowired private AuthenticationService authenticationService;
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-		if (authenticationService.validSessionLogin(request.getSession())) {
+		// Get the user credentials.
+		String mobileToken = request.getParameter("mobileToken");
+		String consumerUuid = request.getParameter("consumerUuid");
+		
+		// Validate the user.
+		if (authenticationService.validConsumerMobileLogin(mobileToken, consumerUuid)) {
 			return true;
 		} else {
 			response.sendError(403);
