@@ -74,6 +74,87 @@
 				</property>
 			</bean>
 		</mvc:interceptor>
+		
+		<!-- Consumer authentication required. -->
+		<!-- TODO: Whitelist more functions since the crawler needs to be able to access them. -->
+		<mvc:interceptor>
+			<mvc:mapping path="/consumer/*" />
+			<mvc:mapping path="/consumers/*" />
+			<mvc:mapping path="/index/*" />
+			<mvc:mapping path="/payment/*" />
+			<mvc:mapping path="/restaurantMenu/*" />
+			<mvc:mapping path="/searchList/*" />
+			<mvc:exclude-mapping path="/index/index"/>
+			<mvc:exclude-mapping path="/index/regist"/>
+			<mvc:exclude-mapping path="/index/login"/>
+			<mvc:exclude-mapping path="/index/signOut"/>
+			<mvc:exclude-mapping path="/index/emailExist"/>
+			<mvc:exclude-mapping path="/index/createAccount"/>
+			<mvc:exclude-mapping path="/index/sendResetPasswordVerificationCode"/>
+			<mvc:exclude-mapping path="/index/checkVerificationCode"/>
+			<mvc:exclude-mapping path="/index/resetPassword"/>
+			<bean class="com.camut.framework.interceptors.ConsumerLoginRequiredInterceptor" />
+		</mvc:interceptor>
+		
+		<!-- Restaurant authentication required. -->
+		<mvc:interceptor>
+			<mvc:mapping path="/discount/*" />
+			<mvc:mapping path="/dish/*" />
+			<mvc:mapping path="/distancePrice/*" />
+			<mvc:mapping path="/garnish/*" />
+			<mvc:mapping path="/information/*" />
+			<mvc:mapping path="/opentime/*" />
+			<mvc:mapping path="/order/*" />
+			<mvc:mapping path="/restaurant/*" />
+			<mvc:mapping path="/restaurantStatement/*" />
+			<mvc:mapping path="/stripe/*" />
+			<mvc:mapping path="/table/*" />
+			<mvc:exclude-mapping path="/restaurant/login" />
+			<mvc:exclude-mapping path="/restaurant/register" />
+			<mvc:exclude-mapping path="/restaurant/toRegisterSuccess" />
+			<mvc:exclude-mapping path="/restaurant/checkLoginName" />
+			<mvc:exclude-mapping path="/restaurant/checkRestaurantName" />
+			<mvc:exclude-mapping path="/restaurant/restaurantRegister" />
+			<mvc:exclude-mapping path="/restaurant/restaurantLogin" />
+			<mvc:exclude-mapping path="/restaurant/resetPassword" />
+			<mvc:exclude-mapping path="/restaurant/sendemail" />
+			<mvc:exclude-mapping path="/restaurant/verifyTheCode" />
+			<mvc:exclude-mapping path="/restaurant/dopasswordreset" />
+			<mvc:exclude-mapping path="/restaurant/signOut" />
+			<bean class="com.camut.framework.interceptors.RestaurantLoginRequiredInterceptor" />
+		</mvc:interceptor>
+		
+		<!-- Admin authentication required. -->
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/*" />
+			<mvc:mapping path="/adminStatement/*" />
+			<mvc:exclude-mapping path="/admin/login"/>
+			<mvc:exclude-mapping path="/admin/dologin"/>
+			<mvc:exclude-mapping path="/admin/signout"/>
+			<mvc:exclude-mapping path="/admin/sendemail"/>
+			<mvc:exclude-mapping path="/admin/resetPage"/>
+			<mvc:exclude-mapping path="/admin/doresetpassword"/>
+			<bean class="com.camut.framework.interceptors.AdminLoginRequiredInterceptor" />
+		</mvc:interceptor>
+		
+		<!-- Mobile consumer authentication required. -->
+		<mvc:interceptor>
+			<mvc:mapping path="/api/consumer/**" />
+			<mvc:exclude-mapping path="/api/consumer/login" />
+			<mvc:exclude-mapping path="/api/consumer/register" />
+			<mvc:exclude-mapping path="/api/consumer/forget" />
+			<mvc:exclude-mapping path="/api/consumer/forget" />
+			<mvc:exclude-mapping path="/api/consumer/forget/verify" />
+			<mvc:exclude-mapping path="/api/consumer/forget/new" />
+			<bean class="com.camut.framework.interceptors.MobileConsumerLoginRequiredInterceptor" />
+		</mvc:interceptor>
+		
+		<!-- Mobile restaurant authentication required. -->
+		<mvc:interceptor>
+			<mvc:mapping path="/api/restaurant/**" />
+			<mvc:exclude-mapping path="/api/restaurant/login" />
+			<bean class="com.camut.framework.interceptors.MobileRestaurantLoginRequiredInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 </beans>
