@@ -41,9 +41,8 @@ public interface AuthenticationService {
 	 * @Title: validRestaurantMobileLogin
 	 * @Description: Checks to see if there is a valid restaurant user logged in with mobile.
 	 * @param mobileToken
-	 * @param mobileType
 	 * @param restaurantUuid
 	 * @return
 	 */
-	public boolean validRestaurantMobileLogin(String mobileToken, String mobileType, String restaurantUuid);
+	public boolean validRestaurantMobileLogin(String mobileToken, String restaurantUuid);
 }

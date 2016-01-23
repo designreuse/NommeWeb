@@ -138,16 +138,21 @@
 		</mvc:interceptor>
 		
 		<!-- Mobile consumer authentication required. -->
-		<!-- TODO: Update mappings for login functions. -->
 		<mvc:interceptor>
-			<mvc:mapping path="/api/**" />
 			<mvc:mapping path="/api/consumer/**" />
+			<mvc:exclude-mapping path="/api/consumer/login" />
+			<mvc:exclude-mapping path="/api/consumer/register" />
+			<mvc:exclude-mapping path="/api/consumer/forget" />
+			<mvc:exclude-mapping path="/api/consumer/forget" />
+			<mvc:exclude-mapping path="/api/consumer/forget/verify" />
+			<mvc:exclude-mapping path="/api/consumer/forget/new" />
 			<bean class="com.camut.framework.interceptors.MobileConsumerLoginRequiredInterceptor" />
 		</mvc:interceptor>
 		
 		<!-- Mobile restaurant authentication required. -->
 		<mvc:interceptor>
 			<mvc:mapping path="/api/restaurant/**" />
+			<mvc:exclude-mapping path="/api/restaurant/login" />
 			<bean class="com.camut.framework.interceptors.MobileRestaurantLoginRequiredInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

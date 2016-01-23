@@ -1,19 +1,25 @@
 package com.camut.service.impl;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.camut.model.Consumers;
+import com.camut.model.Restaurants;
+import com.camut.model.RestaurantsUser;
 import com.camut.service.AuthenticationService;
 import com.camut.service.ConsumersService;
+import com.camut.service.RestaurantsUserService;
 import com.camut.utils.StringUtil;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 	
 	@Autowired private ConsumersService consumersService;
+	@Autowired private RestaurantsUserService restaurantsUserService;
 	
 	/**
 	 * @Title: validConsumerSessionLogin
@@ -77,6 +83,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	@Override
 	public boolean validConsumerMobileLogin(String mobileToken, String consumerUuid) {
+		// Require login credentials.
+		if (StringUtil.isEmpty(mobileToken) || StringUtil.isEmpty(consumerUuid)) {
+			return false;
+		}
+		
 		// Get the consumer with the same Uuid.
 		Consumers expectedConsumer = consumersService.getConsumersByUuid(consumerUuid);
 		if (expectedConsumer == null) {
@@ -95,14 +106,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @Title: validRestaurantMobileLogin
 	 * @Description: Checks to see if there is a valid restaurant user logged in with mobile.
 	 * @param mobileToken
-	 * @param mobileType
 	 * @param restaurantUuid
 	 * @return
 	 */
 	@Override
-	public boolean validRestaurantMobileLogin(String mobileToken, String mobileType, String restaurantUuid) {
-		// TODO: Get the restaurant user with the same Uuid.
-		// TODO: Compare the mobile token.  If it is the same, then the user is valid.
+	public boolean validRestaurantMobileLogin(String mobileToken, String restaurantUuid) {
+		// Require login credentials.
+		if (StringUtil.isEmpty(mobileToken) || StringUtil.isEmpty(restaurantUuid)) {
+			return false;
+		}
+		
+		// Get all users for the given restaurant.
+		Restaurants searchRestaurant = new Restaurants();
+		searchRestaurant.setUuid(restaurantUuid);
+		List<RestaurantsUser> restaurantUsers = restaurantsUserService.getAllRestaurantsUser(searchRestaurant);
+		
+		// Check if one of the users has a matching token.  If so, this is a valid user.
+		for (RestaurantsUser restaurantUser : restaurantUsers) {
+			if (restaurantUser.getToken().equals(mobileToken)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 }

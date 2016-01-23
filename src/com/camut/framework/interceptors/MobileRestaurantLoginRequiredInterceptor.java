@@ -14,11 +14,11 @@ public class MobileRestaurantLoginRequiredInterceptor extends HandlerInterceptor
 	@Autowired private AuthenticationService authenticationService;
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-		// TODO: Get the mobile token, mobile type, and Uuid for the restaurant user.
-		String mobileToken = "";
-		String mobileType = "";
-		String restaurantUuid = "";
-		if (authenticationService.validRestaurantMobileLogin(mobileToken, mobileType, restaurantUuid)) {
+		// Get the user credentials.
+		String mobileToken = request.getParameter("token");
+		String restaurantUuid = request.getParameter("restaurantUuid");
+		
+		if (authenticationService.validRestaurantMobileLogin(mobileToken, restaurantUuid)) {
 			return true;
 		} else {
 			response.sendError(403);
